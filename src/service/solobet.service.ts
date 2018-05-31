@@ -19,7 +19,7 @@ export class SolobetService {
   }
 
 
-  loadMatches(account, matchId): Observable<any> {
+  loadMatches(matchId): Observable<any> {
 
     return Observable.create(observer => {
 
@@ -28,7 +28,7 @@ export class SolobetService {
         .deployed()
         .then(instance => {
 
-          return instance.findMatch.call(matchId, {from: account});
+          return instance.findMatch.call(matchId, {from: this.web3Ser.coinbase});
         })
         .then((result) => {
           var index = 0;
@@ -54,18 +54,18 @@ export class SolobetService {
 
   }
 
-  loadBettings(account, matchId): Observable<any> {
+  loadBettings(matchId): Observable<any> {
 
     let bettings = new Array();
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
 
-        return instance.totalBets.call(matchId, {from: account});
+        return instance.totalBets.call(matchId, {from: this.web3Ser.coinbase});
       }).then(totalBets => {
 
 
         for (let i = 0; i < totalBets; i++) {
-            this.getBetting(account, matchId, i).subscribe(betting => {
+            this.getBetting( matchId, i).subscribe(betting => {
               bettings.push(betting);
             });
         }
@@ -77,12 +77,12 @@ export class SolobetService {
     });
   }
 
-  getBetting(account, matchId, bettingId): Observable<any> {
+  getBetting(matchId, bettingId): Observable<any> {
 
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
 
-        return instance.getBettingInfo.call(matchId, bettingId, {from: account});
+        return instance.getBettingInfo.call(matchId, bettingId, {from: this.web3Ser.coinbase});
       }).then(result => {
 
         let betting = {offer: result[0], dealer: result[1], rate: result[2], amount: result[3], status: result[4]};

@@ -14,9 +14,10 @@ declare var window: any;
 export class Web3Service {
 
   public web3: any;
-
+  public coinbase: any;
   constructor() {
     this.checkAndInstantiateWeb3();
+    this.coinbase = '0x7E5F4552091A69125d5DfCb7b8C2659029395Bdf';
   }
 
   checkAndInstantiateWeb3 = () => {
@@ -39,6 +40,7 @@ export class Web3Service {
   };
 
   getAccounts(): Observable<any>{
+
     return Observable.create(observer => {
       this.web3.eth.getAccounts((err, accs) => {
         if (err != null) {

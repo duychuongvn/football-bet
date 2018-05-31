@@ -40,14 +40,14 @@ export class AdminComponent  {
 
   loadMatches = () => {
 
-    this.solobetService.loadMatches(this.account, '0x123')
+    this.solobetService.loadMatches('0x124')
       .subscribe(match => {
         this.match = match;
       }, e => {console.log(e); });
   }
 
   loadBettings = () => {
-    this.solobetService.loadBettings(this.account, '0x123')
+    this.solobetService.loadBettings( '0x124')
       .subscribe(bettings => {
         this.bettings = bettings;
       }, e => {console.log(e); });

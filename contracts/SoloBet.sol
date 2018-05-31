@@ -46,6 +46,8 @@ contract SoloBet is Ownable {
   function totalBets(string matchId) public view returns (uint256) {
     return bettingMatches[matchId].length;
   }
+
+
   function findMatch(string matchId) public view returns (
     string homeTeam,
     string awayTeam,
