@@ -37,8 +37,9 @@ export class HomeComponent {
         let match = result[i];
         let mHash = match.match_hometeam_name + match.match_awayteam_name + match.match_date + match.match_time;
 
+        var matchId = this.web3Service.toSHA3(mHash);
         var bettingMatch = {
-          'id': this.web3Service.toSHA3(mHash),
+          'id': matchId,
           'homeTeam': match.match_hometeam_name,
           'awayTeam': match.match_awayteam_name,
           'matchDate': match.match_date,
@@ -49,13 +50,23 @@ export class HomeComponent {
 
        let betting = {offer: "s", dealer: "s", rate: 0, amount: 1, status: 1};
       // bettingMatch.bettings.push(betting);
-        this.solobetService.loadBettings(this.web3Service.toSHA3(mHash))
-          .subscribe(bettings => {
+        this.solobetService.loadBettings(matchId)
+          .subscribe(result => {
 
-            bettingMatch.bettings.push(betting);
-            if(bettingMatch.bettings.length > 0) {
-              console.log(this.upcommingMatches);
+         //   alert(bettings.length);
+           // alert("s" + this.web3Service.toSHA3(mHash))
+            for(let j =0; j < this.upcommingMatches.length;j++ ) {
+              let match = this.upcommingMatches[j];
+               if(match.id == result.matchId){
+                 match.bettings = result.bettings;
+                 console.log(match.bettings);
+                 break;
+               }
             }
+            // bettingMatch.bettings.push(betting);
+            // if(bettings.length > 0) {
+            //   console.log(bettingMatch);
+            // }
 
 
           }, e => {
@@ -90,10 +101,11 @@ export class HomeComponent {
       });
   };
 
-  loadBettings = (matchid) => {
-    this.solobetService.loadBettings(matchid)
+  loadBettings = (match) => {
+    this.solobetService.loadBettings(match.id)
       .subscribe(bettings => {
-        this.bettings = bettings;
+        //this.bettings = bettings;
+        match.bettings = bettings;
       }, e => {
         console.log(e);
       });
@@ -113,10 +125,11 @@ export class HomeComponent {
   offer = (match) => {
     this.solobetService.newOffer(this.account, match, 200,75, 3)
       .subscribe(result => {
-        alert(result);
+        this.loadBettings(match);
       }, e => {
-        console.log(e);
         alert(e);
+        console.log(e);
+
       });
   };
 
