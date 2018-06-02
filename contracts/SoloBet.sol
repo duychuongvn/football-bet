@@ -194,7 +194,7 @@ contract SoloBet is Ownable {
 }
 
   function offerNewMatch(string matchId, string homeTeam, string awayTeam, uint time, uint[2] rate) public payable returns (bool) {
-    require(time + 74 * 1000 * 60 > now);
+    require(time + 75 * 1000 * 60 > now);
     // allow 15 minutes before the match finishes
 
     Match memory _match;

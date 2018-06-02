@@ -32,7 +32,7 @@ export class SolobetService {
         .deployed()
         .then(instance => {
 
-          return instance.findMatch.call(matchId, {from: this.web3Ser.coinbase});
+          return instance.findMatch.call(matchId);
         })
         .then((result) => {
           var index = 0;
@@ -65,7 +65,7 @@ export class SolobetService {
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
 
-        return instance.totalBets.call(matchId, {from: this.web3Ser.coinbase});
+        return instance.totalBets.call(matchId);
       }).then(totalBets => {
 
 
@@ -92,7 +92,7 @@ export class SolobetService {
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
 
-        return instance.getBettingInfo.call(matchId, bettingId, {from: this.web3Ser.coinbase});
+        return instance.getBettingInfo.call(matchId, bettingId);
       }).then(result => {
         let betting = {bettingId: bettingId, matchId: matchId, offer: result[0], dealer: result[1], rate: result[2], amount: result[3], status: result[4]};
         observer.next(betting);
