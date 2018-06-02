@@ -40,21 +40,31 @@ export class AdminComponent  {
 
   loadMatches = () => {
 
-    this.solobetService.loadMatches('0x124')
+    this.solobetService.loadMatches('0x00615ac0bbee39cf8b51f5cc986881ad8128b347e58b08ba4a05e3c5bd4074b7')
       .subscribe(match => {
         this.match = match;
       }, e => {console.log(e); });
   }
 
   loadBettings = () => {
-    this.solobetService.loadBettings( '0x124')
+    this.solobetService.loadBettings( '0x00615ac0bbee39cf8b51f5cc986881ad8128b347e58b08ba4a05e3c5bd4074b7')
       .subscribe(bettings => {
         this.bettings = bettings;
       }, e => {console.log(e); });
   }
 
-  offer = () => {
-    alert(this.amount);
+  deal = () => {
+    this.solobetService.deal(this.account, '0x00615ac0bbee39cf8b51f5cc986881ad8128b347e58b08ba4a05e3c5bd4074b7',0)
+      .subscribe(result => {
+        this.loadBettings();
+      }, e => {console.log(e); alert(e)});
 
   }
+
+  updateScore = () => {
+    this.solobetService.updateScore( this.account,'0x00615ac0bbee39cf8b51f5cc986881ad8128b347e58b08ba4a05e3c5bd4074b7',3,0);
+    this.loadMatches();
+  }
+
+
 }

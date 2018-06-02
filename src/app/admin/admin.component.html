@@ -5,6 +5,13 @@
   <br/>
   {{match.homeTeam}} {{match.homeGoals}} - {{match.awayGoals}} {{match.awayTeam}} Date: {{match.time}}
 </p>
+
+<button
+
+  (click)="deal()"
+  class="button is-primary">
+  New Offer
+</button>
 <br/>
 <!--
 <span>New Offer</span>
@@ -35,6 +42,26 @@
 <p>
 <li *ngFor="let betting of bettings">
   {{betting.offer}} - {{betting.dealer}} - {{betting.amount}} - ({{betting.rate[0]}}-{{betting.rate[1]}}) - {{betting.status}}
+
+  <br>
+
 </li>
+
+<br/>
+
+<button
+
+  (click)="deal()"
+  class="button is-primary">
+  Deal
+</button>
+
+
+<button
+
+  (click)="updateScore()"
+  class="button is-primary">
+  Update Score
+</button>
 </p>
 

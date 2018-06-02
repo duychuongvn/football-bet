@@ -39,6 +39,9 @@ export class Web3Service {
     }
   };
 
+  toSHA3(value) {
+    return this.web3.sha3(value);
+  }
   getAccounts(): Observable<any>{
 
     return Observable.create(observer => {

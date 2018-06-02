@@ -7,14 +7,29 @@
 </div>
 <h2>Here are some links to help you start: </h2>
 <ul>
-  <li>
-    <h2><a  rel="noopener" href="admin">admin</a></h2>
+  <li *ngFor="let match of upcommingMatches">
+    {{match.homeTeam}} - {{match.awayTeam}} - Date: {{match.matchDate}} {{match.matchTime}}
+
+    <button
+
+      (click)="offer(match)"
+      class="button is-primary">
+      Offer
+    </button>
+
+
+  <tr *ngFor="let betting of match.bettings">
+    {{betting.offer}} - {{betting.dealer}} - {{betting.amount}} - ({{betting.rate[0]}}-{{betting.rate[1]}}) - {{betting.status}}
+    <button
+
+      (click)="deal(match.id)"
+      class="button is-primary">
+      Deal
+    </button>
+    <br>
+
+  </tr>
   </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
+
 </ul>
 
