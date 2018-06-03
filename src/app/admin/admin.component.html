@@ -1,67 +1,27 @@
-<p>
+
+<form #matchForm="ngForm">
+<ul>
+  <li *ngFor="let match of upcommingMatches">
+
+    <div>
+      {{match.homeTeam}}
+      <p class="control">
+       <input style="width: 50px"
+              class="input"
+              type="text"
+              [(ngModel)]="match.homeScore"/>
+        </p>
+        -
+      <p class="control">
+       <input style="width: 50px"  [(ngModel)]="match.awayScore"/>
+      </p>
+      {{match.awayTeam}} - Date: {{match.time}}
+    </div>
 
 
-  <span>Match:</span>{{math}}
-  <br/>
-  {{match.homeTeam}} {{match.homeGoals}} - {{match.awayGoals}} {{match.awayTeam}} Date: {{match.time}}
-</p>
 
-<button
+  </li>
 
-  (click)="deal()"
-  class="button is-primary">
-  New Offer
-</button>
-<br/>
-<!--
-<span>New Offer</span>
-<label>Amount:</label> <input id="amount"  [(ngModel)]="amount"
-                              class="input"
-                              type="text"
-                              placeholder="95"
-                              name="amount"
-                              required  #amountModel="ngModel"/>
-<label>Rate:</label><input id="rate1" [(ngModel)]="rate1"
-                           class="input"
-                           type="text"
-                           placeholder="1"
-                           name="rate1"
-                           required #rate1Model="ngModel"/>-<input id="rate2"
-                                             [(ngModel)]="rate2"
-                                             class="input"
-                                             type="text"
-                                             placeholder="0"
-                                             name="rate2"
-                                             required #rate2Model="ngModel"/>
-<button id="offer" onclick="offer()">Offer</button>
-<br/>
+</ul>
 
-<Button id="deal" onclick="deal()">Deal</Button>
-
--->
-<p>
-<li *ngFor="let betting of bettings">
-  {{betting.offer}} - {{betting.dealer}} - {{betting.amount}} - ({{betting.rate[0]}}-{{betting.rate[1]}}) - {{betting.status}}
-
-  <br>
-
-</li>
-
-<br/>
-
-<button
-
-  (click)="deal()"
-  class="button is-primary">
-  Deal
-</button>
-
-
-<button
-
-  (click)="updateScore()"
-  class="button is-primary">
-  Update Score
-</button>
-</p>
-
+</form>

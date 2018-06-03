@@ -123,7 +123,7 @@ export class HomeComponent {
   };
 
   offer = (match) => {
-    this.solobetService.newOffer(this.account, match, 200,75, 3)
+    this.solobetService.newOffer(this.account, match, 75, 3)
       .subscribe(result => {
         this.loadBettings(match);
       }, e => {

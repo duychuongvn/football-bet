@@ -8,7 +8,8 @@
 <h2>Here are some links to help you start: </h2>
 <ul>
   <li *ngFor="let match of upcommingMatches">
-    <a (click)="loadBettings(match)"> {{match.homeTeam}} - {{match.awayTeam}} - Date: {{match.matchDate}} {{match.matchTime}}</a>
+
+    <a (click)="loadBettings(match)"> {{match.homeTeam}} {{match.homeScore}} - {{match.awayScore}} {{match.awayTeam}} - Date: {{match.matchDate}} {{match.matchTime}}</a>
 
     <button
 
@@ -19,7 +20,7 @@
 
 
   <tr *ngFor="let betting of match.bettings">
-    {{betting.offer}} - {{betting.dealer}} - {{betting.amount}} - ({{betting.rate[0]}}-{{betting.rate[1]}}) - {{betting.status}}
+    {{betting.offer}} - {{betting.dealer}} - {{betting.amount}} - ({{betting.rate}}) - {{betting.status}}
     <button
 
       (click)="deal(match.id)"
