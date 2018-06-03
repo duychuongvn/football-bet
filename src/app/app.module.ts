@@ -9,6 +9,7 @@ import { HomeComponent } from './home/home.component';
 // import { BrowserModule } from '@angular/platform-browser';
 
 import {SolobetService, Web3Service, MatchService} from '../service/service';
+import { MatchDetailComponent } from './match-detail/match-detail.component';
 
 const SERVICES = [
   SolobetService,
@@ -22,7 +23,8 @@ const SERVICES = [
   declarations: [
     AppComponent,
     AdminComponent,
-    HomeComponent
+    HomeComponent,
+    MatchDetailComponent
   ],
   imports: [
     BrowserModule,
