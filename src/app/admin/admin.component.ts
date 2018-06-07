@@ -1,4 +1,5 @@
 import {Component, NgZone} from '@angular/core';
+
 import {Web3Service, SolobetService, MatchService} from '../../service/service';
 import {log} from 'util';
 
@@ -58,9 +59,15 @@ export class AdminComponent {
     });
   };
   updateScore = (match) => {
-    this.solobetService.updateScore(this.account, match.id, 3, 0);
+    this.solobetService.updateScore(this.account, match.matchId, parseInt(match.homeScore), parseInt(match.awayScore));
     this.initMatches();
   };
+  approveScore = (match) => {
+    this.solobetService.approveScore(this.account, match.matchId);
+    this.initMatches();
+  };
+
+
 
 
 }

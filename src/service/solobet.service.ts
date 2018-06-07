@@ -136,7 +136,6 @@ export class SolobetService {
   }
 
   updateScore(account: string, matchId: string, homeScore: number, awayScore: number) {
-
      this.Solobet.deployed().then(instance => {
        return instance.updateScore(matchId, homeScore, awayScore, {from: account});
      });
@@ -154,6 +153,12 @@ export class SolobetService {
         console.log(err);
         alert(err);
       });
+    });
+  }
+
+  approveScore(account: any, matchId: string | any) {
+    this.Solobet.deployed().then(instance => {
+      return instance.approveScore(matchId, {from: account});
     });
   }
 }

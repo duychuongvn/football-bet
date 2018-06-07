@@ -27,6 +27,7 @@ contract AsianSoloBet is Ownable, Strings {
     uint time;
     MatchStatus status;
     bool isApproved;
+    uint256 index;
   }
 
 
@@ -51,7 +52,7 @@ contract AsianSoloBet is Ownable, Strings {
   address public feeOwner;
   mapping(string => Match) matches;
   mapping(string => Betting[]) bettingMatches;
-  string[] bettingMatchIds;
+  Match[] bettingMatchIndexes;
 
   function SoloBet() public {
 
@@ -113,16 +114,24 @@ contract AsianSoloBet is Ownable, Strings {
 
     }
 
-    removeBettingMatch(matchId);
+    removeBettingMatch(_match);
     return true;
   }
 
-  function removeBettingMatch(string matchId) internal returns (bool){
-    delete bettingMatches[matchId];
-    removeBettingMatchIds(matchId);
+  function removeBettingMatch(Match _match) internal returns (bool){
+    delete bettingMatches[_match.id];
+    removeBettingMatchIndex(_match);
     return true;
   }
 
+  function removeBettingMatchIndex(Match _match) internal returns (bool) {
+    uint256 toDelete = _match.index;
+    uint256 lastIndex = bettingMatchIndexes.length - 1;
+    bettingMatchIndexes[toDelete] = bettingMatchIndexes[lastIndex];
+    bettingMatchIndexes[toDelete].index = toDelete;
+    bettingMatchIndexes.length--;
+    return true;
+  }
 
   function transferFund(address receiver, uint256 amount) internal returns (bool) {
     uint256 gaslimit = block.gaslimit;
@@ -365,10 +374,20 @@ contract AsianSoloBet is Ownable, Strings {
   }
 
   function getBettingMatchIds() public view returns (string) {
+    string[] memory bettingMatchIds = lookupBettingMatchIds();
+
     return join(bettingMatchIds, ",");
     //    return "";
   }
 
+  function lookupBettingMatchIds() public returns(string[]) {
+    uint256 length = bettingMatchIndexes.length;
+    string[] memory matchIds = new string[](length);
+    for(uint256 i =0 ; i <length; i++) {
+      matchIds[i] = bettingMatchIndexes[i].id;
+    }
+    return matchIds;
+  }
 
   function copyBytes(bytes dest, bytes source, uint posdes, uint posSource, uint length) public {
 
@@ -409,17 +428,7 @@ contract AsianSoloBet is Ownable, Strings {
   }
 
   function getTotalBettingMatches() public view returns (uint256) {
-    return bettingMatchIds.length;
-  }
-
-  function removeBettingMatchIds(string matchId) {
-    for (uint256 i = 0; i < bettingMatchIds.length; i++) {
-      string memory id = bettingMatchIds[i];
-      if (keccak256(matchId) == keccak256(id)) {
-        delete bettingMatchIds[i];
-        break;
-      }
-    }
+    return bettingMatchIndexes.length;
   }
 
 
@@ -451,7 +460,8 @@ contract AsianSoloBet is Ownable, Strings {
 
     bettingMatches[matchId].push(_betting);
 
-    bettingMatchIds.push(matchId);
+
+    _match.index = bettingMatchIndexes.push(_match) - 1;
     return true;
 
   }

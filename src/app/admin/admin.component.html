@@ -1,21 +1,32 @@
 
-<form #matchForm="ngForm">
+
 <ul>
   <li *ngFor="let match of upcommingMatches">
 
     <div>
       {{match.homeTeam}}
-      <p class="control">
        <input style="width: 50px"
               class="input"
               type="text"
               [(ngModel)]="match.homeScore"/>
-        </p>
         -
-      <p class="control">
-       <input style="width: 50px"  [(ngModel)]="match.awayScore"/>
-      </p>
-      {{match.awayTeam}} - Date: {{match.time}}
+       <input style="width: 50px"   class="input"
+              type="text" [(ngModel)]="match.awayScore"/>
+          {{match.awayTeam}} - Date: {{match.time}}
+
+      <button
+
+        (click)="updateScore(match)"
+        class="button is-primary">
+        Update Score
+      </button>
+
+      <button
+
+        (click)="approveScore(match)"
+        class="button is-primary">
+        Approve Score
+      </button>
     </div>
 
 
@@ -24,4 +35,3 @@
 
 </ul>
 
-</form>

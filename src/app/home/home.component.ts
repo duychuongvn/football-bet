@@ -15,8 +15,6 @@ export class HomeComponent {
   upcommingMatches: any;
   bettings: any;
   amount: 0;
-  rate1: 0;
-  rate2: 0;
 
   constructor(private _ngZone: NgZone,
               private  web3Service: Web3Service,
@@ -48,7 +46,6 @@ export class HomeComponent {
         };
         this.upcommingMatches.push(bettingMatch);
 
-       let betting = {offer: "s", dealer: "s", rate: 0, amount: 1, status: 1};
       // bettingMatch.bettings.push(betting);
         this.solobetService.loadBettings(matchId)
           .subscribe(result => {
@@ -73,21 +70,25 @@ export class HomeComponent {
             console.log(e);
           });
       }
+    }, fetchMatchErr => {
+      alert(fetchMatchErr);
     });
 
   };
 
   onReady = () => {
+    // alert("ready")
+    this._ngZone.run(() => {
+        this.initMatches();
+      }
+    );
     this.web3Service.getAccounts().subscribe(accs => {
       this.accounts = accs;
       this.account = this.accounts[0];
 
       // This is run from window:load and ZoneJS is not aware of it we
       // need to use _ngZone.run() so that the UI updates on promise resolution
-      this._ngZone.run(() => {
-          this.initMatches();
-        }
-      );
+
     }, err => alert(err));
   };
 
@@ -123,6 +124,7 @@ export class HomeComponent {
   };
 
   offer = (match) => {
+    alert('a');
     this.solobetService.newOffer(this.account, match, 75, 3)
       .subscribe(result => {
         this.loadBettings(match);
