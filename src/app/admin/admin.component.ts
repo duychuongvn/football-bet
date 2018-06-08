@@ -49,9 +49,9 @@ export class AdminComponent {
     this.upcommingMatches = new Array();
     this.solobetService.loadBettingMatches().subscribe(result => {
 
-       var  matchIds = result.split(',');
-       for(let i = 0;i < matchIds.length;i ++) {
-         this.solobetService.loadMatches(matchIds[i]).subscribe(match => {
+
+       for(let i = 0;i < result.length;i ++) {
+         this.solobetService.loadMatches(result[i]).subscribe(match => {
            console.log(match);
            this.upcommingMatches.push(match);
          });

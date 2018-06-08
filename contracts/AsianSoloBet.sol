@@ -1,7 +1,7 @@
 pragma solidity ^0.4.21;
-pragma experimental ABIEncoderV2;
 
 import "./Ownable.sol";
+
 import "./Strings.sol";
 
 
@@ -11,35 +11,37 @@ contract AsianSoloBet is Ownable, Strings {
 
   enum BettingStatus {Open, Deal, Canceled, Refunded, Done}
 
-  event LogDeal(address offer, address dealer, string matchId, uint256 betingId);
-  event LogApproveScore(string matchId);
+  event LogDeal(address offer, address dealer, bytes32 matchId, uint256 betingId);
+  event LogApproveScore(bytes32 matchId);
   event Transfer(address indexed _from, address indexed _to, uint256 _value);
 
   uint256 GAS_PRICE = 21000;
 
   struct Match {
 
-    string id;
-    string homeTeam;
-    string awayTeam;
-    uint homeScore;
-    uint awayScore;
-    uint time;
+    bytes32 id;
+    uint8 homeScore;
+    uint8 awayScore;
+    uint32 index;
+    uint48 time;
     MatchStatus status;
     bool isApproved;
-    uint256 index;
+    string homeTeam;
+    string awayTeam;
+
   }
 
+  bytes32[] bettingMatchIndexes;
 
   struct Betting {
-
-    Match _match;
     address bookmaker;
     address punter;
+    bytes32 matchId;
     int rate; // rate >= 0: bookmakers bets for home team else bet for away team
     uint256 amount;
     BettingStatus status;
   }
+
 
   struct Funding {
 
@@ -50,11 +52,10 @@ contract AsianSoloBet is Ownable, Strings {
   }
 
   address public feeOwner;
-  mapping(string => Match) matches;
-  mapping(string => Betting[]) bettingMatches;
-  Match[] bettingMatchIndexes;
+  mapping(bytes32 => Match) matches;
+  mapping(bytes32 => Betting[]) bettingMatches;
 
-  function SoloBet() public {
+  function AsianSoloBet() public {
 
     feeOwner = msg.sender;
   }
@@ -65,12 +66,12 @@ contract AsianSoloBet is Ownable, Strings {
   }
 
 
-  function totalBets(string matchId) public view returns (uint256) {
+  function totalBets(bytes32 matchId) public view returns (uint256) {
     return bettingMatches[matchId].length;
   }
 
 
-  function findMatch(string matchId) public view returns (
+  function findMatch(bytes32 matchId) public view returns (
     string homeTeam,
     string awayTeam,
     uint homeScore,
@@ -89,16 +90,16 @@ contract AsianSoloBet is Ownable, Strings {
   }
 
 
-  function updateScore(string matchId, uint homeScore, uint awayScore) public onlyOwner returns (bool) {
+  function updateScore(bytes32 matchId, uint homeScore, uint awayScore) public onlyOwner returns (bool) {
 
     Match storage _match = matches[matchId];
-    _match.homeScore = homeScore;
-    _match.awayScore = awayScore;
+    _match.homeScore = uint8(homeScore);
+    _match.awayScore = uint8(awayScore);
     _match.status = MatchStatus.Finished;
     return true;
   }
 
-  function approveScore(string matchId) public onlyOwner returns (bool) {
+  function approveScore(bytes32 matchId) public onlyOwner returns (bool) {
     Match storage _match = matches[matchId];
     _match.isApproved = true;
 
@@ -125,10 +126,12 @@ contract AsianSoloBet is Ownable, Strings {
   }
 
   function removeBettingMatchIndex(Match _match) internal returns (bool) {
-    uint256 toDelete = _match.index;
-    uint256 lastIndex = bettingMatchIndexes.length - 1;
+
+
+    uint32 toDelete = _match.index;
+    uint32 lastIndex = uint32(bettingMatchIndexes.length - 1);
     bettingMatchIndexes[toDelete] = bettingMatchIndexes[lastIndex];
-    bettingMatchIndexes[toDelete].index = toDelete;
+    matches[bettingMatchIndexes[toDelete]].index = toDelete;
     bettingMatchIndexes.length--;
     return true;
   }
@@ -373,58 +376,8 @@ contract AsianSoloBet is Ownable, Strings {
 
   }
 
-  function getBettingMatchIds() public view returns (string) {
-    string[] memory bettingMatchIds = lookupBettingMatchIds();
-
-    return join(bettingMatchIds, ",");
-    //    return "";
-  }
-
-  function lookupBettingMatchIds() public returns(string[]) {
-    uint256 length = bettingMatchIndexes.length;
-    string[] memory matchIds = new string[](length);
-    for(uint256 i =0 ; i <length; i++) {
-      matchIds[i] = bettingMatchIndexes[i].id;
-    }
-    return matchIds;
-  }
-
-  function copyBytes(bytes dest, bytes source, uint posdes, uint posSource, uint length) public {
-
-    for (uint i = posSource; i < posSource + length; i++) {
-      dest[posdes++] = source[i];
-    }
-  }
-
-  function join(string[] data, string delimiter) public returns (string) {
-
-    bytes memory delimiterBytes = bytes(delimiter);
-    uint length = delimiterBytes.length * (data.length - 1);
-    uint i;
-    for (i = 0; i < data.length; i++) {
-      length += (bytes(data[i])).length;
-    }
-
-    string memory tmp = new string(length);
-    bytes memory joinstr = bytes(tmp);
-    uint j;
-    uint k;
-    uint joinIndex = 0;
-    bytes memory itemt = bytes(data[0]);
-    copyBytes(joinstr, itemt, 0, 0, itemt.length);
-    joinIndex += itemt.length;
-
-
-    for (j = 1; j < data.length; j++) {
-      copyBytes(joinstr, delimiterBytes, joinIndex, 0, delimiterBytes.length);
-      joinIndex += delimiterBytes.length;
-      bytes memory dataItem = bytes(data[j]);
-      copyBytes(joinstr, dataItem, joinIndex, 0, dataItem.length);
-      joinIndex += dataItem.length;
-    }
-
-
-    return string(joinstr);
+  function getBettingMatchIds() public view returns (bytes32[]) {
+    return bettingMatchIndexes;
   }
 
   function getTotalBettingMatches() public view returns (uint256) {
@@ -432,45 +385,43 @@ contract AsianSoloBet is Ownable, Strings {
   }
 
 
-  function offerNewMatch(string matchId, string homeTeam, string awayTeam, uint time, int rate) public payable returns (bool) {
-    require(time + 75 * 1000 * 60 > now);
+  function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint time, int rate) public payable returns (bool) {
+    //  require(time + 75 * 1000 * 60 > now);
     // allow 15 minutes before the match finishes
 
+    MatchStatus status;
+
+    if (time < now) {
+      status = MatchStatus.Playing;
+    } else {
+      status = MatchStatus.Waiting;
+    }
+
+
     Match memory _match;
+
     _match.id = matchId;
     _match.homeTeam = homeTeam;
     _match.awayTeam = awayTeam;
     _match.homeScore = 0;
     _match.awayScore = 0;
-    _match.time = time;
-    if (time < now) {
-      _match.status = MatchStatus.Playing;
-    } else {
-      _match.status = MatchStatus.Waiting;
-    }
-
+    _match.time = uint48(time);
+    _match.status = status;
+    _match.index = uint32(bettingMatchIndexes.push(matchId) - 1);
     matches[matchId] = _match;
 
-    Betting memory _betting;
-    _betting._match = _match;
-    _betting.bookmaker = msg.sender;
-    _betting.rate = rate;
-    _betting.amount = msg.value;
-    _betting.status = BettingStatus.Open;
-
+   Betting memory _betting = Betting(msg.sender, 0x0, _match.id, rate, msg.value, BettingStatus.Open);
     bettingMatches[matchId].push(_betting);
 
-
-    _match.index = bettingMatchIndexes.push(_match) - 1;
     return true;
 
   }
 
 
-  function offer(string matchId, int rate) public payable returns (bool) {
+  function offer(bytes32 matchId, int rate) public payable returns (bool) {
     Match memory _match = matches[matchId];
     Betting memory _betting;
-    _betting._match = _match;
+    _betting.matchId = matchId;
     _betting.bookmaker = msg.sender;
     _betting.rate = rate;
     _betting.status = BettingStatus.Open;
@@ -479,7 +430,7 @@ contract AsianSoloBet is Ownable, Strings {
     return true;
   }
 
-  function deal(string matchId, uint256 bettingId) public payable returns (bool) {
+  function deal(bytes32 matchId, uint256 bettingId) public payable returns (bool) {
 
     Betting storage _betting = bettingMatches[matchId][bettingId];
     require(_betting.status == BettingStatus.Open);
@@ -489,7 +440,7 @@ contract AsianSoloBet is Ownable, Strings {
     return true;
   }
 
-  function getBettingInfo(string matchId, uint256 bettingId) public view returns (address bookmaker, address punter, int rate, uint256 amount, BettingStatus status) {
+  function getBettingInfo(bytes32 matchId, uint256 bettingId) public view returns (address bookmaker, address punter, int rate, uint256 amount, BettingStatus status) {
     Betting memory _betting = bettingMatches[matchId][bettingId];
     bookmaker = _betting.bookmaker;
     punter = _betting.punter;
