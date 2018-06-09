@@ -53,7 +53,6 @@ export class HomeComponent {
               let match = this.upcommingMatches[j];
                if(match.id == result.matchId){
                  match.bettings = result.bettings;
-                 console.log(match.bettings);
                  break;
                }
             }

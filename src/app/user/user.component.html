@@ -1,3 +1,12 @@
-<p>
-  user works!
-</p>
+
+  <ul>
+  <li *ngFor="let match of groupMatches">
+      <span> {{match.match.homeTeam}} {{match.match.homeScore}}-{{match.match.awayScore}}  {{match.match.awayTeam}}</span>
+      <ul>
+        <li *ngFor="let betting of match.bettings">
+
+          <span> {{betting.rate}} : {{betting.amount}}</span>
+        </li>
+      </ul>
+  </li>
+  </ul>

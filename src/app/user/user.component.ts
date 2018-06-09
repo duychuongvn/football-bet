@@ -11,6 +11,7 @@ export class UserComponent {
   bettingMatches: any;
   accounts: any;
 
+  groupMatches: any;
 
   constructor(private _ngZone: NgZone,
               private  web3Service: Web3Service,
@@ -38,9 +39,52 @@ export class UserComponent {
   }
 
   loadMyBettingMatches = () => {
-    this.solobetService.loadBettingMatchesByAccount(this.account).subscribe(result =>{
-      this.bettingMatches = result;
-      console.log(result);
+    this.solobetService.loadBettingMatchesByAccount(this.account).subscribe(result => {
+      this.convertBettingToGroupByMatches(result);
+       for(let i =0;i<result.length;i++) {
+         let matchId = result[i].matchId;
+         this.solobetService.loadMatches(matchId).subscribe(match => {
+           for(let j =0 ;j<result.length;j++) {
+             if(this.groupMatches[j].matchId == match.matchId) {
+               this.groupMatches[j].match = match;
+              break;
+             }
+           }
+         });
+
+       }
+
+       console.log(this.groupMatches);
+
     });
   }
+
+  convertBettingToGroupByMatches(bettingMatches) {
+    this.groupMatches = new Array();
+
+    for(let i = 0; i < bettingMatches.length;i++) {
+
+      let betting = bettingMatches[i];
+      let match = this.findMatch(betting.matchId) ;
+
+      if(match) {
+        match.bettings.push(betting);
+      } else {
+        match = {matchId: betting.matchId, match: {}, bettings: [betting]};
+        this.groupMatches.push(match);
+
+      }
+
+    }
+  }
+  findMatch(matchId) {
+    for(let i =0; i < this.groupMatches.length;i++) {
+      if(this.groupMatches[i].matchId == matchId) {
+        return  this.groupMatches[i];
+      }
+
+    }
+    return null;
+  }
 }
+

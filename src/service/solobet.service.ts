@@ -58,6 +58,12 @@ export class SolobetService {
 
   }
 
+  loadMatchById(matchId) {
+
+    this.solobetInstance.findMatch.call(matchId).then(result => {
+
+    });
+  }
   loadBettings(matchId): Observable<any> {
 
 
@@ -173,7 +179,8 @@ export class SolobetService {
         var rates = result[2];
         var amounts = result[3];
         for(let i =0; i  < matchIds.length;i++) {
-          bettingMatches.push({"matchId": matchIds[i], "bettingId": bettingIds[i].toNumber(), "rate": rates[i].toNumber(), "amount": amounts[i].toNumber()});
+          bettingMatches.push({"matchId": matchIds[i], match: null, "bettingId": bettingIds[i].toNumber(), "rate": rates[i].toNumber(), "amount": amounts[i].toNumber()});
+
         }
 
         observe.next(bettingMatches);
@@ -182,4 +189,6 @@ export class SolobetService {
 
     });
   }
+
+
 }
