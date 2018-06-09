@@ -55,11 +55,43 @@ contract AsianSoloBet is Ownable, Strings {
   mapping(bytes32 => Match) matches;
   mapping(bytes32 => Betting[]) bettingMatches;
 
+  mapping(address => uint256) balances;
+
+  mapping(address => MyBet[]) myBets;
+
+  struct MyBet {
+
+    uint32 bettingIndex;
+    bytes32 matchId;
+  }
+
   function AsianSoloBet() public {
 
     feeOwner = msg.sender;
   }
 
+
+  function getBettingMatchesByAddress(address owner) public view returns (bytes32[], uint32[], int[], uint256[]) {
+    MyBet[] memory bets = myBets[owner];
+    bytes32[] memory matchIds = new bytes32[](bets.length);
+    uint32[] memory bettingIndexes = new uint32[](matchIds.length);
+    uint256[] memory amounts = new uint256[](matchIds.length);
+    int[] memory rates = new int[](matchIds.length);
+
+    for (uint32 i = 0; i < bets.length; i++) {
+
+      matchIds[i] = bets[i].matchId;
+      bettingIndexes[i] = bets[i].bettingIndex;
+      rates[i] = bettingMatches[matchIds[i]][bettingIndexes[i]].rate;
+      amounts[i] = bettingMatches[matchIds[i]][bettingIndexes[i]].amount;
+    }
+
+    return (matchIds, bettingIndexes, rates, amounts);
+  }
+
+  function getBalance(address owner) public view returns (uint256) {
+    return balances[owner];
+  }
 
   function changeFeeOwner(address _feeOwner) public onlyOwner returns (bool) {
     feeOwner = _feeOwner;
@@ -139,6 +171,7 @@ contract AsianSoloBet is Ownable, Strings {
   function transferFund(address receiver, uint256 amount) internal returns (bool) {
     uint256 gaslimit = block.gaslimit;
     uint256 txFee = gaslimit * GAS_PRICE;
+    balances[receiver] -= amount;
     receiver.transfer(amount - txFee);
 
   }
@@ -386,7 +419,7 @@ contract AsianSoloBet is Ownable, Strings {
 
 
   function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint time, int rate) public payable returns (bool) {
-    //  require(time + 75 * 1000 * 60 > now);
+    require(time + 75 * 1000 * 60 > now);
     // allow 15 minutes before the match finishes
 
     MatchStatus status;
@@ -398,44 +431,38 @@ contract AsianSoloBet is Ownable, Strings {
     }
 
 
-    Match memory _match;
-
-    _match.id = matchId;
-    _match.homeTeam = homeTeam;
-    _match.awayTeam = awayTeam;
-    _match.homeScore = 0;
-    _match.awayScore = 0;
-    _match.time = uint48(time);
-    _match.status = status;
-    _match.index = uint32(bettingMatchIndexes.push(matchId) - 1);
-    matches[matchId] = _match;
-
-   Betting memory _betting = Betting(msg.sender, 0x0, _match.id, rate, msg.value, BettingStatus.Open);
-    bettingMatches[matchId].push(_betting);
-
-    return true;
-
-  }
-
-
-  function offer(bytes32 matchId, int rate) public payable returns (bool) {
     Match memory _match = matches[matchId];
-    Betting memory _betting;
-    _betting.matchId = matchId;
-    _betting.bookmaker = msg.sender;
-    _betting.rate = rate;
-    _betting.status = BettingStatus.Open;
-    _betting.amount = msg.value;
-    bettingMatches[matchId].push(_betting);
+
+    if (_match.status == MatchStatus.NotAvailable) {
+      _match.id = matchId;
+      _match.homeTeam = homeTeam;
+      _match.awayTeam = awayTeam;
+      _match.homeScore = 0;
+      _match.awayScore = 0;
+      _match.time = uint48(time);
+      _match.status = status;
+      _match.index = uint32(bettingMatchIndexes.push(matchId) - 1);
+      matches[matchId] = _match;
+    }
+
+    Betting memory _betting = Betting(msg.sender, 0x0, _match.id, rate, msg.value, BettingStatus.Open);
+//    bettingMatches[matchId].push(_betting);
+    uint32 bettingIndex = uint32(bettingMatches[matchId].push(_betting) -1);
+    myBets[msg.sender].push(MyBet( bettingIndex, matchId));
     return true;
+
   }
+
 
   function deal(bytes32 matchId, uint256 bettingId) public payable returns (bool) {
 
     Betting storage _betting = bettingMatches[matchId][bettingId];
+    require(_betting.bookmaker != msg.sender);
     require(_betting.status == BettingStatus.Open);
     _betting.punter = msg.sender;
     _betting.status = BettingStatus.Deal;
+
+    myBets[msg.sender].push(MyBet(uint32(bettingId),matchId));
     // emit LogDeal(_betting.offer, _betting.dealer, matchId, bettingId);
     return true;
   }

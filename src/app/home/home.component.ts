@@ -1,6 +1,5 @@
 import {Component, NgZone, OnInit} from '@angular/core';
 import {Web3Service, SolobetService, MatchService} from '../../service/service';
-import 'rxjs/add/operator/map';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -50,8 +49,6 @@ export class HomeComponent {
         this.solobetService.loadBettings(matchId)
           .subscribe(result => {
 
-         //   alert(bettings.length);
-           // alert("s" + this.web3Service.toSHA3(mHash))
             for(let j =0; j < this.upcommingMatches.length;j++ ) {
               let match = this.upcommingMatches[j];
                if(match.id == result.matchId){
@@ -60,11 +57,6 @@ export class HomeComponent {
                  break;
                }
             }
-            // bettingMatch.bettings.push(betting);
-            // if(bettings.length > 0) {
-            //   console.log(bettingMatch);
-            // }
-
 
           }, e => {
             console.log(e);
@@ -105,7 +97,6 @@ export class HomeComponent {
   loadBettings = (match) => {
     this.solobetService.loadBettings(match.id)
       .subscribe(bettings => {
-        //this.bettings = bettings;
         match.bettings = bettings;
       }, e => {
         console.log(e);
@@ -118,18 +109,15 @@ export class HomeComponent {
         this.loadBettings(matchId);
       }, e => {
         console.log(e);
-        alert(e);
       });
 
   };
 
   offer = (match) => {
-    alert('a');
     this.solobetService.newOffer(this.account, match, 75, 3)
       .subscribe(result => {
         this.loadBettings(match);
       }, e => {
-        alert(e);
         console.log(e);
 
       });

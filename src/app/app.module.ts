@@ -10,6 +10,7 @@ import { HomeComponent } from './home/home.component';
 
 import {SolobetService, Web3Service, MatchService} from '../service/service';
 import { MatchDetailComponent } from './match-detail/match-detail.component';
+import { UserComponent } from './user/user.component';
 
 const SERVICES = [
   SolobetService,
@@ -24,7 +25,8 @@ const SERVICES = [
     AppComponent,
     AdminComponent,
     HomeComponent,
-    MatchDetailComponent
+    MatchDetailComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,
@@ -34,6 +36,10 @@ const SERVICES = [
       {
         path: 'admin',
         component: AdminComponent
+      },
+      {
+        path: 'user',
+        component: UserComponent
       },
       {
         path: '',

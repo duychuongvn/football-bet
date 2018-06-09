@@ -127,8 +127,6 @@ export class SolobetService {
       this.Solobet.deployed().then(instance => {
         return instance.offerNewMatch(match.id, match.homeTeam, match.awayTeam,  matchTime, rate, {from: account, value: amount * 1000000000000000000});
       }).then(result => {
-        alert(result);
-        console.log(result);
          observer.next(result);
          observer.complete();
       }).catch(error => {
@@ -161,6 +159,27 @@ export class SolobetService {
   approveScore(account: any, matchId: string | any) {
     this.Solobet.deployed().then(instance => {
       return instance.approveScore(matchId, {from: account});
+    });
+  }
+
+  loadBettingMatchesByAccount(account) : Observable<any> {
+    let bettingMatches = new Array();
+    return Observable.create(observe => {
+      this.Solobet.deployed().then(instance => {
+        return instance.getBettingMatchesByAddress.call(account);
+      }).then(result => {
+        var matchIds = result[0];
+        var bettingIds = result[1];
+        var rates = result[2];
+        var amounts = result[3];
+        for(let i =0; i  < matchIds.length;i++) {
+          bettingMatches.push({"matchId": matchIds[i], "bettingId": bettingIds[i].toNumber(), "rate": rates[i].toNumber(), "amount": amounts[i].toNumber()});
+        }
+
+        observe.next(bettingMatches);
+        observe.complete();
+      });
+
     });
   }
 }
