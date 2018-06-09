@@ -1,10 +1,13 @@
-import {Component, NgZone, OnInit} from '@angular/core';
+import {Component, NgZone, OnInit, Pipe, PipeTransform} from '@angular/core';
 import {Web3Service, SolobetService, MatchService} from '../../service/service';
+
+
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.css']
 })
+
 export class UserComponent {
 
   account: any;
@@ -12,7 +15,8 @@ export class UserComponent {
   accounts: any;
 
   groupMatches: any;
-
+  searchMatch: any;
+  groupMatchesFilter: any;
   constructor(private _ngZone: NgZone,
               private  web3Service: Web3Service,
               private  solobetService: SolobetService,

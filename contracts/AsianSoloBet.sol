@@ -76,6 +76,7 @@ contract AsianSoloBet is Ownable, Strings {
     bytes32[] memory matchIds = new bytes32[](bets.length);
     uint32[] memory bettingIndexes = new uint32[](matchIds.length);
     uint256[] memory amounts = new uint256[](matchIds.length);
+   // BettingStatus[] memory statuses = new BettingStatus[](matchIds.length);
     int[] memory rates = new int[](matchIds.length);
 
     for (uint32 i = 0; i < bets.length; i++) {
@@ -84,6 +85,7 @@ contract AsianSoloBet is Ownable, Strings {
       bettingIndexes[i] = bets[i].bettingIndex;
       rates[i] = bettingMatches[matchIds[i]][bettingIndexes[i]].rate;
       amounts[i] = bettingMatches[matchIds[i]][bettingIndexes[i]].amount;
+   //   statuses[i] = bettingMatches[matchIds[i]][bettingIndexes[i]].status;
     }
 
     return (matchIds, bettingIndexes, rates, amounts);
@@ -148,6 +150,14 @@ contract AsianSoloBet is Ownable, Strings {
     }
 
     removeBettingMatch(_match);
+    return true;
+  }
+
+  function cancelOffer(bytes32 matchId, uint256 bettingId) external  returns (bool){
+    Betting memory _betting = bettingMatches[matchId][bettingId];
+    require(_betting.bookmaker == msg.sender);
+    require(_betting.status == BettingStatus.Open);
+    refund(_betting);
     return true;
   }
 
