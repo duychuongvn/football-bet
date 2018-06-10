@@ -1,24 +1,21 @@
 import { Routes } from '@angular/router';
-import { AdminComponent  } from 'app/admin/admin.component';
-import { HomeComponent } from 'app/home/home.component';
-import { UserComponent } from 'app/user/user.component';
 
 export const appRoutes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    loadChildren: 'app/home/home.module#HomeModule'
   },
   {
     path: 'admin',
-    component: AdminComponent
+    loadChildren: 'app/admin/admin.module#AdminModule'
   },
   {
     path: 'user',
-    component: UserComponent
+    loadChildren: 'app/user/user.module#UserModule'
   },
   {
     path: '**',
-    component: HomeComponent,
+    loadChildren: 'app/home/home.module#HomeModule',
     pathMatch: 'full'
   }
 ];

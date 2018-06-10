@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon';
-import { FixtureInterface } from 'interface/fixture';
+import { FixtureInterface } from 'interfaces/fixture';
 
 export class Fixture {
 

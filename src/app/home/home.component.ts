@@ -1,5 +1,4 @@
 import {Component, NgZone, OnInit} from '@angular/core';
-
 import { Web3Service, SolobetService, MatchService, JhelperService } from 'service/service';
 
 import { Fixture } from 'models/fixture';
