@@ -1,19 +1,21 @@
 import { Injectable } from '@angular/core';
-import { AppComponent } from '../app/app.component';
+import {Http} from '@angular/http';
+
 @Injectable({
   providedIn: 'root'
 })
 export class JhelperService {
 
-  data_rate_json: any;
-  constructor(private _app: AppComponent) { 
-    
-
+  fixtures: any;
+  constructor(private http: Http) { 
+  
   }
 
-  getRatesJson(){
-    // this.data_rate_json = this._app.rate_data_json;
-    // console.log(this._app.rate_data_json)
+  public fetchFixtures(): any{
+    return this.http.get('assets/fixtures.json')
+      .map(res => {
+        return res.json();
+      });
   }
 
 }

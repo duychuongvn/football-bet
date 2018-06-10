@@ -7,6 +7,8 @@ import { AppComponent } from './app.component';
 import { AdminComponent } from './admin/admin.component';
 import { HomeComponent } from './home/home.component';
 import {MatchPipe} from './user/match.pipe';
+import { HttpModule }      from '@angular/http';
+
 // import { BrowserModule } from '@angular/platform-browser';
 
 import {SolobetService, Web3Service, MatchService} from '../service/service';
@@ -34,6 +36,7 @@ const SERVICES = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    HttpModule,
     RouterModule.forRoot([
       {
         path: 'admin',

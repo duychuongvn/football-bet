@@ -1,5 +1,5 @@
 import {Component, NgZone, OnInit} from '@angular/core';
-import {Web3Service, SolobetService, MatchService} from '../../service/service';
+import {Web3Service, SolobetService, MatchService, JhelperService} from '../../service/service';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -18,7 +18,8 @@ export class HomeComponent {
   constructor(private _ngZone: NgZone,
               private  web3Service: Web3Service,
               private  solobetService: SolobetService,
-              private matchService: MatchService) {
+              private matchService: MatchService,
+            private _helper: JhelperService) {
 
 
     this.onReady();
@@ -26,6 +27,8 @@ export class HomeComponent {
   }
 
   initMatches = () => {
+
+    this.fetch()
 
     this.upcommingMatches = new Array();
     this.matchService.getMatches().subscribe(result => {
@@ -68,6 +71,10 @@ export class HomeComponent {
   };
 
   onReady = () => {
+
+
+    
+
     // alert("ready")
     this._ngZone.run(() => {
         this.initMatches();
@@ -121,5 +128,12 @@ export class HomeComponent {
 
       });
   };
+
+
+  public fetch(): any{
+    this._helper.fetchFixtures().subscribe(resp => {
+      console.log(resp)
+    })
+  }
 
 }
