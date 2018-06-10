@@ -171,7 +171,7 @@ export class HomeComponent implements OnInit {
   }
 
   public fetchMatchDetail(fixture: Fixture) {
-    this._router.navigate(["match-detail"], { queryParams: this.match });
+    this._router.navigate(["match-detail"], { queryParams: fixture.pickJson() });
   }
 
   private fetchFlag(fixtures: any): any {

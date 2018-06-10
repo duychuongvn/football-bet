@@ -9,7 +9,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let fixture of fixtures">
-        <th scope="row">{{ fixture.date_string }}</th>
+        <td scope="row">{{ fixture.date_string }}</td>
         <td>{{ fixture.match }}</td>
         <td>
           <button (click)="fetchMatchDetail(fixture)" class="btn btn-sm btn-primary">Detail</button>

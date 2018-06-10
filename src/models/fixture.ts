@@ -70,11 +70,9 @@ export class Fixture {
     this._status = v;
   }
 
-  public get match(): string {
-    return `${this.homeTeamName} - ${this.awayTeamName}`;
-  }
 
-  
+
+
   private _awayFlag : string;
   public get awayFlag() : string {
     return this._awayFlag;
@@ -83,7 +81,7 @@ export class Fixture {
     this._awayFlag = v;
   }
 
-  
+
   private _homeFlag : string;
   public get homeFlag() : string {
     return this._homeFlag;
@@ -91,8 +89,10 @@ export class Fixture {
   public set homeFlag(v : string) {
     this._homeFlag = v;
   }
-  
-  
+  public get match(): string {
+    return `${this.homeTeamName} - ${this.awayTeamName}`;
+  }
+
 
   constructor(data?: FixtureInterface) {
     if (data) {
@@ -107,5 +107,20 @@ export class Fixture {
       this.awayFlag      = data.awayFlag;
       this.homeFlag      = data.homeFlag
     }
+  }
+
+  public pickJson() {
+    return {
+      id: this.id,
+      competitionId: this.competitionId,
+      homeTeamId: this.homeTeamId,
+      awayTeamId: this.awayTeamId,
+      homeTeamName: this.homeTeamName,
+      awayTeamName: this.awayTeamName,
+      date: this.date,
+      status: this.status,
+      awayFlag: this.awayFlag,
+      homeFlag: this.homeFlag
+    };
   }
 }
