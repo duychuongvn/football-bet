@@ -1,10 +1,27 @@
+<div class="container">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Match</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let fixture of fixtures">
+        <th scope="row">{{ fixture.date_string }}</th>
+        <td>{{ fixture.match }}</td>
+        <td>
+          <button (click)="fetchMatchDetail(fixture)" class="btn btn-sm btn-primary">Detail</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
 <!--The content below is only a placeholder and can be replaced.-->
-
-
-
-  
-
-<div style="text-align:center">
+<!-- <div style="text-align:center">
   <h1>
     Welcome to
   </h1>
@@ -37,5 +54,5 @@
   </tr>
   </li>
 
-</ul>
+</ul> -->
 

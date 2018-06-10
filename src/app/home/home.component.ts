@@ -1,146 +1,193 @@
-import {Component, NgZone, OnInit} from '@angular/core';
-import {Web3Service, SolobetService, MatchService, JhelperService} from '../../service/service';
-import {Router} from "@angular/router"
+import { Component, NgZone, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import {
+  Web3Service,
+  SolobetService,
+  MatchService,
+  JhelperService
+} from "../../service/service";
+
+import { Fixture } from "../../models/fixture";
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  selector: "app-home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.css"]
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
+  public account: any;
+  public accounts: any;
+  public match = {
+    matchId: "",
+    homeTeam: "",
+    awayTeam: "",
+    homeGoals: 0,
+    awayGoals: 0,
+    time: 0,
+    status: 0
+  };
+  public upcommingMatches: any;
+  public bettings: any;
+  public amount: 0;
 
-  account: any;
-  accounts: any;
-  match = {matchId: '', homeTeam: '', awayTeam: '', homeGoals: 0, awayGoals: 0, time: 0, status: 0};
+  public fixtures: Fixture[] = [];
 
-  upcommingMatches: any;
-  bettings: any;
-  amount: 0;
+  constructor(
+    private _ngZone: NgZone,
+    private _web3Service: Web3Service,
+    private _solobetService: SolobetService,
+    private _matchService: MatchService,
+    private _helper: JhelperService,
+    private _router: Router
+  ) {}
 
-  constructor(private _ngZone: NgZone,
-              private  web3Service: Web3Service,
-              private  solobetService: SolobetService,
-              private matchService: MatchService,
-            private _helper: JhelperService,
-          private _router: Router) {
-
-
-    this.onReady();
-
+  ngOnInit() {
+    this._ngZone.run(() => {
+      this.initMatches();
+    });
+    this.fetch();
+    this._getAccounts();
   }
 
-  initMatches = () => {
+  private _getAccounts() {
+    this._web3Service.getAccounts().subscribe(
+      accs => {
+        this.accounts = accs;
+        this.account = this.accounts[0];
 
-    this.fetch()
+        // This is run from window:load and ZoneJS is not aware of it we
+        // need to use _ngZone.run() so that the UI updates on promise resolution
+      },
+      err => alert(err)
+    );
+  }
 
+  public initMatches() {
     this.upcommingMatches = new Array();
-    this.matchService.getMatches().subscribe(result => {
-      // this.upcommingMatches = result;
-      for (let i = 0; i < result.length; i++) {
-        let match = result[i];
-        let mHash = match.match_hometeam_name + match.match_awayteam_name + match.match_date + match.match_time;
+    this._matchService.getMatches().subscribe(
+      result => {
+        // this.upcommingMatches = result;
+        for (let i = 0; i < result.length; i++) {
+          let match = result[i];
+          let mHash =
+            match.match_hometeam_name +
+            match.match_awayteam_name +
+            match.match_date +
+            match.match_time;
 
-        var matchId = this.web3Service.toSHA3(mHash);
-        var bettingMatch = {
-          'id': matchId,
-          'homeTeam': match.match_hometeam_name,
-          'awayTeam': match.match_awayteam_name,
-          'matchDate': match.match_date,
-          'matchTime': match.match_time,
-          'bettings': []
-        };
-        this.upcommingMatches.push(bettingMatch);
+          var matchId = this._web3Service.toSHA3(mHash);
+          var bettingMatch = {
+            id: matchId,
+            homeTeam: match.match_hometeam_name,
+            awayTeam: match.match_awayteam_name,
+            matchDate: match.match_date,
+            matchTime: match.match_time,
+            bettings: []
+          };
+          this.upcommingMatches.push(bettingMatch);
 
-      // bettingMatch.bettings.push(betting);
-        this.solobetService.loadBettings(matchId)
-          .subscribe(result => {
-
-            for(let j =0; j < this.upcommingMatches.length;j++ ) {
-              let match = this.upcommingMatches[j];
-               if(match.id == result.matchId){
-                 match.bettings = result.bettings;
-                 break;
-               }
+          // bettingMatch.bettings.push(betting);
+          this._solobetService.loadBettings(matchId).subscribe(
+            result => {
+              for (let j = 0; j < this.upcommingMatches.length; j++) {
+                let match = this.upcommingMatches[j];
+                if (match.id == result.matchId) {
+                  match.bettings = result.bettings;
+                  break;
+                }
+              }
+            },
+            e => {
+              console.log(e);
             }
-
-          }, e => {
-            console.log(e);
-          });
-      }
-    }, fetchMatchErr => {
-      alert(fetchMatchErr);
-    });
-
-  };
-
-  onReady = () => {
-
-
-    
-
-    // alert("ready")
-    this._ngZone.run(() => {
-        this.initMatches();
+          );
+        }
+      },
+      fetchMatchErr => {
+        alert(fetchMatchErr);
       }
     );
-    this.web3Service.getAccounts().subscribe(accs => {
-      this.accounts = accs;
-      this.account = this.accounts[0];
+  }
 
-      // This is run from window:load and ZoneJS is not aware of it we
-      // need to use _ngZone.run() so that the UI updates on promise resolution
-
-    }, err => alert(err));
-  };
-
-  loadMatches = () => {
-
-    this.solobetService.loadMatches('0x123')
-      .subscribe(match => {
+  public loadMatches() {
+    this._solobetService.loadMatches("0x123").subscribe(
+      match => {
         this.match = match;
-      }, e => {
+      },
+      e => {
         console.log(e);
-      });
-  };
+      }
+    );
+  }
 
-  loadBettings = (match) => {
-    this.solobetService.loadBettings(match.id)
-      .subscribe(bettings => {
+  public loadBettings(match) {
+    this._solobetService.loadBettings(match.id).subscribe(
+      bettings => {
         match.bettings = bettings;
-      }, e => {
+      },
+      e => {
         console.log(e);
-      });
-  };
+      }
+    );
+  }
 
-  deal = (matchId, bettingId) => {
-    this.solobetService.deal(this.account, matchId, 0)
-      .subscribe(result => {
+  public deal(matchId, bettingId) {
+    this._solobetService.deal(this.account, matchId, 0).subscribe(
+      result => {
         this.loadBettings(matchId);
-      }, e => {
+      },
+      e => {
         console.log(e);
-      });
+      }
+    );
+  }
 
-  };
-
-  offer = (match) => {
-    this.solobetService.newOffer(this.account, match, 75, 3)
-      .subscribe(result => {
+  public offer(match) {
+    this._solobetService.newOffer(this.account, match, 75, 3).subscribe(
+      result => {
         this.loadBettings(match);
-      }, e => {
+      },
+      e => {
         console.log(e);
+      }
+    );
+  }
 
+  public fetch(): any {
+    this.fixtures = [];
+
+    this._helper.fetchFixtures().subscribe(
+      res => {
+        res.fixtures.map(item => {
+          if (item.homeTeamName && item.awayTeamName) {
+            this.fixtures.push(new Fixture(item));
+          }
+        });
+        this.fetchFlag(this.fixtures);
+      },
+      errors => {
+        console.log(errors);
+      }
+    );
+  }
+
+  public fetchMatchDetail(fixture: Fixture) {
+    this._router.navigate(["match-detail"], { queryParams: this.match });
+  }
+
+  private fetchFlag(fixtures: any): any {
+    fixtures.forEach(fixture => {
+      this._helper.fetchTeam().subscribe(resp => {
+        resp.teams.map(team => {
+          this.fixtures.filter(item => {
+            if (item.homeTeamName === team.name) {
+              item.homeFlag = team.crestUrl;
+            }
+            if (item.awayTeamName === team.name) {
+              item.awayFlag = team.crestUrl;
+            }
+          });
+        });
       });
-  };
-
-
-  public fetch(): any{
-    this._helper.fetchFixtures().subscribe(resp => {
-      console.log(resp)
-    })
-  };
-
-  public fetchMatchDetail(match: any){
-    this._router.navigate(['/match-detail'], { queryParams: match });
-};
-
-
+    });
+  }
 }

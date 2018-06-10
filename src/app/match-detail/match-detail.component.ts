@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Fixture } from '../../models/fixture';
 
 @Component({
   selector: 'app-match-detail',
@@ -9,26 +10,19 @@ import { ActivatedRoute } from '@angular/router';
 export class MatchDetailComponent implements OnInit {
 
 
-  match = {id:"", awayTeam:"", homeTeam:"", rate:"", leftAmount:"", rightAmount:"", leftAddress:"", rightAddress:""};
+  public fixtures: Fixture[] = [];
 
   constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.queryParams
     .subscribe(params => {
-      console.log(params); // {order: "popular"}
-      // this.match = params;
-      console.log(this.match); // popular
+      
+
     });
   }
 
 
-  public fetchMatchDetail(match: any): any{
-
-
-
-      return null;
-  }
   
 
 }
