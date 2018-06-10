@@ -168,6 +168,9 @@ export class SolobetService {
     });
   }
 
+  toEther(wei) {
+    return wei / 1000000000000000000;
+  }
   loadBettingMatchesByAccount(account) : Observable<any> {
     let bettingMatches = new Array();
     return Observable.create(observe => {
@@ -178,11 +181,22 @@ export class SolobetService {
         var bettingIds = result[1];
         var rates = result[2];
         var amounts = result[3];
+        var betForHomeTeam = result[4];
+        var status = result[5];
         for(let i =0; i  < matchIds.length;i++) {
-          bettingMatches.push({"matchId": matchIds[i], match: null, "bettingId": bettingIds[i].toNumber(), "rate": rates[i].toNumber(), "amount": amounts[i].toNumber()});
+          bettingMatches.push({"matchId": matchIds[i],
+                              match: null, "bettingId":
+                              bettingIds[i].toNumber(),
+                              "rate": rates[i].toNumber(),
+                              "amount": this.toEther(amounts[i].toNumber()),
+                              "chooseHomeTeam": betForHomeTeam[i],
+                              "betFor": null,
+                              "status": status[i].toNumber()});
+
 
         }
 
+        console.log(bettingMatches);
         observe.next(bettingMatches);
         observe.complete();
       });

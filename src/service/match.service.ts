@@ -7,7 +7,11 @@ import 'rxjs/add/operator/map';
 declare var require: any;
 
 const httpOptions = {
-  headers: new HttpHeaders({'Content-Type': 'application/json'})
+  //headers: new HttpHeaders({'Content-Type': 'application/json'})
+  headers: new HttpHeaders({
+    'Access-Control-Allow-Origin': '*',
+    'Content-Type': 'application/json'
+  })
 };
 
 const API_KEY = '243fcce4927d5972d2bc02951ebc15245d90c78af66f9afa74120ce87b8ebc31';
@@ -28,6 +32,31 @@ export class MatchService {
        // .toArray()
         .subscribe(result => {
           console.log(result.toString());
+          observer.next(result);
+          observer.complete();
+        });
+    });
+  }
+
+  getWorldcupMatches() : Observable<any> {
+
+
+    return Observable.create(observer => {
+      this.http.get('./assets/api/fixtures.json')
+      // .toArray()
+        .subscribe(result => {
+          console.log(result.toString());
+          observer.next(result);
+          observer.complete();
+        });
+    });
+
+  }
+
+  getWorldcupTeamInfo(teamReference): Observable<any> {
+    return Observable.create(observer => {
+      this.http.get(teamReference)
+        .subscribe(result => {
           observer.next(result);
           observer.complete();
         });

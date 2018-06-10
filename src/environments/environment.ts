@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  HttpProvider: "http://localhost:9545"
+  HttpProvider: "http://localhost:9545",
+  NetworkSymbol: "ETH"
 
 };
 

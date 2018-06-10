@@ -61,8 +61,10 @@ contract AsianSoloBet is Ownable, Strings {
 
   struct MyBet {
 
-    uint32 bettingIndex;
+    uint32 betIdx;
     bytes32 matchId;
+    bool bet4HomeTeam;
+
   }
 
   function AsianSoloBet() public {
@@ -71,24 +73,31 @@ contract AsianSoloBet is Ownable, Strings {
   }
 
 
-  function getBettingMatchesByAddress(address owner) public view returns (bytes32[], uint32[], int[], uint256[]) {
-    MyBet[] memory bets = myBets[owner];
-    bytes32[] memory matchIds = new bytes32[](bets.length);
-    uint32[] memory bettingIndexes = new uint32[](matchIds.length);
+  function getBettingMatchesByAddress(address owner) public view returns (bytes32[], uint256[], int[], uint256[], bool[],uint[] ) {
+  //  MyBet[] memory bets = myBets[owner];
+    bytes32[] memory matchIds = new bytes32[](myBets[owner].length);
+    uint256[] memory betIdxes = new uint256[](matchIds.length);
     uint256[] memory amounts = new uint256[](matchIds.length);
-   // BettingStatus[] memory statuses = new BettingStatus[](matchIds.length);
+    bool[]memory chooseHomeTeam = new bool[](matchIds.length);
+   // BettingStatus[] memory status = new BettingStatus[](matchIds.length);
+    uint256[] memory status = new uint256[](matchIds.length);
     int[] memory rates = new int[](matchIds.length);
+  //  Betting memory _betting;
+    for (uint32 i = 0; i < matchIds.length; i++) {
 
-    for (uint32 i = 0; i < bets.length; i++) {
+      matchIds[i] = myBets[owner][i].matchId;
+      betIdxes[i] = uint256(myBets[owner][i].betIdx);
+      chooseHomeTeam[i] = myBets[owner][i].bet4HomeTeam;
 
-      matchIds[i] = bets[i].matchId;
-      bettingIndexes[i] = bets[i].bettingIndex;
-      rates[i] = bettingMatches[matchIds[i]][bettingIndexes[i]].rate;
-      amounts[i] = bettingMatches[matchIds[i]][bettingIndexes[i]].amount;
-   //   statuses[i] = bettingMatches[matchIds[i]][bettingIndexes[i]].status;
+     // _betting = bettingMatches[matchIds[i]][betIdxes[i]];
+      rates[i] = bettingMatches[matchIds[i]][betIdxes[i]].rate;
+      amounts[i] = bettingMatches[matchIds[i]][betIdxes[i]].amount;
+      status[i] = uint256(bettingMatches[matchIds[i]][betIdxes[i]].status);
+//      status[i]=_betting.status;
+   //   statuses[i] = bettingMatches[matchIds[i]][betIdxes[i]].status;
     }
 
-    return (matchIds, bettingIndexes, rates, amounts);
+    return (matchIds, betIdxes, rates, amounts, chooseHomeTeam,status);
   }
 
   function getBalance(address owner) public view returns (uint256) {
@@ -457,8 +466,8 @@ contract AsianSoloBet is Ownable, Strings {
 
     Betting memory _betting = Betting(msg.sender, 0x0, _match.id, rate, msg.value, BettingStatus.Open);
 //    bettingMatches[matchId].push(_betting);
-    uint32 bettingIndex = uint32(bettingMatches[matchId].push(_betting) -1);
-    myBets[msg.sender].push(MyBet( bettingIndex, matchId));
+    uint32 betIdx = uint32(bettingMatches[matchId].push(_betting) -1);
+    myBets[msg.sender].push(MyBet( betIdx, matchId, rate >=0));
     return true;
 
   }
@@ -472,7 +481,7 @@ contract AsianSoloBet is Ownable, Strings {
     _betting.punter = msg.sender;
     _betting.status = BettingStatus.Deal;
 
-    myBets[msg.sender].push(MyBet(uint32(bettingId),matchId));
+    myBets[msg.sender].push(MyBet(uint32(bettingId),matchId, _betting.rate < 0));
     // emit LogDeal(_betting.offer, _betting.dealer, matchId, bettingId);
     return true;
   }

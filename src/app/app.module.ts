@@ -9,14 +9,15 @@ import { HomeComponent } from './home/home.component';
 import {MatchPipe} from './user/match.pipe';
 // import { BrowserModule } from '@angular/platform-browser';
 
-import {SolobetService, Web3Service, MatchService} from '../service/service';
+import {SolobetService, Web3Service, MatchService, UserService} from '../service/service';
 import { MatchDetailComponent } from './match-detail/match-detail.component';
 import { UserComponent } from './user/user.component';
 
 const SERVICES = [
   SolobetService,
   Web3Service,
-  MatchService
+  MatchService,
+  UserService
 
 ]
 

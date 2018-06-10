@@ -1,0 +1,8 @@
+{
+  Networks: [
+    {name: "Ethereum", sympol: "ETH", chainId: 1, "url": "http://localhost:9545"},
+    {name: "Ethereum Kova Testnet", sympol: "ETH", chainId: 3,"http://localhost:9545"},
+    {name: "Ethereum Rinkeby Testnet", sympol: "ETH", chainId: 4,"http://localhost:9545"},
+    {name: "Etherzero", sympol: "ETZ", chainId: 88,"https://rpc.etherzero.org"}
+  ]
+}

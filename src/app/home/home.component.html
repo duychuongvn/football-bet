@@ -32,5 +32,23 @@
   </tr>
   </li>
 
+
+
+  <li *ngFor="let match of worldcupMatches">
+    <li>
+        <tr>
+          <td>
+            <img src="{{match.homeTeam.crestUrl}}"/>
+            <br/>
+            <span style="text-align: center">{{match.homeTeamName}}</span>
+          </td>
+          <td>
+            <img src="{{match.awayTeam.crestUrl}}"/>
+            <br/>
+            <span style="text-align: center">{{match.awayTeamName}}</span>
+
+          </td>
+        </tr>
+    </li>
 </ul>
 

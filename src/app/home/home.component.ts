@@ -1,5 +1,6 @@
 import {Component, NgZone, OnInit} from '@angular/core';
 import {Web3Service, SolobetService, MatchService} from '../../service/service';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -14,6 +15,8 @@ export class HomeComponent {
   upcommingMatches: any;
   bettings: any;
   amount: 0;
+
+  worldcupMatches: any;
 
   constructor(private _ngZone: NgZone,
               private  web3Service: Web3Service,
@@ -45,16 +48,16 @@ export class HomeComponent {
         };
         this.upcommingMatches.push(bettingMatch);
 
-      // bettingMatch.bettings.push(betting);
+        // bettingMatch.bettings.push(betting);
         this.solobetService.loadBettings(matchId)
           .subscribe(result => {
 
-            for(let j =0; j < this.upcommingMatches.length;j++ ) {
+            for (let j = 0; j < this.upcommingMatches.length; j++) {
               let match = this.upcommingMatches[j];
-               if(match.id == result.matchId){
-                 match.bettings = result.bettings;
-                 break;
-               }
+              if (match.id == result.matchId) {
+                match.bettings = result.bettings;
+                break;
+              }
             }
 
           }, e => {
@@ -70,7 +73,8 @@ export class HomeComponent {
   onReady = () => {
     // alert("ready")
     this._ngZone.run(() => {
-        this.initMatches();
+       this.initMatches();
+      //this.loadWorldcupMatches();
       }
     );
     this.web3Service.getAccounts().subscribe(accs => {
@@ -122,4 +126,32 @@ export class HomeComponent {
       });
   };
 
+
+  loadWorldcupMatches = () => {
+    this.worldcupMatches = new Array();
+    this.matchService.getWorldcupMatches().subscribe(matches => {
+      let fixtures = matches.fixtures;
+      for (let i = 0; i < fixtures.length; i++) {
+        var match = fixtures[i];
+        this.worldcupMatches.push({
+          homeTeamName: match.homeTeamName, awayTeamName: match.awayTeamName, time: match.date,
+          homeScore: match.result.goalsHomeTeam, awayScore: match.result.goalsAwayTeam,
+          homeTeam: {}, awayTeam: {},
+          homeTeamId: match.homeTeam, awayTeamId: match.awayTeam
+        });
+
+        this.matchService.getWorldcupTeamInfo(match.homeTeam).subscribe(team => {
+          for (let i = 0; i < this.worldcupMatches.length; i++) {
+            let match = this.worldcupMatches[i];
+            if (match.homeTeamId == team._link.self.href) {
+              match.homeTeam = team;
+            } else if (match.awayTeamId == team._link.seft.href) {
+              match.awayTeam = team;
+            }
+          }
+        });
+
+      }
+    });
+  };
 }

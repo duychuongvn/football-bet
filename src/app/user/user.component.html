@@ -1,17 +1,33 @@
+<div class="account">
+    <span>Your Account</span>
+  <br/>
+    <span>Network: {{networkInfo.provider.name}}</span>
+   <br/>
+    <span>Address:</span> {{networkInfo.selectedAccount}}
+  <br/>
+    <span>Balance: </span> {{accountBalance}} {{networkInfo.provider.symbol}}
+</div>
 
+<br/>
 
-Filter: <input class="input"
-               type="text"
-               [(ngModel)]="searchMatch"
-                />
-  <ul>
+<div>
+  Search Your Matches:
+  <input class="input"
+         type="text"
+         [(ngModel)]="searchMatch"
+  />
+</div>
+
+<ul>
 
     <li *ngFor="let match of groupMatches | matchPipe:searchMatch">
       <span> {{match.match.homeTeam}} {{match.match.homeScore}}-{{match.match.awayScore}}  {{match.match.awayTeam}}</span>
       <ul>
         <li *ngFor="let betting of match.bettings">
-
-          <span> {{betting.rate}} : {{betting.amount}}</span>
+          <span  class="animate-if" ng-if="betting.chooseHomeTeam==true" >Bet for {{match.match.homeTeam}}</span>
+          <span  class="animate-if" ng-if="betting.chooseHomeTeam==false" >Bet for {{match.match.awayTeam}}</span>
+          <span>   {{betting.rate}} : {{betting.amount}}{{networkInfo.provider.symbol}}</span>
+          <span>   {{betting.status}}</span>
         </li>
       </ul>
     </li>
