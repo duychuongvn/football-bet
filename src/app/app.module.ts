@@ -15,6 +15,8 @@ import {SolobetService, Web3Service, MatchService} from '../service/service';
 import { MatchDetailComponent } from './match-detail/match-detail.component';
 import { UserComponent } from './user/user.component';
 
+import { appRoutes } from 'app/app.router';
+
 const SERVICES = [
   SolobetService,
   Web3Service,
@@ -37,20 +39,7 @@ const SERVICES = [
     HttpClientModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot([
-      {
-        path: 'admin',
-        component: AdminComponent
-      },
-      {
-        path: 'user',
-        component: UserComponent
-      },
-      {
-        path: '',
-        component: HomeComponent
-      }
-    ])
+    RouterModule.forRoot(appRoutes)
   ],
   providers: [SERVICES],
   bootstrap: [AppComponent]
