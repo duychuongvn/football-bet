@@ -23,7 +23,7 @@ export class UserComponent {
               private matchService: MatchService) {
 
 
-    this.onReady();
+    // this.onReady();
 
   }
 

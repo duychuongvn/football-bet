@@ -1,21 +1,30 @@
 import { Routes } from '@angular/router';
+import { HomeModule } from 'app/home/home.module';
+import { AdminModule } from 'app/admin/admin.module';
+import { UserModule } from 'app/user/user.module';
+
+import { MatchDetailComponent } from './match-detail/match-detail.component';
 
 export const appRoutes: Routes = [
   {
     path: '',
-    loadChildren: 'app/home/home.module#HomeModule'
+    loadChildren: () => HomeModule
   },
   {
     path: 'admin',
-    loadChildren: 'app/admin/admin.module#AdminModule'
+    loadChildren: () => AdminModule
   },
   {
     path: 'user',
-    loadChildren: 'app/user/user.module#UserModule'
+    loadChildren: () => UserModule
+  },
+  {
+    path: 'details',
+    component: MatchDetailComponent
   },
   {
     path: '**',
-    loadChildren: 'app/home/home.module#HomeModule',
+    redirectTo: '',
     pathMatch: 'full'
   }
 ];

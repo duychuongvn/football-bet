@@ -28,12 +28,12 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this._ngZone.run(() => {
-        this.initMatches();
-      }
-    );
+    // this._ngZone.run(() => {
+    //     this.initMatches();
+    //   }
+    // );
     this.fetch();
-    this._getAccounts();
+    // this._getAccounts();
   }
 
   private _getAccounts() {
