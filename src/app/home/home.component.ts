@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit {
       this.initMatches();
     });
     this.fetch();
-    this._getAccounts();
+    // this._getAccounts();
   }
 
   private _getAccounts() {

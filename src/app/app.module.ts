@@ -4,16 +4,16 @@ import { RouterModule} from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 
-import { HomeModule } from 'app/home/home.module';
-import { AdminModule } from 'app/admin/admin.module';
-import { UserModule } from 'app/user/user.module';
+import { HomeModule } from '../app/home/home.module';
+import { AdminModule } from '../app/admin/admin.module';
+import { UserModule } from '../app/user/user.module';
 
-import { SolobetService, Web3Service, MatchService } from 'service/service';
+import { SolobetService, Web3Service, MatchService } from '../service/service';
 
 import { AppComponent } from './app.component';
 import { MatchDetailComponent } from './match-detail/match-detail.component';
 
-import { appRoutes } from 'app/app.router';
+import { appRoutes } from '../app/app.router';
 
 const SERVICES = [
   SolobetService,
