@@ -1,11 +1,13 @@
-import { Routes } from '@angular/router';
-import { HomeModule } from '../app/home/home.module';
-import { AdminModule } from '../app/admin/admin.module';
-import { UserModule } from '../app/user/user.module';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+
+import { HomeModule } from 'app/home/home.module';
+import { AdminModule } from 'app/admin/admin.module';
+import { UserModule } from 'app/user/user.module';
 
 import { MatchDetailComponent } from './match-detail/match-detail.component';
 
-export const appRoutes: Routes = [
+const appRoutes: Routes = [
   {
     path: '',
     loadChildren: () => HomeModule
@@ -33,3 +35,11 @@ export const appRoutes: Routes = [
     pathMatch: 'full'
   }
 ];
+
+@NgModule({
+  imports: [
+    RouterModule.forRoot(appRoutes)
+  ],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
