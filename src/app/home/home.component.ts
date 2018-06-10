@@ -1,5 +1,6 @@
 import {Component, NgZone, OnInit} from '@angular/core';
 import {Web3Service, SolobetService, MatchService, JhelperService} from '../../service/service';
+import {Router} from "@angular/router"
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -19,7 +20,8 @@ export class HomeComponent {
               private  web3Service: Web3Service,
               private  solobetService: SolobetService,
               private matchService: MatchService,
-            private _helper: JhelperService) {
+            private _helper: JhelperService,
+          private _router: Router) {
 
 
     this.onReady();
@@ -134,6 +136,11 @@ export class HomeComponent {
     this._helper.fetchFixtures().subscribe(resp => {
       console.log(resp)
     })
-  }
+  };
+
+  public fetchMatchDetail(match: any){
+    this._router.navigate(['/match-detail'], { queryParams: match });
+};
+
 
 }
