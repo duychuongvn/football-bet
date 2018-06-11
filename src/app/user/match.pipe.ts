@@ -1,12 +1,17 @@
 import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({ name: 'matchPipe' })
 export class MatchPipe implements PipeTransform {
-  transform(matches: any, searchText: any): any {
-    if(searchText == null) return matches;
+  transform(matches: any, condition: any): any {
+    if(condition == null || condition.team == null) return matches;
 
+    console.log(matches);
+    console.log(condition);
     return matches.filter(function(item){
-      return (item.match.homeTeam.toLowerCase().indexOf(searchText.toLowerCase()) !== -1)
-        || (item.match.awayTeam.toLowerCase().indexOf(searchText.toLowerCase()) !== -1);
+      return ((item.match.homeTeam.toLowerCase().indexOf(condition.team.toLowerCase()) !== -1)
+        || (item.match.awayTeam.toLowerCase().indexOf(condition.team.toLowerCase()) !== -1)
+        &&(!condition.matchStatus || (condition.matchStatus && item.match.status == 4 ))
+
+      );
     });
   }
 }

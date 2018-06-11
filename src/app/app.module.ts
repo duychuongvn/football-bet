@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { AdminComponent } from './admin/admin.component';
 import { HomeComponent } from './home/home.component';
 import {MatchPipe} from './user/match.pipe';
+import {BettingPipe} from './user/betting.pipe';
 // import { BrowserModule } from '@angular/platform-browser';
 
 import {SolobetService, Web3Service, MatchService, UserService} from '../service/service';
@@ -29,7 +30,8 @@ const SERVICES = [
     HomeComponent,
     MatchDetailComponent,
     UserComponent,
-    MatchPipe
+    MatchPipe,
+    BettingPipe
   ],
   imports: [
     BrowserModule,

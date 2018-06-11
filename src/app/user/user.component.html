@@ -9,21 +9,27 @@
 </div>
 
 <br/>
-
 <div>
   Search Your Matches:
   <input class="input"
          type="text"
          [(ngModel)]="searchMatch"
   />
+  <br/>
+
+  Match status <input class="input" type="checkbox" [(ngModel)]="isFinished"/>Finished
+  <br/>
+  Betting status:
+  <input class="input" type="checkbox" [(ngModel)]="isOpening" />Opening
+  <input class="input" type="checkbox" [(ngModel)]="isDeal" />Deal
 </div>
 
 <ul>
 
-    <li *ngFor="let match of groupMatches | matchPipe:searchMatch">
+    <li *ngFor="let match of groupMatches | matchPipe:{team:searchMatch, matchStatus: isFinished, bettingStatus: {open: isOpening, deal: isDeal}}">
       <span> {{match.match.homeTeam}} {{match.match.homeScore}}-{{match.match.awayScore}}  {{match.match.awayTeam}}</span>
       <ul>
-        <li *ngFor="let betting of match.bettings">
+        <li *ngFor="let betting of match.bettings | bettingPipe:{open: isOpening, deal: isDeal}">
           <span  class="animate-if" ng-if="betting.chooseHomeTeam==true" >Bet for {{match.match.homeTeam}}</span>
           <span  class="animate-if" ng-if="betting.chooseHomeTeam==false" >Bet for {{match.match.awayTeam}}</span>
           <span>   {{betting.rate}} : {{betting.amount}}{{networkInfo.provider.symbol}}</span>
