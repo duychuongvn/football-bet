@@ -1,5 +1,5 @@
 import {Component, NgZone, OnInit, Pipe, PipeTransform} from '@angular/core';
-import {Web3Service, SolobetService, MatchService} from '../../service/service';
+import {Web3Service, SolobetService, MatchService, UserService} from '../../service/service';
 
 
 @Component({
@@ -13,14 +13,17 @@ export class UserComponent {
   account: any;
   bettingMatches: any;
   accounts: any;
-
+  networkSympol: any;
   groupMatches: any;
   searchMatch: any;
   groupMatchesFilter: any;
+  accountBalance: any;
+  networkInfo: {selectedAccount: "", provider: {}};
   constructor(private _ngZone: NgZone,
               private  web3Service: Web3Service,
               private  solobetService: SolobetService,
-              private matchService: MatchService) {
+              private matchService: MatchService,
+              private userService: UserService) {
 
 
     // this.onReady();
@@ -28,7 +31,7 @@ export class UserComponent {
   }
 
   onReady = () => {
-
+    this.networkInfo = {selectedAccount: '', provider: {}};
     this.web3Service.getAccounts().subscribe(accs => {
       this.accounts = accs;
       this.account = this.accounts[0];
@@ -37,11 +40,19 @@ export class UserComponent {
       // need to use _ngZone.run() so that the UI updates on promise resolution
       this._ngZone.run(() => {
           this.loadMyBettingMatches();
+          this.loadAccountBalance();
         }
       );
     }, err => alert(err));
   }
 
+  loadAccountBalance = () => {
+   this.userService.getBalance(this.account).subscribe(balance => {
+     this.accountBalance = balance;
+   });
+    this.networkSympol = this.web3Service.networkSymbol;
+    this.networkInfo =  this.web3Service.getNetworkInfo();
+  }
   loadMyBettingMatches = () => {
     this.solobetService.loadBettingMatchesByAccount(this.account).subscribe(result => {
       this.convertBettingToGroupByMatches(result);

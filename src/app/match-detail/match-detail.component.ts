@@ -109,7 +109,7 @@ export class MatchDetailComponent implements OnInit {
         this.loadBettings(this.match);
       },
       e => {
-        console.log(e);
+        console.error("Invalid number of arguments to Solidity function")
       }
     );
   }
