@@ -1,24 +1,56 @@
-<div class="container">
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th scope="col">Date</th>
-        <th scope="col">Match</th>
-        <th scope="col">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let fixture of fixtures">
-        <td scope="row">{{ fixture.date_string }}</td>
-        <td>{{ fixture.match }}</td>
-        <td>
-          <button (click)="fetchMatchDetail(fixture)" class="btn btn-sm btn-primary">Detail</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+<!-- Image and text -->
+<nav class="navbar navbar-light shadow-sm p-3 mb-3 bg-white rounded">
+  <a class="navbar-brand">
+    <img src="/assets/images/icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
+    Football Bet
+  </a>
+
+  <form class="form-inline">
+    <input class="form-control mr-sm-2"
+      type="search"
+      placeholder="Search match"
+      aria-label="Search"
+      name="search-name"
+      [(ngModel)]="matchName">
+  </form>
+</nav>
+
+<div class="container-fluid">
+  <div class="card-columns">
+    <div class="card text-white bg-info " *ngFor="let fixture of searchMatch(matchName)">
+      <div class="card-header">{{ fixture.key }}</div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list-group-item-info" *ngFor="let match of fixture.value">
+          <p class="float-left my-0"><img [src]="match.homeFlag" width="30px"> {{ match.match }} <img [src]="match.awayFlag" width="30px"></p>
+          <a routerLink="match-detail" [queryParams]="match.pickJson()" class="badge badge-primary float-right mt-2">Info</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
 
+<!-- <table class="table table-hover table-secondary">
+  <thead>
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Match</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let fixture of matchFixtures">
+      <th scope="row">{{ fixture.key }}</th>
+      <td>
+        <div *ngFor="let match of fixture.value; let i = index">
+          <p><span *ngIf="fixture.value.length > 1"> {{ i+1 }}: </span> <img [src]="match.homeFlag" width="30px"> {{ match.match }} <img [src]="match.awayFlag" width="30px"></p>
+        </div>
+      </td>
+      <td class="text-center">
+        <button  class="btn btn-sm btn-primary">Detail</button>
+      </td>
+    </tr>
+  </tbody>
+</table> -->
 
 <!--The content below is only a placeholder and can be replaced.-->
 <!-- <div style="text-align:center">
