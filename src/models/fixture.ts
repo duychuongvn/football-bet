@@ -74,25 +74,21 @@ export class Fixture {
     return `${this.homeTeamName} - ${this.awayTeamName}`;
   }
 
-  
-  private _awayFlag : string;
-  public get awayFlag() : string {
+  private _awayFlag: string;
+  public get awayFlag(): string {
     return this._awayFlag;
   }
-  public set awayFlag(v : string) {
+  public set awayFlag(v: string) {
     this._awayFlag = v;
   }
 
-  
-  private _homeFlag : string;
-  public get homeFlag() : string {
+  private _homeFlag: string;
+  public get homeFlag(): string {
     return this._homeFlag;
   }
-  public set homeFlag(v : string) {
+  public set homeFlag(v: string) {
     this._homeFlag = v;
   }
-  
-  
 
   constructor(data?: FixtureInterface) {
     if (data) {

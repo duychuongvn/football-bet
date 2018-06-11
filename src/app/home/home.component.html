@@ -1,23 +1,38 @@
-<div class="container">
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th scope="col">Date</th>
-        <th scope="col">Match</th>
-        <th scope="col">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let fixture of fixtures">
-        <th scope="row">{{ fixture.date_string }}</th>
-        <td>{{ fixture.match }}</td>
-        <td>
-          <button (click)="fetchMatchDetail(fixture)" class="btn btn-sm btn-primary">Detail</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+<!-- Image and text -->
+<nav class="navbar navbar-light shadow-sm p-3 bg-white rounded">
+  <a class="navbar-brand">
+    <img src="/assets/images/icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
+    Football Bet
+  </a>
+
+  <!-- <form class="form-inline">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0">Search</button>
+  </form> -->
+</nav>
+
+<table class="table table-hover table-secondary">
+  <thead>
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Match</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let fixture of matchFixtures">
+      <th scope="row">{{ fixture.key }}</th>
+      <td>
+        <div *ngFor="let match of fixture.value; let i = index">
+          <p><span *ngIf="fixture.value.length > 1"> {{ i+1 }}: </span> <img [src]="match.homeFlag" width="30px"> {{ match.match }} <img [src]="match.awayFlag" width="30px"></p>
+        </div>
+      </td>
+      <td class="text-center">
+        <button  class="btn btn-sm btn-primary">Detail</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 
 <!--The content below is only a placeholder and can be replaced.-->

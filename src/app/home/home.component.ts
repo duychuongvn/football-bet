@@ -7,7 +7,10 @@ import {
   JhelperService
 } from "../../service/service";
 
-import { Fixture } from "../../models/fixture";
+import { Fixture } from "models/fixture";
+import * as groupBy from 'lodash/groupBy';
+import * as map from 'lodash/map';
+
 @Component({
   selector: "app-home",
   templateUrl: "./home.component.html",
@@ -30,6 +33,7 @@ export class HomeComponent implements OnInit {
   public amount: 0;
 
   public fixtures: Fixture[] = [];
+  public matchFixtures = [];
 
   constructor(
     private _ngZone: NgZone,
@@ -163,6 +167,10 @@ export class HomeComponent implements OnInit {
           }
         });
         this.fetchFlag(this.fixtures);
+        this.matchFixtures = map(groupBy(this.fixtures, 'date_string', ['asc']), (value, key) => ({
+          key,
+          value: [...value]
+        }));
       },
       errors => {
         console.log(errors);
@@ -178,7 +186,7 @@ export class HomeComponent implements OnInit {
     fixtures.forEach(fixture => {
       this._helper.fetchTeam().subscribe(resp => {
         resp.teams.map(team => {
-          this.fixtures.filter(item => {
+          this.fixtures.forEach(item => {
             if (item.homeTeamName === team.name) {
               item.homeFlag = team.crestUrl;
             }
