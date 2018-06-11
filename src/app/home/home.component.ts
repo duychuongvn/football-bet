@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit {
 
   public initMatches() {
     this.upcommingMatches = new Array();
-    this._matchService.getMatches().subscribe(
+    this._helper.fetchFixtures().subscribe(
       result => {
         // this.upcommingMatches = result;
         for (let i = 0; i < result.length; i++) {

@@ -128,6 +128,12 @@ export class SolobetService {
   }
 
   newOffer(account, match, rate, amount): Observable<any> {
+
+    console.log(account)
+    console.log(match)
+    console.log(rate)
+    console.log(amount)
+
     var matchTime = new Date(match.matchDate + " " + match.matchTime).getTime();
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {

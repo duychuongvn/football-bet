@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule} from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
+import {FormsModule} from '@angular/forms';
 
 import { AppRoutingModule } from 'app/app.router';
 
@@ -22,7 +23,8 @@ const SERVICES = [
     BrowserModule,
     HttpClientModule,
     HttpModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule
   ],
   declarations: [
     AppComponent,
