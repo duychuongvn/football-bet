@@ -9,7 +9,9 @@ import {
 
 import { Fixture } from "models/fixture";
 import * as groupBy from 'lodash/groupBy';
+import * as clone from 'lodash/clone';
 import * as map from 'lodash/map';
+import * as includes from 'lodash/includes';
 
 @Component({
   selector: "app-home",
@@ -32,8 +34,9 @@ export class HomeComponent implements OnInit {
   public bettings: any;
   public amount: 0;
 
-  public fixtures: Fixture[] = [];
-  public matchFixtures = [];
+  private _fixtures: Fixture[] = [];
+  private _matchFixtures = [];
+  public matchName: string = '';
 
   constructor(
     private _ngZone: NgZone,
@@ -157,17 +160,17 @@ export class HomeComponent implements OnInit {
   }
 
   public fetch(): any {
-    this.fixtures = [];
+    this._fixtures = [];
 
     this._helper.fetchFixtures().subscribe(
       res => {
         res.fixtures.map(item => {
           if (item.homeTeamName && item.awayTeamName) {
-            this.fixtures.push(new Fixture(item));
+            this._fixtures.push(new Fixture(item));
           }
         });
-        this.fetchFlag(this.fixtures);
-        this.matchFixtures = map(groupBy(this.fixtures, 'date_string', ['asc']), (value, key) => ({
+        this.fetchFlag(this._fixtures);
+        this._matchFixtures = map(groupBy(this._fixtures, 'date_string', ['asc']), (value, key) => ({
           key,
           value: [...value]
         }));
@@ -178,15 +181,11 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  public fetchMatchDetail(fixture: Fixture) {
-    this._router.navigate(["match-detail"], { queryParams: fixture.pickJson() });
-  }
-
   private fetchFlag(fixtures: any): any {
     fixtures.forEach(fixture => {
       this._helper.fetchTeam().subscribe(resp => {
         resp.teams.map(team => {
-          this.fixtures.forEach(item => {
+          this._fixtures.forEach(item => {
             if (item.homeTeamName === team.name) {
               item.homeFlag = team.crestUrl;
             }
@@ -197,5 +196,19 @@ export class HomeComponent implements OnInit {
         });
       });
     });
+  }
+
+  public searchMatch(name: string) {
+    let _term;
+
+    if (this.matchName.length > 1) {
+      _term = this._matchFixtures.filter(item => {
+        return item.value.find(val => includes((val.homeTeamName.toLowerCase() || val.awayTeamName.toLowerCase()), this.matchName.toLowerCase()));
+      });
+    } else {
+      _term = this._matchFixtures;
+    }
+
+    return _term;
   }
 }

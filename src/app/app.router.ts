@@ -21,11 +21,6 @@ const appRoutes: Routes = [
     loadChildren: () => UserModule
   },
   {
-    path: 'details',
-    component: MatchDetailComponent
-  },
-
-  {
     path: 'match-detail',
     component: MatchDetailComponent
   },
