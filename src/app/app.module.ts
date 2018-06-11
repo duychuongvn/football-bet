@@ -8,6 +8,8 @@ import { FormsModule } from "@angular/forms";
 import { AppRoutingModule } from "app/app.router";
 
 import { AppComponent } from "./app.component";
+import {MatchPipe} from './user/match.pipe';
+import {BettingPipe} from './user/betting.pipe';
 
 import {
   SolobetService,
@@ -33,8 +35,10 @@ const SERVICES = [
     HttpModule,
     AppRoutingModule,
     FormsModule
+
+
   ],
-  declarations: [AppComponent, MatchDetailComponent],
+  declarations: [AppComponent, MatchDetailComponent, MatchPipe,BettingPipe],
   providers: [SERVICES],
   bootstrap: [AppComponent]
 })
