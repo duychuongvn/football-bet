@@ -1,54 +1,30 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+<!-- Image and text -->
+<nav class="navbar navbar-light shadow-sm p-3 mb-3 bg-white rounded">
+  <a class="navbar-brand">
+    <img src="/assets/images/icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
+    Football Bet
+  </a>
+
+  <form class="form-inline">
+    <input class="form-control mr-sm-2"
+      type="search"
+      placeholder="Search match"
+      aria-label="Search"
+      name="search-name"
+      [(ngModel)]="matchName">
+  </form>
+</nav>
+
+<div class="container-fluid">
+  <div class="card-columns">
+    <div class="card text-white bg-info " *ngFor="let fixture of searchMatch(matchName)">
+      <div class="card-header">{{ fixture.key }}</div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item list-group-item-info" *ngFor="let match of fixture.value">
+          <p class="float-left my-0"><img [src]="match.homeFlag" width="30px"> {{ match.match }} <img [src]="match.awayFlag" width="30px"></p>
+          <a routerLink="match-detail" [queryParams]="match.pickJson()" class="badge badge-primary float-right mt-2">Info</a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li *ngFor="let match of upcommingMatches">
-
-    <a (click)="loadBettings(match)"> {{match.homeTeam}} {{match.homeScore}} - {{match.awayScore}} {{match.awayTeam}} - Date: {{match.matchDate}} {{match.matchTime}}</a>
-
-    <button
-
-      (click)="offer(match)"
-      class="button is-primary">
-      Offer
-    </button>
-
-
-  <tr *ngFor="let betting of match.bettings">
-    {{betting.offer}} - {{betting.dealer}} - {{betting.amount}} - ({{betting.rate}}) - {{betting.status}}
-    <button
-
-      (click)="deal(match.id)"
-      class="button is-primary">
-      Deal
-    </button>
-    <br>
-
-  </tr>
-  </li>
-
-
-
-  <li *ngFor="let match of worldcupMatches">
-    <li>
-        <tr>
-          <td>
-            <img src="{{match.homeTeam.crestUrl}}"/>
-            <br/>
-            <span style="text-align: center">{{match.homeTeamName}}</span>
-          </td>
-          <td>
-            <img src="{{match.awayTeam.crestUrl}}"/>
-            <br/>
-            <span style="text-align: center">{{match.awayTeamName}}</span>
-
-          </td>
-        </tr>
-    </li>
-</ul>
-

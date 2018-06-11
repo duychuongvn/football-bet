@@ -1,3 +1,111 @@
-<p>
-  match-detail works!
-</p>
+<div class="container">
+
+  <div class="row mb-3">
+    <div>
+      <h1 class="text-info">{{fixture.homeTeamName}} vs. {{fixture.awayTeamName}} </h1>
+
+      <div>
+        <i class="material-icons">
+          date_range
+        </i>{{fixture.date_string}}</div>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <button type="button" class="btn btn-warning mr-3" data-toggle="modal" data-target="#exampleModal">
+      New Handicap
+    </button>
+    <button routerLink="/" type="button" class="btn btn-success">Return to home</button>
+  </div>
+  <div class="row mb-3">
+    <table class="table table-bordered table-striped text-center">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">{{fixture.homeTeamName}}</th>
+          <th scope="col">Odds</th>
+          <th scope="col">{{fixture.awayTeamName}}</th>
+          <th scope="col">Stake(ETH)</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr>
+          <th scope="row">1</th>
+          <td scope="row">0x3049d0612193b107b08...</td>
+          <td scope="row">0:1 1/4</td>
+          <td scope="row">0x01c400bcef2e2416b84...</td>
+          <td scope="row">3</td>
+          <td>
+
+            <button type="button" class="btn btn-info">Deal</button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <!-- modal offer -->
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title font-weight-bold text-info" id="exampleModalLabel">Handicap</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body col">
+          <div class="row ml-2 font-weight-bold mb-3">
+            Fixture Number:
+            <div id="fixtureId" class="text-warning mr-2">
+              <span>#</span>{{handicap.id}}</div>
+          </div>
+
+          <div class="row ml-2 font-weight-bold mb-3">
+            <i class="material-icons">
+              date_range
+            </i>
+            <div id="fixtureDate" class="text-warning">{{handicap.date_string}}</div>
+          </div>
+
+          <div class="row ml-2">
+            <div class="form-group">
+              <label for="teamName">Select Pair</label>
+              <select class="form-control" id="teamName">
+                <option value="{{handicap.pairTeam}}">{{handicap.pairTeam}}</option>
+                <option value="{{handicap.inversePairTeam}}">{{handicap.inversePairTeam}}</option>
+              </select>
+            </div>
+
+            <div class="col mb-3">
+              <div class="form-group">
+                <label for="odds">Odds</label>
+                <select [(ngModel)]="handicap.odds" class="form-control text-center" id="odds">
+                  <option [value]="item.id" *ngFor="let item of oddsArray">{{item.value}}</option>
+                </select>
+              </div>
+
+            </div>
+            <div class="col mb-3">
+              <label for="stake">Stake</label>
+              <input [(ngModel)]="handicap.stake" type="number" class="form-control" id="stake" placeholder="Stake">
+
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" (click)="offer(handicap)" class="btn btn-primary">Create</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

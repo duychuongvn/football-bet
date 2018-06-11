@@ -29,7 +29,7 @@ export class UserComponent {
               private userService: UserService) {
 
 
-    this.onReady();
+    // this.onReady();
 
   }
 

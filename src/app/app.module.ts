@@ -1,58 +1,41 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { RouterModule} from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
-import { AppComponent } from './app.component';
-import { AdminComponent } from './admin/admin.component';
-import { HomeComponent } from './home/home.component';
-import {MatchPipe} from './user/match.pipe';
-import {BettingPipe} from './user/betting.pipe';
-// import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { RouterModule } from "@angular/router";
+import { HttpClientModule } from "@angular/common/http";
+import { HttpModule } from "@angular/http";
+import { FormsModule } from "@angular/forms";
 
-import {SolobetService, Web3Service, MatchService, UserService} from '../service/service';
-import { MatchDetailComponent } from './match-detail/match-detail.component';
-import { UserComponent } from './user/user.component';
+import { AppRoutingModule } from "app/app.router";
 
-const SERVICES = [
+import { AppComponent } from "./app.component";
+
+import {
   SolobetService,
   Web3Service,
   MatchService,
   UserService
+} from "../service/service";
+import { MatchDetailComponent } from "./match-detail/match-detail.component";
 
-]
+const SERVICES = [
+  SolobetService,
+  Web3Service,
+  ,
+  MatchService,
+  MatchService,
+  UserService
+];
 
 @NgModule({
-
-  declarations: [
-    AppComponent,
-    AdminComponent,
-    HomeComponent,
-    MatchDetailComponent,
-    UserComponent,
-    MatchPipe,
-    BettingPipe
-  ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    FormsModule,
-    RouterModule.forRoot([
-      {
-        path: 'admin',
-        component: AdminComponent
-      },
-      {
-        path: 'user',
-        component: UserComponent
-      },
-      {
-        path: '',
-        component: HomeComponent
-      }
-    ])
+    HttpModule,
+    AppRoutingModule,
+    FormsModule
   ],
+  declarations: [AppComponent, MatchDetailComponent],
   providers: [SERVICES],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
