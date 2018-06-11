@@ -56,7 +56,10 @@ export class Fixture {
     return this._date;
   }
   public get date_string(): string {
-    return DateTime.fromISO(this._date).toFormat('f');
+    return DateTime.fromISO(this._date).toFormat('dd/MM/yyyy');
+  }
+  public get time_string(): string {
+    return DateTime.fromISO(this._date).toFormat('HH:mm a');
   }
   public set date(v: string) {
     this._date = v;

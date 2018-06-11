@@ -182,17 +182,15 @@ export class HomeComponent implements OnInit {
   }
 
   private fetchFlag(fixtures: any): any {
-    fixtures.forEach(fixture => {
-      this._helper.fetchTeam().subscribe(resp => {
-        resp.teams.map(team => {
-          this._fixtures.forEach(item => {
-            if (item.homeTeamName === team.name) {
-              item.homeFlag = team.crestUrl;
-            }
-            if (item.awayTeamName === team.name) {
-              item.awayFlag = team.crestUrl;
-            }
-          });
+    this._helper.fetchTeam().subscribe(resp => {
+      resp.teams.map(team => {
+        this._fixtures.forEach(item => {
+          if (item.homeTeamName === team.name) {
+            item.homeFlag = team.crestUrl;
+          }
+          if (item.awayTeamName === team.name) {
+            item.awayFlag = team.crestUrl;
+          }
         });
       });
     });
