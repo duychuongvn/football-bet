@@ -1,12 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Fixture } from "../../models/fixture";
-import {
-  Web3Service,
-  SolobetService,
-  MatchService,
-  JhelperService
-} from "../../service/service";
+import { Web3Service, SolobetService, MatchService, JhelperService } from "service/service";
+
+import { Fixture } from "models/fixture";
 import { Handicap } from "models/handicap";
 import { Match } from "models/match";
 
@@ -16,20 +12,13 @@ import { Match } from "models/match";
   styleUrls: ["./match-detail.component.css"]
 })
 export class MatchDetailComponent implements OnInit {
+
   public fixture: Fixture = new Fixture();
   public handicap: Handicap = new Handicap();
   public match: Match = new Match();
-  public oddsArray: any[] = [
-    { id: "000", value: "0:0" },
-    { id: "025", value: "0:1/4" },
-    { id: "050", value: "0:1/2" },
-    { id: "075", value: "0:3/4" },
-    { id: "100", value: "0:1" },
-    { id: "125", value: "0:1 1/4" },
-    { id: "150", value: "0:1 1/2" },
-    { id: "175", value: "0:1 3/4" },
-    { id: "200", value: "0:2" }
-  ];
+
+  public oddsArray = Handicap.oddsArray;
+
   public account: any;
   public accounts: any;
 
@@ -48,27 +37,14 @@ export class MatchDetailComponent implements OnInit {
       if (p.id) {
         this._setProperties(p);
       } else {
-        this._router.navigate([""]);
+        this._router.navigate(['']);
       }
     });
   }
 
   private _setProperties(p: any) {
-    this.handicap.id = p.id.toString();
-    this.handicap.pairTeam = p.homeTeamName + "-" + p.awayTeamName;
-    this.handicap.inversePairTeam = p.awayTeamName + "-" + p.homeTeamName;
-    this.handicap.date = p.date;
-
-    this.fixture.id = p.id.toString();
-    this.fixture.awayFlag = p.awayFlag;
-    this.fixture.awayTeamId = p.awayTeamId;
-    this.fixture.awayTeamName = p.awayTeamName;
-    this.fixture.competitionId = p.competitionId;
-    this.fixture.date = p.date;
-    this.fixture.homeFlag = p.homeFlag;
-    this.fixture.homeTeamId = p.homeTeamId;
-    this.fixture.homeTeamName = p.homeTeamName;
-    this.fixture.status = p.status;
+    this.handicap = new Handicap(p);
+    this.fixture = new Fixture(p);
 
     let time = new Date(p.date);
     this.match.matchId = p.id.toString();
