@@ -7,6 +7,8 @@ import { Fixture } from "models/fixture";
 import { Handicap } from "models/handicap";
 import { Match } from "models/match";
 
+import { PAIR_TYPE } from 'enums/handicap';
+
 @Component({
   selector: 'app-deal-modal',
   templateUrl: './deal-modal.component.html',
@@ -23,6 +25,8 @@ export class DealModalComponent implements OnInit {
 
   public oddsArray = Handicap.oddsArray;
 
+  public pairs: Array<Object>;
+
   constructor(
     private _bsModalService: BsModalService,
     private _bsModalRef: BsModalRef,
@@ -31,6 +35,10 @@ export class DealModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.pairs = [
+      { id: PAIR_TYPE.REVERT, value: this.handicap.pairTeam },
+      { id: PAIR_TYPE.INVERSE, value: this.handicap.inversePairTeam }
+    ];
   }
 
   public offer(handicap: Handicap) {
@@ -40,25 +48,12 @@ export class DealModalComponent implements OnInit {
     this._solobetService
       .newOffer(this.account, this.match, +handicap.odds, handicap.stake)
       .subscribe(result => {
-          console.log("====begin loadBettings=====");
-          this.loadBettings(this.match);
-          console.log("====end loadBettings=====");
+        this._notify.success('Create success');
+        this.close('reload');
         }, e => {
           this._notify.error("Invalid number of arguments to Solidity function");
         }
       );
-  }
-
-  public loadBettings(match) {
-    this._solobetService.loadBettings(match.id)
-    .subscribe( bettings => {
-      console.log(bettings)
-      match.bettings = bettings;
-      this._notify.success('Create success');
-      this.close('reload');
-    }, errors => {
-      this._notify.error(errors);
-    });
   }
 
   private _prepareMatches(handicap) {

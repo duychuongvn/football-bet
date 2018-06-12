@@ -1,24 +1,26 @@
-import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Web3Service } from "service/service";
+import { Web3Service, SolobetService, NotifyService } from 'service/service';
 
-import { Fixture } from "models/fixture";
-import { Handicap } from "models/handicap";
-import { Match } from "models/match";
+import { Fixture } from 'models/fixture';
+import { Handicap } from 'models/handicap';
+import { Match } from 'models/match';
+import { Betting } from 'models/betting';
 
 import { DealModalComponent } from 'app/deal-modal/deal-modal.component';
 
 @Component({
-  selector: "app-match-detail",
-  templateUrl: "./match-detail.component.html",
-  styleUrls: ["./match-detail.component.css"]
+  selector: 'app-match-detail',
+  templateUrl: './match-detail.component.html',
+  styleUrls: ['./match-detail.component.css']
 })
 export class MatchDetailComponent implements OnInit {
 
   public fixture: Fixture = new Fixture();
   public handicap: Handicap = new Handicap();
   public match: Match = new Match();
+  public bettings: Betting[] = [];
 
   public account: string;
 
@@ -26,7 +28,9 @@ export class MatchDetailComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router,
     private _web3Service: Web3Service,
-    private _modalService: BsModalService
+    private _solobetService: SolobetService,
+    private _modalService: BsModalService,
+    private _notify: NotifyService
   ) {}
 
   ngOnInit() {
@@ -34,6 +38,7 @@ export class MatchDetailComponent implements OnInit {
     this._route.queryParams.subscribe(p => {
       if (p.id) {
         this._setProperties(p);
+        this._loadBettings(p.id);
       } else {
         this._router.navigate(['']);
       }
@@ -60,6 +65,31 @@ export class MatchDetailComponent implements OnInit {
         this.account = accs[0];
       }, err => alert(err)
     );
+  }
+
+  private _loadBettings(id: string) {
+    this._solobetService.loadBettings(id)
+    .subscribe(res => {
+      let _bettings = [];
+      setTimeout(() => {
+        res.bettings.map(item => {
+          _bettings.push(new Betting({
+            bettingId: item.bettingId,
+            matchId: item.matchId,
+            amount: item.amount.c[0]/10000,
+            offer: item.offer,
+            dealer: item.dealer,
+            odds: item.rate.c[0],
+            stake: 0,
+            status: item.status.valueOf()
+          }));
+        });
+
+        this.bettings = _bettings;
+      }, 200);
+    }, errors => {
+      this._notify.error(errors);
+    });
   }
 
   public openHandicap() {
@@ -97,7 +127,7 @@ export class MatchDetailComponent implements OnInit {
   private _openModalWithComponent(comp, opts?: ModalOptions) {
     const subscribe = this._modalService.onHidden.subscribe((res: any) => {
       if (res) {
-        console.log(res);
+        this._loadBettings(this.match.matchId.toString());
       }
 
       subscribe.unsubscribe();

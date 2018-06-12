@@ -35,12 +35,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr *ngFor="let betting of bettings">
           <th scope="row">1</th>
-          <td scope="row">0x3049d0612193b107b08...</td>
-          <td scope="row">0:1 1/4</td>
-          <td scope="row">0x01c400bcef2e2416b84...</td>
-          <td scope="row">3</td>
+          <td scope="row">{{ betting.offer }}</td>
+          <td scope="row">{{ betting.odds_string }}</td>
+          <td scope="row">{{ betting.dealer }}</td>
+          <td scope="row">{{ betting.amount }}</td>
           <td>
             <button type="button" class="btn btn-info" (click)="openDeal()">Deal</button>
           </td>

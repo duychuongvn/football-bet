@@ -1,8 +1,9 @@
 export interface BettingInterface{
   bettingId: string| number,
   matchId: string | number,
-  bookmarkerAddress: string,
-  punterAddress: string,
+  amount: number,
+  offer: string,
+  dealer: string,
   odds: string | number,
   stake: number,
   status: number

@@ -1,4 +1,6 @@
-import {BettingInterface} from 'interfaces/betting'
+import { BettingInterface } from 'interfaces/betting'
+
+import { Handicap } from './handicap'
 
 export class Betting {
   private _status: number;
@@ -21,16 +23,19 @@ export class Betting {
   public get odds(): string | number {
     return this._odds;
   }
+  public get odds_string(): string {
+    return Handicap.oddsArray.find((item: any) => +item.id === this.odds)['value'];
+  }
   public set odds(v: string | number) {
     this._odds = v;
   }
 
-  private _punterAddress: string;
-  public get punterAddress(): string {
-    return this._punterAddress;
+  private _dealer: string;
+  public get dealer(): string {
+    return this._dealer;
   }
-  public set punterAddress(v: string) {
-    this._punterAddress = v;
+  public set dealer(v: string) {
+    this._dealer = v;
   }
 
   private _bettingId: string | number;
@@ -49,26 +54,32 @@ export class Betting {
     this._matchId = v;
   }
 
-  private _bookmarkerAddress: string;
-  public get bookmarkerAddress(): string {
-    return this._bookmarkerAddress;
+  private _amount: number;
+  public get amount(): number {
+    return this._amount;
   }
-  public set bookmarkerAddress(v: string) {
-    this._bookmarkerAddress = v;
+  public set amount(v: number) {
+    this._amount = v;
   }
 
+  private _offer: string;
+  public get offer(): string {
+    return this._offer;
+  }
+  public set offer(v: string) {
+    this._offer = v;
+  }
 
-
-
-  constructor(data?: BettingInterface){
-    if(data){
+  constructor(data?: BettingInterface) {
+    if (data) {
       this.bettingId = data.bettingId;
-      this.matchId = data.matchId;
-      this.bookmarkerAddress = data.bookmarkerAddress;
-      this.punterAddress = data.punterAddress;
-      this.odds = data.odds;
-      this.stake = data.stake;
-      this.status = data.status;
+      this.matchId   = data.matchId;
+      this.amount    = data.amount;
+      this.offer     = data.offer;
+      this.dealer    = data.dealer;
+      this.odds      = data.odds;
+      this.stake     = data.stake;
+      this.status    = data.status;
     }
   }
 }

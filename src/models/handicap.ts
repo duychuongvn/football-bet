@@ -1,22 +1,7 @@
 import { HandicapInterface } from 'interfaces/handicap';
 import { DateTime } from 'luxon';
 
-enum ODDS_TYPE {
-  ZERO = '0:0',
-  QUARTER = '0:1/4',
-  HALF = '0:1/2',
-  THREE_FOURTHS = '0:3/4',
-  ONE = '0:1',
-  ONE_QUARTER = '0:1 1/4',
-  ONE_HALF = '0:1 1/2',
-  ONE_THREE_FOURTHS = '0:1 3/4',
-  TWO = '0:2'
-}
-
-enum PAIR_TYPE {
-  REVERT = '1',
-  INVERSE = '2'
-}
+import { ODDS_TYPE, PAIR_TYPE } from 'enums/handicap';
 
 export class Handicap {
   public static readonly oddsArray: Array<Object> = [
@@ -84,13 +69,6 @@ export class Handicap {
   }
   public set date(v: string) {
     this._date = v;
-  }
-
-  public get pairs(): Array<Object> {
-    return [
-      { id: PAIR_TYPE.REVERT, value: this.pairTeam },
-      { id: PAIR_TYPE.INVERSE, value: this.inversePairTeam }
-    ];
   }
 
   public get date_string(): string {

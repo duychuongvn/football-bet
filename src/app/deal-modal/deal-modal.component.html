@@ -19,7 +19,7 @@
   <div class="form-group">
     <label>Select Pair</label>
     <select [(ngModel)]="handicap.selectedPair" class="form-control" id="pairs">
-        <option [value]="item.id" *ngFor="let item of handicap.pairs">{{item.value}}</option>
+        <option [value]="item.id" *ngFor="let item of pairs">{{item.value}}</option>
       </select>
   </div>
 
