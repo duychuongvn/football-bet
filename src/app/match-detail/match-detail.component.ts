@@ -8,6 +8,7 @@ import {
   JhelperService
 } from "../../service/service";
 import { Handicap } from "models/handicap";
+import { Match } from "models/match";
 
 @Component({
   selector: "app-match-detail",
@@ -17,6 +18,7 @@ import { Handicap } from "models/handicap";
 export class MatchDetailComponent implements OnInit {
   public fixture: Fixture = new Fixture();
   public handicap: Handicap = new Handicap();
+  public match: Match = new Match();
   public oddsArray: any[] = [
     { id: "000", value: "0:0" },
     { id: "025", value: "0:1/4" },
@@ -30,15 +32,6 @@ export class MatchDetailComponent implements OnInit {
   ];
   public account: any;
   public accounts: any;
-  public match = {
-    matchId: "",
-    homeTeam: "",
-    awayTeam: "",
-    homeGoals: 0,
-    awayGoals: 0,
-    time: 0,
-    status: 0
-  };
 
   constructor(
     private _route: ActivatedRoute,
