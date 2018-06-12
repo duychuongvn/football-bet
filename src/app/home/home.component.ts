@@ -257,5 +257,7 @@ export class HomeComponent implements OnInit {
     console.log(mHash)
     console.log(this._web3Service.toSHA3(mHash))
     item.id = this._web3Service.toSHA3(mHash);
+
+    console.log(item.id)
   }
 }

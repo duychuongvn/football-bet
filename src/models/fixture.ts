@@ -3,11 +3,11 @@ import { FixtureInterface } from '../interfaces/fixture';
 
 export class Fixture {
 
-  private _id: number;
-  public get id(): number {
+  private _id: number | string;
+  public get id(): number | string {
     return this._id;
   }
-  public set id(v: number) {
+  public set id(v: number | string) {
     this._id = v;
   }
 

@@ -61,12 +61,12 @@ export class MatchDetailComponent implements OnInit {
   }
 
   private _setProperties(p: any) {
-    this.handicap.id = +p.id;
+    this.handicap.id = p.id;
     this.handicap.pairTeam = p.homeTeamName + "-" + p.awayTeamName;
     this.handicap.inversePairTeam = p.awayTeamName + "-" + p.homeTeamName;
     this.handicap.date = p.date;
 
-    this.fixture.id = +p.id;
+    this.fixture.id = p.id;
     this.fixture.awayFlag = p.awayFlag;
     this.fixture.awayTeamId = p.awayTeamId;
     this.fixture.awayTeamName = p.awayTeamName;
@@ -118,7 +118,7 @@ export class MatchDetailComponent implements OnInit {
   }
 
   private _prepareMatches(handicap) {
-    this.match.matchId = handicap.id;
+    this.match.matchId = handicap.id.toString();
     this.match.homeTeam = this.fixture.homeTeamName;
     this.match.awayTeam = this.fixture.awayTeamName;
     let time = new Date(handicap.date);
