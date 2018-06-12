@@ -35,7 +35,10 @@ const SERVICES = [
     HttpModule,
     AppRoutingModule,
     FormsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      preventDuplicates: true,
+    })
   ],
   declarations: [AppComponent],
   providers: [SERVICES],
