@@ -58,6 +58,7 @@ export class Match {
   }
 
   constructor(data?: MatchInterface) {
+    if(data){
     this.matchId = data.matchId;
     this.homeTeam = data.homeTeam;
     this.awayTeam = data.awayTeam;
@@ -65,6 +66,7 @@ export class Match {
     this.awayGoals = data.awayGoals;
     this.status = data.status;
     this.time = data.time;
+    }
   }
 
   public get date_from_time(){

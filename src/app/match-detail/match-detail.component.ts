@@ -69,6 +69,15 @@ export class MatchDetailComponent implements OnInit {
     this.fixture.homeTeamId = p.homeTeamId;
     this.fixture.homeTeamName = p.homeTeamName;
     this.fixture.status = p.status;
+
+    let time = new Date(p.date);
+    this.match.matchId = p.id.toString();
+    this.match.homeTeam = p.homeTeamName;
+    this.match.awayTeam = p.awayTeamName;
+    this.match.homeGoals = p.homeGoals;
+    this.match.awayGoals = p.awayGoals;
+    this.match.time = time.getTime();
+    this.match.status = 0;
   }
 
   private _getAccounts() {
@@ -97,7 +106,7 @@ export class MatchDetailComponent implements OnInit {
 
   public offer(handicap: Handicap) {
     console.log(this.match)
-    this._prepareMatches(handicap);
+    // this._prepareMatches(handicap);
     this._solobetService.newOffer(this.account, this.match, +handicap.odds, handicap.stake).subscribe(
       result => {
         console.log("====begin loadBettings=====")
