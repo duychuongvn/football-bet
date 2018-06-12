@@ -6,7 +6,6 @@ import { HttpModule } from "@angular/http";
 import { FormsModule } from "@angular/forms";
 
 import { AppRoutingModule } from "app/app.router";
-
 import { AppComponent } from "./app.component";
 
 import {
@@ -15,12 +14,10 @@ import {
   MatchService,
   UserService
 } from "../service/service";
-import { MatchDetailComponent } from "./match-detail/match-detail.component";
 
 const SERVICES = [
   SolobetService,
   Web3Service,
-  ,
   MatchService,
   MatchService,
   UserService
@@ -34,7 +31,7 @@ const SERVICES = [
     AppRoutingModule,
     FormsModule
   ],
-  declarations: [AppComponent, MatchDetailComponent],
+  declarations: [AppComponent],
   providers: [SERVICES],
   bootstrap: [AppComponent]
 })

@@ -1,6 +1,5 @@
 export interface HandicapInterface{
   id: number | string,
-  pairs: any[],
   selectedPair: string,
   homeTeamName: string,
   awayTeamName: string,

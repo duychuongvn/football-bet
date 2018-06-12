@@ -27,7 +27,7 @@
           <p class="float-left my-0 pl-4">
             <img [src]="match.homeFlag" width="30px"> {{ match.match }} <img [src]="match.awayFlag" width="30px">
           </p>
-          <a routerLink="match-detail" [queryParams]="match.pickJson()" class="badge badge-primary float-right mt-2">Info</a>
+          <a routerLink="/match-detail" [queryParams]="match.pickJson()" class="badge badge-primary float-right mt-2">Info</a>
         </li>
       </ul>
     </div>

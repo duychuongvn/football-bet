@@ -18,9 +18,7 @@
   </div>
 
   <div class="row mb-3">
-    <button type="button" class="btn btn-warning mr-3" data-toggle="modal" data-target="#offerModal">
-      New Handicap
-    </button>
+    <button type="button" class="btn btn-warning mr-3" (click)="openDeal()">New Handicap</button>
     <button routerLink="/" type="button" class="btn btn-success">Return to home</button>
   </div>
 
@@ -49,56 +47,5 @@
         </tr>
       </tbody>
     </table>
-  </div>
-
-  <!-- Modal -->
-  <div class="modal fade" id="offerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title font-weight-bold">Handicap</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body col">
-          <div class="form-group">
-            <label class="font-weight-bold">Fixture Number:</label>
-            <span class="d-block font-weight-light text-info text-truncate" [attr.title]="handicap.id">#{{handicap.id}}</span>
-          </div>
-
-          <div class="form-group text-danger font-weight-bold d-flex">
-            <i class="material-icons">date_range</i>
-            <span class="d-inline-block">{{ handicap.date_string }} {{ handicap.time_string }}</span>
-          </div>
-
-          <div class="form-group">
-            <label>Select Pair</label>
-            <select [(ngModel)]="handicap.selectedPair" class="form-control" id="pairs">
-                <option [value]="item.id" *ngFor="let item of handicap.pairs">{{item.value}}</option>
-              </select>
-          </div>
-
-          <div class="form-group row">
-            <div class="col-sm-6">
-              <label>Odds</label>
-              <select class="form-control text-center" [(ngModel)]="handicap.odds">
-                <option [value]="item.id" *ngFor="let item of oddsArray">{{item.value}}</option>
-              </select>
-            </div>
-            <div class="col-sm-6">
-              <label>Stake (ETH)</label>
-              <input type="number" min="1" class="form-control" placeholder="Stake"
-                [(ngModel)]="handicap.stake">
-            </div>
-          </div>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" (click)="offer(handicap)" class="btn btn-primary">Create</button>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
