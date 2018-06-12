@@ -15,8 +15,8 @@ contract AsianSoloBet is Ownable, Strings {
   event LogApproveScore(bytes32 matchId);
   event Transfer(address indexed _from, address indexed _to, uint256 _value);
 
-  uint256 GAS_PRICE = 21000;
-
+   uint256 GAS_PRICE = 21000;
+   uint256 GAS_LIMIT = 1; // 1Gwei
   struct Match {
 
     bytes32 id;
@@ -37,6 +37,7 @@ contract AsianSoloBet is Ownable, Strings {
     address bookmaker;
     address punter;
     bytes32 matchId;
+    uint8 pair;
     int rate; // rate >= 0: bookmakers bets for home team else bet for away team
     uint256 amount;
     BettingStatus status;
@@ -63,7 +64,7 @@ contract AsianSoloBet is Ownable, Strings {
 
     uint32 betIdx;
     bytes32 matchId;
-    bool bet4HomeTeam;
+    bool bet4Weaker;
 
   }
 
@@ -82,19 +83,15 @@ contract AsianSoloBet is Ownable, Strings {
    // BettingStatus[] memory status = new BettingStatus[](matchIds.length);
     uint256[] memory status = new uint256[](matchIds.length);
     int[] memory rates = new int[](matchIds.length);
-  //  Betting memory _betting;
     for (uint32 i = 0; i < matchIds.length; i++) {
 
       matchIds[i] = myBets[owner][i].matchId;
       betIdxes[i] = uint256(myBets[owner][i].betIdx);
-      chooseHomeTeam[i] = myBets[owner][i].bet4HomeTeam;
+      chooseHomeTeam[i] = myBets[owner][i].bet4Weaker;
 
-     // _betting = bettingMatches[matchIds[i]][betIdxes[i]];
       rates[i] = bettingMatches[matchIds[i]][betIdxes[i]].rate;
       amounts[i] = bettingMatches[matchIds[i]][betIdxes[i]].amount;
       status[i] = uint256(bettingMatches[matchIds[i]][betIdxes[i]].status);
-//      status[i]=_betting.status;
-   //   statuses[i] = bettingMatches[matchIds[i]][betIdxes[i]].status;
     }
 
     return (matchIds, betIdxes, rates, amounts, chooseHomeTeam,status);
@@ -188,8 +185,9 @@ contract AsianSoloBet is Ownable, Strings {
   }
 
   function transferFund(address receiver, uint256 amount) internal returns (bool) {
-    uint256 gaslimit = block.gaslimit;
-    uint256 txFee = gaslimit * GAS_PRICE;
+   // uint256 gaslimit = block.gaslimit;
+
+    uint256 txFee = GAS_LIMIT * GAS_PRICE;
     balances[receiver] -= amount;
     receiver.transfer(amount - txFee);
 
@@ -437,12 +435,14 @@ contract AsianSoloBet is Ownable, Strings {
   }
 
 
-  function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint time, int rate) public payable returns (bool) {
+  enum Pair {
+    Home_Away, Away_Home
+  }
+  function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint pair, uint time, int rate) public payable returns (bool) {
     require(time + 75 * 1000 * 60 > now);
     // allow 15 minutes before the match finishes
 
     MatchStatus status;
-
     if (time < now) {
       status = MatchStatus.Playing;
     } else {
@@ -464,7 +464,7 @@ contract AsianSoloBet is Ownable, Strings {
       matches[matchId] = _match;
     }
 
-    Betting memory _betting = Betting(msg.sender, 0x0, _match.id, rate, msg.value, BettingStatus.Open);
+    Betting memory _betting = Betting(msg.sender, 0x0, _match.id, uint8(pair), rate, msg.value, BettingStatus.Open);
 //    bettingMatches[matchId].push(_betting);
     uint32 betIdx = uint32(bettingMatches[matchId].push(_betting) -1);
     myBets[msg.sender].push(MyBet( betIdx, matchId, rate >=0));
@@ -476,6 +476,7 @@ contract AsianSoloBet is Ownable, Strings {
   function deal(bytes32 matchId, uint256 bettingId) public payable returns (bool) {
 
     Betting storage _betting = bettingMatches[matchId][bettingId];
+    require(_betting.amount == msg.value);
     require(_betting.bookmaker != msg.sender);
     require(_betting.status == BettingStatus.Open);
     _betting.punter = msg.sender;
@@ -486,12 +487,13 @@ contract AsianSoloBet is Ownable, Strings {
     return true;
   }
 
-  function getBettingInfo(bytes32 matchId, uint256 bettingId) public view returns (address bookmaker, address punter, int rate, uint256 amount, BettingStatus status) {
+  function getBettingInfo(bytes32 matchId, uint256 bettingId) public view returns (address bookmaker, address punter, uint8 pair, int odds, uint256 amount, BettingStatus status) {
     Betting memory _betting = bettingMatches[matchId][bettingId];
     bookmaker = _betting.bookmaker;
     punter = _betting.punter;
-    rate = _betting.rate;
+    odds = _betting.rate;
     amount = _betting.amount;
     status = _betting.status;
+    pair = _betting.pair;
   }
 }
