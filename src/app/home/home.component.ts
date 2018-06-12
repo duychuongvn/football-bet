@@ -42,9 +42,9 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this._ngZone.run(() => {
-      this.initMatches();
-    });
+    // this._ngZone.run(() => {
+    //   this.initMatches();
+    // });
     this.fetch();
     // this._getAccounts();
   }
@@ -242,16 +242,8 @@ export class HomeComponent implements OnInit {
   // >>>>>>> beb65726e374a18e73b95a8a6405beb113936a51
 
   private _hashId(item) {
-    let time = new Date(item.date);
-    console.log(time.getTime());
-    let mHash =
-    item.homeTeamName +
-    item.awayTeamName +
-    time.getTime();
-    console.log(mHash)
-    console.log(this._web3Service.toSHA3(mHash))
-    item.id = this._web3Service.toSHA3(mHash);
-
-    console.log(item.id)
+    const _time = new Date(item.date);
+    const _mHash = `${item.homeTeamName}${item.awayTeamName}${_time.getTime()}`;
+    item.id = this._web3Service.toSHA3(_mHash);
   }
 }

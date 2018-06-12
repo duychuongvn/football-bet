@@ -8,12 +8,12 @@
 <div class="container">
   <div class="row mb-3">
     <div>
-      <h1 class="text-info">{{fixture.homeTeamName}} vs. {{fixture.awayTeamName}} </h1>
+      <h1 class="text-info">{{ fixture.match }}</h1>
 
-      <div>
-        <i class="material-icons">
-          date_range
-        </i>{{match.date_from_time}}</div>
+      <div class="d-flex">
+        <i class="material-icons">date_range</i>
+        <span class="d-inline-block">{{ fixture.date_string }} {{ fixture.time_string }}</span>
+      </div>
     </div>
   </div>
 
@@ -44,58 +44,52 @@
           <td scope="row">0x01c400bcef2e2416b84...</td>
           <td scope="row">3</td>
           <td>
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#offerModal">Deal</button>
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">Deal</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- modal offer -->
-  <div class="modal fade" id="offerModal" tabindex="-1" role="dialog" aria-labelledby="offerModalLabel" aria-hidden="true">
+  <!-- Modal -->
+  <div class="modal fade" id="offerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title font-weight-bold text-info">Offer Deal</h5>
+          <h5 class="modal-title font-weight-bold">Handicap</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body col">
-          <div class="row ml-2 font-weight-bold mb-3">
-            Fixture Number:
-            <div id="fixtureId" class="text-warning mr-2">
-              <span>#</span>{{handicap.id}}</div>
+          <div class="form-group">
+            <label class="font-weight-bold">Fixture Number:</label>
+            <span class="d-block font-weight-light text-info text-truncate" [attr.title]="handicap.id">#{{handicap.id}}</span>
           </div>
 
-          <div class="row ml-2 font-weight-bold mb-3">
-            <i class="material-icons">
-              date_range
-            </i>
-            <div id="fixtureDate" class="text-warning">{{handicap.date_string}}</div>
+          <div class="form-group text-danger font-weight-bold d-flex">
+            <i class="material-icons">date_range</i>
+            <span class="d-inline-block">{{ handicap.date_string }} {{ handicap.time_string }}</span>
           </div>
 
-          <div class="row ml-2">
-            <div class="form-group">
-              <label for="pairs">Select Pair</label>
-              <select [(ngModel)]="handicap.selectedPair" class="form-control" id="pairs">
+          <div class="form-group">
+            <label>Select Pair</label>
+            <select [(ngModel)]="handicap.selectedPair" class="form-control" id="pairs">
                 <option [value]="item.id" *ngFor="let item of handicap.pairs">{{item.value}}</option>
               </select>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label>Odds</label>
+              <select class="form-control text-center" [(ngModel)]="handicap.odds">
+                <option [value]="item.id" *ngFor="let item of oddsArray">{{item.value}}</option>
+              </select>
             </div>
-
-            <div class="col mb-3">
-              <div class="form-group">
-                <label for="odds">Odds</label>
-                <select [(ngModel)]="handicap.odds" class="form-control text-center" id="odds">
-                  <option [value]="item.id" *ngFor="let item of oddsArray">{{item.value}}</option>
-                </select>
-              </div>
-
-            </div>
-            <div class="col mb-3">
-              <label for="stake">Stake</label>
-              <input [(ngModel)]="handicap.stake" type="number" class="form-control" id="stake" placeholder="Stake">
-
+            <div class="col-sm-6">
+              <label>Stake (ETH)</label>
+              <input type="number" min="1" class="form-control" placeholder="Stake"
+                [(ngModel)]="handicap.stake">
             </div>
           </div>
 
@@ -107,62 +101,4 @@
       </div>
     </div>
   </div>
-
-  <!-- Modal
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title font-weight-bold text-info" id="exampleModalLabel">Handicap</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body col">
-          <div class="row ml-2 font-weight-bold mb-3">
-            Fixture Number:
-            <div id="fixtureId" class="text-warning mr-2">
-              <span>#</span>{{handicap.id}}</div>
-          </div>
-
-          <div class="row ml-2 font-weight-bold mb-3">
-            <i class="material-icons">
-              date_range
-            </i>
-            <div id="fixtureDate" class="text-warning">{{handicap.date_string}}</div>
-          </div>
-
-          <div class="row ml-2">
-            <div class="form-group">
-              <label for="teamName">Select Pair</label>
-              <select class="form-control" id="teamName">
-                <option value="{{handicap.pairTeam}}">{{handicap.pairTeam}}</option>
-                <option value="{{handicap.inversePairTeam}}">{{handicap.inversePairTeam}}</option>
-              </select>
-            </div>
-
-            <div class="col mb-3">
-              <div class="form-group">
-                <label for="odds">Odds</label>
-                <select [(ngModel)]="handicap.odds" class="form-control text-center" id="odds">
-                  <option [value]="item.id" *ngFor="let item of oddsArray">{{item.value}}</option>
-                </select>
-              </div>
-
-            </div>
-            <div class="col mb-3">
-              <label for="stake">Stake</label>
-              <input [(ngModel)]="handicap.stake" type="number" class="form-control" id="stake" placeholder="Stake">
-
-            </div>
-          </div>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" (click)="offer(handicap)" class="btn btn-primary">Create</button>
-        </div>
-      </div>
-    </div>
-  </div>-->
 </div>

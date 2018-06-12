@@ -1,17 +1,38 @@
 import { HandicapInterface } from "interfaces/handicap";
 import { DateTime } from "luxon";
 
+enum ODDS_TYPE {
+  ZERO = "0:0",
+  QUARTER = "0:1/4",
+  HALF = "0:1/2",
+  THREE_FOURTHS = "0:3/4",
+  ONE = "0:1",
+  ONE_QUARTER = "0:1 1/4",
+  ONE_HALF = "0:1 1/2",
+  ONE_THREE_FOURTHS = "0:1 3/4",
+  TWO = "0:2"
+}
+
 export class Handicap {
+  private _selectedPair: string;
+  public get selectedPair(): string {
+    return this._selectedPair;
+  }
+  public set selectedPair(v: string) {
+    this._selectedPair = v;
+  }
 
-
-private _selectedPair : string;
-public get selectedPair() : string {
-  return this._selectedPair;
-}
-public set selectedPair(v : string) {
-  this._selectedPair = v;
-}
-
+  public static readonly oddsArray: Array<Object> = [
+    { id: "000", value: ODDS_TYPE.ZERO },
+    { id: "025", value: ODDS_TYPE.QUARTER },
+    { id: "050", value: ODDS_TYPE.HALF },
+    { id: "075", value: ODDS_TYPE.THREE_FOURTHS },
+    { id: "100", value: ODDS_TYPE.ONE },
+    { id: "125", value: ODDS_TYPE.ONE_QUARTER },
+    { id: "150", value: ODDS_TYPE.ONE_HALF },
+    { id: "175", value: ODDS_TYPE.ONE_THREE_FOURTHS },
+    { id: "200", value: ODDS_TYPE.TWO }
+  ];
 
   private _id: number | string;
   public get id(): number | string {
@@ -21,11 +42,25 @@ public set selectedPair(v : string) {
     this._id = v;
   }
 
+  private _homeTeamName: string;
+  public get homeTeamName(): string {
+    return this._homeTeamName;
+  }
+  public set homeTeamName(v: string) {
+    this._homeTeamName = v;
+  }
 
+  private _awayTeamName: string;
+  public get awayTeamName(): string {
+    return this._awayTeamName;
+  }
+  public set awayTeamName(v: string) {
+    this._awayTeamName = v;
+  }
 
   private _odds: string;
   public get odds(): string {
-    return this._odds;
+    return this._odds || Handicap.oddsArray[1]["id"];
   }
   public set odds(v: string) {
     this._odds = v;
@@ -33,34 +68,29 @@ public set selectedPair(v : string) {
 
   private _stake: number;
   public get stake(): number {
-    return this._stake;
+    return this._stake || 5;
   }
   public set stake(v: number) {
     this._stake = v;
   }
 
-
-  private _date : string;
-  public get date() : string {
+  private _date: string;
+  public get date(): string {
     return this._date;
   }
-  public set date(v : string) {
+  public set date(v: string) {
     this._date = v;
   }
 
-
-
-private _pairs : any[];
-public get pairs() : any[] {
-  return this._pairs;
-}
-public set pairs(v : any[]) {
-  this._pairs = v;
-}
-
-
+  private _pairs: any[];
+  public get pairs(): any[] {
+    return this._pairs;
+  }
+  public set pairs(v: any[]) {
+    this._pairs = v;
+  }
   public get date_string(): string {
-    return DateTime.fromISO(this._date).toFormat('f');
+    return DateTime.fromISO(this._date).toFormat("f");
   }
 
   constructor(data?: HandicapInterface) {
@@ -71,6 +101,7 @@ public set pairs(v : any[]) {
       this.stake = data.stake;
       this.date = data.date;
       this.selectedPair = data.selectedPair;
+      this.id = data.id;
     }
   }
 }
