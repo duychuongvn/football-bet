@@ -21,7 +21,7 @@ export class MatchDetailComponent implements OnInit {
     { id: "000", value: "0:0" },
     { id: "025", value: "0:1/4" },
     { id: "050", value: "0:1/2" },
-    { id: "075", value: "0:0:3/4" },
+    { id: "075", value: "0:3/4" },
     { id: "100", value: "0:1" },
     { id: "125", value: "0:1 1/4" },
     { id: "150", value: "0:1 1/2" },
@@ -104,12 +104,15 @@ export class MatchDetailComponent implements OnInit {
 
   public offer(handicap: Handicap) {
     this._prepareMatches(handicap);
-    this._solobetService.newOffer(this.account, this.match, handicap.odds, handicap.stake).subscribe(
+    this._solobetService.newOffer(this.account, this.match, +handicap.odds, handicap.stake).subscribe(
       result => {
+        console.log("====begin loadBettings=====")
         this.loadBettings(this.match);
+        console.log("====end loadBettings=====")
       },
+
       e => {
-        console.error("Invalid number of arguments to Solidity function")
+        console.error("Invalid number of arguments to Solidity function", e)
       }
     );
   }
@@ -118,7 +121,6 @@ export class MatchDetailComponent implements OnInit {
     this.match.matchId = handicap.id;
     this.match.homeTeam = this.fixture.homeTeamName;
     this.match.awayTeam = this.fixture.awayTeamName;
-
     let time = new Date(handicap.date);
     console.log(time.getTime());
     this.match.time = time.getTime();

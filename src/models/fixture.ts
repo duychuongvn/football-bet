@@ -11,6 +11,10 @@ export class Fixture {
     this._id = v;
   }
 
+  public get id_string(): string{
+    return ""+this._id;
+  }
+
   private _competitionId: number;
   public get competitionId(): number {
     return this._competitionId;
