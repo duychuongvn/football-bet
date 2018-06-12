@@ -62,11 +62,28 @@ export class MatchDetailComponent implements OnInit {
     );
   }
 
-  public openDeal() {
+  public openHandicap() {
     const _opts = {
       class: 'modal-md',
       initialState: {
         title: 'Handicap',
+        btnSubmit: 'Create',
+        account: this.account,
+        match: this.match,
+        fixture: this.fixture,
+        handicap: this.handicap
+      }
+    };
+
+    this._openModalWithComponent(DealModalComponent, _opts);
+  }
+
+  public openDeal() {
+    const _opts = {
+      class: 'modal-md',
+      initialState: {
+        title: 'Deal',
+        btnSubmit: 'Deal',
         account: this.account,
         match: this.match,
         fixture: this.fixture,

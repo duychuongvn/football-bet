@@ -1,5 +1,5 @@
-import {MatchInterface} from 'interfaces/match'
-import {Betting} from 'models/betting'
+import { MatchInterface } from 'interfaces/match'
+import { Betting } from 'models/betting'
 
 export class Match {
   private _status: number;
@@ -13,6 +13,9 @@ export class Match {
   private _time: number;
   public get time(): number {
     return this._time;
+  }
+  public get date_from_time() {
+    return new Date(this.time);
   }
   public set time(v: number) {
     this._time = v;
@@ -58,29 +61,24 @@ export class Match {
     this._homeGoals = v;
   }
 
-  constructor(data?: MatchInterface) {
-    if(data){
-    this.matchId = data.matchId;
-    this.homeTeam = data.homeTeam;
-    this.awayTeam = data.awayTeam;
-    this.homeGoals = data.homeGoals;
-    this.awayGoals = data.awayGoals;
-    this.status = data.status;
-    this.time = data.time;
-    this.bettings = data.bettings
-    }
-  }
-
-  public get date_from_time(){
-    return new Date(this.time);
-  }
-
-  private _bettings : Betting[];
-  public get bettings() : Betting[] {
+  private _bettings: Betting[];
+  public get bettings(): Betting[] {
     return this._bettings;
   }
-  public set bettings(v : Betting[]) {
+  public set bettings(v: Betting[]) {
     this._bettings = v;
   }
 
+  constructor(data?: MatchInterface) {
+    if (data) {
+      this.matchId = data.matchId;
+      this.homeTeam = data.homeTeam;
+      this.awayTeam = data.awayTeam;
+      this.homeGoals = data.homeGoals;
+      this.awayGoals = data.awayGoals;
+      this.status = data.status;
+      this.time = data.time;
+      this.bettings = data.bettings
+    }
+  }
 }

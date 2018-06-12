@@ -18,7 +18,7 @@
   </div>
 
   <div class="row mb-3">
-    <button type="button" class="btn btn-warning mr-3" (click)="openDeal()">New Handicap</button>
+    <button type="button" class="btn btn-warning mr-3" (click)="openHandicap()">New Handicap</button>
     <button routerLink="/" type="button" class="btn btn-success">Return to home</button>
   </div>
 
@@ -42,7 +42,7 @@
           <td scope="row">0x01c400bcef2e2416b84...</td>
           <td scope="row">3</td>
           <td>
-            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal">Deal</button>
+            <button type="button" class="btn btn-info" (click)="openDeal()">Deal</button>
           </td>
         </tr>
       </tbody>

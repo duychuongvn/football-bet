@@ -138,7 +138,7 @@ export class SolobetService {
     // var matchTime = new Date(match.matchDate + " " + match.matchTime).getTime();
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
-        return instance.offerNewMatch(parseInt(match.id), match.homeTeam, match.awayTeam,  match.time, rate, {from: account, value: amount * 1000000000000000000});
+        return instance.offerNewMatch(parseInt(match.matchId), match.homeTeam, match.awayTeam,  match.time, rate, {from: account, value: amount * 1000000000000000000});
       }).then(result => {
          observer.next(result);
          observer.complete();
