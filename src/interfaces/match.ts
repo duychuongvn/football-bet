@@ -1,3 +1,5 @@
+import {Betting} from 'models/betting'
+
 export interface MatchInterface {
   matchId: string | number;
   homeTeam: string;
@@ -6,4 +8,5 @@ export interface MatchInterface {
   awayGoals: number;
   time: number;
   status: number;
+  bettings: Betting[];
 }

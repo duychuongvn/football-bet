@@ -1,4 +1,5 @@
 import {MatchInterface} from 'interfaces/match'
+import {Betting} from 'models/betting'
 
 export class Match {
   private _status: number;
@@ -66,10 +67,20 @@ export class Match {
     this.awayGoals = data.awayGoals;
     this.status = data.status;
     this.time = data.time;
+    this.bettings = data.bettings
     }
   }
 
   public get date_from_time(){
     return new Date(this.time);
   }
+
+  private _bettings : Betting[];
+  public get bettings() : Betting[] {
+    return this._bettings;
+  }
+  public set bettings(v : Betting[]) {
+    this._bettings = v;
+  }
+
 }

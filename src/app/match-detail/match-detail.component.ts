@@ -30,6 +30,8 @@ export class MatchDetailComponent implements OnInit {
     { id: "175", value: "0:1 3/4" },
     { id: "200", value: "0:2" }
   ];
+
+
   public account: any;
   public accounts: any;
 
@@ -43,6 +45,7 @@ export class MatchDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    let _pairs: any[]=[];
     this._getAccounts();
     this._route.queryParams.subscribe(p => {
       if (p.id) {
@@ -55,8 +58,12 @@ export class MatchDetailComponent implements OnInit {
 
   private _setProperties(p: any) {
     this.handicap.id = p.id.toString();
-    this.handicap.pairTeam = p.homeTeamName + "-" + p.awayTeamName;
-    this.handicap.inversePairTeam = p.awayTeamName + "-" + p.homeTeamName;
+
+    let _pairs: any[] = [
+      {id:"1",value:p.homeTeamName + "-" + p.awayTeamName},
+      {id:"2",value:p.awayTeamName + "-" + p.homeTeamName}    ];
+    this.handicap.pairs = _pairs;
+    console.log(this.handicap.pairs)
     this.handicap.date = p.date;
 
     this.fixture.id = p.id.toString();
@@ -105,19 +112,22 @@ export class MatchDetailComponent implements OnInit {
   }
 
   public offer(handicap: Handicap) {
-    console.log(this.match)
+    console.log(handicap);
     // this._prepareMatches(handicap);
-    this._solobetService.newOffer(this.account, this.match, +handicap.odds, handicap.stake).subscribe(
-      result => {
-        console.log("====begin loadBettings=====")
-        this.loadBettings(this.match);
-        console.log("====end loadBettings=====")
-      },
 
-      e => {
-        console.error("Invalid number of arguments to Solidity function", e)
-      }
-    );
+    this._solobetService
+      .newOffer(this.account, this.match, +handicap.odds, handicap.stake)
+      .subscribe(
+        result => {
+          console.log("====begin loadBettings=====");
+          this.loadBettings(this.match);
+          console.log("====end loadBettings=====");
+        },
+
+        e => {
+          console.error("Invalid number of arguments to Solidity function", e);
+        }
+      );
   }
 
   private _prepareMatches(handicap) {
@@ -127,7 +137,7 @@ export class MatchDetailComponent implements OnInit {
     let time = new Date(handicap.date);
     console.log(time.getTime());
     this.match.time = time.getTime();
-    console.log(this.match)
+    console.log(this.match);
     console.log(handicap);
   }
 }

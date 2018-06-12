@@ -2,6 +2,17 @@ import { HandicapInterface } from "interfaces/handicap";
 import { DateTime } from "luxon";
 
 export class Handicap {
+
+
+private _selectedPair : string;
+public get selectedPair() : string {
+  return this._selectedPair;
+}
+public set selectedPair(v : string) {
+  this._selectedPair = v;
+}
+
+
   private _id: number | string;
   public get id(): number | string {
     return this._id;
@@ -10,13 +21,7 @@ export class Handicap {
     this._id = v;
   }
 
-  private _pairTeam: string;
-  public get pairTeam(): string {
-    return this._pairTeam;
-  }
-  public set pairTeam(v: string) {
-    this._pairTeam = v;
-  }
+
 
   private _odds: string;
   public get odds(): string {
@@ -44,13 +49,15 @@ export class Handicap {
   }
 
 
-  private _inversePairTeam : string;
-  public get inversePairTeam() : string {
-    return this._inversePairTeam;
-  }
-  public set inversePairTeam(v : string) {
-    this._inversePairTeam = v;
-  }
+
+private _pairs : any[];
+public get pairs() : any[] {
+  return this._pairs;
+}
+public set pairs(v : any[]) {
+  this._pairs = v;
+}
+
 
   public get date_string(): string {
     return DateTime.fromISO(this._date).toFormat('f');
@@ -60,10 +67,10 @@ export class Handicap {
     if (data) {
       this.id = data.id;
       this.odds = data.odds;
-      this.pairTeam = data.pairTeam;
+      this.pairs = data.pairs;
       this.stake = data.stake;
       this.date = data.date;
-      this.inversePairTeam = data.inversePairTeam;
+      this.selectedPair = data.selectedPair;
     }
   }
 }

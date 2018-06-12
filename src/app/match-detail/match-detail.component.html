@@ -13,12 +13,12 @@
       <div>
         <i class="material-icons">
           date_range
-        </i>{{fixture.date_string}}</div>
+        </i>{{match.date_from_time}}</div>
     </div>
   </div>
 
   <div class="row mb-3">
-    <button type="button" class="btn btn-warning mr-3" data-toggle="modal" data-target="#exampleModal">
+    <button type="button" class="btn btn-warning mr-3" data-toggle="modal" data-target="#offerModal">
       New Handicap
     </button>
     <button routerLink="/" type="button" class="btn btn-success">Return to home</button>
@@ -77,10 +77,9 @@
 
           <div class="row ml-2">
             <div class="form-group">
-              <label for="teamName">Select Pair</label>
-              <select class="form-control" id="teamName">
-                <option value="{{handicap.pairTeam}}">{{handicap.pairTeam}}</option>
-                <option value="{{handicap.inversePairTeam}}">{{handicap.inversePairTeam}}</option>
+              <label for="pairs">Select Pair</label>
+              <select [(ngModel)]="handicap.selectedPair" class="form-control" id="pairs">
+                <option [value]="item.id" *ngFor="let item of handicap.pairs">{{item.value}}</option>
               </select>
             </div>
 
@@ -109,7 +108,7 @@
     </div>
   </div>
 
-  <!-- Modal -->
+  <!-- Modal
   <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -165,5 +164,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </div>-->
 </div>

@@ -1,7 +1,7 @@
 export interface HandicapInterface{
   id: number | string,
-  pairTeam: string,
-  inversePairTeam: string,
+  pairs: any[],
+  selectedPair: string,
   odds: string,
   stake: number,
   date: string;

@@ -1,5 +1,7 @@
 import { Component, NgZone, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { Match } from "models/match";
+
 import {
   Web3Service,
   SolobetService,
@@ -21,15 +23,7 @@ import * as includes from "lodash/includes";
 export class HomeComponent implements OnInit {
   public account: any;
   public accounts: any;
-  public match = {
-    matchId: "",
-    homeTeam: "",
-    awayTeam: "",
-    homeGoals: 0,
-    awayGoals: 0,
-    time: 0,
-    status: 0
-  };
+  public match: Match = new Match();
   public upcommingMatches: any;
   public bettings: any;
   public amount: 0;
