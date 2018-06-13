@@ -200,226 +200,280 @@ contract AsianSoloBet is Ownable, Strings {
   }
 
 
-  function getFunding(Match _match, Betting _betting) internal returns (Funding[3] bookmakerFunding) {
+  function calcFundForBetting00AndBookmakerChooseStrongerTeam(int bookMarkerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+
+    if (bookMarkerTeamScore > punterTeamScore) {// home team win
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    } else if (bookMarkerTeamScore == punterTeamScore) {
+
+      bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
+      bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
+
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+  function calcFundForBetting025AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    uint256 halfAmount = amountAfterFee / 2;
+    if (bookmakerTeamScore > punterTeamScore) {// home team win
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    } else if (bookmakerTeamScore == punterTeamScore) {
+
+      bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
+      bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+  function calcFundForBetting025AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    uint256 halfAmount = amountAfterFee / 2;
+    if (punterTeamScore > bookmakerTeamScore) {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+
+
+    } else if (punterTeamScore == bookmakerTeamScore) {
+
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
+      bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
+    } else {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+
+  function calcFundForBetting050AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    if (bookmakerTeamScore > punterTeamScore) {// home team win
+
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+  function calcFundForBetting050AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    if (punterTeamScore > bookmakerTeamScore) {// home team win
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+    } else {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+
+  function calcFundForBetting075AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    int score = bookmakerTeamScore - punterTeamScore;
+    uint256 halfAmount = amountAfterFee / 2;
+    if (score > 1) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    } else if (score == 1) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
+      bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
+
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+  function calcFundForBetting075AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    int score = bookmakerTeamScore - punterTeamScore;
+    uint256 halfAmount = amountAfterFee / 2;
+    if (score >= 0) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    } else if (score == - 1) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
+      bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+  function calcFundForBetting100AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    int score = bookmakerTeamScore - punterTeamScore;
+    if (score > 1) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    } else if (score == 1) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
+      bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+  function calcFundForBetting100AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    int score = bookmakerTeamScore - punterTeamScore;
+    if (score >= 0) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    } else if (score == - 1) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
+      bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+
+    }
+  }
+
+
+  function calcFundForBetting125AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    int score = bookmakerTeamScore - punterTeamScore;
+    uint256 halfAmount = amountAfterFee / 2;
+    if (score > 1) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    } else if (score == 1) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
+      bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+
+    }
+  }
+
+  function calcFundForBetting125AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    int score = bookmakerTeamScore - punterTeamScore;
+    uint256 halfAmount = amountAfterFee / 2;
+    if (score >= 0) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    } else if (score == - 1) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
+      bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+  function calcFundForBetting150AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    int score = bookmakerTeamScore - punterTeamScore;
+    if (score > 1) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+  function calcFundForBetting150AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    int score = bookmakerTeamScore - punterTeamScore;
+    if (score >= - 1) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+  function calcFundForBetting175AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    int score = bookmakerTeamScore - punterTeamScore;
+    uint256 halfAmount = amountAfterFee / 2;
+    if (score > 2) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    } else if (score == 2) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
+      bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
+
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+  function calcFundForBetting175AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    int score = bookmakerTeamScore - punterTeamScore;
+    uint256 halfAmount = amountAfterFee / 2;
+    if (score >= - 1) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    } else if (score == - 2) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
+      bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
+
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+  function calcFundForBetting200AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+    int score = bookmakerTeamScore - punterTeamScore;
+    if (score > 2) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+
+    } else if (score == 2) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
+      bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
+
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+  function calcFundForBetting200AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+
+    int score = bookmakerTeamScore - punterTeamScore;
+    if (score >= - 1) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+    } else if (score == - 2) {
+      bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
+      bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
+
+    } else {
+      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+    }
+  }
+
+
+  function getFunding(Match _match, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
     int homeScore = _match.homeScore;
     int awayScore = _match.awayScore;
     uint256 fee = _betting.amount - _betting.amount * 95 / 100;
     uint256 amountAfterFee = _betting.amount - fee;
     uint256 halfAmount = amountAfterFee / 2;
     int score;
-    //    Funding[2] memory bookmakerFunding;
     int rate = _betting.rate;
 
     if (rate == 0) {
-
-      if (homeScore > awayScore) {// home team win
-        //  bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else if (homeScore == awayScore) {
-
-        bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
-
-      } else {
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-      }
-
+      bookmakerFunding = calcFundForBetting00AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
     } else if (rate == - 25) {
-      if (homeScore > awayScore) {// home team win
-        // bookmakerFunding.push(Funding(_betting.bookmaker, amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else if (homeScore == awayScore) {
-
-        //  bookmakerFunding.push(Funding(_betting.bookmaker, halfAmount, _betting));
-        //  bookmakerFunding.push(Funding(_betting.punter, _betting.amount + halfAmount, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
-      } else {
-        // bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-      }
+      bookmakerFunding = calcFundForBetting025AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
     } else if (rate == 25) {// bet for away team
+      bookmakerFunding = calcFundForBetting025AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
 
-      if (homeScore > awayScore) {// home team win
-        //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-
-
-      } else if (homeScore == awayScore) {
-
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
-      } else {
-        // bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      }
     } else if (rate == - 50) {// bet for home team
-      if (homeScore > awayScore) {// home team win
+      bookmakerFunding = calcFundForBetting050AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
 
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else {
-        //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-      }
     } else if (rate == 50) {// bet for away team
-      if (homeScore > awayScore) {// home team win
-        // bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-      } else {
-        //  bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      }
+
+      bookmakerFunding = calcFundForBetting050AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
     } else if (rate == - 75) {// bet for home team
-      score = homeScore - awayScore;
-      if (score > 1) {
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else if (score == 1) {
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting));
-        //        bookmakerFunding.push(Funding(_betting.punter, halfAmount, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
+      bookmakerFunding = calcFundForBetting075AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
 
-      } else {
-        //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-
-      }
     } else if (rate == 75) {// bet for away team
-      score = awayScore - homeScore;
-      if (score >= 0) {
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-
-      }  else if (score == -1) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
-      } else {
-        //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-      }
+      bookmakerFunding = calcFundForBetting075AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
     } else if (rate == - 100) {// bet for home team
-      score = homeScore - awayScore;
-      if (score > 1) {
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else if (score == 1) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
-      } else {
-        //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-      }
+      bookmakerFunding = calcFundForBetting100AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
     } else if (rate == 100) {// bet for away team
-      score = awayScore - homeScore;
-      if (score >= 0) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else if (score == -1) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker,amountAfterFee, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
-      } else {
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-
-      }
+      bookmakerFunding = calcFundForBetting100AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
     } else if (rate == - 125) {// bet for home team
-      score = homeScore - awayScore;
-      if (score > 1) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else if (score == 1) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
-      } else {
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-
-      }
+      bookmakerFunding = calcFundForBetting125AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
     } else if (rate == 125) {// bet for away team
-      score = awayScore - homeScore;
-      if (score >=0) {
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else if (score == -1) {
-
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
-      } else {
-        //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-      }
+      bookmakerFunding = calcFundForBetting125AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
     } else if (rate == - 150) {// bet for home team
-      score = homeScore - awayScore;
-      if (score > 1) {
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else {
-        //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-      }
+      bookmakerFunding = calcFundForBetting150AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
     } else if (rate == 150) {// bet for away team
-      score = awayScore - homeScore;
-      if (score >= -1) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-
-      } else {
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-      }
+      bookmakerFunding = calcFundForBetting150AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
     } else if (rate == - 175) {// bet for home team
-      score = homeScore - awayScore;
-      if (score > 2) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else if (score == 2) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
+      bookmakerFunding = calcFundForBetting175AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
 
-      } else {
-        //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-      }
-    }
-    else if (rate == 175) {// bet for home team
-      score = awayScore - homeScore;
-      if (score >= -1) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else if (score == -2) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker,  halfAmount, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
+    } else if (rate == 175) {// bet for home team
+      bookmakerFunding = calcFundForBetting175AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
+    } else if (rate == - 200) {// bet for home team
+      bookmakerFunding = calcFundForBetting200AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
 
-      } else {
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-      }}
-
-    else if (rate == - 200) {// bet for home team
-      score = homeScore - awayScore;
-      if (score > 2) {
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-
-      } else if (score == 2) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
-
-      } else {
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-      }
     } else if (rate == 200) {// bet for away team
-      score = awayScore - homeScore;
-      if (score >= -1) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else if (score == -2) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
-
-      } else {
-        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-      }
+      bookmakerFunding = calcFundForBetting200AndBookmakerChooseWeakerTeam(awayScore,homeScore, amountAfterFee, _betting);
     }
-    bookmakerFunding[2] = Funding(feeOwner, fee, _betting);
+    //    bookmakerFunding[2] = Funding(feeOwner, fee, _betting);
     return bookmakerFunding;
   }
 
   function funding(Match _match, Betting _betting) internal returns (bool) {
 
-    Funding[3] memory fundings = getFunding(_match, _betting);
+    Funding[2] memory fundings = getFunding(_match, _betting);
     for (uint i = 0; i < fundings.length; i++) {
       Funding memory funding = fundings[i];
       if (funding.receiver != 0x0) {
