@@ -1,8 +1,12 @@
 const AsianSoloBet = artifacts.require("AsianSoloBet");
 const betAmount = 2000000000000000000;// 2 Ether
-const totalAmountReceivedAfterWin = betAmount + betAmount * 95 / 100 - 21000;// 5% fee and 21000 gas
+const  amountAfterFee = betAmount * 95 / 100;
+const  gasUsedToSendTx = 21000;
+const totalAmountReceivedAfterWin = betAmount + amountAfterFee - gasUsedToSendTx;// 5% fee and 21000 gas
+
 const halfAmountPaidAfterFee = betAmount * 95 / 100/2;
-const totalAmountReceivedAfterDrawAndGetHaldPaid = betAmount + halfAmountPaidAfterFee - 21000;// 5% fee and 21000 gas
+const totalAmountReceivedWhenLooseAHalf = halfAmountPaidAfterFee - gasUsedToSendTx;
+const totalAmountRecievedWhenWinAHalf = betAmount + totalAmountReceivedWhenLooseAHalf;
 var offerNewMatch = (owner) => {
 
 }
@@ -88,6 +92,8 @@ describe('When offer new match', () => {
 
     contract("AsianSoloBet", accounts => {
       const [firstAccount] = accounts;
+      const contractOwner = accounts[0]
+      const feeOwner = contractOwner;
       const bookmaker = accounts[1]
       const punter = accounts[2];
       const matchTime = 1548728850000;
@@ -226,7 +232,7 @@ describe('When offer new match', () => {
         contract.deal(0x127, 0, {from: punter, value: betAmount});
 
         await sleep();
-        await contract.updateScore(0x127, 0, 1); // Russia 0:0 USA
+        await contract.updateScore(0x127, 0, 1); // Russia 0:1 USA
         const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
         const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
 
@@ -239,8 +245,8 @@ describe('When offer new match', () => {
         const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
         //cannot verify exact amount due to lack of gas
-        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + halfAmountPaidAfterFee), "Bookmaker loose half amount when the match is draw")
-        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + betAmount + halfAmountPaidAfterFee), "Punter win half amount when the match is draw")
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer ), "Bookmaker loose all when russia lose 0-1");
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all when Rusa lose 0-1")
 
       });
 
@@ -412,11 +418,703 @@ describe('When offer new match', () => {
         const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
         //cannot verify exact amount due to lack of gas
-        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerBeforeOffer + halfAmountPaidAfterFee) , "Bookmaker win 1/2 when Russia win 2-1")
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + betAmount + halfAmountPaidAfterFee) , "Bookmaker win 1/2 when Russia win 2-1")
         assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + halfAmountPaidAfterFee), "Punter lose 1/2 amount when Russia win 2-1")
 
       });
+
+      it('should transfer all stake to punter when  pair is [Rusia 0:3/4 USA] and bookmaker choose Rusia (-75) and the match is draw 2-2 ', async () => {
+        const betAmount = 2000000000000000000;
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x134, homeTeam, awayTeam, 0, matchTime, -75, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x134, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x134, 2, 2); // Russia 2:2 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x134);
+
+        await sleep();
+        await contract.updateScore(0x134, 2, 2); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker loose when choose Rusia and the match is draw" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win when chose USA and the match is draw");
+
+      });
+
+
+      it('should transfer all stake to punter when  pair is [Rusia 0:3/4 USA] and bookmaker choose Rusia (-75) and the match USA win 3-2 ', async () => {
+        const betAmount = 2000000000000000000;
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x135, homeTeam, awayTeam, 0, matchTime, -75, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x135, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x135, 2, 3); // Russia 2:3 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x135);
+
+        await sleep();
+        await contract.updateScore(0x135, 2, 3); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker loose when choose Rusia and the match is draw" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win when chose USA and the match is draw");
+
+      });
+
+
+      it('should transfer all stake to bookmaker when  pair is [Rusia 0:1 USA] and bookmaker choose Rusia (-100) and the match Russia 2-0 USA ', async () => {
+        const betAmount = 2000000000000000000;
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x136, homeTeam, awayTeam, 0, matchTime, -100, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x136, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x136, 2, 0); // Russia 2:0 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x136);
+
+        await sleep();
+        await contract.updateScore(0x136, 2, 0); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin) , "Bookmaker win all amount when result is Rusia 2-0 USA" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal), "Punter loose all money when result is  Rusia 2-0 USA");
+
+      });
+
+
+      it('should refund to bookmaker and punter when  pair is [Rusia 0:1 USA] and bookmaker choose Rusia (-100) and the match is Russia 2-1 USA ', async () => {
+        const betAmount = 2000000000000000000;
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x137, homeTeam, awayTeam, 0, matchTime, -100, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x137, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x137, 2, 1); // Russia 2:1 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x137);
+
+        await sleep();
+        await contract.updateScore(0x137, 2, 1); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + amountAfterFee - gasUsedToSendTx) , "Bookmaker receive the stake when the match result is Rusia 2-1 USA" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + amountAfterFee - gasUsedToSendTx), "Bookmaker receive the stake when the match result is Rusia 2-1 USA");
+
+      });
+
+      it('should transfer to punter when  pair is [Rusia 0:1 USA] and bookmaker choose Rusia (-100) and the match is draw ', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -100, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 2, 2); // Russia 2:2 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 2, 2); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker loose all when the match is draw (2-2)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all money when the mach is draw (2-2)");
+
+      });
+
+      it('should transfer to punter when  pair is [Rusia 0:1 USA] and bookmaker choose Rusia (-100) and  Russia loose ', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -100, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 1, 2); // Russia 1:2 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 1, 2); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker loose all when the match is Russia 2-1 USA" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all money when the mach is Russia 2-1 USA");
+
+      });
+
+      it('should transfer to bookmaker when  pair is [Rusia 0:1 1/4 USA] (1.25) and bookmaker choose Rusia and the match Russia 3-1 USA', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -125, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 3, 1); // Russia 3:1USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 3, 1); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin) , "Bookmaker win all when the match is Russia 3-1 USA" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal), "Punter loose all money when the mach is Russia 3-1 USA");
+
+      });
+
+      it('should transfer to punter when  pair is [Rusia 0:1 USA] and bookmaker choose Rusia (-100) and  Russia loose ', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -100, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 1, 2); // Russia 1:2 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 1, 2); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker loose all when the match is Russia 2-1 USA" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all money when the mach is Russia 2-1 USA");
+
+      });
+
+      it('should transfer a half to bookmaker and punter when  pair is [Rusia 0:1 1/4 USA] (1.25) and bookmaker choose Rusia and the match Russia 3-2 USA', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -125, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 3, 2); // Russia 3:1USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 3, 2); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedWhenLooseAHalf) , "Bookmaker loose a half  when the match is Russia 3-2 USA" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountRecievedWhenWinAHalf), "Punter win a half when the mach is Russia 3-2 USA");
+
+      });
+
+
+      it('should transfer all to punter when  pair is [Rusia 0:1 1/4 USA] (1.25) and bookmaker choose Rusia and the match Russia 3-3 USA (draw)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -125, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 3, 3); // Russia 3:1USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 3, 3); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker loose all  when the match is Russia 3-3 USA (draw)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all when the mach is Russia 3-3 USA (draw)");
+
+      });
+
+      it('should transfer all to punter when  pair is [Rusia 0:1 1/4 USA] (1.25) and bookmaker choose Rusia and the match Russia 3-4 USA (Russia loose)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -125, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 3, 4); // Russia 3:1USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 3, 4); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker loose all  when the match is Russia 3-4 USA (Russia loose)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all when the mach is Russia 3-4 USA (Russia loose)");
+
+      });
+
+
+      it('should transfer all to bookmaker when  pair is [Rusia 0:1 1/2 USA] (1.50) and bookmaker choose Rusia and the match Russia 3-1  USA (Russia win 2 goals)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -150, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 3, 1); // Russia 3:1USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 3, 1); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin) , "Bookmaker win all  when the match is Russia 3-1 USA (Russia win)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal), "Punter loose all when the mach is Russia 3-1 USA (Russia win)");
+
+      });
+
+      it('should transfer all to punter when  pair is [Rusia 0:1 1/2 USA] (1.50) and bookmaker choose Rusia and the match Russia 3-2  USA (Russia win 1 goals)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -150, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 3, 2); // Russia 3:2 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 3, 2); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker loose all  when the match is Russia 3-2 USA (Russia win 1 goal)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all when the mach is Russia 3-1 USA (Russia win 1 goal)");
+
+      });
+
+      it('should transfer all to punter when  pair is [Rusia 0:1 1/2 USA] (1.50) and bookmaker choose Rusia and the match Russia 3-3  USA (Russia draw)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -150, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 3, 3); // Russia 3:2 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 3, 3); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker loose all  when the match is Russia 3-3 USA (Russia draw)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all when the mach is Russia 3-3 USA (Russia draw)");
+
+      });
+
+
+      it('should transfer all to punter when  pair is [Rusia 0:1 1/2 USA] (1.50) and bookmaker choose Rusia and the match Russia 1-2  USA (Russia loose)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -150, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 1, 2); // Russia 1:2 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 1, 2); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker loose all  when the match is Russia 1-2 USA (Russia loose)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all when the mach is Russia 1-2 USA (Russia loose)");
+
+      });
+
+
+      it('should transfer all to bookmaker when  pair is [Rusia 0:1 3/4 USA] (1.75) and bookmaker choose Rusia and the match Russia 4-1  USA (Russia win >= 3 goals)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -175, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 1); // Russia 4:1 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 1); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin) , "Bookmaker win all  when the match is Russia 4-1 USA (Russia win >= 3 goals)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal ), "Punter loose all when the match is Russia 4-1 USA (Russia win >= 3 goals)");
+
+      });
+
+
+      it('should transfer a half to bookmaker and punter when  pair is [Rusia 0:1 3/4 USA] (1.75) and bookmaker choose Rusia and the match Russia 4-2  USA (Russia win = 2 goals)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -175, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 2); // Russia 4:2 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 2); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountRecievedWhenWinAHalf) , "Bookmaker win a half  when the match is Russia 4-2 USA (Russia win 2 goals)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedWhenLooseAHalf), "Punter loose a half all when the match is Russia 4-1 USA (Russia win 2 goals)");
+
+      });
+
+      it('should transfer all to punter when  pair is [Rusia 0:1 3/4 USA] (1.75) and bookmaker choose Rusia and the match Russia 4-3  USA (Russia win = 1 goals)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -175, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 3); // Russia 4:3 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 3); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker loose all when the match is Russia 4-3 USA (Russia win 1 goal)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all when the match is Russia 4-3 USA (Russia win 1 goal)");
+
+      });
+
+
+      it('should transfer all to punter when  pair is [Rusia 0:1 3/4 USA] (1.75) and bookmaker choose Rusia and the match Russia 4-4  USA (Russia draw)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -175, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 4); // Russia 4:3 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 4); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker loose all when the match is Russia 4-4 USA (Russia draw)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all when the match is Russia 4-4 USA (Russia draw)");
+
+      });
+
+      it('should transfer all to punter when  pair is [Rusia 0:1 3/4 USA] (1.75) and bookmaker choose Rusia and the match Russia 4-5  USA (Russia loose)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -175, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 5); // Russia 4:5 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 5); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker loose all when the match is Russia 4-5 USA (Russia loose)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all when the match is Russia 4-5 USA (Russia loose)");
+
+      });
+
+      it('should transfer all to bookmaker when  pair is [Rusia 0:2 USA] (2.00) and bookmaker choose Rusia and the match Russia 4-1  USA (Russia win >=3 goals)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -200, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 1); // Russia 4:1 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 1); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin) , "Bookmaker win all when the match is Russia 4-1 USA (Russia win 3 goals)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal ), "Punter loose all when the match is Russia 4-1 USA (Russia win 3 goals)");
+
+      });
+
+      it('should refund to bookmaker and punter when  pair is [Rusia 0:2 USA] (2.00) and bookmaker choose Rusia and the match Russia 4-2  USA (Russia win 2 goals)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -200, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 2); // Russia 4:2 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 2); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + amountAfterFee) , "Bookmaker receives refund when the match is Russia 4-2 USA (Russia win 2 goals)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + amountAfterFee ), "Punter recieves refund when the match is Russia 4-2 USA (Russia win 2 goals)");
+
+      });
+
+
+      it('should transfer to punter when  pair is [Rusia 0:2 USA] (2.00) and bookmaker choose Rusia and the match Russia 4-3  USA (Russia win 1 goals)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -200, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 3); // Russia 4:3 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 3); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer ) , "Bookmaker loose all when the match is Russia 4-3 USA (Russia win 1 goals)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin ), "Punter win refund when the match is Russia 4-3 USA (Russia win 1 goals)");
+
+      });
+      it('should transfer to punter when  pair is [Rusia 0:2 USA] (2.00) and bookmaker choose Rusia and the match Russia 4-4  USA (Russia draw)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -200, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 4); // Russia 4:4 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 4); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer ) , "Bookmaker loose all when the match is Russia 4-4 USA (Russia draw)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin ), "Punter win refund when the match is Russia 4-4 USA (Russia draw)");
+
+      });
+
+
+      it('should transfer to punter when  pair is [Rusia 0:2 USA] (2.00) and bookmaker choose Rusia and the match Russia 4-5  USA (Russia loose)', async () => {
+        const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
+        contract.offerNewMatch(0x138, homeTeam, awayTeam, 0, matchTime, -200, {from: bookmaker, value: betAmount});
+
+        // punter deals with bookmaker means that
+        contract.deal(0x138, 0, {from: punter, value: betAmount});
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 5); // Russia 4:5 USA
+        const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+        contract.approveScore(0x138);
+
+        await sleep();
+        await contract.updateScore(0x138, 4, 5); // cheat here to wait for network update new balance
+
+        const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+        const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+
+        //cannot verify exact amount due to lack of gas
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer ) , "Bookmaker loose all when the match is Russia 4-5 USA (Russia loose)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin ), "Punter win refund when the match is Russia 4-5 USA (Russia loose)");
+
+      });
+
+
     });
+
 
 
   });
