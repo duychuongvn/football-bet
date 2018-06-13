@@ -32,7 +32,7 @@ export class Betting {
 
   private _dealer: string;
   public get dealer(): string {
-    return this._dealer;
+    return (this._dealer === "0x0000000000000000000000000000000000000000")?"":this._dealer;
   }
   public set dealer(v: string) {
     this._dealer = v;
@@ -64,11 +64,12 @@ export class Betting {
 
   private _offer: string;
   public get offer(): string {
-    return this._offer;
+    return (this._offer === "0x0000000000000000000000000000000000000000")?"":this._offer;;
   }
   public set offer(v: string) {
     this._offer = v;
   }
+
 
   constructor(data?: BettingInterface) {
     if (data) {

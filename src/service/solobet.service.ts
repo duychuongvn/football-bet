@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {fromPromise} from 'rxjs/observable/fromPromise';
 import {Web3Service} from './web3.service';
+import { Betting } from 'models/betting';
 
 declare var require: any;
 const solobetArtifacts = require('../../build/contracts/AsianSoloBet.json');
@@ -94,15 +95,21 @@ export class SolobetService {
     });
   }
 
-  getBetting(matchId, bettingId): Observable<any> {
+  getBetting(matchId, bettingId): Observable<Betting> {
 
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
-
         return instance.getBettingInfo.call(matchId, bettingId);
       }).then(result => {
-        let betting = {bettingId: bettingId, matchId: matchId, offer: result[0], dealer: result[1], rate: result[2], amount: result[3], status: result[4].toNumber()};
-        observer.next(betting);
+        observer.next(new Betting({
+          bettingId: bettingId,
+          matchId: matchId,
+          amount: result[3].c[0]/10000,
+          offer: result[0],
+          dealer: result[1],
+          odds: result[2].c[0],
+          stake: result[3].c[0]/10000,
+          status: result[4].toNumber()}));
         observer.complete();
       }).catch(err => {
         alert(err)
@@ -129,12 +136,6 @@ export class SolobetService {
   }
 
   newOffer(account, match, rate, amount): Observable<any> {
-
-    console.log(account)
-    console.log(match)
-    console.log(rate)
-    console.log(amount)
-    console.log(match.time)
     // var matchTime = new Date(match.matchDate + " " + match.matchTime).getTime();
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {

@@ -83,6 +83,20 @@ export class Handicap {
     this._selectedPair = v;
   }
 
+
+  private _selectedTeam : string;
+  public get selectedTeam() : string {
+    return this._selectedTeam;
+  }
+  public set selectedTeam(v : string) {
+    this._selectedTeam = v;
+  }
+
+  public get teams() : string[]{
+    return [this._homeTeamName, this._awayTeamName];
+  }
+
+
   constructor(data?: HandicapInterface) {
     if (data) {
       this.id           = data.id;
@@ -92,6 +106,7 @@ export class Handicap {
       this.selectedPair = data.selectedPair;
       this.homeTeamName = data.homeTeamName;
       this.awayTeamName = data.awayTeamName;
+      this.selectedTeam = data.selectedTeam;
     }
   }
 }

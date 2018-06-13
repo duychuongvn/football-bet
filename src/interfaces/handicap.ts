@@ -5,5 +5,6 @@ export interface HandicapInterface{
   awayTeamName: string,
   odds: string,
   stake: number,
-  date: string;
+  date: string,
+  selectedTeam: string
 }

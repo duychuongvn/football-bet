@@ -18,7 +18,7 @@
   </div>
 
   <div class="row mb-3">
-    <button type="button" class="btn btn-warning mr-3" (click)="openHandicap()">New Handicap</button>
+    <button type="button" class="btn btn-warning mr-3" (click)="openHandicap()">New Bet</button>
     <button routerLink="/" type="button" class="btn btn-success">Return to home</button>
   </div>
 
@@ -35,16 +35,19 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let betting of bettings">
-          <th scope="row">1</th>
+        <tr *ngFor="let betting of bettings; let i = index">
+          <th scope="row">{{i}}</th>
           <td scope="row">{{ betting.offer }}</td>
           <td scope="row">{{ betting.odds_string }}</td>
           <td scope="row">{{ betting.dealer }}</td>
           <td scope="row">{{ betting.amount }}</td>
-          <td>
-            <button type="button" class="btn btn-info" (click)="openDeal()">Deal</button>
+
+          <td *ngIf="betting.odds_string">
+              <button type="button" class="btn btn-info" (click)="openDeal()">Deal</button>
           </td>
+
         </tr>
+
       </tbody>
     </table>
   </div>
