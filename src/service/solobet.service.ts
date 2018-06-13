@@ -39,10 +39,10 @@ export class SolobetService {
           match.matchId = matchId;
           match.homeTeam = result[index++];
           match.awayTeam = result[index++];
-          match.homeScore = result[index++];
-          match.awayScore = result[index++];
-          match.time =    result[index++];
-          match.status = result[index++];
+          match.homeScore = result[index++].toNumber();
+          match.awayScore = result[index++].toNumber();
+          match.time =   result[index++].toNumber();
+          match.status = result[index++].toNumber();
 
           observer.next(match);
           observer.complete();
@@ -101,7 +101,7 @@ export class SolobetService {
 
         return instance.getBettingInfo.call(matchId, bettingId);
       }).then(result => {
-        let betting = {bettingId: bettingId, matchId: matchId, offer: result[0], dealer: result[1], rate: result[2], amount: result[3], status: result[4]};
+        let betting = {bettingId: bettingId, matchId: matchId, offer: result[0], dealer: result[1], rate: result[2], amount: result[3], status: result[4].toNumber()};
         observer.next(betting);
         observer.complete();
       }).catch(err => {

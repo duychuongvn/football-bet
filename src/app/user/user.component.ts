@@ -16,6 +16,9 @@ export class UserComponent {
   networkSympol: any;
   groupMatches: any;
   searchMatch: any;
+  isDeal: boolean;
+  isFinished: boolean;
+  isOpening: boolean;
   groupMatchesFilter: any;
   accountBalance: any;
   networkInfo: {selectedAccount: "", provider: {}};
@@ -26,7 +29,7 @@ export class UserComponent {
               private userService: UserService) {
 
 
-    // this.onReady();
+    this.onReady();
 
   }
 
@@ -39,13 +42,20 @@ export class UserComponent {
       // This is run from window:load and ZoneJS is not aware of it we
       // need to use _ngZone.run() so that the UI updates on promise resolution
       this._ngZone.run(() => {
-          this.loadMyBettingMatches();
+        this.init();
+        this.loadMyBettingMatches();
           this.loadAccountBalance();
+
         }
       );
     }, err => alert(err));
   }
 
+  init = () => {
+    this.isDeal = true;
+    this.isFinished = false;
+    this.isOpening = true;
+  }
   loadAccountBalance = () => {
    this.userService.getBalance(this.account).subscribe(balance => {
      this.accountBalance = balance;
@@ -74,6 +84,7 @@ export class UserComponent {
     });
   }
 
+
   convertBettingToGroupByMatches(bettingMatches) {
     this.groupMatches = new Array();
 
@@ -92,6 +103,8 @@ export class UserComponent {
 
     }
   }
+
+
   findMatch(matchId) {
     for(let i =0; i < this.groupMatches.length;i++) {
       if(this.groupMatches[i].matchId == matchId) {

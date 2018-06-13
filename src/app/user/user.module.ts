@@ -5,7 +5,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { UserComponent } from './user.component';
 
-import { MatchPipe } from './match.pipe';
+import {MatchPipe} from './match.pipe';
+import {BettingPipe} from './betting.pipe';
 
 const _router: Routes = [
   {
@@ -22,7 +23,7 @@ const _router: Routes = [
   ],
   declarations: [
     UserComponent,
-    MatchPipe
+    MatchPipe,BettingPipe
   ],
   exports: [
     UserComponent
