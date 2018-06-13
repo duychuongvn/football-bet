@@ -104,12 +104,13 @@ export class SolobetService {
         observer.next(new Betting({
           bettingId: bettingId,
           matchId: matchId,
-          amount: result[3].c[0]/10000,
+          amount: result[4].c[0]/10000,
           offer: result[0],
           dealer: result[1],
-          odds: result[2].c[0],
-          stake: result[3].c[0]/10000,
-          status: result[4].toNumber()}));
+          odds: result[3].c[0],
+          stake: result[4].c[0]/10000,
+          status: result[5].toNumber(),
+          pair: result[2].toNumber()}));
         observer.complete();
       }).catch(err => {
         alert(err)
@@ -135,11 +136,12 @@ export class SolobetService {
     });
   }
 
-  newOffer(account, match, rate, amount): Observable<any> {
+  newOffer(account, match, rate, amount, pair): Observable<any> {
     // var matchTime = new Date(match.matchDate + " " + match.matchTime).getTime();
+    console.log(match.matchId)
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
-        return instance.offerNewMatch(parseInt(match.matchId), match.homeTeam, match.awayTeam,  match.time, rate, {from: account, value: amount * 1000000000000000000});
+        return instance.offerNewMatch(+match.matchId, match.homeTeam, match.awayTeam, pair , match.time, rate, {from: account, value: amount * 1000000000000000000});
       }).then(result => {
          observer.next(result);
          observer.complete();

@@ -64,11 +64,21 @@ export class Betting {
 
   private _offer: string;
   public get offer(): string {
-    return (this._offer === "0x0000000000000000000000000000000000000000")?"":this._offer;;
+    return (this._offer === "0x0000000000000000000000000000000000000000")?"":this._offer;
   }
   public set offer(v: string) {
     this._offer = v;
   }
+
+
+  private _pair : number;
+  public get pair() : number {
+    return this._pair;
+  }
+  public set pair(v : number) {
+    this._pair = v;
+  }
+
 
 
   constructor(data?: BettingInterface) {
@@ -81,6 +91,7 @@ export class Betting {
       this.odds      = data.odds;
       this.stake     = data.stake;
       this.status    = data.status;
+      this.pair      = data.pair;
     }
   }
 }

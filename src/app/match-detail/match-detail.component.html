@@ -37,15 +37,19 @@
       <tbody>
         <tr *ngFor="let betting of bettings; let i = index">
           <th scope="row">{{i}}</th>
-          <td scope="row">{{ betting.offer }}</td>
-          <td scope="row">{{ betting.odds_string }}</td>
-          <td scope="row">{{ betting.dealer }}</td>
-          <td scope="row">{{ betting.amount }}</td>
-
-          <td *ngIf="betting.odds_string">
-              <button type="button" class="btn btn-info" (click)="openDeal()">Deal</button>
+          <td scope="row">
+              <div *ngIf="betting.pair == 1">
+                  {{ betting.offer}}
+                </div>
           </td>
+          <td scope="row">{{ betting.odds_string }}</td>
+          <td scope="row">
 
+          </td>
+          <td scope="row">{{ betting.amount}}</td>
+          <td *ngIf="betting.odds_string">
+            <button type="button" class="btn btn-info" (click)="openDeal()">Deal</button>
+          </td>
         </tr>
 
       </tbody>

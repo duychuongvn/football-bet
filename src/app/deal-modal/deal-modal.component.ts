@@ -45,8 +45,10 @@ export class DealModalComponent implements OnInit {
     console.log(handicap);
     // this._prepareMatches(handicap);
 
+    console.log(this.match)
+
     this._solobetService
-      .newOffer(this.account, this.match, +handicap.odds, handicap.stake)
+      .newOffer(this.account, this.match, +handicap.odds, handicap.stake, handicap.selectedTeam)
       .subscribe(result => {
         this._notify.success('Create success');
         this.close('reload');

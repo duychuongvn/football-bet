@@ -6,5 +6,6 @@ export interface BettingInterface{
   dealer: string,
   odds: string | number,
   stake: number,
-  status: number
+  status: number,
+  pair: number
 }

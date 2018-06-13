@@ -143,7 +143,7 @@ export class HomeComponent implements OnInit {
   }
 
   public offer(match) {
-    this._solobetService.newOffer(this.account, match, 75, 3).subscribe(
+    this._solobetService.newOffer(this.account, match, 75, 3, 0).subscribe(
       result => {
         this.loadBettings(match);
       },

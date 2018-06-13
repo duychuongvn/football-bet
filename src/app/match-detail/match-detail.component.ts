@@ -73,6 +73,7 @@ export class MatchDetailComponent implements OnInit {
       let _bettings = [];
       setTimeout(() => {
         res.bettings.map(item => {
+          console.log(item)
           _bettings.push(item);
         });
         this.bettings = _bettings;
