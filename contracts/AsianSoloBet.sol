@@ -15,8 +15,8 @@ contract AsianSoloBet is Ownable, Strings {
   event LogApproveScore(bytes32 matchId);
   event Transfer(address indexed _from, address indexed _to, uint256 _value);
 
-   uint256 GAS_PRICE = 21000;
-   uint256 GAS_LIMIT = 1; // 1Gwei
+  uint256 GAS_PRICE = 21000;
+  uint256 GAS_LIMIT = 1; // 1Gwei
   struct Match {
 
     bytes32 id;
@@ -74,13 +74,13 @@ contract AsianSoloBet is Ownable, Strings {
   }
 
 
-  function getBettingMatchesByAddress(address owner) public view returns (bytes32[], uint256[], int[], uint256[], bool[],uint[] ) {
-  //  MyBet[] memory bets = myBets[owner];
+  function getBettingMatchesByAddress(address owner) public view returns (bytes32[], uint256[], int[], uint256[], bool[], uint[]) {
+    //  MyBet[] memory bets = myBets[owner];
     bytes32[] memory matchIds = new bytes32[](myBets[owner].length);
     uint256[] memory betIdxes = new uint256[](matchIds.length);
     uint256[] memory amounts = new uint256[](matchIds.length);
     bool[]memory chooseHomeTeam = new bool[](matchIds.length);
-   // BettingStatus[] memory status = new BettingStatus[](matchIds.length);
+    // BettingStatus[] memory status = new BettingStatus[](matchIds.length);
     uint256[] memory status = new uint256[](matchIds.length);
     int[] memory rates = new int[](matchIds.length);
     for (uint32 i = 0; i < matchIds.length; i++) {
@@ -94,7 +94,7 @@ contract AsianSoloBet is Ownable, Strings {
       status[i] = uint256(bettingMatches[matchIds[i]][betIdxes[i]].status);
     }
 
-    return (matchIds, betIdxes, rates, amounts, chooseHomeTeam,status);
+    return (matchIds, betIdxes, rates, amounts, chooseHomeTeam, status);
   }
 
   function getBalance(address owner) public view returns (uint256) {
@@ -159,7 +159,7 @@ contract AsianSoloBet is Ownable, Strings {
     return true;
   }
 
-  function cancelOffer(bytes32 matchId, uint256 bettingId) external  returns (bool){
+  function cancelOffer(bytes32 matchId, uint256 bettingId) external returns (bool){
     Betting memory _betting = bettingMatches[matchId][bettingId];
     require(_betting.bookmaker == msg.sender);
     require(_betting.status == BettingStatus.Open);
@@ -185,11 +185,11 @@ contract AsianSoloBet is Ownable, Strings {
   }
 
   function transferFund(address receiver, uint256 amount) internal returns (bool) {
-        if(receiver != 0x0) {
-        uint256 txFee = GAS_LIMIT * GAS_PRICE;
-        balances[receiver] -= amount;
-        receiver.transfer(amount - txFee);
-        emit Transfer(msg.sender, receiver, amount);
+    if (receiver != 0x0) {
+      uint256 txFee = GAS_LIMIT * GAS_PRICE;
+      balances[receiver] -= amount;
+      receiver.transfer(amount - txFee);
+      emit Transfer(msg.sender, receiver, amount);
     }
   }
 
@@ -239,6 +239,7 @@ contract AsianSoloBet is Ownable, Strings {
         bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
       }
     } else if (rate == 25) {// bet for away team
+
       if (homeScore > awayScore) {// home team win
         //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
         bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
@@ -246,10 +247,8 @@ contract AsianSoloBet is Ownable, Strings {
 
       } else if (homeScore == awayScore) {
 
-        //  bookmakerFunding.push(Funding(_betting.bookmaker, halfAmount, _betting));
-        //  bookmakerFunding.push(Funding(_betting.punter, _betting.amount + halfAmount, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
+        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
+        bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
       } else {
         // bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
         bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
@@ -289,16 +288,13 @@ contract AsianSoloBet is Ownable, Strings {
       }
     } else if (rate == 75) {// bet for away team
       score = awayScore - homeScore;
-      if (score > 1) {
+      if (score >= 0) {
         //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
         bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
 
-      } else if (score == 1) {
-        halfAmount = amountAfterFee / 2;
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting));
-        //        bookmakerFunding.push(Funding(_betting.punter, halfAmount, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
+      }  else if (score == -1) {
+        bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
+        bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
       } else {
         //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
         bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
@@ -309,7 +305,7 @@ contract AsianSoloBet is Ownable, Strings {
         //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
         bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
       } else if (score == 1) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee , _betting);
+        bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
         bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
       } else {
         //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
@@ -317,45 +313,35 @@ contract AsianSoloBet is Ownable, Strings {
       }
     } else if (rate == 100) {// bet for away team
       score = awayScore - homeScore;
-      if (score > 1) {
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
+      if (score >= 0) {
         bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else if (score == 1) {
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount, _betting));
-        //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, _betting.amount, _betting);
+      } else if (score == -1) {
+        bookmakerFunding[0] = Funding(_betting.bookmaker,amountAfterFee, _betting);
+        bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
       } else {
-        //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
         bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
 
       }
     } else if (rate == - 125) {// bet for home team
       score = homeScore - awayScore;
       if (score > 1) {
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
         bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
       } else if (score == 1) {
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, halfAmount, _betting));
-        //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + halfAmount, _betting));
         bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
         bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
       } else {
-        //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
         bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
 
       }
     } else if (rate == 125) {// bet for away team
       score = awayScore - homeScore;
-      if (score > 1) {
+      if (score >=0) {
         //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
         bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else if (score == 1) {
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, halfAmount, _betting));
-        //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + halfAmount, _betting));
+      } else if (score == -1) {
 
-        bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
+        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
+        bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
       } else {
         //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
         bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
@@ -369,45 +355,40 @@ contract AsianSoloBet is Ownable, Strings {
         //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
         bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
       }
-    }     else if (rate == 150) {// bet for away team
+    } else if (rate == 150) {// bet for away team
       score = awayScore - homeScore;
-      if (score > 1) {
-        //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
+      if (score >= -1) {
         bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+
+      } else {
+        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      }
+    } else if (rate == - 175) {// bet for home team
+      score = homeScore - awayScore;
+      if (score > 2) {
+        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      } else if (score == 2) {
+        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
+        bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
 
       } else {
         //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
         bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
       }
-    } else if (rate == - 175) {// bet for home team
-                score = homeScore - awayScore;
-                if (score > 2) {
-                  bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-                }if (score == 2) {
-                     bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount+ halfAmount, _betting);
-                        bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
+    }
+    else if (rate == 175) {// bet for home team
+      score = awayScore - homeScore;
+      if (score >= -1) {
+        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      } else if (score == -2) {
+        bookmakerFunding[0] = Funding(_betting.bookmaker,  halfAmount, _betting);
+        bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
 
-                  } else {
-                  //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
-                  bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-                }
-              }
-              else if (rate == 175) {// bet for home team
-                    score = awayScore - homeScore;
-                         if (score > 2) {
-                           //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
-                           bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-                         }if (score == 2) {
-                              bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
-                                 bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
+      } else {
+        bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      }}
 
-                           } else {
-                           //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
-                           bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-                         }
-                       }
-
-     else if (rate == - 200) {// bet for home team
+    else if (rate == - 200) {// bet for home team
       score = homeScore - awayScore;
       if (score > 2) {
         //        bookmakerFunding.push(Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting));
@@ -415,21 +396,20 @@ contract AsianSoloBet is Ownable, Strings {
 
       } else if (score == 2) {
         bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter,  amountAfterFee, _betting);
+        bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
 
       } else {
         bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
       }
     } else if (rate == 200) {// bet for away team
       score = awayScore - homeScore;
-      if (score > 2) {
+      if (score >= -1) {
         bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-      } else if (score == 2) {
-        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount, _betting);
-        bookmakerFunding[1] = Funding(_betting.punter, _betting.amount, _betting);
+      } else if (score == -2) {
+        bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
+        bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
 
       } else {
-        //        bookmakerFunding.push(Funding(_betting.punter, _betting.amount + amountAfterFee, _betting));
         bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
       }
     }
@@ -489,9 +469,9 @@ contract AsianSoloBet is Ownable, Strings {
     }
 
     Betting memory _betting = Betting(msg.sender, 0x0, _match.id, uint8(pair), rate, msg.value, BettingStatus.Open);
-//    bettingMatches[matchId].push(_betting);
-    uint32 betIdx = uint32(bettingMatches[matchId].push(_betting) -1);
-    myBets[msg.sender].push(MyBet( betIdx, matchId, rate >=0));
+    //    bettingMatches[matchId].push(_betting);
+    uint32 betIdx = uint32(bettingMatches[matchId].push(_betting) - 1);
+    myBets[msg.sender].push(MyBet(betIdx, matchId, rate >= 0));
     return true;
 
   }
@@ -506,7 +486,7 @@ contract AsianSoloBet is Ownable, Strings {
     _betting.punter = msg.sender;
     _betting.status = BettingStatus.Deal;
 
-    myBets[msg.sender].push(MyBet(uint32(bettingId),matchId, _betting.rate < 0));
+    myBets[msg.sender].push(MyBet(uint32(bettingId), matchId, _betting.rate < 0));
     // emit LogDeal(_betting.offer, _betting.dealer, matchId, bettingId);
     return true;
   }
