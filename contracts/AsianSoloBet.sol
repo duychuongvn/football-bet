@@ -1,72 +1,15 @@
 pragma solidity ^0.4.21;
 
 import "./Ownable.sol";
+import "./SoloBet.sol";
 
-import "./Strings.sol";
 
+contract AsianSoloBet is Ownable, SoloBet {
 
-contract AsianSoloBet is Ownable, Strings {
-
-  enum MatchStatus {NotAvailable, Waiting, Playing, Canceled, Finished}
-
-  enum BettingStatus {Open, Deal, Canceled, Refunded, Done}
-
-  event LogDeal(address offer, address dealer, bytes32 matchId, uint256 betingId);
-  event LogApproveScore(bytes32 matchId);
-  event Transfer(address indexed _from, address indexed _to, uint256 _value);
 
   uint256 GAS_PRICE = 21000;
   uint256 GAS_LIMIT = 1; // 1Gwei
-  struct Match {
 
-    bytes32 id;
-    uint8 homeScore;
-    uint8 awayScore;
-    uint32 index;
-    uint48 time;
-    MatchStatus status;
-    bool isApproved;
-    string homeTeam;
-    string awayTeam;
-
-  }
-
-  bytes32[] bettingMatchIndexes;
-
-  struct Betting {
-    address bookmaker;
-    address punter;
-    bytes32 matchId;
-    uint8 pair;
-    int rate; // rate >= 0: bookmakers bets for home team else bet for away team
-    uint256 amount;
-    BettingStatus status;
-  }
-
-
-  struct Funding {
-
-    address receiver;
-    uint256 amount;
-    Betting betting;
-
-  }
-
-  address public feeOwner;
-  mapping(bytes32 => Match) matches;
-  mapping(bytes32 => Betting[]) bettingMatches;
-
-  mapping(address => uint256) balances;
-
-  mapping(address => MyBet[]) myBets;
-
-  struct MyBet {
-
-    uint32 betIdx;
-    bytes32 matchId;
-    bool bet4Weaker;
-
-  }
 
   function AsianSoloBet() public {
 
@@ -95,14 +38,6 @@ contract AsianSoloBet is Ownable, Strings {
     }
 
     return (matchIds, betIdxes, rates, amounts, chooseHomeTeam, status);
-  }
-
-  function getBalance(address owner) public view returns (uint256) {
-    return balances[owner];
-  }
-
-  function changeFeeOwner(address _feeOwner) public onlyOwner returns (bool) {
-    feeOwner = _feeOwner;
   }
 
 
@@ -156,6 +91,7 @@ contract AsianSoloBet is Ownable, Strings {
     }
 
     removeBettingMatch(_match);
+    emit LogApproveScore(_match.id);
     return true;
   }
 
@@ -187,7 +123,6 @@ contract AsianSoloBet is Ownable, Strings {
   function transferFund(address receiver, uint256 amount) internal returns (bool) {
     if (receiver != 0x0) {
       uint256 txFee = GAS_LIMIT * GAS_PRICE;
-      balances[receiver] -= amount;
       receiver.transfer(amount - txFee);
       emit Transfer(msg.sender, receiver, amount);
     }
@@ -196,9 +131,34 @@ contract AsianSoloBet is Ownable, Strings {
   function refund(Betting _betting) internal returns (bool) {
     transferFund(_betting.bookmaker, _betting.amount);
     _betting.status = BettingStatus.Refunded;
+    balances[_betting.bookmaker] = balances[_betting.bookmaker] - _betting.amount;
+    emit UpdateFund(_betting.bookmaker, _betting.amount, "refund");
     return true;
   }
 
+  function funding(Match _match, Betting _betting) internal returns (bool) {
+
+    Funding[2] memory fundings = getFunding(_match, _betting);
+    for (uint i = 0; i < fundings.length; i++) {
+      Funding memory funding = fundings[i];
+      if (funding.receiver != 0x0) {
+        transferFund(funding.receiver, funding.amount);
+        funding.betting.status = BettingStatus.Done;
+
+      }
+    }
+
+    balances[_betting.bookmaker] = balances[_betting.bookmaker] - _betting.amount;
+    balances[_betting.punter] = balances[_betting.punter] - _betting.amount;
+    emit UpdateFund(_betting.bookmaker, _betting.amount, "funding");
+    emit UpdateFund(_betting.punter, _betting.amount, "funding");
+    emit RemainFund(_betting.bookmaker, balances[_betting.bookmaker], "remain");
+    emit RemainFund(_betting.punter, balances[_betting.punter], "remain");
+
+  }
+
+  event UpdateFund(address player, uint256 value, string note);
+  event RemainFund(address player, uint256 value, string note);
 
   function calcFundForBetting00AndBookmakerChooseStrongerTeam(int bookMarkerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
 
@@ -465,23 +425,10 @@ contract AsianSoloBet is Ownable, Strings {
       bookmakerFunding = calcFundForBetting200AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
 
     } else if (rate == 200) {// bet for away team
-      bookmakerFunding = calcFundForBetting200AndBookmakerChooseWeakerTeam(awayScore,homeScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting200AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
     }
     //    bookmakerFunding[2] = Funding(feeOwner, fee, _betting);
     return bookmakerFunding;
-  }
-
-  function funding(Match _match, Betting _betting) internal returns (bool) {
-
-    Funding[2] memory fundings = getFunding(_match, _betting);
-    for (uint i = 0; i < fundings.length; i++) {
-      Funding memory funding = fundings[i];
-      if (funding.receiver != 0x0) {
-        transferFund(funding.receiver, funding.amount);
-        funding.betting.status = BettingStatus.Done;
-      }
-    }
-
   }
 
   function getBettingMatchIds() public view returns (bytes32[]) {
@@ -492,10 +439,6 @@ contract AsianSoloBet is Ownable, Strings {
     return bettingMatchIndexes.length;
   }
 
-
-  enum Pair {
-    Home_Away, Away_Home
-  }
   function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint pair, uint time, int rate) public payable returns (bool) {
     require(time + 75 * 1000 * 60 > now);
     // allow 15 minutes before the match finishes
@@ -525,7 +468,12 @@ contract AsianSoloBet is Ownable, Strings {
     Betting memory _betting = Betting(msg.sender, 0x0, _match.id, uint8(pair), rate, msg.value, BettingStatus.Open);
     //    bettingMatches[matchId].push(_betting);
     uint32 betIdx = uint32(bettingMatches[matchId].push(_betting) - 1);
+    if (isPlayerNotExist(msg.sender)) {
+      players.push(msg.sender);
+    }
     myBets[msg.sender].push(MyBet(betIdx, matchId, rate >= 0));
+    balances[msg.sender] += msg.value;
+
     return true;
 
   }
@@ -540,8 +488,14 @@ contract AsianSoloBet is Ownable, Strings {
     _betting.punter = msg.sender;
     _betting.status = BettingStatus.Deal;
 
+    if (isPlayerNotExist(msg.sender)) {
+      players.push(msg.sender);
+    }
     myBets[msg.sender].push(MyBet(uint32(bettingId), matchId, _betting.rate < 0));
-    // emit LogDeal(_betting.offer, _betting.dealer, matchId, bettingId);
+    balances[msg.sender] += msg.value;
+
+    emit LogDeal(_betting.bookmaker, _betting.punter, matchId, bettingId);
+
     return true;
   }
 
