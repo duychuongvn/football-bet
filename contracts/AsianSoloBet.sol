@@ -227,7 +227,7 @@ contract AsianSoloBet is Ownable, Strings {
     } else if (rate == - 25) {
       if (homeScore > awayScore) {// home team win
         // bookmakerFunding.push(Funding(_betting.bookmaker, amountAfterFee, _betting));
-        bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
+        bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
       } else if (homeScore == awayScore) {
 
         //  bookmakerFunding.push(Funding(_betting.bookmaker, halfAmount, _betting));
