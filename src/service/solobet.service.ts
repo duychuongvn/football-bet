@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {fromPromise} from 'rxjs/observable/fromPromise';
 import {Web3Service} from './web3.service';
+import {log} from 'util';
 
 declare var require: any;
 const solobetArtifacts = require('../../build/contracts/AsianSoloBet.json');
@@ -13,6 +14,7 @@ export class SolobetService {
   Solobet = contract(solobetArtifacts);
 
   solobetInstance: any;
+
   constructor(
     private web3Ser: Web3Service,
   ) {
@@ -41,7 +43,7 @@ export class SolobetService {
           match.awayTeam = result[index++];
           match.homeScore = result[index++].toNumber();
           match.awayScore = result[index++].toNumber();
-          match.time =   result[index++].toNumber();
+          match.time = result[index++].toNumber();
           match.status = result[index++].toNumber();
 
           observer.next(match);
@@ -64,6 +66,7 @@ export class SolobetService {
 
     });
   }
+
   loadBettings(matchId): Observable<any> {
 
 
@@ -75,7 +78,6 @@ export class SolobetService {
       }).then(totalBets => {
 
 
-
         for (let i = 0; i < totalBets; i++) {
           this.getBetting(matchId, i).subscribe(betting => {
             bettings.push(betting);
@@ -84,9 +86,8 @@ export class SolobetService {
         }
 
 
-
         observer.next({matchId: matchId, bettings: bettings});
-       observer.complete();
+        observer.complete();
       }).catch(err => {
         observer.error(err);
       });
@@ -100,11 +101,19 @@ export class SolobetService {
 
         return instance.getBettingInfo.call(matchId, bettingId);
       }).then(result => {
-        let betting = {bettingId: bettingId, matchId: matchId, offer: result[0], dealer: result[1], rate: result[2], amount: result[3], status: result[4].toNumber()};
+        let betting = {
+          bettingId: bettingId,
+          matchId: matchId,
+          offer: result[0],
+          dealer: result[1],
+          rate: result[2],
+          amount: result[3],
+          status: result[4].toNumber()
+        };
         observer.next(betting);
         observer.complete();
       }).catch(err => {
-        alert(err)
+        alert(err);
         observer.error(err);
       });
     });
@@ -129,18 +138,22 @@ export class SolobetService {
 
   newOffer(account, match, rate, amount): Observable<any> {
 
-    console.log(account)
-    console.log(match)
-    console.log(rate)
-    console.log(amount)
+    console.log(account);
+    console.log(match);
+    console.log(rate);
+    console.log(amount);
 
-    var matchTime = new Date(match.matchDate + " " + match.matchTime).getTime();
+    var matchTime = new Date(match.matchDate + ' ' + match.matchTime).getTime();
+
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
-        return instance.offerNewMatch(match.id, match.homeTeam, match.awayTeam,  matchTime, rate, {from: account, value: amount * 1000000000000000000});
+        return instance.offerNewMatch(parseInt(match.id), match.homeTeam, match.awayTeam, 0, match.time, rate, {
+          from: account,
+          value: amount * 1000000000000000000
+        });
       }).then(result => {
-         observer.next(result);
-         observer.complete();
+        observer.next(result);
+        observer.complete();
       }).catch(error => {
         observer.error(error);
       });
@@ -148,12 +161,12 @@ export class SolobetService {
   }
 
   updateScore(account: string, matchId: string, homeScore: number, awayScore: number) {
-     this.Solobet.deployed().then(instance => {
-       return instance.updateScore(matchId, homeScore, awayScore, {from: account});
-     });
+    this.Solobet.deployed().then(instance => {
+      return instance.updateScore(matchId, homeScore, awayScore, {from: account});
+    });
   }
 
-  loadBettingMatches() : Observable<any> {
+  loadBettingMatches(): Observable<any> {
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
         return instance.getBettingMatchIds.call();
@@ -177,7 +190,22 @@ export class SolobetService {
   toEther(wei) {
     return wei / 1000000000000000000;
   }
-  loadBettingMatchesByAccount(account) : Observable<any> {
+
+  getPlacedBalance(account): Observable<any> {
+    return Observable.create(observ => {
+      this.Solobet.deployed().then(instance=>{
+        return instance.getPlayerBalance.call(account);
+      }).then(balance=>{
+        observ.next(this.toEther(balance));
+        observ.complete();
+
+      }).catch(err => {
+        observ.error(err);
+      });
+    });
+  }
+
+  loadBettingMatchesByAccount(account): Observable<any> {
     let bettingMatches = new Array();
     return Observable.create(observe => {
       this.Solobet.deployed().then(instance => {
@@ -189,15 +217,17 @@ export class SolobetService {
         var amounts = result[3];
         var betForHomeTeam = result[4];
         var status = result[5];
-        for(let i =0; i  < matchIds.length;i++) {
-          bettingMatches.push({"matchId": matchIds[i],
-                              match: null, "bettingId":
-                              bettingIds[i].toNumber(),
-                              "rate": rates[i].toNumber(),
-                              "amount": this.toEther(amounts[i].toNumber()),
-                              "chooseHomeTeam": betForHomeTeam[i],
-                              "betFor": null,
-                              "status": status[i].toNumber()});
+        for (let i = 0; i < matchIds.length; i++) {
+          bettingMatches.push({
+            'matchId': matchIds[i],
+            match: null, 'bettingId':
+              bettingIds[i].toNumber(),
+            'rate': rates[i].toNumber(),
+            'amount': this.toEther(amounts[i].toNumber()),
+            'chooseHomeTeam': betForHomeTeam[i],
+            'betFor': null,
+            'status': status[i].toNumber()
+          });
 
 
         }

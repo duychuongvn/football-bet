@@ -88,7 +88,7 @@ contract SoloBet is Ownable {
 
   function getBettingInfo(bytes32 matchId, uint256 bettingId) public view returns (address bookmaker, address punter, uint8 pair, int odds, uint256 amount, BettingStatus status);
 
-  function getBettingMatchesByAddress(address owner) public view returns (bytes32[], uint256[], int[], uint256[], bool[], uint[]);
+  function getBettingMatchesByAddress(address owner) public view returns (bytes32[] matchIds, uint256[] betIdxes, int[] odds, uint256[] amounts, bool[]chooseHomeTeam, uint[] status);
 
   function deal(bytes32 matchId, uint256 bettingId) public payable returns (bool);
 

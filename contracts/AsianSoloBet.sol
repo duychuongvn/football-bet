@@ -23,19 +23,19 @@ contract AsianSoloBet is Ownable, SoloBet {
     uint256[] memory amounts = new uint256[](matchIds.length);
     bool[]memory chooseHomeTeam = new bool[](matchIds.length);
     uint256[] memory status = new uint256[](matchIds.length);
-    int[] memory rates = new int[](matchIds.length);
+    int[] memory odds = new int[](matchIds.length);
     for (uint32 i = 0; i < matchIds.length; i++) {
 
       matchIds[i] = myBets[owner][i].matchId;
       betIdxes[i] = uint256(myBets[owner][i].betIdx);
       chooseHomeTeam[i] = myBets[owner][i].bet4Weaker;
 
-      rates[i] = bettingMatches[matchIds[i]][betIdxes[i]].rate;
+      odds[i] = bettingMatches[matchIds[i]][betIdxes[i]].rate;
       amounts[i] = bettingMatches[matchIds[i]][betIdxes[i]].amount;
       status[i] = uint256(bettingMatches[matchIds[i]][betIdxes[i]].status);
     }
 
-    return (matchIds, betIdxes, rates, amounts, chooseHomeTeam, status);
+    return (matchIds, betIdxes, odds, amounts, chooseHomeTeam, status);
   }
 
 
