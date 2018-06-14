@@ -97,7 +97,7 @@ var assertThrow = async (fn, args) => {
         const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
         assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer ), "Bookmaker lose")
-        assert.equal(toGwei(amountOfPunterAfterDeal), toGwei(amountOfPunterAfterApproveMatchScore + totalAmountReceivedAfterWin), "Punter win")
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win")
       });
 
       it('should transfer stake to punter when pair is Russia 0:0 USA (0) and bookmaker choose USA and result is Russia 0:1 USA (Russia lose)', async () => {
@@ -122,7 +122,7 @@ var assertThrow = async (fn, args) => {
         const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
         //cannot verify exact amount deu to lack of gas
-        assert.equal(toGwei(amountOfBookMakerAfterOffer), toGwei(amountOfBookMakerAfterApproveMatchScore + totalAmountReceivedAfterWin), "Bookmaker win")
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker win")
         assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter lose")
       });
 
