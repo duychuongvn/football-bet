@@ -53,8 +53,7 @@ export class DealModalComponent implements OnInit {
         this.account,
         this.match,
         handicap.odds_number,
-        handicap.stake,
-        handicap.selectedTeam
+        handicap.stake
       )
       .subscribe(
         result => {

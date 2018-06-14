@@ -39,12 +39,12 @@
           <th scope="row">{{i}}</th>
           <td scope="row">{{betting.homeOffer}}
           </td>
-          <td scope="row" class="text-danger">{{ betting.odds_string }}</td>
+          <td scope="row" class="text-danger">{{ betting.odds }}</td>
           <td scope="row">
             {{betting.awayOffer}}
           </td>
-          <td scope="row">{{ betting.amount}}</td>
-          <td *ngIf="betting.odds_string">
+          <td scope="row">{{ betting.stake}}</td>
+          <td *ngIf="betting.odds">
             <button type="button" class="btn btn-info" (click)="openAcceptOdds(betting)">Deal</button>
           </td>
         </tr>

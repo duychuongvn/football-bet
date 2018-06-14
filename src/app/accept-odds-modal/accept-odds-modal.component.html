@@ -20,12 +20,12 @@
         {{match.homeTeam}} - {{match.awayTeam}}
     </div>
     <div id="stake">
-      <div>Stake <span>: {{handicap.stake}}</span> <span id="currency">ETH</span> </div>
+      <div>Stake <span>: {{betting.amount}}</span> <span id="currency">ETH</span> </div>
     </div>
   </div>
 </div>
 
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
-  <button type="button" class="btn btn-primary" (click)="deal(match.matchId,bettingId)">{{ btnSubmit }}</button>
+  <button type="button" class="btn btn-primary" (click)="deal(betting)">{{ btnSubmit }}</button>
 </div>

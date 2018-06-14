@@ -79,15 +79,20 @@ export class MatchDetailComponent implements OnInit {
   }
 
   private _loadBettings(id: string) {
+
     this._solobetService.loadBettings(id)
     .subscribe(res => {
+      console.log("==" +res);
       let _bettings = [];
       setTimeout(() => {
         res.bettings.map(item => {
-          if(item.pair == 0)
+          if(item.odds <=0)
           {
             item.homeOffer = item.offer;
+            item.awayOffer = item.dealer;
           }else{
+
+            item.homeOffer = item.dealer;
             item.awayOffer = item.offer;
           }
           console.log(item)

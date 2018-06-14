@@ -99,7 +99,7 @@ contract SoloBet is Ownable {
   function approveScore(bytes32 matchId) public onlyOwner returns (bool);
 
   function updateScore(bytes32 matchId, uint homeScore, uint awayScore) public onlyOwner returns (bool);
-  function claimStake(bytes32 matchId, uint256 bettingId) public returns (bool);
+//  function claimStake(bytes32 matchId, uint256 bettingId) public returns (bool);
 
   function withDrawFee() public onlyOwner {
     owner.transfer(balances[feeOwner]);

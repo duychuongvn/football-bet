@@ -70,18 +70,18 @@ export class SolobetService {
 
   loadBettings(matchId): Observable<any> {
 
-    let _matchId = parseInt(matchId);
+    // let _matchId = parseInt(matchId);
+
 
     let bettings = new Array();
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
-
-        return instance.totalBets.call(_matchId);
+        return instance.totalBets.call(matchId);
       }).then(totalBets => {
 
-
         for (let i = 0; i < totalBets; i++) {
-          this.getBetting(_matchId, i).subscribe(betting => {
+          this.getBetting(matchId, i).subscribe(betting => {
+            console.log("++++++" + JSON.stringify(betting));
             bettings.push(betting);
           });
           // bettings.push(this.getBettingSync(matchId, i));
@@ -103,13 +103,14 @@ export class SolobetService {
         observer.next(new Betting({
           bettingId: bettingId,
           matchId: matchId,
-          amount: result[4].c[0]/10000,
           offer: result[0],
           dealer: result[1],
-          odds: result[3].c[0],
-          stake: result[4].c[0]/10000,
+          pair: result[2].toNumber(),
+          odds: result[3].toNumber(),
+          amount: result[4].toNumber(),
+          stake: this.toEther(result[4].toNumber()),
           status: result[5].toNumber(),
-          pair: result[2].toNumber(),homeOffer:"",awayOffer:"",homeDealer:"",awayDealer:""}));
+          homeOffer:"",awayOffer:"",homeDealer:"",awayDealer:""}));
         observer.complete();
       }).catch(err => {
         alert(err);
@@ -119,16 +120,15 @@ export class SolobetService {
   }
 
   deal(account, matchId, bettingId): Observable<any> {
-    let _matchId = +matchId;
-    let _bettingId = +bettingId;
-
-    console.log(_matchId)
-    console.log(_bettingId)
+    console.log(matchId)
+    console.log(bettingId)
 
     return Observable.create(observer => {
-      this.getBetting(_matchId, _bettingId).subscribe(betting => {
+      this.getBetting(matchId, bettingId).subscribe(betting => {
+        alert(betting)
+        console.log(betting);
         this.Solobet.deployed().then(instance => {
-          return instance.deal(_matchId, _bettingId, {from: account, value: betting.amount});
+          return instance.deal(matchId, bettingId, {from: account, value: betting.amount});
         }).then(betResult => {
           observer.next(betResult);
           observer.complete();
@@ -148,11 +148,12 @@ export class SolobetService {
     console.log(rate);
     console.log(amount);
 
+    alert(rate);
     var matchTime = new Date(match.matchDate + ' ' + match.matchTime).getTime();
 
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
-        return instance.offerNewMatch(parseInt(match.id), match.homeTeam, match.awayTeam, 0, match.time, rate, {
+        return instance.offerNewMatch(this.web3Ser.toSHA3(match.homeTeam +match.awayTeam +match.time), match.homeTeam, match.awayTeam, 0, match.time, rate, {
           from: account,
           value: amount * 1000000000000000000
         });

@@ -61,11 +61,11 @@ export class Betting {
     this._bettingId = v;
   }
 
-  private _matchId: string | number;
-  public get matchId(): string | number {
+  private _matchId: any;
+  public get matchId(): any {
     return this._matchId;
   }
-  public set matchId(v: string | number) {
+  public set matchId(v: any) {
     this._matchId = v;
   }
 
