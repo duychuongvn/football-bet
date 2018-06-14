@@ -7,5 +7,9 @@ export interface BettingInterface{
   odds: string | number,
   stake: number,
   status: number,
-  pair: number
+  pair: number,
+  homeOffer: string,
+  awayOffer: string,
+  homeDealer: string,
+  awayDealer: string
 }

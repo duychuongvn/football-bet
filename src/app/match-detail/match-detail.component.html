@@ -37,14 +37,11 @@
       <tbody>
         <tr *ngFor="let betting of bettings; let i = index">
           <th scope="row">{{i}}</th>
-          <td scope="row">
-              <div *ngIf="betting.pair == 1">
-                  {{ betting.offer}}
-                </div>
+          <td scope="row">{{betting.homeOffer}}
           </td>
           <td scope="row">{{ betting.odds_string }}</td>
           <td scope="row">
-
+            {{betting.awayOffer}}
           </td>
           <td scope="row">{{ betting.amount}}</td>
           <td *ngIf="betting.odds_string">

@@ -81,6 +81,43 @@ export class Betting {
 
 
 
+  private _homeOffer : string;
+  public get homeOffer() : string {
+    return this._homeOffer;
+  }
+  public set homeOffer(v : string) {
+    this._homeOffer = v;
+  }
+
+
+  private _awayOffer : string;
+  public get awayOffer() : string {
+    return this._awayOffer;
+  }
+  public set awayOffer(v : string) {
+    this._awayOffer = v;
+  }
+
+
+
+  private _homeDealer : string;
+  public get homeDealer() : string {
+    return this._homeDealer;
+  }
+  public set homeDealer(v : string) {
+    this._homeDealer = v;
+  }
+
+
+private _awayDealer : string;
+public get awayDealer() : string {
+  return this._awayDealer;
+}
+public set awayDealer(v : string) {
+  this._awayDealer = v;
+}
+
+
   constructor(data?: BettingInterface) {
     if (data) {
       this.bettingId = data.bettingId;

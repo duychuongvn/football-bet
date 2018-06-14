@@ -110,7 +110,7 @@ export class SolobetService {
           odds: result[3].c[0],
           stake: result[4].c[0]/10000,
           status: result[5].toNumber(),
-          pair: result[2].toNumber()}));
+          pair: result[2].toNumber(),homeOffer:"",awayOffer:"",homeDealer:"",awayDealer:""}));
         observer.complete();
       }).catch(err => {
         alert(err)
