@@ -93,7 +93,7 @@ export class MatchDetailComponent implements OnInit {
     const _opts = {
       class: 'modal-md',
       initialState: {
-        title: 'Handicap',
+        title: 'Bets Selection',
         btnSubmit: 'Create',
         account: this.account,
         match: this.match,
@@ -109,8 +109,8 @@ export class MatchDetailComponent implements OnInit {
     const _opts = {
       class: 'modal-md',
       initialState: {
-        title: 'Deal',
-        btnSubmit: 'Deal',
+        title: 'Deal Modal',
+        btnSubmit: 'Place Bet',
         account: this.account,
         match: this.match,
         fixture: this.fixture,
@@ -130,6 +130,6 @@ export class MatchDetailComponent implements OnInit {
       subscribe.unsubscribe();
     });
 
-    this._modalService.show(DealModalComponent, opts);
+    this._modalService.show(comp, opts);
   }
 }
