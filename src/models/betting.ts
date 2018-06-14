@@ -24,7 +24,13 @@ export class Betting {
     return this._odds;
   }
   public get odds_string(): string {
-    return Handicap.oddsArray.find((item: any) => +item.id === this.odds)['value'];
+    if(this._pair === 0){
+      return Handicap.oddsArray.find((item: any) => +item.id === this.odds)['value'];
+    }else{
+       let oddsArray = Handicap.oddsArray.find((item: any) => +item.id === this.odds)['value'].split(":");
+      return oddsArray[1] + ":" +oddsArray[0];
+    }
+
   }
   public set odds(v: string | number) {
     this._odds = v;
