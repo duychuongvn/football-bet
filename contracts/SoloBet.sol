@@ -2,257 +2,106 @@ pragma solidity ^0.4.21;
 
 import "./Ownable.sol";
 
-
 contract SoloBet is Ownable {
-
+  enum Pair {Home_Away, Away_Home}
   enum MatchStatus {NotAvailable, Waiting, Playing, Canceled, Finished}
-
   enum BettingStatus {Open, Deal, Canceled, Refunded, Done}
 
-  event LogDeal(address offer, address dealer, string matchId, uint256 betingId);
-  event LogApproveScore(string matchId);
+  event LogDeal(address bookmaker, address punter, bytes32 matchId, uint256 betingId);
+  event LogApproveScore(bytes32 matchId);
   event Transfer(address indexed _from, address indexed _to, uint256 _value);
 
   struct Match {
 
-    string id;
-    string homeTeam;
-    string awayTeam;
-    uint homeGoals;
-    uint awayGoals;
-    uint time;
+    bytes32 id;
+    uint8 homeScore;
+    uint8 awayScore;
+    uint32 index;
+    uint48 time;
     MatchStatus status;
     bool isApproved;
+    string homeTeam;
+    string awayTeam;
+
   }
 
+  bytes32[] bettingMatchIndexes;
 
   struct Betting {
-
-    Match _match;
-    address offer;
-    address dealer;
-    uint[2] rate;
+    address bookmaker;
+    address punter;
+    bytes32 matchId;
+    uint8 pair;
+    int rate; // rate >= 0: bookmakers bets for home team else bet for away team
     uint256 amount;
     BettingStatus status;
   }
 
-  address public feeOwner;
-  mapping(string => Match) matches;
-  mapping(string => Betting[]) bettingMatches;
 
+  struct Funding {
 
-  function SoloBet() public {
+    address receiver;
+    uint256 amount;
+    Betting betting;
 
-    feeOwner = msg.sender;
   }
 
+  address public feeOwner;
+  mapping(bytes32 => Match) matches;
+  mapping(bytes32 => Betting[]) bettingMatches;
+  mapping(address => uint256) balances;
+  address[] players;
+  mapping(address => MyBet[]) myBets;
+
+  struct MyBet {
+
+    uint32 betIdx;
+    bytes32 matchId;
+    bool bet4Weaker;
+
+  }
+
+
+  function isPlayerNotExist(address player) internal view returns (bool) {
+    return myBets[player].length <= 0;
+  }
+
+  function countPlayers() public view returns (uint) {
+    return players.length;
+  }
+
+  function getPlayerBalance(address player) public view returns (uint256) {
+    return balances[player];
+  }
 
   function changeFeeOwner(address _feeOwner) public onlyOwner returns (bool) {
     feeOwner = _feeOwner;
   }
 
+  function totalBets(bytes32 matchId) public view returns (uint256);
 
-  function totalBets(string matchId) public view returns (uint256) {
-    return bettingMatches[matchId].length;
-  }
+  function getBettingMatchIds() public view returns (bytes32[]);
 
+  function getTotalBettingMatches() public view returns (uint256);
 
-  function findMatch(string matchId) public view returns (
-    string homeTeam,
-    string awayTeam,
-    uint homeGoals,
-    uint awayGoals,
-    uint time,
-    MatchStatus status) {
+  function findMatch(bytes32 matchId) public view returns (string homeTeam, string awayTeam, uint homeScore, uint awayScore, uint time, MatchStatus status);
 
-    Match memory _match = matches[matchId];
+  function getBettingInfo(bytes32 matchId, uint256 bettingId) public view returns (address bookmaker, address punter, uint8 pair, int odds, uint256 amount, BettingStatus status);
 
-    homeTeam = _match.homeTeam;
-    awayTeam = _match.awayTeam;
-    homeGoals = _match.homeGoals;
-    awayGoals = _match.awayGoals;
-    status = _match.status;
-    time = _match.time;
-  }
+  function getBettingMatchesByAddress(address owner) public view returns (bytes32[] matchIds, uint256[] betIdxes, int[] odds, uint256[] amounts, bool[]chooseHomeTeam, uint[] status);
 
+  function deal(bytes32 matchId, uint256 bettingId) public payable returns (bool);
 
-    function updateScore(string matchId, uint homeScore, uint awayScore) public onlyOwner returns (bool) {
+  function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint pair, uint time, int rate) public payable returns (bool);
 
-    Match storage _match = matches[matchId];
-    _match.homeGoals = homeScore;
-    _match.awayGoals = awayScore;
-    _match.status = MatchStatus.Finished;
-    return true;
-  }
+  function cancelOffer(bytes32 matchId, uint256 bettingId) external returns (bool);
 
-  function approveScore(string matchId) public onlyOwner returns (bool) {
-    Match storage _match = matches[matchId];
-    _match.isApproved = true;
+  function approveScore(bytes32 matchId) public onlyOwner returns (bool);
 
-    Betting[] storage _bettings = bettingMatches[matchId];
-    for (uint256 i = 0; i < _bettings.length; i++) {
+  function updateScore(bytes32 matchId, uint homeScore, uint awayScore) public onlyOwner returns (bool);
 
-      Betting storage _betting = _bettings[i];
-      if(_betting.status == BettingStatus.Deal) {
-        funding(_match, _betting );
-      } else {
-        refund(_betting);
-      }
-
-    }
-
-    return true;
-  }
-
-
-  function refund(Betting _betting) internal returns (bool) {
-
-      _betting.offer.transfer(_betting.amount);
-      _betting.status = BettingStatus.Refunded;
-     return true;
-  }
-
-  function funding(Match _match, Betting _betting) internal returns (bool) {
-
-
-    uint[2] memory rate = _betting.rate;
-
-    uint homeGoals = _match.homeGoals * 100;
-    uint awayGoals = _match.awayGoals * 100;
-    uint256  fee = _betting.amount - _betting.amount * 95 / 100;
-    uint256 amountAfterFee = _betting.amount - fee;
-    uint256  amount = amountAfterFee;
-    address winner;
-    address looser;
-    if(rate[0] > rate[1]) { // bet home team wins
-
-      if (rate[0] < homeGoals) { // home team scores are more than expected from offer
-        // home team win and offer win
-        winner = _betting.offer;
-        looser = _betting.dealer;
-
-      } else if(rate[0] == homeGoals) { // dealer wins if home team scores equals offer score
-
-        winner = _betting.dealer;
-        looser = _betting.offer;
-
-      if(rate[1] == 25) { // offer looses 50% if bet 1/4 for away team
-         amount =  amountAfterFee - amountAfterFee*50/100;
-          // offer lose 50%
-        } else if (rate[1] == 50) { // offer loose all if bet 1/2 for away team
-           amount =  amountAfterFee - amountAfterFee*75/100;
-          //offer lose 75%
-        } else {
-         amount = amountAfterFee;
-          // offer lose all
-        }
-
-      } else {
-        winner = _betting.dealer;
-        looser = _betting.offer;
-      }
-
-    } else
-
-    {
-      if (rate[1] < awayGoals) {
-        // home team win and offer win
-
-        winner = _betting.offer;
-        looser = _betting.dealer;
-
-
-      } else if(rate[0] == awayGoals) {
-
-        winner = _betting.dealer;
-        looser = _betting.offer;
-        if(rate[0] == 25) {
-          amount =  amountAfterFee - amountAfterFee*25/100;
-          // offer lose 50%
-        } else if (rate[0] == 50) {
-          amount =  amountAfterFee - amountAfterFee*50/100;
-          //offer lose 75%
-        } else {
-          amount = amountAfterFee;
-          // offer lose all
-        }
-
-      } else {
-
-        winner = _betting.dealer;
-        looser = _betting.offer;
-
-      }
-
-    }
-
-
-    uint256 totalFund  = _betting.amount + amount;
-    feeOwner.transfer(fee);
-    winner.transfer(totalFund);
-
-}
-
-  function offerNewMatch(string matchId, string homeTeam, string awayTeam, uint time, uint[2] rate) public payable returns (bool) {
-    require(time + 75 * 1000 * 60 > now);
-    // allow 15 minutes before the match finishes
-
-    Match memory _match;
-    _match.id = matchId;
-    _match.homeTeam = homeTeam;
-    _match.awayTeam = awayTeam;
-    _match.homeGoals = 0;
-    _match.awayGoals = 0;
-    _match.time = time;
-    if (time < now) {
-      _match.status = MatchStatus.Playing;
-    } else {
-      _match.status = MatchStatus.Waiting;
-    }
-
-    matches[matchId] = _match;
-
-    Betting memory _betting;
-    _betting._match = _match;
-    _betting.offer = msg.sender;
-    _betting.rate = rate;
-    _betting.amount = msg.value;
-    _betting.status = BettingStatus.Open;
-
-    bettingMatches[matchId].push(_betting);
-    return true;
-
-  }
-
-
-  function offer(string matchId, uint[2] rate) public payable returns (bool) {
-    Match memory _match = matches[matchId];
-    Betting memory _betting;
-    _betting._match = _match;
-    _betting.offer = msg.sender;
-    _betting.rate = rate;
-    _betting.status = BettingStatus.Open;
-    _betting.amount = msg.value;
-    bettingMatches[matchId].push(_betting);
-    return true;
-  }
-
-  function deal(string matchId, uint256 bettingId) public payable returns (bool) {
-
-    Betting storage _betting = bettingMatches[matchId][bettingId];
-    require(_betting.status == BettingStatus.Open);
-    _betting.dealer = msg.sender;
-    _betting.status = BettingStatus.Deal;
-   // emit LogDeal(_betting.offer, _betting.dealer, matchId, bettingId);
-    return true;
-  }
-
-  function getBettingInfo(string matchId, uint256 bettingId) public view returns (address offer, address dealer, uint[2] rate, uint256 amount, BettingStatus status) {
-    Betting memory _betting = bettingMatches[matchId][bettingId];
-    offer = _betting.offer;
-    dealer = _betting.dealer;
-    rate = _betting.rate;
-    amount = _betting.amount;
-    status = _betting.status;
+  function withDrawFee() public onlyOwner {
+    owner.transfer(balances[feeOwner]);
+    emit Transfer(address(this), owner, balances[feeOwner]);
   }
 }
