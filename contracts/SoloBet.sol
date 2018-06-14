@@ -62,7 +62,7 @@ contract SoloBet is Ownable {
   }
 
 
-  function isPlayerNotExist(address player) internal returns (bool) {
+  function isPlayerNotExist(address player) internal view returns (bool) {
     return myBets[player].length <= 0;
   }
 
@@ -100,18 +100,8 @@ contract SoloBet is Ownable {
 
   function updateScore(bytes32 matchId, uint homeScore, uint awayScore) public onlyOwner returns (bool);
 
-  event LogSelfDestruct(address sender, uint amount);
-
-  function destroyContract() public onlyOwner {
-    for (uint i = 0; i < players.length; i++) {
-      if (balances[players[i]] > 0) {
-        players[i].transfer(balances[players[i]]);
-        emit Transfer(address(this), players[i], balances[players[i]]);
-      }
-    }
-
-    LogSelfDestruct(owner, this.balance);
-    // selfdestruct(owner);
+  function withDrawFee() public onlyOwner {
+    owner.transfer(balances[feeOwner]);
+    emit Transfer(address(this), owner, balances[feeOwner]);
   }
-
 }

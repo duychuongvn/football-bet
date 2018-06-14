@@ -15,7 +15,7 @@ sleep = () => {
 }
 
 toGwei = (wei) => {
-  return parseInt(wei / 1000000000000000000);
+  return (wei / 10000000000000000).toFixed(2);
 }
 var assertThrow = async (fn, args) => {
   try {
@@ -107,7 +107,7 @@ describe('Test data consistently when admin update score and kill contract', asy
       contract.offerNewMatch(0x125, homeTeam, awayTeam, 0, matchTime, 0, {from: bookmaker, value: betAmount});
 
 
-     await contract.destroyContract();
+   //  await contract.destroyContract();
 
       const balanceOfBookmarkerAfterDestroyContract = await web3.eth.getBalance(bookmaker);
       const balanceOfPunterDestroyContract = await web3.eth.getBalance(punter);

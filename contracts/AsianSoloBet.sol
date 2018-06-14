@@ -6,24 +6,22 @@ import "./SoloBet.sol";
 
 contract AsianSoloBet is Ownable, SoloBet {
 
-
+  string public name;
   uint256 GAS_PRICE = 21000;
   uint256 GAS_LIMIT = 1; // 1Gwei
 
 
   function AsianSoloBet() public {
-
+    name = "Asia Solo Bet";
     feeOwner = msg.sender;
   }
 
 
   function getBettingMatchesByAddress(address owner) public view returns (bytes32[], uint256[], int[], uint256[], bool[], uint[]) {
-    //  MyBet[] memory bets = myBets[owner];
     bytes32[] memory matchIds = new bytes32[](myBets[owner].length);
     uint256[] memory betIdxes = new uint256[](matchIds.length);
     uint256[] memory amounts = new uint256[](matchIds.length);
     bool[]memory chooseHomeTeam = new bool[](matchIds.length);
-    // BettingStatus[] memory status = new BettingStatus[](matchIds.length);
     uint256[] memory status = new uint256[](matchIds.length);
     int[] memory rates = new int[](matchIds.length);
     for (uint32 i = 0; i < matchIds.length; i++) {
@@ -150,10 +148,7 @@ contract AsianSoloBet is Ownable, SoloBet {
 
     balances[_betting.bookmaker] = balances[_betting.bookmaker] - _betting.amount;
     balances[_betting.punter] = balances[_betting.punter] - _betting.amount;
-    emit UpdateFund(_betting.bookmaker, _betting.amount, "funding");
-    emit UpdateFund(_betting.punter, _betting.amount, "funding");
-    emit RemainFund(_betting.bookmaker, balances[_betting.bookmaker], "remain");
-    emit RemainFund(_betting.punter, balances[_betting.punter], "remain");
+    balances[feeOwner] = balances[feeOwner] + _betting.amount - _betting.amount * 95 / 100;
 
   }
 
@@ -385,23 +380,28 @@ contract AsianSoloBet is Ownable, SoloBet {
     uint256 halfAmount = amountAfterFee / 2;
     int score;
     int rate = _betting.rate;
+    if (_betting.pair == uint8(Pair.Away_Home)) {
+      rate = rate * - 1;
+      homeScore = _match.awayScore;
+      awayScore = _match.homeScore;
+    }
 
     if (rate == 0) {
-      bookmakerFunding = calcFundForBetting00AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
+      if (_betting.pair == uint8(Pair.Home_Away)) {
+        bookmakerFunding = calcFundForBetting00AndBookmakerChooseStrongerTeam(_match.homeScore, _match.awayScore, amountAfterFee, _betting);
+      } else {
+        bookmakerFunding = calcFundForBetting00AndBookmakerChooseStrongerTeam(_match.awayScore, _match.homeScore, amountAfterFee, _betting);
+      }
     } else if (rate == - 25) {
       bookmakerFunding = calcFundForBetting025AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
     } else if (rate == 25) {// bet for away team
       bookmakerFunding = calcFundForBetting025AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
-
     } else if (rate == - 50) {// bet for home team
       bookmakerFunding = calcFundForBetting050AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
-
     } else if (rate == 50) {// bet for away team
-
       bookmakerFunding = calcFundForBetting050AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
     } else if (rate == - 75) {// bet for home team
       bookmakerFunding = calcFundForBetting075AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
-
     } else if (rate == 75) {// bet for away team
       bookmakerFunding = calcFundForBetting075AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
     } else if (rate == - 100) {// bet for home team
@@ -412,22 +412,20 @@ contract AsianSoloBet is Ownable, SoloBet {
       bookmakerFunding = calcFundForBetting125AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
     } else if (rate == 125) {// bet for away team
       bookmakerFunding = calcFundForBetting125AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
-    } else if (rate == - 150) {// bet for home team
+    } else if (rate == - 150) {
       bookmakerFunding = calcFundForBetting150AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
     } else if (rate == 150) {// bet for away team
       bookmakerFunding = calcFundForBetting150AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
-    } else if (rate == - 175) {// bet for home team
+    } else if (rate == - 175) {
       bookmakerFunding = calcFundForBetting175AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
-
-    } else if (rate == 175) {// bet for home team
+    } else if (rate == 175) {
       bookmakerFunding = calcFundForBetting175AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
-    } else if (rate == - 200) {// bet for home team
+    } else if (rate == - 200) {
       bookmakerFunding = calcFundForBetting200AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
-
-    } else if (rate == 200) {// bet for away team
+    } else if (rate == 200) {
       bookmakerFunding = calcFundForBetting200AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
     }
-    //    bookmakerFunding[2] = Funding(feeOwner, fee, _betting);
+
     return bookmakerFunding;
   }
 
@@ -466,7 +464,6 @@ contract AsianSoloBet is Ownable, SoloBet {
     }
 
     Betting memory _betting = Betting(msg.sender, 0x0, _match.id, uint8(pair), rate, msg.value, BettingStatus.Open);
-    //    bettingMatches[matchId].push(_betting);
     uint32 betIdx = uint32(bettingMatches[matchId].push(_betting) - 1);
     if (isPlayerNotExist(msg.sender)) {
       players.push(msg.sender);
@@ -507,5 +504,19 @@ contract AsianSoloBet is Ownable, SoloBet {
     amount = _betting.amount;
     status = _betting.status;
     pair = _betting.pair;
+  }
+
+  event LogSelfDestruct(address sender, uint amount);
+
+  function destroyContract() public onlyOwner {
+    for (uint i = 0; i < players.length; i++) {
+      if (balances[players[i]] > 0) {
+        players[i].transfer(balances[players[i]]);
+        emit Transfer(address(this), players[i], balances[players[i]]);
+      }
+    }
+
+    emit LogSelfDestruct(owner, this.balance);
+    selfdestruct(owner);
   }
 }
