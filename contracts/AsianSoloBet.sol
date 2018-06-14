@@ -495,7 +495,6 @@ contract AsianSoloBet is Ownable, SoloBet {
 
 
   function deal(bytes32 matchId, uint256 bettingId) public payable returns (bool) {
-
     Betting storage _betting = bettingMatches[matchId][bettingId];
     require(_betting.amount == msg.value);
     require(_betting.bookmaker != msg.sender);

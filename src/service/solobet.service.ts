@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {fromPromise} from 'rxjs/observable/fromPromise';
 import {Web3Service} from './web3.service';
+import { Betting } from 'models/betting';
 import {log} from 'util';
 
 declare var require: any;
@@ -69,23 +70,22 @@ export class SolobetService {
 
   loadBettings(matchId): Observable<any> {
 
+    let _matchId = parseInt(matchId);
 
     let bettings = new Array();
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
 
-        return instance.totalBets.call(matchId);
+        return instance.totalBets.call(_matchId);
       }).then(totalBets => {
 
 
         for (let i = 0; i < totalBets; i++) {
-          this.getBetting(matchId, i).subscribe(betting => {
+          this.getBetting(_matchId, i).subscribe(betting => {
             bettings.push(betting);
           });
           // bettings.push(this.getBettingSync(matchId, i));
         }
-
-
         observer.next({matchId: matchId, bettings: bettings});
         observer.complete();
       }).catch(err => {
@@ -94,23 +94,22 @@ export class SolobetService {
     });
   }
 
-  getBetting(matchId, bettingId): Observable<any> {
+  getBetting(matchId, bettingId): Observable<Betting> {
 
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
-
         return instance.getBettingInfo.call(matchId, bettingId);
       }).then(result => {
-        let betting = {
+        observer.next(new Betting({
           bettingId: bettingId,
           matchId: matchId,
+          amount: result[4].c[0]/10000,
           offer: result[0],
           dealer: result[1],
-          rate: result[2],
-          amount: result[3],
-          status: result[4].toNumber()
-        };
-        observer.next(betting);
+          odds: result[3].c[0],
+          stake: result[4].c[0]/10000,
+          status: result[5].toNumber(),
+          pair: result[2].toNumber(),homeOffer:"",awayOffer:"",homeDealer:"",awayDealer:""}));
         observer.complete();
       }).catch(err => {
         alert(err);
@@ -120,11 +119,16 @@ export class SolobetService {
   }
 
   deal(account, matchId, bettingId): Observable<any> {
+    let _matchId = +matchId;
+    let _bettingId = +bettingId;
+
+    console.log(_matchId)
+    console.log(_bettingId)
 
     return Observable.create(observer => {
-      this.getBetting(matchId, bettingId).subscribe(betting => {
+      this.getBetting(_matchId, _bettingId).subscribe(betting => {
         this.Solobet.deployed().then(instance => {
-          return instance.deal(matchId, bettingId, {from: account, value: betting.amount});
+          return instance.deal(_matchId, _bettingId, {from: account, value: betting.amount});
         }).then(betResult => {
           observer.next(betResult);
           observer.complete();
@@ -135,6 +139,7 @@ export class SolobetService {
       });
     });
   }
+
 
   newOffer(account, match, rate, amount): Observable<any> {
 

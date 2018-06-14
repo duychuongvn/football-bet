@@ -1,0 +1,53 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">{{ title }}</h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="form-group">
+    <label class="font-weight-bold">Fixture Number:</label>
+    <span class="d-block font-weight-light text-info text-truncate" [attr.title]="handicap.id">#{{handicap.id}}</span>
+  </div>
+
+  <div class="form-group text-danger font-weight-bold d-flex">
+    <i class="material-icons">date_range</i>
+    <span class="d-inline-block">{{ handicap.date_string }} {{ handicap.time_string }}</span>
+  </div>
+
+  <div class="form-group">
+    <label>Pair</label>
+    <select [(ngModel)]="handicap.selectedPair" class="form-control" id="pairs">
+        <option [value]="item.id" *ngFor="let item of pairs">{{item.value}}</option>
+      </select>
+  </div>
+
+  <div class="form-group">
+      <label>Team</label>
+      <select [(ngModel)]="handicap.selectedTeam" class="form-control" id="teams">
+          <option [value]="i" *ngFor="let item of handicap.teams; let i = index">{{item}}</option>
+        </select>
+    </div>
+
+
+
+  <div class="form-group row">
+    <div class="col-sm-6">
+      <label>Odds</label>
+      <select class="form-control text-center" [(ngModel)]="handicap.odds">
+        <option [value]="item.id" *ngFor="let item of oddsArray">{{item.value}}</option>
+      </select>
+    </div>
+    <div class="col-sm-6">
+      <label>Stake (ETH)</label>
+      <input type="number" min="1" class="form-control" placeholder="Stake"
+        [(ngModel)]="handicap.stake">
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
+  <button type="button" (click)="offer(handicap)" class="btn btn-primary">{{ btnSubmit }}</button>
+</div>

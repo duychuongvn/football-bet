@@ -1,0 +1,31 @@
+<div class="modal-header">
+  <h4 class="modal-title pull-left">{{ title }}</h4>
+  <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="form-group">
+      <div id="match">
+          {{match.homeTeam}} - {{match.awayTeam}}
+      </div>
+      <div id="matchTime">
+        {{match.date_from_time}}
+      </div>
+
+      <div id="selectedTeam"><span *ngIf="betting.pair === 0">{{match.away}}</span> <span *ngIf="betting.pair === 1">{{match.homeTeam}}</span> <span class="text-danger"> {{0 - betting.odds_number}}</span> @ <span id="estimateCoinWin">...</span>
+      </div>
+      <div id="match">
+        {{match.homeTeam}} - {{match.awayTeam}}
+    </div>
+    <div id="stake">
+      <div>Stake <span>: {{handicap.stake}}</span> <span id="currency">ETH</span> </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
+  <button type="button" class="btn btn-primary" (click)="deal(match.matchId,bettingId)">{{ btnSubmit }}</button>
+</div>

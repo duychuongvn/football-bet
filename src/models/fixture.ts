@@ -3,12 +3,16 @@ import { FixtureInterface } from '../interfaces/fixture';
 
 export class Fixture {
 
-  private _id: number;
-  public get id(): number {
+  private _id: number | string;
+  public get id(): number | string {
     return this._id;
   }
-  public set id(v: number) {
+  public set id(v: number | string) {
     this._id = v;
+  }
+
+  public get id_string(): string{
+    return ""+this._id;
   }
 
   private _competitionId: number;
@@ -56,7 +60,10 @@ export class Fixture {
     return this._date;
   }
   public get date_string(): string {
-    return DateTime.fromISO(this._date).toFormat('f');
+    return DateTime.fromISO(this._date).toFormat('dd/MM/yyyy');
+  }
+  public get time_string(): string {
+    return DateTime.fromISO(this._date).toFormat('HH:mm a');
   }
   public set date(v: string) {
     this._date = v;

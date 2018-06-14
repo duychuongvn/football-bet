@@ -1,5 +1,7 @@
 import { Component, NgZone, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { Match } from "models/match";
+
 import {
   Web3Service,
   SolobetService,
@@ -8,10 +10,10 @@ import {
 } from "../../service/service";
 
 import { Fixture } from "models/fixture";
-import * as groupBy from 'lodash/groupBy';
-import * as clone from 'lodash/clone';
-import * as map from 'lodash/map';
-import * as includes from 'lodash/includes';
+import * as groupBy from "lodash/groupBy";
+import * as clone from "lodash/clone";
+import * as map from "lodash/map";
+import * as includes from "lodash/includes";
 
 @Component({
   selector: "app-home",
@@ -21,22 +23,14 @@ import * as includes from 'lodash/includes';
 export class HomeComponent implements OnInit {
   public account: any;
   public accounts: any;
-  public match = {
-    matchId: "",
-    homeTeam: "",
-    awayTeam: "",
-    homeGoals: 0,
-    awayGoals: 0,
-    time: 0,
-    status: 0
-  };
+  public match: Match = new Match();
   public upcommingMatches: any;
   public bettings: any;
   public amount: 0;
 
   private _fixtures: Fixture[] = [];
   private _matchFixtures = [];
-  public matchName: string = '';
+  public matchName: string = "";
 
   constructor(
     private _ngZone: NgZone,
@@ -48,9 +42,9 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this._ngZone.run(() => {
-      this.initMatches();
-    });
+    // this._ngZone.run(() => {
+    //   this.initMatches();
+    // });
     this.fetch();
     // this._getAccounts();
   }
@@ -111,7 +105,6 @@ export class HomeComponent implements OnInit {
       },
       fetchMatchErr => {
         alert(fetchMatchErr);
-
       }
     );
   }
@@ -150,7 +143,7 @@ export class HomeComponent implements OnInit {
   }
 
   public offer(match) {
-    this._solobetService.newOffer(this.account, match, 75, 3).subscribe(
+    this._solobetService.newOffer(this.account, match, 75, 3, 0).subscribe(
       result => {
         this.loadBettings(match);
       },
@@ -167,14 +160,18 @@ export class HomeComponent implements OnInit {
       res => {
         res.fixtures.map(item => {
           if (item.homeTeamName && item.awayTeamName) {
+            this._hashId(item);
             this._fixtures.push(new Fixture(item));
           }
         });
         this.fetchFlag(this._fixtures);
-        this._matchFixtures = map(groupBy(this._fixtures, 'date_string', ['asc']), (value, key) => ({
-          key,
-          value: [...value]
-        }));
+        this._matchFixtures = map(
+          groupBy(this._fixtures, "date_string", ["asc"]),
+          (value, key) => ({
+            key,
+            value: [...value]
+          })
+        );
       },
       errors => {
         console.log(errors);
@@ -183,17 +180,15 @@ export class HomeComponent implements OnInit {
   }
 
   private fetchFlag(fixtures: any): any {
-    fixtures.forEach(fixture => {
-      this._helper.fetchTeam().subscribe(resp => {
-        resp.teams.map(team => {
-          this._fixtures.forEach(item => {
-            if (item.homeTeamName === team.name) {
-              item.homeFlag = team.crestUrl;
-            }
-            if (item.awayTeamName === team.name) {
-              item.awayFlag = team.crestUrl;
-            }
-          });
+    this._helper.fetchTeam().subscribe(resp => {
+      resp.teams.map(team => {
+        this._fixtures.forEach(item => {
+          if (item.homeTeamName === team.name) {
+            item.homeFlag = team.crestUrl;
+          }
+          if (item.awayTeamName === team.name) {
+            item.awayFlag = team.crestUrl;
+          }
         });
       });
     });
@@ -203,7 +198,12 @@ export class HomeComponent implements OnInit {
     let _term;
     if (this.matchName.length > 1) {
       _term = this._matchFixtures.filter(item => {
-        return item.value.find(val => includes((val.homeTeamName.toLowerCase() || val.awayTeamName.toLowerCase()), this.matchName.toLowerCase()));
+        return item.value.find(val =>
+          includes(
+            val.homeTeamName.toLowerCase() || val.awayTeamName.toLowerCase(),
+            this.matchName.toLowerCase()
+          )
+        );
       });
     } else {
       _term = this._matchFixtures;
@@ -212,32 +212,38 @@ export class HomeComponent implements OnInit {
     return _term;
   }
 
-//   loadWorldcupMatches = () => {
-//     this.worldcupMatches = new Array();
-//     this.matchService.getWorldcupMatches().subscribe(matches => {
-//       let fixtures = matches.fixtures;
-//       for (let i = 0; i < fixtures.length; i++) {
-//         var match = fixtures[i];
-//         this.worldcupMatches.push({
-//           homeTeamName: match.homeTeamName, awayTeamName: match.awayTeamName, time: match.date,
-//           homeScore: match.result.goalsHomeTeam, awayScore: match.result.goalsAwayTeam,
-//           homeTeam: {}, awayTeam: {},
-//           homeTeamId: match.homeTeam, awayTeamId: match.awayTeam
-//         });
+  //   loadWorldcupMatches = () => {
+  //     this.worldcupMatches = new Array();
+  //     this.matchService.getWorldcupMatches().subscribe(matches => {
+  //       let fixtures = matches.fixtures;
+  //       for (let i = 0; i < fixtures.length; i++) {
+  //         var match = fixtures[i];
+  //         this.worldcupMatches.push({
+  //           homeTeamName: match.homeTeamName, awayTeamName: match.awayTeamName, time: match.date,
+  //           homeScore: match.result.goalsHomeTeam, awayScore: match.result.goalsAwayTeam,
+  //           homeTeam: {}, awayTeam: {},
+  //           homeTeamId: match.homeTeam, awayTeamId: match.awayTeam
+  //         });
 
-//         this.matchService.getWorldcupTeamInfo(match.homeTeam).subscribe(team => {
-//           for (let i = 0; i < this.worldcupMatches.length; i++) {
-//             let match = this.worldcupMatches[i];
-//             if (match.homeTeamId == team._link.self.href) {
-//               match.homeTeam = team;
-//             } else if (match.awayTeamId == team._link.seft.href) {
-//               match.awayTeam = team;
-//             }
-//           }
-//         });
+  //         this.matchService.getWorldcupTeamInfo(match.homeTeam).subscribe(team => {
+  //           for (let i = 0; i < this.worldcupMatches.length; i++) {
+  //             let match = this.worldcupMatches[i];
+  //             if (match.homeTeamId == team._link.self.href) {
+  //               match.homeTeam = team;
+  //             } else if (match.awayTeamId == team._link.seft.href) {
+  //               match.awayTeam = team;
+  //             }
+  //           }
+  //         });
 
-//       }
-//     });
-//   };
-// >>>>>>> beb65726e374a18e73b95a8a6405beb113936a51
+  //       }
+  //     });
+  //   };
+  // >>>>>>> beb65726e374a18e73b95a8a6405beb113936a51
+
+  private _hashId(item) {
+    const _time = new Date(item.date);
+    const _mHash = `${item.homeTeamName}${item.awayTeamName}${_time.getTime()}`;
+    item.id = this._web3Service.toSHA3(_mHash);
+  }
 }

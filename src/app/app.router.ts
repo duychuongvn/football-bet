@@ -4,8 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { HomeModule } from 'app/home/home.module';
 import { AdminModule } from 'app/admin/admin.module';
 import { UserModule } from 'app/user/user.module';
-
-import { MatchDetailComponent } from './match-detail/match-detail.component';
+import { MatchDetailModule } from 'app/match-detail/match-detail.module';
 
 const appRoutes: Routes = [
   {
@@ -22,7 +21,7 @@ const appRoutes: Routes = [
   },
   {
     path: 'match-detail',
-    component: MatchDetailComponent
+    loadChildren: () => MatchDetailModule
   },
   {
     path: '**',

@@ -1,5 +1,5 @@
 export interface FixtureInterface {
-  id: number,
+  id: number|string,
   competitionId: number,
   homeTeamId: number,
   homeTeamName: string,
