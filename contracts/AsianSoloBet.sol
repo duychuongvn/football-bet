@@ -437,9 +437,17 @@ contract AsianSoloBet is Ownable, SoloBet {
     return bettingMatchIndexes.length;
   }
 
+  function abs(int value) internal view returns(int) {
+    if(value <0) {
+      return value * -1;
+    }
+    return value;
+  }
   function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint pair, uint time, int rate) public payable returns (bool) {
     require(time + 75 * 1000 * 60 > now);
     // allow 15 minutes before the match finishes
+//    uint odds = uint(rate);
+    require(rate ==0 || abs(rate) ==25 ||  abs(rate) == 50 ||  abs(rate) == 75 ||  abs(rate) == 100 ||  abs(rate) == 125 ||  abs(rate) == 150 ||  abs(rate) == 175 ||  abs(rate) == 200);
 
     MatchStatus status;
     if (time < now) {

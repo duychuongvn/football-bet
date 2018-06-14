@@ -93,7 +93,7 @@ describe('Test data consistently when admin update score and kill contract', asy
     });
 
 
-    it('should refund all balance to players when addmin kill contract', async()=> {
+    it('should refund all balance to players when admin kill contract', async()=> {
       const balanceOfBookmarkerBeforeOffer = await web3.eth.getBalance(bookmaker);
       const balanceOfPunterBeforeDeal = await web3.eth.getBalance(punter);
       contract.offerNewMatch(0x123, homeTeam, awayTeam, 0, matchTime, 0, {from: bookmaker, value: betAmount});
@@ -118,7 +118,11 @@ describe('Test data consistently when admin update score and kill contract', asy
       assert.equal(toGwei(balanceOfBookmarkerBeforeOffer), toGwei(balanceOfBookmarkerAfterDestroyContract), "refund all balance to bookmaker when destroy contract")
       assert.equal(toGwei(balanceOfPunterBeforeDeal), toGwei(balanceOfPunterDestroyContract), "refund all balance to punter when destroy contract")
 
-    })
+    });
+
+    it('should throw exception when input not valid odds', async() => {
+      await assertThrow( contract.offerNewMatch(0x125, homeTeam, awayTeam, 0, matchTime, -1, {from: bookmaker, value: betAmount}))
+    });
   });
 
 
