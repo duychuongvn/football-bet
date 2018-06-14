@@ -120,11 +120,16 @@ export class SolobetService {
   }
 
   deal(account, matchId, bettingId): Observable<any> {
+    let _matchId = +matchId;
+    let _bettingId = +bettingId;
+
+    console.log(_matchId)
+    console.log(_bettingId)
 
     return Observable.create(observer => {
-      this.getBetting(matchId, bettingId).subscribe(betting => {
+      this.getBetting(_matchId, _bettingId).subscribe(betting => {
         this.Solobet.deployed().then(instance => {
-          return instance.deal(matchId, bettingId, {from: account, value: betting.amount});
+          return instance.deal(_matchId, _bettingId, {from: account, value: betting.amount});
         }).then(betResult => {
           observer.next(betResult);
           observer.complete();

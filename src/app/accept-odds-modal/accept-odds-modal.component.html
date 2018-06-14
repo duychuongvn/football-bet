@@ -6,10 +6,26 @@
 </div>
 
 <div class="modal-body">
-  this is modal
+  <div class="form-group">
+      <div id="match">
+          {{match.homeTeam}} - {{match.awayTeam}}
+      </div>
+      <div id="matchTime">
+        {{match.date_from_time}}
+      </div>
+
+      <div id="selectedTeam"><span *ngIf="betting.pair === 0">{{match.away}}</span> <span *ngIf="betting.pair === 1">{{match.homeTeam}}</span> <span class="text-danger"> {{0 - betting.odds_number}}</span> @ <span id="estimateCoinWin">...</span>
+      </div>
+      <div id="match">
+        {{match.homeTeam}} - {{match.awayTeam}}
+    </div>
+    <div id="stake">
+      <div>Stake <span>: {{handicap.stake}}</span> <span id="currency">ETH</span> </div>
+    </div>
+  </div>
 </div>
 
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
-  <button type="button" class="btn btn-primary">{{ btnSubmit }}</button>
+  <button type="button" class="btn btn-primary" (click)="deal(match.matchId,bettingId)">{{ btnSubmit }}</button>
 </div>

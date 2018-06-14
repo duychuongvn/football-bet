@@ -22,6 +22,7 @@ export class MatchDetailComponent implements OnInit {
   public handicap: Handicap = new Handicap();
   public match: Match = new Match();
   public bettings: Betting[] = [];
+  public betting: Betting = new Betting();
 
   public account: string;
 
@@ -44,6 +45,15 @@ export class MatchDetailComponent implements OnInit {
         this._router.navigate(['']);
       }
     });
+  }
+
+
+  private _fetchBetById(bettingId: string){
+    this._solobetService.getBetting(this.match.matchId,bettingId).subscribe(res => {
+      setTimeout(() => {
+        this.betting = res;
+      })
+    })
   }
 
   private _setProperties(p: any) {
@@ -122,13 +132,17 @@ export class MatchDetailComponent implements OnInit {
     this._openModalWithComponent(DealModalComponent, _opts);
   }
 
-  public openAcceptOdds() {
+  public openAcceptOdds(betting) {
     const _opts = {
       class: 'modal-md',
       initialState: {
         title: 'Accept Odds Modal',
-        btnSubmit: 'Accept'
-      }
+        btnSubmit: 'Accept',
+        match: this.match,
+        handicap: this.handicap,
+        account: this.account,
+        betting: betting
+            }
     };
 
     this._openModalWithComponent(AcceptOddsModalComponent, _opts);

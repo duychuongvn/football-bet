@@ -45,7 +45,7 @@
           </td>
           <td scope="row">{{ betting.amount}}</td>
           <td *ngIf="betting.odds_string">
-            <button type="button" class="btn btn-info" (click)="openDeal()">Deal</button>
+            <button type="button" class="btn btn-info" (click)="openAcceptOdds(betting)">Deal</button>
           </td>
         </tr>
 
