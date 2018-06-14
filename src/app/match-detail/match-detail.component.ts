@@ -9,6 +9,7 @@ import { Match } from 'models/match';
 import { Betting } from 'models/betting';
 
 import { DealModalComponent } from 'app/deal-modal/deal-modal.component';
+import { AcceptOddsModalComponent } from 'app/accept-odds-modal/accept-odds-modal.component';
 
 @Component({
   selector: 'app-match-detail',
@@ -119,6 +120,18 @@ export class MatchDetailComponent implements OnInit {
     };
 
     this._openModalWithComponent(DealModalComponent, _opts);
+  }
+
+  public openAcceptOdds() {
+    const _opts = {
+      class: 'modal-md',
+      initialState: {
+        title: 'Accept Odds Modal',
+        btnSubmit: 'Accept'
+      }
+    };
+
+    this._openModalWithComponent(AcceptOddsModalComponent, _opts);
   }
 
   private _openModalWithComponent(comp, opts?: ModalOptions) {
