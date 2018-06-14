@@ -123,6 +123,21 @@ describe('Test data consistently when admin update score and kill contract', asy
     it('should throw exception when input not valid odds', async() => {
       await assertThrow( contract.offerNewMatch(0x125, homeTeam, awayTeam, 0, matchTime, -1, {from: bookmaker, value: betAmount}))
     });
+
+    it('should allow user claim stake when the match is finished', async() => {
+      contract.offerNewMatch(0x124, homeTeam, awayTeam, 0, matchTime, 0, {from: bookmaker, value: betAmount});
+      contract.deal(0x124, 0, {from: punter, value: betAmount});
+      contract.updateScore(0x124, 1,0)
+      const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+      const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+      contract.claimStake(0x124,0, {from: bookmaker, gasPrice: 30, gasLimit: 210000});
+      contract.updateScore(0x124, 1,0); // cheat here to wait for network update new balance
+      const amountOfBookMakerAfterClaim = await web3.eth.getBalance(bookmaker).toNumber();
+      const amountOfPunterAfterClaim = await  web3.eth.getBalance(punter).toNumber();
+
+      assert.equals(toGwei(amountOfBookMakerAfterClaim), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker wins all and get all stake" );
+      assert.equals(toGwei(amountOfPunterAfterClaim), toGwei(amountOfPunterAfterDeal), "Bookmaker loses all and don't get stake back" );
+    });
   });
 
 
