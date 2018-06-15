@@ -3,7 +3,7 @@ pragma solidity ^0.4.21;
 import "./Ownable.sol";
 
 contract SoloBet is Ownable {
-  enum Pair {Home_Away, Away_Home}
+  enum Team {Home, Away}
   enum MatchStatus {NotAvailable, Waiting, Playing, Canceled, Finished}
   enum BettingStatus {Open, Deal, Canceled, Refunded, Done}
 
@@ -31,7 +31,7 @@ contract SoloBet is Ownable {
     address bookmaker;
     address punter;
     bytes32 matchId;
-    uint8 pair;
+    uint8 bmTeam; //bookmaker team
     int rate; // rate >= 0: bookmakers bets for home team else bet for away team
     uint256 amount;
     BettingStatus status;

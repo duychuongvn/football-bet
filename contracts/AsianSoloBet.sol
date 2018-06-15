@@ -388,47 +388,47 @@ contract AsianSoloBet is Ownable, SoloBet {
     uint256 amountAfterFee = _betting.amount - fee;
     uint256 halfAmount = amountAfterFee / 2;
     int score;
-    int rate = _betting.rate;
-    if (_betting.pair == uint8(Pair.Away_Home)) {
-      rate = rate * - 1;
+    int odds = _betting.rate;
+
+    if (_betting.bmTeam == uint8(Team.Away)) {
       bookmakerTeamScore = _match.awayScore;
       punterTeamScore = _match.homeScore;
     }
 
-    if (rate == 0) {
+    if (odds == 0) {
       bookmakerFunding = calcFundForBetting00AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (rate == - 25) {
+    } else if (odds == - 25) {
       bookmakerFunding = calcFundForBetting025AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (rate == 25) {// bet for away team
-      bookmakerFunding = calcFundForBetting025AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
-    } else if (rate == - 50) {// bet for home team
+    } else if (odds == 25) {// bet for away team
+      bookmakerFunding = calcFundForBetting025AndBookmakerChooseWeakerTeam(punterTeamScore,bookmakerTeamScore , amountAfterFee, _betting);
+    } else if (odds == - 50) {// bet for home team
       bookmakerFunding = calcFundForBetting050AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (rate == 50) {// bet for away team
-      bookmakerFunding = calcFundForBetting050AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
-    } else if (rate == - 75) {// bet for home team
+    } else if (odds == 50) {// bet for away team
+      bookmakerFunding = calcFundForBetting050AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
+    } else if (odds == - 75) {// bet for home team
       bookmakerFunding = calcFundForBetting075AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (rate == 75) {// bet for away team
-      bookmakerFunding = calcFundForBetting075AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
-    } else if (rate == - 100) {// bet for home team
+    } else if (odds == 75) {// bet for away team
+      bookmakerFunding = calcFundForBetting075AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
+    } else if (odds == - 100) {// bet for home team
       bookmakerFunding = calcFundForBetting100AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (rate == 100) {// bet for away team
-      bookmakerFunding = calcFundForBetting100AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
-    } else if (rate == - 125) {// bet for home team
+    } else if (odds == 100) {// bet for away team
+      bookmakerFunding = calcFundForBetting100AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
+    } else if (odds == - 125) {// bet for home team
       bookmakerFunding = calcFundForBetting125AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (rate == 125) {// bet for away team
-      bookmakerFunding = calcFundForBetting125AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
-    } else if (rate == - 150) {
+    } else if (odds == 125) {// bet for away team
+      bookmakerFunding = calcFundForBetting125AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
+    } else if (odds == - 150) {
       bookmakerFunding = calcFundForBetting150AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (rate == 150) {// bet for away team
-      bookmakerFunding = calcFundForBetting150AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
-    } else if (rate == - 175) {
+    } else if (odds == 150) {// bet for away team
+      bookmakerFunding = calcFundForBetting150AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
+    } else if (odds == - 175) {
       bookmakerFunding = calcFundForBetting175AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (rate == 175) {
-      bookmakerFunding = calcFundForBetting175AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
-    } else if (rate == - 200) {
+    } else if (odds == 175) {
+      bookmakerFunding = calcFundForBetting175AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
+    } else if (odds == - 200) {
       bookmakerFunding = calcFundForBetting200AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (rate == 200) {
-      bookmakerFunding = calcFundForBetting200AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
+    } else if (odds == 200) {
+      bookmakerFunding = calcFundForBetting200AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
     }
 
     return bookmakerFunding;
@@ -449,9 +449,15 @@ contract AsianSoloBet is Ownable, SoloBet {
     return value;
   }
 
-  function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint pair, uint time, int rate) public payable returns (bool) {
-    require(time + 75 * 60 > now);// allow 15 minutes before the match finishes
-    require(rate == 0 || abs(rate) == 25 || abs(rate) == 50 || abs(rate) == 75 || abs(rate) == 100 || abs(rate) == 125 || abs(rate) == 150 || abs(rate) == 175 || abs(rate) == 200);
+  function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint selectedTeam, uint time, int odds) public payable returns (bool) {
+//    require(time + 75 * 60 > now);// allow 15 minutes before the match finishes
+//    require(odds == 0 || odds == -25 || odds == 25
+//            || odds == -50 || odds == 50
+//            || odds == -100 || odds == 100
+//            || odds == -125 || odds == 125
+//            || odds == -150 || odds == 150
+//            || odds == -175 || odds == 175
+//            || odds == -200 || odds == 200);
 
     MatchStatus status;
     if (time < now) {
@@ -475,12 +481,12 @@ contract AsianSoloBet is Ownable, SoloBet {
       matches[matchId] = _match;
     }
 
-    Betting memory _betting = Betting(msg.sender, 0x0, _match.id, uint8(pair), rate, msg.value, BettingStatus.Open);
+    Betting memory _betting = Betting(msg.sender, 0x0, _match.id, uint8(selectedTeam), odds, msg.value, BettingStatus.Open);
     uint32 betIdx = uint32(bettingMatches[matchId].push(_betting) - 1);
     if (isPlayerNotExist(msg.sender)) {
       players.push(msg.sender);
     }
-    myBets[msg.sender].push(MyBet(betIdx, matchId, rate >= 0));
+    myBets[msg.sender].push(MyBet(betIdx, matchId, selectedTeam == uint8(Team.Home)));
     balances[msg.sender] += msg.value;
 
     return true;
@@ -499,7 +505,9 @@ contract AsianSoloBet is Ownable, SoloBet {
     if (isPlayerNotExist(msg.sender)) {
       players.push(msg.sender);
     }
-    myBets[msg.sender].push(MyBet(uint32(bettingId), matchId, _betting.rate < 0));
+
+    myBets[msg.sender].push(MyBet(uint32(bettingId), matchId, _betting.bmTeam != uint8(Team.Home)));
+
     balances[msg.sender] += msg.value;
 
     emit LogDeal(_betting.bookmaker, _betting.punter, matchId, bettingId);
@@ -507,14 +515,14 @@ contract AsianSoloBet is Ownable, SoloBet {
     return true;
   }
 
-  function getBettingInfo(bytes32 matchId, uint256 bettingId) public view returns (address bookmaker, address punter, uint8 pair, int odds, uint256 amount, BettingStatus status) {
+  function getBettingInfo(bytes32 matchId, uint256 bettingId) public view returns (address bookmaker, address punter, uint8 selectedTeam, int odds, uint256 amount, BettingStatus status) {
     Betting memory _betting = bettingMatches[matchId][bettingId];
     bookmaker = _betting.bookmaker;
     punter = _betting.punter;
     odds = _betting.rate;
     amount = _betting.amount;
     status = _betting.status;
-    pair = _betting.pair;
+    selectedTeam = _betting.bmTeam;
   }
 
   event LogSelfDestruct(address sender, uint amount);
