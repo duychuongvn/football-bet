@@ -400,7 +400,7 @@ contract AsianSoloBet is Ownable, SoloBet {
     } else if (odds == - 25) {
       bookmakerFunding = calcFundForBetting025AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
     } else if (odds == 25) {// bet for away team
-      bookmakerFunding = calcFundForBetting025AndBookmakerChooseWeakerTeam(punterTeamScore,bookmakerTeamScore , amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting025AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore , amountAfterFee, _betting);
     } else if (odds == - 50) {// bet for home team
       bookmakerFunding = calcFundForBetting050AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
     } else if (odds == 50) {// bet for away team
