@@ -49,6 +49,7 @@ export class MatchDetailComponent implements OnInit {
 
 
   private _fetchBetById(bettingId: string){
+    alert(this.match.matchId);
     this._solobetService.getBetting(this.match.matchId,bettingId).subscribe(res => {
       setTimeout(() => {
         this.betting = res;
@@ -79,15 +80,20 @@ export class MatchDetailComponent implements OnInit {
   }
 
   private _loadBettings(id: string) {
+
     this._solobetService.loadBettings(id)
     .subscribe(res => {
+      console.log("==" +res);
       let _bettings = [];
       setTimeout(() => {
         res.bettings.map(item => {
-          if(item.pair == 0)
+          if(item.odds <=0)
           {
             item.homeOffer = item.offer;
+            item.awayOffer = item.dealer;
           }else{
+
+            item.homeOffer = item.dealer;
             item.awayOffer = item.offer;
           }
           console.log(item)
@@ -151,7 +157,7 @@ export class MatchDetailComponent implements OnInit {
   private _openModalWithComponent(comp, opts?: ModalOptions) {
     const subscribe = this._modalService.onHidden.subscribe((res: any) => {
       if (res) {
-        this._loadBettings(this.match.matchId.toString());
+        this._loadBettings(this.match.matchId);
       }
 
       subscribe.unsubscribe();

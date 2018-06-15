@@ -14,7 +14,16 @@ export class Handicap {
     { id: "125", value: ODDS_TYPE.ONE_QUARTER },
     { id: "150", value: ODDS_TYPE.ONE_HALF },
     { id: "175", value: ODDS_TYPE.ONE_THREE_FOURTHS },
-    { id: "200", value: ODDS_TYPE.TWO }
+    { id: "200", value: ODDS_TYPE.TWO },
+    { id: "-000", value: ODDS_TYPE.ZERO },
+    { id: "-025", value: ODDS_TYPE.INVERSE_QUARTER },
+    { id: "-050", value: ODDS_TYPE.INVERSE_HALF },
+    { id: "-075", value: ODDS_TYPE.INVERSE_THREE_FOURTHS },
+    { id: "-100", value: ODDS_TYPE.INVERSE_ONE },
+    { id: "-125", value: ODDS_TYPE.INVERSE_ONE_QUARTER },
+    { id: "-150", value: ODDS_TYPE.INVERSE_ONE_HALF },
+    { id: "-175", value: ODDS_TYPE.INVERSE_ONE_THREE_FOURTHS },
+    { id: "-200", value: ODDS_TYPE.INVERSE_TWO }
   ];
 
   private _id: number | string;
@@ -50,26 +59,15 @@ export class Handicap {
 
   private _odds: string | number;
   public get odds(): string | number {
-    return this._odds || Handicap.oddsArray[1]["id"]
+    return this._odds || Handicap.oddsArray[1]["id"];
   }
   public set odds(v: string | number) {
     this._odds = v;
   }
 
-  public get odds_number(): number{
-    if (
-      (this.selectedPair === "1" && this._selectedTeam === "0") ||
-      (this.selectedPair === "2" && this._selectedTeam === "1")
-    ) {
-      return (0 - parseInt(this.odds.toString()));
-    } else if (
-      (this.selectedPair === "1" && this._selectedTeam === "1") ||
-      (this.selectedPair === "2" && this._selectedTeam === "0")
-    ) {
-      return parseInt(this.odds.toString());
-    }
-
-}
+  public get odds_number(): number {
+    return parseInt(this.odds.toString());
+  }
   private _stake: number;
   public get stake(): number {
     return this._stake || 5;

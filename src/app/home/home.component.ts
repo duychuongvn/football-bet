@@ -62,52 +62,6 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  public initMatches() {
-    this.upcommingMatches = new Array();
-    this._helper.fetchFixtures().subscribe(
-      result => {
-        // this.upcommingMatches = result;
-        for (let i = 0; i < result.length; i++) {
-          let match = result[i];
-          let mHash =
-            match.match_hometeam_name +
-            match.match_awayteam_name +
-            match.match_date +
-            match.match_time;
-
-          var matchId = this._web3Service.toSHA3(mHash);
-          var bettingMatch = {
-            id: matchId,
-            homeTeam: match.match_hometeam_name,
-            awayTeam: match.match_awayteam_name,
-            matchDate: match.match_date,
-            matchTime: match.match_time,
-            bettings: []
-          };
-          this.upcommingMatches.push(bettingMatch);
-
-          // bettingMatch.bettings.push(betting);
-          this._solobetService.loadBettings(matchId).subscribe(
-            result => {
-              for (let j = 0; j < this.upcommingMatches.length; j++) {
-                let match = this.upcommingMatches[j];
-                if (match.id == result.matchId) {
-                  match.bettings = result.bettings;
-                  break;
-                }
-              }
-            },
-            e => {
-              console.log(e);
-            }
-          );
-        }
-      },
-      fetchMatchErr => {
-        alert(fetchMatchErr);
-      }
-    );
-  }
 
   public loadMatches() {
     this._solobetService.loadMatches("0x123").subscribe(
@@ -143,7 +97,7 @@ export class HomeComponent implements OnInit {
   }
 
   public offer(match) {
-    this._solobetService.newOffer(this.account, match, 75, 3, 0).subscribe(
+    this._solobetService.newOffer(this.account, match, 75, 3).subscribe(
       result => {
         this.loadBettings(match);
       },
@@ -243,7 +197,7 @@ export class HomeComponent implements OnInit {
 
   private _hashId(item) {
     const _time = new Date(item.date);
-    const _mHash = `${item.homeTeamName}${item.awayTeamName}${_time.getTime()}`;
+    const _mHash = `${item.homeTeamName}${item.awayTeamName}${_time.getTime()/1000}`;
     item.id = this._web3Service.toSHA3(_mHash);
   }
 }

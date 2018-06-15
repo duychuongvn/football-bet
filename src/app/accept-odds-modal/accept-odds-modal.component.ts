@@ -90,11 +90,11 @@ export class AcceptOddsModalComponent implements OnInit {
     });
   }
 
-  public deal(matchId, bettingId) {
-    console.log(this.account)
-    this._solobetService.deal(this.account, matchId, bettingId).subscribe(
+  public deal(betting) {
+    console.log(betting);
+    this._solobetService.deal(this.account, betting.matchId, betting.bettingId).subscribe(
       result => {
-        this._loadBettings(matchId);
+        this._loadBettings(betting.matchId);
         this._notify.success('Accept success');
         this.close('reload');
       },
