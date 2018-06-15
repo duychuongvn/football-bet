@@ -58,13 +58,13 @@ export class DealModalComponent implements OnInit {
       )
       .subscribe(
         result => {
-          // this._loadBettings(this.match.matchId.toString());
+          this._loadBettings(this.match.matchId.toString());
           this._notify.success("Create success");
           this.close("reload");
         },
         e => {
           this._notify.error(
-            "Invalid number of arguments to Solidity function"
+            "Error occur when offer this match " + e.msg
           );
         }
       );

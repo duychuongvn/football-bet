@@ -2,12 +2,16 @@ import { BettingInterface } from "interfaces/betting";
 
 import { Handicap } from "./handicap";
 
+enum BettingStatus{
+  Open, Deal, Canceled, Refunded, Done
+}
+
 export class Betting {
-  private _status: number;
-  public get status(): number {
-    return this._status;
+  private _status: number|string;
+  public get status(): number|string {
+    return BettingStatus[this._status];
   }
-  public set status(v: number) {
+  public set status(v: number|string) {
     this._status = v;
   }
 

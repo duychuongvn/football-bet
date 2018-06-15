@@ -92,10 +92,10 @@ export class MatchDetailComponent implements OnInit {
             item.homeOffer = item.offer;
             item.awayOffer = item.dealer;
           }else{
-
             item.homeOffer = item.dealer;
             item.awayOffer = item.offer;
           }
+          if(item.status)
           console.log(item)
           _bettings.push(item);
         });

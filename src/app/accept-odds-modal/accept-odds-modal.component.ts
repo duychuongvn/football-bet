@@ -99,8 +99,9 @@ export class AcceptOddsModalComponent implements OnInit {
         this.close('reload');
       },
       e => {
-        console.log(e);
-      }
+        this._notify.error(
+          "Error occur when offer this match " + e.msg
+        );      }
     );
   }
 }
