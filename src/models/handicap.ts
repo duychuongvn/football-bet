@@ -70,7 +70,7 @@ export class Handicap {
   }
   private _stake: number;
   public get stake(): number {
-    return this._stake || 5;
+    return this._stake || 0.01;
   }
   public set stake(v: number) {
     this._stake = v;
@@ -98,7 +98,7 @@ export class Handicap {
 
   private _selectedTeam: string;
   public get selectedTeam(): string {
-    return this._selectedTeam;
+    return this._selectedTeam || "0";
   }
   public set selectedTeam(v: string) {
     this._selectedTeam = v;
