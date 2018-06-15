@@ -382,8 +382,8 @@ contract AsianSoloBet is Ownable, SoloBet {
 
 
   function getFunding(Match _match, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    int homeScore = _match.homeScore;
-    int awayScore = _match.awayScore;
+    int bookmakerTeamScore = _match.homeScore;
+    int punterTeamScore = _match.awayScore;
     uint256 fee = _betting.amount - _betting.amount * 95 / 100;
     uint256 amountAfterFee = _betting.amount - fee;
     uint256 halfAmount = amountAfterFee / 2;
@@ -391,48 +391,44 @@ contract AsianSoloBet is Ownable, SoloBet {
     int rate = _betting.rate;
     if (_betting.pair == uint8(Pair.Away_Home)) {
       rate = rate * - 1;
-      homeScore = _match.awayScore;
-      awayScore = _match.homeScore;
+      bookmakerTeamScore = _match.awayScore;
+      punterTeamScore = _match.homeScore;
     }
 
     if (rate == 0) {
-      if (_betting.pair == uint8(Pair.Home_Away)) {
-        bookmakerFunding = calcFundForBetting00AndBookmakerChooseStrongerTeam(_match.homeScore, _match.awayScore, amountAfterFee, _betting);
-      } else {
-        bookmakerFunding = calcFundForBetting00AndBookmakerChooseStrongerTeam(_match.awayScore, _match.homeScore, amountAfterFee, _betting);
-      }
+      bookmakerFunding = calcFundForBetting00AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
     } else if (rate == - 25) {
-      bookmakerFunding = calcFundForBetting025AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting025AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
     } else if (rate == 25) {// bet for away team
-      bookmakerFunding = calcFundForBetting025AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting025AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
     } else if (rate == - 50) {// bet for home team
-      bookmakerFunding = calcFundForBetting050AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting050AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
     } else if (rate == 50) {// bet for away team
-      bookmakerFunding = calcFundForBetting050AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting050AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
     } else if (rate == - 75) {// bet for home team
-      bookmakerFunding = calcFundForBetting075AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting075AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
     } else if (rate == 75) {// bet for away team
-      bookmakerFunding = calcFundForBetting075AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting075AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
     } else if (rate == - 100) {// bet for home team
-      bookmakerFunding = calcFundForBetting100AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting100AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
     } else if (rate == 100) {// bet for away team
-      bookmakerFunding = calcFundForBetting100AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting100AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
     } else if (rate == - 125) {// bet for home team
-      bookmakerFunding = calcFundForBetting125AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting125AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
     } else if (rate == 125) {// bet for away team
-      bookmakerFunding = calcFundForBetting125AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting125AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
     } else if (rate == - 150) {
-      bookmakerFunding = calcFundForBetting150AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting150AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
     } else if (rate == 150) {// bet for away team
-      bookmakerFunding = calcFundForBetting150AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting150AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
     } else if (rate == - 175) {
-      bookmakerFunding = calcFundForBetting175AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting175AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
     } else if (rate == 175) {
-      bookmakerFunding = calcFundForBetting175AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting175AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
     } else if (rate == - 200) {
-      bookmakerFunding = calcFundForBetting200AndBookmakerChooseStrongerTeam(homeScore, awayScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting200AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
     } else if (rate == 200) {
-      bookmakerFunding = calcFundForBetting200AndBookmakerChooseWeakerTeam(awayScore, homeScore, amountAfterFee, _betting);
+      bookmakerFunding = calcFundForBetting200AndBookmakerChooseWeakerTeam(punterTeamScore, bookmakerTeamScore, amountAfterFee, _betting);
     }
 
     return bookmakerFunding;
@@ -454,9 +450,7 @@ contract AsianSoloBet is Ownable, SoloBet {
   }
 
   function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint pair, uint time, int rate) public payable returns (bool) {
-    require(time + 75 * 1000 * 60 > now);
-    // allow 15 minutes before the match finishes
-    //    uint odds = uint(rate);
+    require(time + 75 * 60 > now);// allow 15 minutes before the match finishes
     require(rate == 0 || abs(rate) == 25 || abs(rate) == 50 || abs(rate) == 75 || abs(rate) == 100 || abs(rate) == 125 || abs(rate) == 150 || abs(rate) == 175 || abs(rate) == 200);
 
     MatchStatus status;

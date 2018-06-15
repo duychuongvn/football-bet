@@ -49,6 +49,7 @@ export class MatchDetailComponent implements OnInit {
 
 
   private _fetchBetById(bettingId: string){
+    alert(this.match.matchId);
     this._solobetService.getBetting(this.match.matchId,bettingId).subscribe(res => {
       setTimeout(() => {
         this.betting = res;
@@ -156,7 +157,7 @@ export class MatchDetailComponent implements OnInit {
   private _openModalWithComponent(comp, opts?: ModalOptions) {
     const subscribe = this._modalService.onHidden.subscribe((res: any) => {
       if (res) {
-        this._loadBettings(this.match.matchId.toString());
+        this._loadBettings(this.match.matchId);
       }
 
       subscribe.unsubscribe();

@@ -149,11 +149,11 @@ export class SolobetService {
     console.log(amount);
 
     alert(rate);
-    var matchTime = new Date(match.matchDate + ' ' + match.matchTime).getTime();
+    var matchTime = new Date(match.matchDate + ' ' + match.matchTime).getTime()/1000;
 
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
-        return instance.offerNewMatch(this.web3Ser.toSHA3(match.homeTeam +match.awayTeam +match.time), match.homeTeam, match.awayTeam, 0, match.time, rate, {
+        return instance.offerNewMatch(this.web3Ser.toSHA3(match.homeTeam +match.awayTeam +match.time/1000), match.homeTeam, match.awayTeam, 0, match.time/1000, rate, {
           from: account,
           value: amount * 1000000000000000000
         });
