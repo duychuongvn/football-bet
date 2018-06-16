@@ -4,8 +4,6 @@ import {Observable} from 'rxjs/Observable';
 import {fromPromise} from 'rxjs/observable/fromPromise';
 
 import {environment} from '../environments/environment';
-import {Network} from '../models/Network';
-import {NetworkProvider} from '../models/NetworkProvider';
 
 declare var require: any;
 const Web3 = require('web3');
@@ -34,22 +32,28 @@ export class Web3Service {
   }
 
 
+  getAccountInfo() : Observable<any> {
+    return Observable.create(ob => {
+      ob.next(this.getNetworkInfo());
+    });
+  }
   getNetworkInfo() {
     let state = this.web3.currentProvider.publicConfigStore._state;
-
+    // alert(state);
     let providers = this.getProviders();
+
     for(var i = 0; i < providers.length; i++) {
       let provider = providers[i]
       if(state.networkVersion == provider.chainId) {
-        let networkProvider = new NetworkProvider({name: provider.name, symbol: provider.symbol, networkVersion: provider.chainId, url: ''});
 
-        this.networkInfo = new  Network({selectedAddress: state.selectedAddress, provider: networkProvider});
+        this.networkInfo ={selectedAddress: state.selectedAddress, provider: provider};
         break;
       }
     }
-    if(this.networkInfo == null) {
-      console.log(state)
-      this.networkInfo = {selectedAccount: state.selectedAddress, provider: {name: "Ethereum Private Network", symbol: "ETH", chainId: 88}}
+
+    // alert(JSON.stringify(this.getNetworkInfo()));
+    if(!this.networkInfo) {
+     throw "Metamask required";
     }
     return this.networkInfo;
   }
