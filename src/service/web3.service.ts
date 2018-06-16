@@ -46,16 +46,13 @@ export class Web3Service {
       let provider = providers[i]
       if(state.networkVersion == provider.chainId) {
 
-        this.networkInfo ={selectedAddress: state.selectedAddress, provider: provider};
-        break;
+        return {selectedAddress: state.selectedAddress, provider: provider};
       }
     }
 
-    // alert(JSON.stringify(this.getNetworkInfo()));
-    if(!this.networkInfo) {
-     throw "Metamask required";
-    }
-    return this.networkInfo;
+    return {selectedAccount: state.selectedAddress, provider: {name: "Ethereum Private Network", symbol: "ETH", chainId: 88}};
+
+    //throw "Metamask required";
   }
 
   getProviders(){
