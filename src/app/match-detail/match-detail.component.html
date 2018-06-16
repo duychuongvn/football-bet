@@ -1,9 +1,4 @@
-<!-- Image and text -->
-<nav class="navbar navbar-light shadow-sm p-3 mb-3 bg-white rounded">
-  <a class="navbar-brand">
-    <img src="/assets/images/icon.png" width="30" height="30" class="d-inline-block align-top" alt=""> Football Bet
-  </a>
-</nav>
+<app-header></app-header>
 
 <div class="container">
   <div class="row mb-3">
@@ -44,9 +39,12 @@
             {{betting.awayOffer}}
           </td>
           <td scope="row">{{ betting.stake}}</td>
-          <td *ngIf="betting.odds">
-            <button type="button" class="btn btn-info" (click)="openAcceptOdds(betting)">Deal</button>
+          <td *ngIf="betting.status === 'Open'">
+            <button type="button" class="btn btn-warning" (click)="openAcceptOdds(betting)">Deal</button>
           </td>
+          <td *ngIf="betting.status !== 'Open'">
+              <button type="button" class="btn btn-info btn-info">Ongoing</button>
+            </td>
         </tr>
 
       </tbody>

@@ -1,23 +1,8 @@
-<!-- Image and text -->
-<nav class="navbar navbar-light shadow-sm p-3 mb-3 bg-white rounded">
-  <a class="navbar-brand">
-    <img src="/assets/images/icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
-    Football Bet
-  </a>
-
-  <form class="form-inline">
-    <input class="form-control mr-sm-2"
-      type="search"
-      placeholder="Search match"
-      aria-label="Search"
-      name="search-name"
-      [(ngModel)]="matchName">
-  </form>
-</nav>
+<app-header></app-header>
 
 <div class="container-fluid">
   <div class="card-columns">
-    <div class="card text-white bg-info " *ngFor="let fixture of searchMatch(matchName)">
+    <div class="card text-white bg-info " *ngFor="let fixture of matchFixtures">
       <div class="card-header">{{ fixture.key }}</div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item list-group-item-info" *ngFor="let match of fixture.value">
@@ -25,7 +10,8 @@
             {{ match.time_string }}
           </p>
           <p class="float-left my-0 pl-4">
-            <img [src]="match.homeFlag" width="30px"> {{ match.match }} <img [src]="match.awayFlag" width="30px">
+            <img [src]="match.homeFlag" width="30px"> {{ match.match }}
+            <img [src]="match.awayFlag" width="30px">
           </p>
           <a routerLink="/match-detail" [queryParams]="match.pickJson()" class="badge badge-primary float-right mt-2">Info</a>
         </li>

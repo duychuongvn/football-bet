@@ -8,7 +8,7 @@
 <div class="modal-body">
   <div class="form-group">
     <label class="font-weight-bold">Fixture Number:</label>
-    <span class="d-block font-weight-light text-info text-truncate" [attr.title]="handicap.id">#{{handicap.id}}</span>
+    <span class="d-block font-weight-light text-info text-truncate" [attr.title]="handicap.id">#{{handicap.id_substring}}</span>
   </div>
 
   <div class="form-group text-danger font-weight-bold d-flex">
@@ -19,7 +19,7 @@
   <div class="form-group row">
       <div class="col-sm-6">
           <label>Selected Team :</label>
-          <select [(ngModel)]="handicap.selectedTeam" class="form-control" id="teams">
+          <select (change)="displayOdds()" [(ngModel)]="handicap.selectedTeam" class="form-control" id="teams">
               <option [value]="i" *ngFor="let item of handicap.teams; let i = index">{{item}}</option>
           </select>
       </div>
@@ -29,12 +29,12 @@
         <option [value]="item.id" *ngFor="let item of oddsArray">{{item.value}}</option>
       </select>
     </div>
-    <div class="col-sm-6">
-      <!-- <label>{{}}</label> -->
+    <div class="col-sm-6 mt-3">
+      <label class="text-success font-weight-bold">{{handicap.handicapDetail}}</label>
     </div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group row">
       <div class="col-sm-6">
           <label>Stake (ETH)</label>
           <input type="number" min="1" class="form-control" placeholder="Stake"

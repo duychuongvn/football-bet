@@ -47,23 +47,27 @@ export class DealModalComponent implements OnInit {
     // this._prepareMatches(handicap);
 
     console.log(this.match);
+    console.log(this.handicap);
+    console.log(this.account);
+
 
     this._solobetService
       .newOffer(
         this.account,
         this.match,
         handicap.odds_number,
-        handicap.stake
+        handicap.stake,
+        handicap.selectedTeam
       )
       .subscribe(
         result => {
-          // this._loadBettings(this.match.matchId.toString());
+          this._loadBettings(this.match.matchId.toString());
           this._notify.success("Create success");
           this.close("reload");
         },
         e => {
           this._notify.error(
-            "Invalid number of arguments to Solidity function"
+            "Error occur when offer this match " + e.msg
           );
         }
       );

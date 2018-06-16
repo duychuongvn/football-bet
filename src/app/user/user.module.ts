@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HeaderModule } from 'app/header/header.module';
 import { Routes, RouterModule } from '@angular/router';
 
 import { UserComponent } from './user.component';
@@ -19,6 +20,7 @@ const _router: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    HeaderModule,
     RouterModule.forChild(_router)
   ],
   declarations: [

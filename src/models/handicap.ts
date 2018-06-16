@@ -34,6 +34,10 @@ export class Handicap {
     this._id = v;
   }
 
+  public get id_substring(): string{
+    return this.id.toString().substr(0, 8);
+  }
+
   private _homeTeamName: string;
   public get homeTeamName(): string {
     return this._homeTeamName;
@@ -70,7 +74,7 @@ export class Handicap {
   }
   private _stake: number;
   public get stake(): number {
-    return this._stake || 5;
+    return this._stake || 0.01;
   }
   public set stake(v: number) {
     this._stake = v;
@@ -98,7 +102,7 @@ export class Handicap {
 
   private _selectedTeam: string;
   public get selectedTeam(): string {
-    return this._selectedTeam;
+    return this._selectedTeam || "0";
   }
   public set selectedTeam(v: string) {
     this._selectedTeam = v;
@@ -106,6 +110,15 @@ export class Handicap {
 
   public get teams(): string[] {
     return [this._homeTeamName, this._awayTeamName];
+  }
+
+  public get handicapDetail(): string{
+     if(this.selectedTeam === "0")
+     {
+      return this.homeTeamName + " " + (this.odds_number/100)
+     }else{
+      return this.awayTeamName + " " + (this.odds_number/100)
+     }
   }
 
   constructor(data?: HandicapInterface) {

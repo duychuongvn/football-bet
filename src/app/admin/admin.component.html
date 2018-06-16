@@ -1,4 +1,4 @@
-
+<app-header></app-header>
 
 <ul>
   <li *ngFor="let match of upcommingMatches">
@@ -8,10 +8,10 @@
        <input style="width: 50px"
               class="input"
               type="text"
-              [(ngModel)]="match.homeScore"/>
+              [(ngModel)]="match.homeGoals"/>
         -
        <input style="width: 50px"   class="input"
-              type="text" [(ngModel)]="match.awayScore"/>
+              type="text" [(ngModel)]="match.awayGoals" />
           {{match.awayTeam}} - Date: {{match.time}}
 
       <button

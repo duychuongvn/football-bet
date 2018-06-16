@@ -14,14 +14,14 @@
         {{match.date_from_time}}
       </div>
 
-      <div id="selectedTeam"><span *ngIf="betting.selectedTeam === 0">{{match.awayTeam}}</span> <span *ngIf="betting.selectedTeam === 1">{{match.homeTeam}}</span> <span class="text-danger"> {{0 - betting.odds_number}}</span> @ <span id="estimateCoinWin">...</span>
+      <div id="selectedTeam"><span *ngIf="betting.selectedTeam === 0">{{match.homeTeam}}</span> <span *ngIf="betting.selectedTeam === 1">{{match.awayTeam}}</span> <span class="text-danger"> {{0 - betting.odds_number}}</span> @ <span id="estimateCoinWin">...</span>
       </div>
       <div id="match">
         {{match.homeTeam}} - {{match.awayTeam}}
     </div>
     <div id="stake">
-      <div>Stake <span class="text-danger">: {{betting.stake}} </span> <span id="currency"> ETH </span> </div>
-    </div>
+        <div>Stake <span class="text-danger">: {{betting.stake}} </span> <span id="currency"> ETH </span> </div>
+      </div>
   </div>
 </div>
 
