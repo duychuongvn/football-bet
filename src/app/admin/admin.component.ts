@@ -35,7 +35,6 @@ export class AdminComponent implements OnInit {
   ngOnInit() {
     this._getAccounts();
     this.setup();
-    this.fetchScore(this.upcommingMatches);
   }
 
   constructor(
@@ -56,10 +55,6 @@ export class AdminComponent implements OnInit {
             fixture.awayTeamName,
             fixture.date
           );
-
-          console.log(_matchId);
-          console.log(match.matchId);
-          console.log(_matchId === match.matchId)
           if (_matchId.toString() === match.matchId) {
             match.homeGoals = _fixture.result.goalsHomeTeam;
             match.awayGoals = _fixture.result.goalsAwayTeam;
@@ -84,8 +79,7 @@ export class AdminComponent implements OnInit {
     this.solobetService.loadBettingMatches().subscribe(result => {
       for (let i = 0; i < result.length; i++) {
         this.solobetService.loadMatches(result[i]).subscribe(match => {
-          console.log("match");
-          console.log(match);
+
           this.upcommingMatches.push(match);
           this.fetchScore(match);
         });
@@ -93,29 +87,13 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  // onReady = () => {
-  //   this.web3Service.getAccounts().subscribe(accs => {
-  //     this.accounts = accs;
-  //     this.account = this.accounts[0];
-
-  //     // This is run from window:load and ZoneJS is not aware of it we
-  //     // need to use _ngZone.run() so that the UI updates on promise resolution
-  //     this._ngZone.run(() => {
-  //         this.initMatches();
-  //       }
-  //     );
-  //   }, err => alert(err));
-  // };
-
-  // initMatches = () => {
-
-  // };
-  updateScore = match => {
+  public updateScore(match){
+    console.log(match)
     this.solobetService.updateScore(
-      this.account,
+      // this.account,
       match.matchId,
-      parseInt(match.homeScore),
-      parseInt(match.awayScore)
+      match.homeGoals,
+      match.awayGoals
     );
     // this.initMatches();
   };

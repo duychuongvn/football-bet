@@ -61,7 +61,6 @@ contract AsianSoloBet is Ownable, SoloBet {
 
 
   function updateScore(bytes32 matchId, uint homeScore, uint awayScore) public onlyOwner returns (bool) {
-
     Match storage _match = matches[matchId];
     _match.hSc = uint8(homeScore);
     _match.aSc = uint8(awayScore);
@@ -425,7 +424,7 @@ contract AsianSoloBet is Ownable, SoloBet {
 
     MatchStatus status;
     if (time < now) {
-      status = ssMatchStatus.Playing;
+      status = MatchStatus.Playing;
     } else {
       status = MatchStatus.Waiting;
     }
