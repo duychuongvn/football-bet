@@ -34,6 +34,10 @@ export class Handicap {
     this._id = v;
   }
 
+  public get id_substring(): string{
+    return this.id.toString().substr(0, 8);
+  }
+
   private _homeTeamName: string;
   public get homeTeamName(): string {
     return this._homeTeamName;

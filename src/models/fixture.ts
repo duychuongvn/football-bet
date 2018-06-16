@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
 import { FixtureInterface } from '../interfaces/fixture';
+import { FixtureResult } from './fixtureResult';
 
 export class Fixture {
 
@@ -97,6 +98,18 @@ export class Fixture {
     return `${this.homeTeamName} - ${this.awayTeamName}`;
   }
 
+  private _result : FixtureResult;
+  public get result() : FixtureResult {
+    return this._result;
+  }
+  public set result(v : FixtureResult) {
+    this._result = v;
+  }
+
+  public get isFinished(): boolean{
+    return this.status === "FINISHED";
+  }
+
   constructor(data?: FixtureInterface) {
     if (data) {
       this.id            = data.id;
@@ -108,7 +121,8 @@ export class Fixture {
       this.date          = data.date;
       this.status        = data.status;
       this.awayFlag      = data.awayFlag;
-      this.homeFlag      = data.homeFlag
+      this.homeFlag      = data.homeFlag;
+      this.result = data.result;
     }
   }
 
@@ -123,7 +137,8 @@ export class Fixture {
       date: this.date,
       status: this.status,
       awayFlag: this.awayFlag,
-      homeFlag: this.homeFlag
+      homeFlag: this.homeFlag,
+      result: this.result
     };
   }
 }

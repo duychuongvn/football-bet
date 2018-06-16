@@ -111,13 +111,18 @@ export class HomeComponent implements OnInit {
     this._fixtures = [];
 
     this._helper.fetchFixtures().subscribe(
+
       res => {
+        // console.log(res)
         res.fixtures.map(item => {
           if (item.homeTeamName && item.awayTeamName) {
             this._hashId(item);
-            this._fixtures.push(new Fixture(item));
+            // if(item.status !== "FINISHED"){
+              this._fixtures.push(new Fixture(item));
+            // }
           }
         });
+        console.log(this._fixtures)
         this.fetchFlag(this._fixtures);
         this._matchFixtures = map(
           groupBy(this._fixtures, "date_string", ["asc"]),
@@ -152,7 +157,7 @@ export class HomeComponent implements OnInit {
     let _term;
     if (this.matchName.length > 1) {
       _term = this._matchFixtures.filter(item => {
-        return item.value.find(val =>
+        return  item.value.filter(val => !val.isFinished).find(val =>
           includes(
             val.homeTeamName.toLowerCase() || val.awayTeamName.toLowerCase(),
             this.matchName.toLowerCase()
@@ -160,9 +165,8 @@ export class HomeComponent implements OnInit {
         );
       });
     } else {
-      _term = this._matchFixtures;
+      _term = this._matchFixtures.map(item => {return item.value.filter(val => !val.isFinished)});
     }
-
     return _term;
   }
 

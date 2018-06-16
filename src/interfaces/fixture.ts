@@ -1,3 +1,5 @@
+import { FixtureResult } from "models/fixtureResult";
+
 export interface FixtureInterface {
   id: number|string,
   competitionId: number,
@@ -8,5 +10,7 @@ export interface FixtureInterface {
   date: string,
   status: string,
   awayFlag: string,
-  homeFlag: string
+  homeFlag: string,
+  result: FixtureResult
+
 };

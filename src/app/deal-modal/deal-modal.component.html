@@ -8,7 +8,7 @@
 <div class="modal-body">
   <div class="form-group">
     <label class="font-weight-bold">Fixture Number:</label>
-    <span class="d-block font-weight-light text-info text-truncate" [attr.title]="handicap.id">#{{handicap.id}}</span>
+    <span class="d-block font-weight-light text-info text-truncate" [attr.title]="handicap.id">#{{handicap.id_substring}}</span>
   </div>
 
   <div class="form-group text-danger font-weight-bold d-flex">
@@ -29,8 +29,8 @@
         <option [value]="item.id" *ngFor="let item of oddsArray">{{item.value}}</option>
       </select>
     </div>
-    <div class="col-sm-6">
-      <label>{{handicap.handicapDetail}}</label>
+    <div class="col-sm-6 mt-3">
+      <label class="text-success font-weight-bold">{{handicap.handicapDetail}}</label>
     </div>
   </div>
 

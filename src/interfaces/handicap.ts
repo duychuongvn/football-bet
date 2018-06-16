@@ -7,4 +7,5 @@ export interface HandicapInterface{
   stake: number,
   date: string,
   selectedTeam: string //0 selected home, 1 selected away
+
 }
