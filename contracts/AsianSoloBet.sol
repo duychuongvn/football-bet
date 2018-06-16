@@ -64,7 +64,6 @@ contract AsianSoloBet is Ownable, SoloBet {
 
 
   function updateScore(bytes32 matchId, uint homeScore, uint awayScore) public onlyOwner returns (bool) {
-
     Match storage _match = matches[matchId];
     _match.homeScore = uint8(homeScore);
     _match.awayScore = uint8(awayScore);

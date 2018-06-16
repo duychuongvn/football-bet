@@ -164,9 +164,12 @@ export class SolobetService {
     });
   }
 
-  updateScore(account: string, matchId: string, homeScore: number, awayScore: number) {
+  updateScore(matchId: any, homeScore: number, awayScore: number) {
+    console.log(matchId)
+    console.log(homeScore)
+    console.log(awayScore)
     this.Solobet.deployed().then(instance => {
-      return instance.updateScore(matchId, homeScore, awayScore, {from: account});
+      return instance.updateScore(+matchId, homeScore, awayScore);
     });
   }
 
