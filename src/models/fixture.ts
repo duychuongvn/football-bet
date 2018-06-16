@@ -110,6 +110,7 @@ export class Fixture {
     return this.status === "FINISHED";
   }
 
+
   constructor(data?: FixtureInterface) {
     if (data) {
       this.id            = data.id;

@@ -78,11 +78,14 @@ export class HomeComponent implements OnInit {
     this._helper.fetchFixtures().subscribe(
 
       res => {
-        // console.log(res)
-        res.fixtures.map(item => {
-          if (item.homeTeamName && item.awayTeamName && item.status !== 'FINISHED') {
-            this._hashId(item);
-            this._fixtures.push(new Fixture(item));
+        console.log(res)
+        res.fixtures.map(fixture => {
+          if (fixture.homeTeamName && fixture.awayTeamName && fixture.status !== 'FINISHED') {
+            // if (fixture.homeTeamName && fixture.awayTeamName) {
+             let fixtureId = this._helper.hashId(fixture.homeTeamName, fixture.awayTeamName, fixture.date);
+             let _fixture = new Fixture(fixture);
+             _fixture.id = fixtureId;
+            this._fixtures.push(_fixture);
           }
         });
         this.fetchFlag();
@@ -132,9 +135,5 @@ export class HomeComponent implements OnInit {
     return _term;
   }
 
-  private _hashId(item) {
-    const _time = new Date(item.date);
-    const _mHash = `${item.homeTeamName}${item.awayTeamName}${_time.getTime()/1000}`;
-    item.id = this._web3Service.toSHA3(_mHash);
-  }
+
 }

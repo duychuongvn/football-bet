@@ -151,7 +151,7 @@ export class SolobetService {
 
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
-        return instance.offerNewMatch(this.web3Ser.toSHA3(match.homeTeam +match.awayTeam +match.time/1000), match.homeTeam, match.awayTeam, selectedTeam, match.time/1000, rate, {
+        return instance.offerNewMatch(match.matchId, match.homeTeam, match.awayTeam, selectedTeam, match.time/1000, rate, {
           from: account,
           value: amount * 1000000000000000000
         });
