@@ -422,6 +422,7 @@ contract AsianSoloBet is Ownable, SoloBet {
 
   function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint selectedTeam, uint time, int odds) public payable returns (bool) {
 
+    require((odds % 25 ==0) &&  (odds / 25 <=8) &&  (odds / 25 >=-8));
     MatchStatus status;
     if (time < now) {
       status = MatchStatus.Playing;
