@@ -1,0 +1,27 @@
+<!-- Image and text -->
+<nav class="navbar navbar-light shadow-sm p-3 mb-3 bg-white rounded">
+  <a class="navbar-brand">
+    <img src="/assets/images/icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
+    Football Bet
+  </a>
+
+  <div class="accounts font-weight-bold">
+    <p class="mb-0">Your Info:
+      <span class="text-info font-weight-normal">{{account.network?.name}} <span class="badge badge-primary">{{ account.address }}</span></span>
+    </p>
+    <p class="mb-0">Your Balance:
+      <span class="badge badge-primary">{{ account.available_banlance_string }}</span>
+      - Placed:
+      <span class="badge badge-danger">{{ account.placed_balance_string }}</span>
+    </p>
+  </div>
+
+  <form class="form-inline">
+    <input class="form-control mr-sm-2"
+      type="search"
+      placeholder="Search match"
+      aria-label="Search"
+      name="search-name"
+      [(ngModel)]="matchName">
+  </form>
+</nav>
