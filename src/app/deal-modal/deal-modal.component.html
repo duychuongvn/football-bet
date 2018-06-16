@@ -19,7 +19,7 @@
   <div class="form-group row">
       <div class="col-sm-6">
           <label>Selected Team :</label>
-          <select [(ngModel)]="handicap.selectedTeam" class="form-control" id="teams">
+          <select (change)="displayOdds()" [(ngModel)]="handicap.selectedTeam" class="form-control" id="teams">
               <option [value]="i" *ngFor="let item of handicap.teams; let i = index">{{item}}</option>
           </select>
       </div>
@@ -30,7 +30,7 @@
       </select>
     </div>
     <div class="col-sm-6">
-      <!-- <label>{{}}</label> -->
+      <label>{{handicap.handicapDetail}}</label>
     </div>
   </div>
 

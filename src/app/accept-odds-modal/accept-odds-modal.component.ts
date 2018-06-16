@@ -31,27 +31,7 @@ export class AcceptOddsModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // console.log(this.bettings)
-    // let _betting = this.bettings.filter(betting => betting.bettingId === this.bettingId)[0];
-    // if(_betting){
-    //   this.betting = new Betting({
-    //     bettingId: _betting.bettingId,
-    //     matchId: _betting.matchId,
-    //     amount: _betting.amount,
-    //     offer: _betting.offer,
-    //     dealer: _betting.dealer,
-    //     odds: _betting.odds,
-    //     stake: _betting.amount,
-    //     status: _betting.status,
-    //     pair: _betting.pair,
-    //     homeOffer:"",
-    //     awayOffer:"",
-    //     homeDealer:"",
-    //     awayDealer:""})
-    // }
 
-    console.log(this.handicap)
-    console.log(this.betting)
   }
 
 

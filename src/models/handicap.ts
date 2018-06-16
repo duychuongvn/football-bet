@@ -108,6 +108,15 @@ export class Handicap {
     return [this._homeTeamName, this._awayTeamName];
   }
 
+  public get handicapDetail(): string{
+     if(this.selectedTeam === "0")
+     {
+      return this.homeTeamName + " " + (this.odds_number/100)
+     }else{
+      return this.awayTeamName + " " + (this.odds_number/100)
+     }
+  }
+
   constructor(data?: HandicapInterface) {
     if (data) {
       this.id = data.id;

@@ -47,6 +47,9 @@ export class DealModalComponent implements OnInit {
     // this._prepareMatches(handicap);
 
     console.log(this.match);
+    console.log(this.handicap);
+    console.log(this.account);
+
 
     this._solobetService
       .newOffer(

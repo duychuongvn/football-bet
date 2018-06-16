@@ -96,16 +96,16 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  public offer(match) {
-    this._solobetService.newOffer(this.account, match, 75, 3).subscribe(
-      result => {
-        this.loadBettings(match);
-      },
-      e => {
-        console.log(e);
-      }
-    );
-  }
+  // public offer(match) {
+  //   this._solobetService.newOffer(this.account, match, 75, 3).subscribe(
+  //     result => {
+  //       this.loadBettings(match);
+  //     },
+  //     e => {
+  //       console.log(e);
+  //     }
+  //   );
+  // }
 
   public fetch(): any {
     this._fixtures = [];
