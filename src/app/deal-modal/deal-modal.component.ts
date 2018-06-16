@@ -1,19 +1,18 @@
-import { Component, OnInit } from "@angular/core";
-import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
-import { Betting } from "models/betting";
+import { Component, OnInit } from '@angular/core';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
-import { SolobetService, NotifyService } from "service/service";
+import { SolobetService, NotifyService } from 'service/service';
 
-import { Fixture } from "models/fixture";
-import { Handicap } from "models/handicap";
-import { Match } from "models/match";
+import { Fixture } from 'models/fixture';
+import { Handicap } from 'models/handicap';
+import { Match } from 'models/match';
 
-import { PAIR_TYPE } from "enums/handicap";
+import { PAIR_TYPE } from 'enums/handicap';
 
 @Component({
-  selector: "app-deal-modal",
-  templateUrl: "./deal-modal.component.html",
-  styleUrls: ["./deal-modal.component.css"]
+  selector: 'app-deal-modal',
+  templateUrl: './deal-modal.component.html',
+  styleUrls: ['./deal-modal.component.css']
 })
 export class DealModalComponent implements OnInit {
   public title: string;
@@ -22,10 +21,8 @@ export class DealModalComponent implements OnInit {
   public match: Match = new Match();
   public fixture: Fixture = new Fixture();
   public handicap: Handicap = new Handicap();
-  public bettings: Betting[] = [];
 
   public oddsArray = Handicap.oddsArray;
-
   public pairs: Array<Object>;
 
   constructor(
@@ -42,69 +39,29 @@ export class DealModalComponent implements OnInit {
     ];
   }
 
-  public offer(handicap: Handicap) {
-    console.log(handicap);
-    // this._prepareMatches(handicap);
-
+  public offer() {
     console.log(this.match);
     console.log(this.handicap);
     console.log(this.account);
-
 
     this._solobetService
       .newOffer(
         this.account,
         this.match,
-        handicap.odds_number,
-        handicap.stake,
-        handicap.selectedTeam
+        this.handicap.odds_number,
+        this.handicap.stake,
+        this.handicap.selectedTeam
       )
-      .subscribe(
-        result => {
-          this._loadBettings(this.match.matchId.toString());
-          this._notify.success("Create success");
-          this.close("reload");
-        },
-        e => {
-          this._notify.error(
-            "Error occur when offer this match " + e.msg
-          );
+      .subscribe(() => {
+          this._notify.success('Create success');
+          this.close('reload');
+        }, e => {
+          this._notify.error(`Error occur when offer this match ${e.msg}`);
         }
       );
   }
 
-  private _loadBettings(id: string) {
-    this._solobetService.loadBettings(id).subscribe(
-      res => {
-        let _bettings = [];
-        setTimeout(() => {
-          res.bettings.map(item => {
-            if (item.pair == 0) {
-              item.homeOffer = item.offer;
-            } else {
-              item.awayOffer = item.offer;
-            }
-            console.log(item);
-            _bettings.push(item);
-          });
-          this.bettings = _bettings;
-        }, 200);
-      },
-      errors => {
-        this._notify.error(errors);
-      }
-    );
-  }
-
-  private _prepareMatches(handicap) {
-    this.match.matchId = handicap.id;
-    this.match.homeTeam = this.fixture.homeTeamName;
-    this.match.awayTeam = this.fixture.awayTeamName;
-    let time = new Date(handicap.date);
-    this.match.time = time.getTime();
-  }
-
-  public close(reason?: string) {
+  public close(reason?: any) {
     this._bsModalService.setDismissReason(reason);
     this._bsModalRef.hide();
   }
