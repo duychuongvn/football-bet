@@ -3,16 +3,13 @@ pragma solidity ^0.4.21;
 import "./Ownable.sol";
 import "./SoloBet.sol";
 
-
 contract AsianSoloBet is Ownable, SoloBet {
 
-  string public name;
   uint256 GAS_PRICE = 21000;
-  uint256 GAS_LIMIT = 1; // 1Gwei
+//  uint256 GAS_LIMIT = 1; // 1Gwei
 
 
   function AsianSoloBet() public {
-    name = "Asia Solo Bet";
     feeOwner = msg.sender;
   }
 
@@ -21,26 +18,26 @@ contract AsianSoloBet is Ownable, SoloBet {
     bytes32[] memory matchIds = new bytes32[](myBets[owner].length);
     uint256[] memory betIdxes = new uint256[](matchIds.length);
     uint256[] memory amounts = new uint256[](matchIds.length);
-    bool[]memory chooseHomeTeam = new bool[](matchIds.length);
+    bool[]memory slHTeam = new bool[](matchIds.length);
     uint256[] memory status = new uint256[](matchIds.length);
     int[] memory odds = new int[](matchIds.length);
     for (uint32 i = 0; i < matchIds.length; i++) {
 
       matchIds[i] = myBets[owner][i].matchId;
       betIdxes[i] = uint256(myBets[owner][i].betIdx);
-      chooseHomeTeam[i] = myBets[owner][i].bet4Weaker;
+      slHTeam[i] = myBets[owner][i].bet4Weaker;
 
-      odds[i] = bettingMatches[matchIds[i]][betIdxes[i]].rate;
-      amounts[i] = bettingMatches[matchIds[i]][betIdxes[i]].amount;
-      status[i] = uint256(bettingMatches[matchIds[i]][betIdxes[i]].status);
+      odds[i] = bets[matchIds[i]][betIdxes[i]].rate;
+      amounts[i] = bets[matchIds[i]][betIdxes[i]].amount;
+      status[i] = uint256(bets[matchIds[i]][betIdxes[i]].status);
     }
 
-    return (matchIds, betIdxes, odds, amounts, chooseHomeTeam, status);
+    return (matchIds, betIdxes, odds, amounts, slHTeam, status);
   }
 
 
   function totalBets(bytes32 matchId) public view returns (uint256) {
-    return bettingMatches[matchId].length;
+    return bets[matchId].length;
   }
 
 
@@ -54,10 +51,10 @@ contract AsianSoloBet is Ownable, SoloBet {
 
     Match memory _match = matches[matchId];
 
-    homeTeam = _match.homeTeam;
-    awayTeam = _match.awayTeam;
-    homeScore = _match.homeScore;
-    awayScore = _match.awayScore;
+    homeTeam = _match.hT;
+    awayTeam = _match.aT;
+    homeScore = _match.hSc;
+    awayScore = _match.aSc;
     status = _match.status;
     time = _match.time;
   }
@@ -66,8 +63,8 @@ contract AsianSoloBet is Ownable, SoloBet {
   function updateScore(bytes32 matchId, uint homeScore, uint awayScore) public onlyOwner returns (bool) {
 
     Match storage _match = matches[matchId];
-    _match.homeScore = uint8(homeScore);
-    _match.awayScore = uint8(awayScore);
+    _match.hSc = uint8(homeScore);
+    _match.aSc = uint8(awayScore);
     _match.status = MatchStatus.Finished;
     return true;
   }
@@ -76,20 +73,19 @@ contract AsianSoloBet is Ownable, SoloBet {
     Match storage _match = matches[matchId];
     _match.isApproved = true;
 
-    Betting[] storage _bettings = bettingMatches[matchId];
+    Betting[] storage _bettings = bets[matchId];
     for (uint256 i = 0; i < _bettings.length; i++) {
 
       Betting storage _betting = _bettings[i];
-      if (_betting.status == BettingStatus.Deal) {
+      if (_betting.status == BetStatus.Deal) {
         funding(_match, _betting);
-      } else if (_betting.status == BettingStatus.Open) {
+      } else if (_betting.status == BetStatus.Open) {
         refund(_betting);
       }
 
     }
 
-    removeBettingMatch(_match);
-    emit LogApproveScore(_match.id);
+    rmBet(_match);
     return true;
   }
 //
@@ -104,42 +100,40 @@ contract AsianSoloBet is Ownable, SoloBet {
 //  }
 
   function cancelOffer(bytes32 matchId, uint256 bettingId) external returns (bool){
-    Betting memory _betting = bettingMatches[matchId][bettingId];
-    require(_betting.bookmaker == msg.sender);
-    require(_betting.status == BettingStatus.Open);
+    Betting memory _betting = bets[matchId][bettingId];
+    require(_betting.bMaker == msg.sender);
+    require(_betting.status == BetStatus.Open);
     refund(_betting);
     return true;
   }
 
-  function removeBettingMatch(Match _match) internal returns (bool){
-    delete bettingMatches[_match.id];
-    removeBettingMatchIndex(_match);
+  function rmBet(Match _match) internal returns (bool){
+    delete bets[_match.id];
+    rmBetIdx(_match);
     return true;
   }
 
-  function removeBettingMatchIndex(Match _match) internal returns (bool) {
+  function rmBetIdx(Match _match) internal returns (bool) {
 
-    uint32 toDelete = _match.index;
-    uint32 lastIndex = uint32(bettingMatchIndexes.length - 1);
-    bettingMatchIndexes[toDelete] = bettingMatchIndexes[lastIndex];
-    matches[bettingMatchIndexes[toDelete]].index = toDelete;
-    bettingMatchIndexes.length--;
+    uint32 toDelete = _match.idx;
+    uint32 lastIdx = uint32(betIndexes.length - 1);
+    betIndexes[toDelete] = betIndexes[lastIdx];
+    matches[betIndexes[toDelete]].idx = toDelete;
+    betIndexes.length--;
     return true;
   }
 
   function transferFund(address receiver, uint256 amount) internal returns (bool) {
     if (receiver != 0x0) {
-      uint256 txFee = GAS_LIMIT * GAS_PRICE;
-      receiver.transfer(amount - txFee);
-      emit Transfer(msg.sender, receiver, amount);
+      receiver.transfer(amount - GAS_PRICE);
+      emit Transfer(msg.sender, receiver, amount - GAS_PRICE);
     }
   }
 
   function refund(Betting _betting) internal returns (bool) {
-    transferFund(_betting.bookmaker, _betting.amount);
-    _betting.status = BettingStatus.Refunded;
-    balances[_betting.bookmaker] = balances[_betting.bookmaker] - _betting.amount;
-    emit UpdateFund(_betting.bookmaker, _betting.amount, "refund");
+    transferFund(_betting.bMaker, _betting.amount);
+    _betting.status = BetStatus.Refunded;
+    balances[_betting.bMaker] = balances[_betting.bMaker] - _betting.amount;
     return true;
   }
 
@@ -150,318 +144,288 @@ contract AsianSoloBet is Ownable, SoloBet {
       Funding memory funding = fundings[i];
       if (funding.receiver != 0x0) {
         transferFund(funding.receiver, funding.amount);
-        funding.betting.status = BettingStatus.Done;
+        funding.betting.status = BetStatus.Done;
 
       }
     }
 
-    balances[_betting.bookmaker] = balances[_betting.bookmaker] - _betting.amount;
+    balances[_betting.bMaker] = balances[_betting.bMaker] - _betting.amount;
     balances[_betting.punter] = balances[_betting.punter] - _betting.amount;
     balances[feeOwner] = balances[feeOwner] + _betting.amount - _betting.amount * 95 / 100;
 
   }
 
-  event UpdateFund(address player, uint256 value, string note);
-  event RemainFund(address player, uint256 value, string note);
 
-  function calcFundForBetting00AndBookmakerChooseStrongerTeam(int bookMarkerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+  function b00Strong(int bSc, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
 
-    if (bookMarkerTeamScore > punterTeamScore) {// home team win
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-    } else if (bookMarkerTeamScore == punterTeamScore) {
+    if (bSc > pTScore) {
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
+    } else if (bSc == pTScore) {
 
-      bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
-      bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, winAmount, _betting);
+      fundings[1] = Funding(_betting.punter, winAmount, _betting);
 
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
     }
   }
 
-  function calcFundForBetting025AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    uint256 halfAmount = amountAfterFee / 2;
-    if (bookmakerTeamScore > punterTeamScore) {// home team win
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
-    } else if (bookmakerTeamScore == punterTeamScore) {
+  function b25Strong(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
 
-      bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
-      bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
+    if (bTScore > pTScore) {
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
+    } else if (bTScore == pTScore) {
+      fundings[0] = Funding(_betting.bMaker, winAmount / 2, _betting);
+      fundings[1] = Funding(_betting.punter, _betting.amount + winAmount / 2, _betting);
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
     }
   }
 
-  function calcFundForBetting025AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    uint256 halfAmount = amountAfterFee / 2;
-    if (punterTeamScore > bookmakerTeamScore) {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
-
-
-    } else if (punterTeamScore == bookmakerTeamScore) {
-
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
-      bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
+  function b25Weak(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
+    if (pTScore > bTScore) {
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
+    } else if (pTScore == bTScore) {
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount / 2, _betting);
+      fundings[1] = Funding(_betting.punter, winAmount / 2, _betting);
     } else {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
     }
   }
 
 
-  function calcFundForBetting050AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    if (bookmakerTeamScore > punterTeamScore) {// home team win
+  function b50Strong(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
+    if (bTScore > pTScore) {// home team win
 
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
     }
   }
 
-  function calcFundForBetting050AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    if (punterTeamScore > bookmakerTeamScore) {// home team win
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+  function b50Weak(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
+    if (pTScore > bTScore) {
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
     } else {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
     }
   }
 
 
-  function calcFundForBetting075AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    int score = bookmakerTeamScore - punterTeamScore;
-    uint256 halfAmount = amountAfterFee / 2;
+  function b75Strong(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
+    int score = bTScore - pTScore;
     if (score > 1) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
     } else if (score == 1) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
-      bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount / 2, _betting);
+      fundings[1] = Funding(_betting.punter, winAmount / 2, _betting);
 
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
     }
   }
 
-  function calcFundForBetting075AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    int score = bookmakerTeamScore - punterTeamScore;
-    uint256 halfAmount = amountAfterFee / 2;
+  function b75Weak(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
+    int score = bTScore - pTScore;
     if (score >= 0) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
     } else if (score == - 1) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
-      bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
+      fundings[0] = Funding(_betting.bMaker, winAmount / 2, _betting);
+      fundings[1] = Funding(_betting.punter, _betting.amount + winAmount / 2, _betting);
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
     }
   }
 
-  function calcFundForBetting100AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    int score = bookmakerTeamScore - punterTeamScore;
+  function b100Strong(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
+    int score = bTScore - pTScore;
     if (score > 1) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
     } else if (score == 1) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
-      bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, winAmount, _betting);
+      fundings[1] = Funding(_betting.punter, winAmount, _betting);
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
     }
   }
 
-  function calcFundForBetting100AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    int score = bookmakerTeamScore - punterTeamScore;
+  function b100Weak(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
+    int score = bTScore - pTScore;
     if (score >= 0) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
     } else if (score == - 1) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
-      bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, winAmount, _betting);
+      fundings[1] = Funding(_betting.punter, winAmount, _betting);
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
 
     }
   }
 
 
-  function calcFundForBetting125AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    int score = bookmakerTeamScore - punterTeamScore;
-    uint256 halfAmount = amountAfterFee / 2;
+  function b125Strong(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
+    int score = bTScore - pTScore;
     if (score > 1) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
     } else if (score == 1) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
-      bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
+      fundings[0] = Funding(_betting.bMaker, winAmount / 2, _betting);
+      fundings[1] = Funding(_betting.punter, _betting.amount + winAmount / 2, _betting);
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
 
     }
   }
 
-  function calcFundForBetting125AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    int score = bookmakerTeamScore - punterTeamScore;
-    uint256 halfAmount = amountAfterFee / 2;
+  function b125Weak(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
+    int score = bTScore - pTScore;
     if (score >= 0) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
     } else if (score == - 1) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
-      bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount / 2, _betting);
+      fundings[1] = Funding(_betting.punter, winAmount / 2, _betting);
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
     }
   }
 
-  function calcFundForBetting150AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    int score = bookmakerTeamScore - punterTeamScore;
+  function b150Strong(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
+    int score = bTScore - pTScore;
     if (score > 1) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
     }
   }
 
-  function calcFundForBetting150AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    int score = bookmakerTeamScore - punterTeamScore;
+  function b150Weak(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
+    int score = bTScore - pTScore;
     if (score >= - 1) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
 
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
     }
   }
 
-  function calcFundForBetting175AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    int score = bookmakerTeamScore - punterTeamScore;
-    uint256 halfAmount = amountAfterFee / 2;
+  function b175Strong(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
+    int score = bTScore - pTScore;
     if (score > 2) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
     } else if (score == 2) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + halfAmount, _betting);
-      bookmakerFunding[1] = Funding(_betting.punter, halfAmount, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount / 2, _betting);
+      fundings[1] = Funding(_betting.punter, winAmount / 2, _betting);
 
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
     }
   }
 
-  function calcFundForBetting175AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    int score = bookmakerTeamScore - punterTeamScore;
-    uint256 halfAmount = amountAfterFee / 2;
+  function b175Weak(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
+    int score = bTScore - pTScore;
     if (score >= - 1) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
     } else if (score == - 2) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, halfAmount, _betting);
-      bookmakerFunding[1] = Funding(_betting.punter, _betting.amount + halfAmount, _betting);
+      fundings[0] = Funding(_betting.bMaker, winAmount / 2, _betting);
+      fundings[1] = Funding(_betting.punter, _betting.amount + winAmount / 2, _betting);
 
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
     }
   }
 
-  function calcFundForBetting200AndBookmakerChooseStrongerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    int score = bookmakerTeamScore - punterTeamScore;
+  function b200Strong(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
+    int score = bTScore - pTScore;
     if (score > 2) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
 
     } else if (score == 2) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
-      bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, winAmount, _betting);
+      fundings[1] = Funding(_betting.punter, winAmount, _betting);
 
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
     }
   }
 
-  function calcFundForBetting200AndBookmakerChooseWeakerTeam(int bookmakerTeamScore, int punterTeamScore, uint amountAfterFee, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
+  function b200Weak(int bTScore, int pTScore, uint winAmount, Betting _betting) internal returns (Funding[2] fundings) {
 
-    int score = bookmakerTeamScore - punterTeamScore;
+    int score = bTScore - pTScore;
     if (score >= - 1) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, _betting.amount + winAmount, _betting);
     } else if (score == - 2) {
-      bookmakerFunding[0] = Funding(_betting.bookmaker, amountAfterFee, _betting);
-      bookmakerFunding[1] = Funding(_betting.punter, amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.bMaker, winAmount, _betting);
+      fundings[1] = Funding(_betting.punter, winAmount, _betting);
 
     } else {
-      bookmakerFunding[0] = Funding(_betting.punter, _betting.amount + amountAfterFee, _betting);
+      fundings[0] = Funding(_betting.punter, _betting.amount + winAmount, _betting);
     }
   }
 
 
-  function getFunding(Match _match, Betting _betting) internal returns (Funding[2] bookmakerFunding) {
-    int bookmakerTeamScore = _match.homeScore;
-    int punterTeamScore = _match.awayScore;
-    uint256 fee = _betting.amount - _betting.amount * 95 / 100;
-    uint256 amountAfterFee = _betting.amount - fee;
-    uint256 halfAmount = amountAfterFee / 2;
+  function getFunding(Match _match, Betting _betting) internal returns (Funding[2] fundings) {
+    int bTScore = _match.hSc;
+    int pTScore = _match.aSc;
+    uint256 winAmount = _betting.amount * 95 / 100;
     int score;
     int odds = _betting.rate;
 
     if (_betting.bmTeam == uint8(Team.Away)) {
-      bookmakerTeamScore = _match.awayScore;
-      punterTeamScore = _match.homeScore;
+      bTScore = _match.aSc;
+      pTScore = _match.hSc;
     }
 
     if (odds == 0) {
-      bookmakerFunding = calcFundForBetting00AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
+      fundings = b00Strong(bTScore, pTScore, winAmount, _betting);
     } else if (odds == - 25) {
-      bookmakerFunding = calcFundForBetting025AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (odds == 25) {// bet for away team
-      bookmakerFunding = calcFundForBetting025AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore , amountAfterFee, _betting);
-    } else if (odds == - 50) {// bet for home team
-      bookmakerFunding = calcFundForBetting050AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (odds == 50) {// bet for away team
-      bookmakerFunding = calcFundForBetting050AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (odds == - 75) {// bet for home team
-      bookmakerFunding = calcFundForBetting075AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (odds == 75) {// bet for away team
-      bookmakerFunding = calcFundForBetting075AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (odds == - 100) {// bet for home team
-      bookmakerFunding = calcFundForBetting100AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (odds == 100) {// bet for away team
-      bookmakerFunding = calcFundForBetting100AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (odds == - 125) {// bet for home team
-      bookmakerFunding = calcFundForBetting125AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (odds == 125) {// bet for away team
-      bookmakerFunding = calcFundForBetting125AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
+      fundings = b25Strong(bTScore, pTScore, winAmount, _betting);
+    } else if (odds == 25) {
+      fundings = b25Weak(bTScore, pTScore, winAmount, _betting);
+    } else if (odds == - 50) {
+      fundings = b50Strong(bTScore, pTScore, winAmount, _betting);
+    } else if (odds == 50) {
+      fundings = b50Weak(bTScore, pTScore, winAmount, _betting);
+    } else if (odds == - 75) {
+      fundings = b75Strong(bTScore, pTScore, winAmount, _betting);
+    } else if (odds == 75) {
+      fundings = b75Weak(bTScore, pTScore, winAmount, _betting);
+    } else if (odds == - 100) {
+      fundings = b100Strong(bTScore, pTScore, winAmount, _betting);
+    } else if (odds == 100) {
+      fundings = b100Weak(bTScore, pTScore, winAmount, _betting);
+    } else if (odds == - 125) {
+      fundings = b125Strong(bTScore, pTScore, winAmount, _betting);
+    } else if (odds == 125) {
+      fundings = b125Weak(bTScore, pTScore, winAmount, _betting);
     } else if (odds == - 150) {
-      bookmakerFunding = calcFundForBetting150AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
-    } else if (odds == 150) {// bet for away team
-      bookmakerFunding = calcFundForBetting150AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
+      fundings = b150Strong(bTScore, pTScore, winAmount, _betting);
+    } else if (odds == 150) {
+      fundings = b150Weak(bTScore, pTScore, winAmount, _betting);
     } else if (odds == - 175) {
-      bookmakerFunding = calcFundForBetting175AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
+      fundings = b175Strong(bTScore, pTScore, winAmount, _betting);
     } else if (odds == 175) {
-      bookmakerFunding = calcFundForBetting175AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
+      fundings = b175Weak(bTScore, pTScore, winAmount, _betting);
     } else if (odds == - 200) {
-      bookmakerFunding = calcFundForBetting200AndBookmakerChooseStrongerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
+      fundings = b200Strong(bTScore, pTScore, winAmount, _betting);
     } else if (odds == 200) {
-      bookmakerFunding = calcFundForBetting200AndBookmakerChooseWeakerTeam(bookmakerTeamScore, punterTeamScore, amountAfterFee, _betting);
+      fundings = b200Weak(bTScore, pTScore, winAmount, _betting);
     }
 
-    return bookmakerFunding;
+    return fundings;
   }
 
   function getBettingMatchIds() public view returns (bytes32[]) {
-    return bettingMatchIndexes;
+    return betIndexes;
   }
 
   function getTotalBettingMatches() public view returns (uint256) {
-    return bettingMatchIndexes.length;
-  }
-
-  function abs(int value) internal view returns (int) {
-    if (value < 0) {
-      return value * - 1;
-    }
-    return value;
+    return betIndexes.length;
   }
 
   function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint selectedTeam, uint time, int odds) public payable returns (bool) {
-//    require(time + 75 * 60 > now);// allow 15 minutes before the match finishes
-//    require(odds == 0 || odds == -25 || odds == 25
-//            || odds == -50 || odds == 50
-//            || odds == -100 || odds == 100
-//            || odds == -125 || odds == 125
-//            || odds == -150 || odds == 150
-//            || odds == -175 || odds == 175
-//            || odds == -200 || odds == 200);
 
     MatchStatus status;
     if (time < now) {
-      status = MatchStatus.Playing;
+      status = ssMatchStatus.Playing;
     } else {
       status = MatchStatus.Waiting;
     }
@@ -471,18 +435,16 @@ contract AsianSoloBet is Ownable, SoloBet {
 
     if (_match.status == MatchStatus.NotAvailable) {
       _match.id = matchId;
-      _match.homeTeam = homeTeam;
-      _match.awayTeam = awayTeam;
-      _match.homeScore = 0;
-      _match.awayScore = 0;
+      _match.hT = homeTeam;
+      _match.aT = awayTeam;
       _match.time = uint48(time);
       _match.status = status;
-      _match.index = uint32(bettingMatchIndexes.push(matchId) - 1);
+      _match.idx = uint32(betIndexes.push(matchId) - 1);
       matches[matchId] = _match;
     }
 
-    Betting memory _betting = Betting(msg.sender, 0x0, _match.id, uint8(selectedTeam), odds, msg.value, BettingStatus.Open);
-    uint32 betIdx = uint32(bettingMatches[matchId].push(_betting) - 1);
+    Betting memory _betting = Betting(msg.sender, 0x0, _match.id, uint8(selectedTeam), odds, msg.value, BetStatus.Open);
+    uint32 betIdx = uint32(bets[matchId].push(_betting) - 1);
     if (isPlayerNotExist(msg.sender)) {
       players.push(msg.sender);
     }
@@ -495,12 +457,12 @@ contract AsianSoloBet is Ownable, SoloBet {
 
 
   function deal(bytes32 matchId, uint256 bettingId) public payable returns (bool) {
-    Betting storage _betting = bettingMatches[matchId][bettingId];
+    Betting storage _betting = bets[matchId][bettingId];
     require(_betting.amount == msg.value);
-    require(_betting.bookmaker != msg.sender);
-    require(_betting.status == BettingStatus.Open);
+    require(_betting.bMaker != msg.sender);
+    require(_betting.status == BetStatus.Open);
     _betting.punter = msg.sender;
-    _betting.status = BettingStatus.Deal;
+    _betting.status = BetStatus.Deal;
 
     if (isPlayerNotExist(msg.sender)) {
       players.push(msg.sender);
@@ -510,14 +472,14 @@ contract AsianSoloBet is Ownable, SoloBet {
 
     balances[msg.sender] += msg.value;
 
-    emit LogDeal(_betting.bookmaker, _betting.punter, matchId, bettingId);
+    emit LogDeal(_betting.bMaker, _betting.punter, matchId, bettingId);
 
     return true;
   }
 
-  function getBettingInfo(bytes32 matchId, uint256 bettingId) public view returns (address bookmaker, address punter, uint8 selectedTeam, int odds, uint256 amount, BettingStatus status) {
-    Betting memory _betting = bettingMatches[matchId][bettingId];
-    bookmaker = _betting.bookmaker;
+  function getBettingInfo(bytes32 matchId, uint256 bettingId) public view returns (address bMaker, address punter, uint8 selectedTeam, int odds, uint256 amount, BetStatus status) {
+    Betting memory _betting = bets[matchId][bettingId];
+    bMaker = _betting.bMaker;
     punter = _betting.punter;
     odds = _betting.rate;
     amount = _betting.amount;

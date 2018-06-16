@@ -1,5 +1,6 @@
 import {Component, NgZone, OnInit, Pipe, PipeTransform} from '@angular/core';
 import {Web3Service, SolobetService, MatchService, UserService} from '../../service/service';
+import {Network} from '../../models/Network';
 
 
 @Component({
@@ -22,7 +23,7 @@ export class UserComponent {
   groupMatchesFilter: any;
   accountBalance: any;
   placedBalance: number;
-  networkInfo: { selectedAccount: '', provider: {} };
+  networkInfo: Network;
 
   constructor(private _ngZone: NgZone,
               private  web3Service: Web3Service,
@@ -36,7 +37,7 @@ export class UserComponent {
   }
 
   onReady = () => {
-    this.networkInfo = {selectedAccount: '', provider: {}};
+
     this.web3Service.getAccounts().subscribe(accs => {
       this.accounts = accs;
       this.account = this.accounts[0];
