@@ -1,24 +1,21 @@
-import { Component, NgZone, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-import { Match } from "models/match";
+import { Component, OnInit } from '@angular/core';
+import { Match } from 'models/match';
 
 import {
   Web3Service,
   SolobetService,
-  MatchService,
   JhelperService
-} from "../../service/service";
+} from 'service/service';
 
-import { Fixture } from "models/fixture";
-import * as groupBy from "lodash/groupBy";
-import * as clone from "lodash/clone";
-import * as map from "lodash/map";
-import * as includes from "lodash/includes";
+import { Fixture } from 'models/fixture';
+import * as groupBy from 'lodash/groupBy';
+import * as map from 'lodash/map';
+import * as includes from 'lodash/includes';
 
 @Component({
-  selector: "app-home",
-  templateUrl: "./home.component.html",
-  styleUrls: ["./home.component.css"]
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
   public account: any;
@@ -29,42 +26,21 @@ export class HomeComponent implements OnInit {
   public amount: 0;
 
   private _fixtures: Fixture[] = [];
-  private _matchFixtures = [];
-  public matchName: string = "";
+  public matchFixtures = [];
+  public matchName: string = '';
 
   constructor(
-    private _ngZone: NgZone,
     private _web3Service: Web3Service,
     private _solobetService: SolobetService,
-    private _matchService: MatchService,
-    private _helper: JhelperService,
-    private _router: Router
+    private _helper: JhelperService
   ) {}
 
   ngOnInit() {
-    // this._ngZone.run(() => {
-    //   this.initMatches();
-    // });
     this.fetch();
-    // this._getAccounts();
   }
-
-  private _getAccounts() {
-    this._web3Service.getAccounts().subscribe(
-      accs => {
-        this.accounts = accs;
-        this.account = this.accounts[0];
-
-        // This is run from window:load and ZoneJS is not aware of it we
-        // need to use _ngZone.run() so that the UI updates on promise resolution
-      },
-      err => alert(err)
-    );
-  }
-
 
   public loadMatches() {
-    this._solobetService.loadMatches("0x123").subscribe(
+    this._solobetService.loadMatches('0x123').subscribe(
       match => {
         this.match = match;
       },
@@ -85,7 +61,7 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  public deal(matchId, bettingId) {
+  public deal(matchId) {
     this._solobetService.deal(this.account, matchId, 0).subscribe(
       result => {
         this.loadBettings(matchId);
@@ -96,17 +72,6 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  // public offer(match) {
-  //   this._solobetService.newOffer(this.account, match, 75, 3).subscribe(
-  //     result => {
-  //       this.loadBettings(match);
-  //     },
-  //     e => {
-  //       console.log(e);
-  //     }
-  //   );
-  // }
-
   public fetch(): any {
     this._fixtures = [];
 
@@ -115,17 +80,14 @@ export class HomeComponent implements OnInit {
       res => {
         // console.log(res)
         res.fixtures.map(item => {
-          if (item.homeTeamName && item.awayTeamName) {
+          if (item.homeTeamName && item.awayTeamName && item.status !== 'FINISHED') {
             this._hashId(item);
-            // if(item.status !== "FINISHED"){
-              this._fixtures.push(new Fixture(item));
-            // }
+            this._fixtures.push(new Fixture(item));
           }
         });
-        console.log(this._fixtures)
-        this.fetchFlag(this._fixtures);
-        this._matchFixtures = map(
-          groupBy(this._fixtures, "date_string", ["asc"]),
+        this.fetchFlag();
+        this.matchFixtures = map(
+          groupBy(this._fixtures, 'date_string', ['asc']),
           (value, key) => ({
             key,
             value: [...value]
@@ -138,7 +100,7 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  private fetchFlag(fixtures: any): any {
+  private fetchFlag(): any {
     this._helper.fetchTeam().subscribe(resp => {
       resp.teams.map(team => {
         this._fixtures.forEach(item => {
@@ -153,51 +115,22 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  public searchMatch(name: string) {
+  public searchMatch() {
     let _term;
     if (this.matchName.length > 1) {
-      _term = this._matchFixtures.filter(item => {
-        return  item.value.filter(val => !val.isFinished).find(val =>
-          includes(
+      _term = this.matchFixtures.filter(item => {
+        return  item.value.find(val => {
+          return includes(
             val.homeTeamName.toLowerCase() || val.awayTeamName.toLowerCase(),
             this.matchName.toLowerCase()
-          )
-        );
+          );
+        });
       });
     } else {
-      _term = this._matchFixtures.map(item => {return item.value.filter(val => !val.isFinished)});
+      _term = this.matchFixtures;
     }
     return _term;
   }
-
-  //   loadWorldcupMatches = () => {
-  //     this.worldcupMatches = new Array();
-  //     this.matchService.getWorldcupMatches().subscribe(matches => {
-  //       let fixtures = matches.fixtures;
-  //       for (let i = 0; i < fixtures.length; i++) {
-  //         var match = fixtures[i];
-  //         this.worldcupMatches.push({
-  //           homeTeamName: match.homeTeamName, awayTeamName: match.awayTeamName, time: match.date,
-  //           homeScore: match.result.goalsHomeTeam, awayScore: match.result.goalsAwayTeam,
-  //           homeTeam: {}, awayTeam: {},
-  //           homeTeamId: match.homeTeam, awayTeamId: match.awayTeam
-  //         });
-
-  //         this.matchService.getWorldcupTeamInfo(match.homeTeam).subscribe(team => {
-  //           for (let i = 0; i < this.worldcupMatches.length; i++) {
-  //             let match = this.worldcupMatches[i];
-  //             if (match.homeTeamId == team._link.self.href) {
-  //               match.homeTeam = team;
-  //             } else if (match.awayTeamId == team._link.seft.href) {
-  //               match.awayTeam = team;
-  //             }
-  //           }
-  //         });
-
-  //       }
-  //     });
-  //   };
-  // >>>>>>> beb65726e374a18e73b95a8a6405beb113936a51
 
   private _hashId(item) {
     const _time = new Date(item.date);

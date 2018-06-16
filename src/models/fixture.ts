@@ -122,7 +122,7 @@ export class Fixture {
       this.status        = data.status;
       this.awayFlag      = data.awayFlag;
       this.homeFlag      = data.homeFlag;
-      this.result = data.result;
+      this.result        = data.result;
     }
   }
 
