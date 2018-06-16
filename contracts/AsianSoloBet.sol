@@ -424,7 +424,7 @@ contract AsianSoloBet is Ownable, SoloBet {
 
     MatchStatus status;
     if (time < now) {
-      status = ssMatchStatus.Playing;
+      status = MatchStatus.Playing;
     } else {
       status = MatchStatus.Waiting;
     }
