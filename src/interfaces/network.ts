@@ -1,5 +1,13 @@
+import {NetworkProvider} from '../models/NetworkProvider';
+
+export interface NetworkProviderInterface {
+  networkVersion: any;
+  symbol: string;
+  name: string;
+  url: string;
+}
+
 export interface NetworkInterface {
-  name: string,
-  chainId: number,
-  symbol: string
-};
+  selectedAddress: any;
+  provider: NetworkProvider;
+}
