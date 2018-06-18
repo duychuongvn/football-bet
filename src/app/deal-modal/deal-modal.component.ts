@@ -9,6 +9,7 @@ import { Handicap } from "models/handicap";
 import { Match } from "models/match";
 
 import { PAIR_TYPE } from "enums/handicap";
+import { ODDS } from "enums/odds";
 
 @Component({
   selector: "app-deal-modal",
@@ -25,6 +26,8 @@ export class DealModalComponent implements OnInit {
   public bettings: Betting[] = [];
 
   public oddsArray = Handicap.oddsArray;
+
+  public oddsArr = Handicap.oddsArr;
 
   public pairs: Array<Object>;
 
@@ -50,12 +53,11 @@ export class DealModalComponent implements OnInit {
     console.log(this.handicap);
     console.log(this.account);
 
-
     this._solobetService
       .newOffer(
         this.account,
         this.match,
-        handicap.odds_number,
+        handicap.odds_number * 100,
         handicap.stake,
         handicap.selectedTeam
       )
@@ -66,9 +68,7 @@ export class DealModalComponent implements OnInit {
           this.close("reload");
         },
         e => {
-          this._notify.error(
-            "Error occur when offer this match " + e.msg
-          );
+          this._notify.error("Error occur when offer this match " + e.msg);
         }
       );
   }
@@ -79,7 +79,7 @@ export class DealModalComponent implements OnInit {
         let _bettings = [];
         setTimeout(() => {
           res.bettings.map(item => {
-            if (item.pair == 0) {
+            if (item.selectedTeam === 0) {
               item.homeOffer = item.offer;
             } else {
               item.awayOffer = item.offer;
