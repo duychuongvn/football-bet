@@ -153,21 +153,46 @@ describe('Test data consistently when admin update score and kill contract', asy
 
     });
 
-    // it('should allow user claim stake when the match is finished', async() => {
-    //   contract.offerNewMatch(0x124, homeTeam, awayTeam, 0, matchTime, 0, {from: bookmaker, value: betAmount});
-    //   contract.deal(0x124, 0, {from: punter, value: betAmount});
-    //   contract.updateScore(0x124, 1,0)
-    //   const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
-    //   const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
-    //
-    //   contract.updateScore(0x124, 1,0); // cheat here to wait for network update new balance
-    //   contract.claimStake(0x124,0, {from: bookmaker, gasPrice: 30, gasLimit: 210000});
-    //   const amountOfBookMakerAfterClaim = await web3.eth.getBalance(bookmaker).toNumber();
-    //   const amountOfPunterAfterClaim = await  web3.eth.getBalance(punter).toNumber();
-    //
-    //   assert.equanls(toGwei(amountOfBookMakerAfterClaim), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker wins all and get all stake" );
-    //   assert.equals(toGwei(amountOfPunterAfterClaim), toGwei(amountOfPunterAfterDeal), "Bookmaker loses all and don't get stake back" );
-    // });
+    it('should allow user claim stake when the match is finished', async() => {
+      contract.offerNewMatch(0x124, homeTeam, awayTeam, 0, matchTime, 0, {from: bookmaker, value: betAmount});
+      contract.deal(0x124, 0, {from: punter, value: betAmount});
+      contract.updateScore(0x124, 1,0)
+      const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+      const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+      contract.claimStake(0x124, {from: bookmaker, gasPrice: 30, gasLimit: 210000});
+      contract.updateScore(0x124, 1,0); // cheat here to wait for network updates balances
+
+      const amountOfBookMakerAfterClaim = await web3.eth.getBalance(bookmaker).toNumber();
+      const amountOfPunterAfterClaim = await  web3.eth.getBalance(punter).toNumber();
+
+      console.log(amountOfBookMakerAfterOffer)
+      console.log(amountOfPunterAfterDeal)
+      console.log(amountOfBookMakerAfterClaim)
+      console.log(amountOfPunterAfterClaim)
+      assert.equal(toGwei(amountOfBookMakerAfterClaim), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker wins all and get all stake" );
+      assert.equal(toGwei(amountOfPunterAfterClaim), toGwei(amountOfPunterAfterDeal), "Bookmaker loses all and don't get stake back" );
+    });
+
+    it('should not update balance when use claims twices', async() => {
+      contract.offerNewMatch(0x124, homeTeam, awayTeam, 0, matchTime, 0, {from: bookmaker, value: betAmount});
+      contract.deal(0x124, 0, {from: punter, value: betAmount});
+      contract.updateScore(0x124, 1,0)
+      const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
+      const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
+
+      contract.updateScore(0x124, 1,0); // cheat here to wait for network update new balance
+      contract.claimStake(0x124, {from: bookmaker, gasPrice: 30, gasLimit: 210000});
+      contract.updateScore(0x124, 1,0); // cheat here to wait for network update new balance
+      contract.claimStake(0x124, {from: bookmaker, gasPrice: 30, gasLimit: 210000});
+      contract.updateScore(0x124, 1,0); // cheat here to wait for network update new balance
+
+      const amountOfBookMakerAfterClaim = await web3.eth.getBalance(bookmaker).toNumber();
+      const amountOfPunterAfterClaim = await  web3.eth.getBalance(punter).toNumber();
+
+      assert.equal(toGwei(amountOfBookMakerAfterClaim), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker wins all and get all stake" );
+      assert.equal(toGwei(amountOfPunterAfterClaim), toGwei(amountOfPunterAfterDeal), "Bookmaker loses all and don't get stake back" );
+    });
   });
 
 
