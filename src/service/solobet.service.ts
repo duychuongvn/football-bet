@@ -78,13 +78,10 @@ export class SolobetService {
       this.Solobet.deployed().then(instance => {
         return instance.totalBets.call(matchId);
       }).then(totalBets => {
-
         for (let i = 0; i < totalBets; i++) {
           this.getBetting(matchId, i).subscribe(betting => {
-            console.log("++++++" + JSON.stringify(betting));
             bettings.push(betting);
           });
-          // bettings.push(this.getBettingSync(matchId, i));
         }
         observer.next({matchId: matchId, bettings: bettings});
         observer.complete();

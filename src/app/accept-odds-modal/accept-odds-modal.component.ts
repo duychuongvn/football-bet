@@ -53,15 +53,15 @@ export class AcceptOddsModalComponent implements OnInit {
     .subscribe(res => {
       let _bettings = [];
       setTimeout(() => {
-        res.bettings.map(item => {
-          if(item.pair == 0)
+        console.log(res)
+        res.bettings.map(betting => {
+          if(betting.selectedTeam == 0)
           {
-            item.homeOffer = item.offer;
+            betting.homeOffer = betting.homeOffer;
           }else{
-            item.awayOffer = item.offer;
+            betting.awayOffer = betting.awayOffer;
           }
-          console.log(item)
-          _bettings.push(item);
+          _bettings.push(betting);
         });
         this.bettings = _bettings;
       }, 200);

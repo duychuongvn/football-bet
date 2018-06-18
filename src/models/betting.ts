@@ -29,21 +29,17 @@ export class Betting {
   }
 
   public get odds_number(): number {
-    if (this.selectedTeam === 0) {
-      return +this._odds / 100;
-    } else {
-      return 0 - +this._odds / 100;
-    }
+      return (parseInt(this.odds.toString()) / 100);
   }
 
   public get odds_string(): string {
     if (this.selectedTeam === 0) {
-      return Handicap.oddsArray.find((item: any) => +item.id === +this.odds)[
+      return Handicap.oddsArray.find((item: any) => parseInt(item.id) === (+this.odds))[
         "value"
       ];
     } else {
       let oddsArray = Handicap.oddsArray
-        .find((item: any) => +item.id === +this.odds)
+        .find((item: any) => parseInt(item.id) === (+this.odds))
         ["value"].split(":");
       return oddsArray[1] + ":" + oddsArray[0];
     }

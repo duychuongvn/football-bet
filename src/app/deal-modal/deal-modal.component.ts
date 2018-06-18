@@ -7,7 +7,8 @@ import { Fixture } from 'models/fixture';
 import { Handicap } from 'models/handicap';
 import { Match } from 'models/match';
 
-import { PAIR_TYPE } from 'enums/handicap';
+import { PAIR_TYPE } from "enums/handicap";
+import { ODDS } from "enums/odds";
 
 @Component({
   selector: 'app-deal-modal',
@@ -23,6 +24,8 @@ export class DealModalComponent implements OnInit {
   public handicap: Handicap = new Handicap();
 
   public oddsArray = Handicap.oddsArray;
+
+  public oddsArr = Handicap.oddsArr;
   public pairs: Array<Object>;
 
   constructor(
@@ -39,7 +42,7 @@ export class DealModalComponent implements OnInit {
     ];
   }
 
-  public offer() {
+  public offer(handicap: Handicap) {
     console.log(this.match);
     console.log(this.handicap);
     console.log(this.account);
@@ -48,19 +51,18 @@ export class DealModalComponent implements OnInit {
       .newOffer(
         this.account,
         this.match,
-        this.handicap.odds_number,
-        this.handicap.stake,
-        this.handicap.selectedTeam
+        handicap.odds_number * 100,
+        handicap.stake,
+        handicap.selectedTeam
       )
       .subscribe(() => {
-          this._notify.success('Create success');
-          this.close('reload');
-        }, e => {
-          this._notify.error(`Error occur when offer this match ${e.msg}`);
+        this._notify.success('Create success');
+        this.close('reload');
+      }, e => {
+        this._notify.error(`Error occur when offer this match ${e.msg}`);
         }
       );
   }
-
   public close(reason?: any) {
     this._bsModalService.setDismissReason(reason);
     this._bsModalRef.hide();
