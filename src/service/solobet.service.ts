@@ -169,6 +169,7 @@ export class SolobetService {
     console.log(matchId)
     console.log(homeScore)
     console.log(awayScore)
+    console.log(account)
     this.Solobet.deployed().then(instance => {
       return instance.updateScore(+matchId, homeScore, awayScore,{from: account});
     });

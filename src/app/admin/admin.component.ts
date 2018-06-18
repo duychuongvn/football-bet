@@ -90,7 +90,7 @@ export class AdminComponent implements OnInit {
   public updateScore(match){
     console.log(match)
     this.solobetService.updateScore(
-      // this.account,
+      this.account,
       match.matchId,
       match.homeGoals,
       match.awayGoals
