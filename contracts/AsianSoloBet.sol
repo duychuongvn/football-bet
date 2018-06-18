@@ -14,8 +14,8 @@ contract AsianSoloBet is Ownable, SoloBet {
   }
 
 
-  function getBettingMatchesByAddress(address owner) public view returns (bytes32[], uint256[], int[], uint256[], bool[], uint[]) {
-    bytes32[] memory matchIds = new bytes32[](myBets[owner].length);
+  function getBettingMatchesByAddress(address bettingOwner) public view returns (bytes32[], uint256[], int[], uint256[], bool[], uint[]) {
+    bytes32[] memory matchIds = new bytes32[](myBets[bettingOwner].length);
     uint256[] memory betIdxes = new uint256[](matchIds.length);
     uint256[] memory amounts = new uint256[](matchIds.length);
     bool[]memory slHTeam = new bool[](matchIds.length);
@@ -27,7 +27,7 @@ contract AsianSoloBet is Ownable, SoloBet {
       betIdxes[i] = uint256(myBets[owner][i].betIdx);
       slHTeam[i] = myBets[owner][i].bet4Weaker;
 
-      odds[i] = bets[matchIds[i]][betIdxes[i]].rate;
+      odds[i] = bets[matchIds[i]][betIdxes[i]].odds;
       amounts[i] = bets[matchIds[i]][betIdxes[i]].amount;
       status[i] = uint256(bets[matchIds[i]][betIdxes[i]].status);
     }
@@ -77,7 +77,7 @@ contract AsianSoloBet is Ownable, SoloBet {
 
       Betting storage _betting = _bettings[i];
       if (_betting.status == BetStatus.Deal) {
-        funding(_match, _betting);
+        doTransfer(_match, _betting);
       } else if (_betting.status == BetStatus.Open) {
         refund(_betting);
       }
@@ -87,16 +87,23 @@ contract AsianSoloBet is Ownable, SoloBet {
     rmBet(_match);
     return true;
   }
-//
-//  function claimStake(bytes32 matchId, uint256 bettingId) public returns (bool) {
-//    require(matches[matchId].status == MatchStatus.Finished);
-//
-//    Betting storage _betting = bettingMatches[matchId][bettingId];
-//    require(_betting.status == BettingStatus.Deal);
-//    funding(matches[matchId], _betting);
-//    return true;
-//
-//  }
+
+  function claimStake(bytes32 matchId) public returns (bool) {
+    require(matches[matchId].status == MatchStatus.Finished);
+    bytes32[] memory matchIds = new bytes32[](myBets[msg.sender].length);
+    Betting[] storage _bettings = bets[matchId];
+
+    for (uint i = 0; i < matchIds.length; i++) {
+      Betting storage _betting = bets[matchId][myBets[msg.sender][i].betIdx];
+      if (_betting.status == BetStatus.Deal) {
+        doTransfer(matches[matchId], _betting);
+      } else if (_betting.status == BetStatus.Open) {
+        refund(_betting);
+      }
+    }
+    return true;
+
+  }
 
   function cancelOffer(bytes32 matchId, uint256 bettingId) external returns (bool){
     Betting memory _betting = bets[matchId][bettingId];
@@ -136,22 +143,20 @@ contract AsianSoloBet is Ownable, SoloBet {
     return true;
   }
 
-  function funding(Match _match, Betting _betting) internal returns (bool) {
+  function doTransfer(Match _match, Betting _betting) internal returns (bool) {
 
     Funding[2] memory fundings = getFunding(_match, _betting);
     for (uint i = 0; i < fundings.length; i++) {
       Funding memory funding = fundings[i];
       if (funding.receiver != 0x0) {
         transferFund(funding.receiver, funding.amount);
-        funding.betting.status = BetStatus.Done;
-
       }
     }
 
     balances[_betting.bMaker] = balances[_betting.bMaker] - _betting.amount;
     balances[_betting.punter] = balances[_betting.punter] - _betting.amount;
     balances[feeOwner] = balances[feeOwner] + _betting.amount - _betting.amount * 95 / 100;
-
+    _betting.status = BetStatus.Done;
   }
 
 
@@ -366,7 +371,7 @@ contract AsianSoloBet is Ownable, SoloBet {
     int pTScore = _match.aSc;
     uint256 winAmount = _betting.amount * 95 / 100;
     int score;
-    int odds = _betting.rate;
+    int odds = _betting.odds;
 
     if (_betting.bmTeam == uint8(Team.Away)) {
       bTScore = _match.aSc;
@@ -422,14 +427,8 @@ contract AsianSoloBet is Ownable, SoloBet {
 
   function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint selectedTeam, uint time, int odds) public payable returns (bool) {
 
-    require((odds % 25 ==0) &&  (odds / 25 <=8) &&  (odds / 25 >=-8));
-    MatchStatus status;
-    if (time < now) {
-      status = MatchStatus.Playing;
-    } else {
-      status = MatchStatus.Waiting;
-    }
-
+    require(time > now);
+    require((odds % 25 == 0) && (odds / 25 <= 8) && (odds / 25 >= - 8));
 
     Match memory _match = matches[matchId];
 
@@ -438,23 +437,21 @@ contract AsianSoloBet is Ownable, SoloBet {
       _match.hT = homeTeam;
       _match.aT = awayTeam;
       _match.time = uint48(time);
-      _match.status = status;
+      _match.status = MatchStatus.Waiting;
       _match.idx = uint32(betIndexes.push(matchId) - 1);
       matches[matchId] = _match;
     }
 
-    Betting memory _betting = Betting(msg.sender, 0x0, _match.id, uint8(selectedTeam), odds, msg.value, BetStatus.Open);
+    Betting memory _betting = Betting(msg.sender, 0x0, uint8(selectedTeam), odds, msg.value, BetStatus.Open);
     uint32 betIdx = uint32(bets[matchId].push(_betting) - 1);
     if (isPlayerNotExist(msg.sender)) {
       players.push(msg.sender);
     }
     myBets[msg.sender].push(MyBet(betIdx, matchId, selectedTeam == uint8(Team.Home)));
     balances[msg.sender] += msg.value;
-
     return true;
 
   }
-
 
   function deal(bytes32 matchId, uint256 bettingId) public payable returns (bool) {
     Betting storage _betting = bets[matchId][bettingId];
@@ -481,7 +478,7 @@ contract AsianSoloBet is Ownable, SoloBet {
     Betting memory _betting = bets[matchId][bettingId];
     bMaker = _betting.bMaker;
     punter = _betting.punter;
-    odds = _betting.rate;
+    odds = _betting.odds;
     amount = _betting.amount;
     status = _betting.status;
     selectedTeam = _betting.bmTeam;

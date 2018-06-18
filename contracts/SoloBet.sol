@@ -29,9 +29,8 @@ contract SoloBet is Ownable {
   struct Betting {
     address bMaker;
     address punter;
-    bytes32 matchId;
     uint8 bmTeam; //bMaker team
-    int rate; // rate >= 0: bMakers bets for home team else bet for away team
+    int odds;
     uint256 amount;
     BetStatus status;
   }
@@ -98,7 +97,7 @@ contract SoloBet is Ownable {
   function approveScore(bytes32 matchId) public onlyOwner returns (bool);
 
   function updateScore(bytes32 matchId, uint hSc, uint aSc) public onlyOwner returns (bool);
-//  function claimStake(bytes32 matchId, uint256 bettingId) public returns (bool);
+  function claimStake(bytes32 matchId) public returns (bool);
 
   function withDrawFee() public onlyOwner {
     owner.transfer(balances[feeOwner]);
