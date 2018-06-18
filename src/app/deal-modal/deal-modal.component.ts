@@ -1,19 +1,19 @@
-import { Component, OnInit } from '@angular/core';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { Component, OnInit } from "@angular/core";
+import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 
-import { SolobetService, NotifyService } from 'service/service';
+import { SolobetService, NotifyService } from "service/service";
 
-import { Fixture } from 'models/fixture';
-import { Handicap } from 'models/handicap';
-import { Match } from 'models/match';
+import { Fixture } from "models/fixture";
+import { Handicap } from "models/handicap";
+import { Match } from "models/match";
 
 import { PAIR_TYPE } from "enums/handicap";
 import { ODDS } from "enums/odds";
 
 @Component({
-  selector: 'app-deal-modal',
-  templateUrl: './deal-modal.component.html',
-  styleUrls: ['./deal-modal.component.css']
+  selector: "app-deal-modal",
+  templateUrl: "./deal-modal.component.html",
+  styleUrls: ["./deal-modal.component.css"]
 })
 export class DealModalComponent implements OnInit {
   public title: string;
@@ -36,17 +36,22 @@ export class DealModalComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    console.log(this.fixture);
     this.pairs = [
       { id: PAIR_TYPE.REVERT, value: this.handicap.pairTeam },
       { id: PAIR_TYPE.INVERSE, value: this.handicap.inversePairTeam }
     ];
   }
 
-  public offer(handicap: Handicap) {
-    console.log(this.match);
-    console.log(this.handicap);
-    console.log(this.account);
+  public markTeam(teamName: string) {
+    if (teamName === this.handicap.homeTeamName) {
+      this.handicap.selectedTeam = "0";
+    } else {
+      this.handicap.selectedTeam = "1";
+    }
+  }
 
+  public offer(handicap: Handicap) {
     this._solobetService
       .newOffer(
         this.account,
@@ -55,11 +60,13 @@ export class DealModalComponent implements OnInit {
         handicap.stake,
         handicap.selectedTeam
       )
-      .subscribe(() => {
-        this._notify.success('Create success');
-        this.close('reload');
-      }, e => {
-        this._notify.error(`Error occur when offer this match ${e.msg}`);
+      .subscribe(
+        () => {
+          this._notify.success("Create success");
+          this.close("reload");
+        },
+        e => {
+          this._notify.error(`Error occur when offer this match ${e.msg}`);
         }
       );
   }

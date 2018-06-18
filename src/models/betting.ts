@@ -29,7 +29,7 @@ export class Betting {
   }
 
   public get odds_number(): number {
-      return (parseInt(this.odds.toString()) / 100);
+      return parseInt(this.odds.toString());
   }
 
   public get odds_string(): string {

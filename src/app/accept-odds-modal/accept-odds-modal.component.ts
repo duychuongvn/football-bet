@@ -5,6 +5,7 @@ import { SolobetService, NotifyService } from "service/service";
 import { Handicap } from 'models/handicap';
 import { Match } from 'models/match';
 import { Betting } from 'models/betting';
+import { Fixture } from "models/fixture";
 
 
 @Component({
@@ -22,6 +23,7 @@ export class AcceptOddsModalComponent implements OnInit {
   public bettings: Betting[] = [];
   public betting: Betting = new Betting();
   public bettingId: any
+  public fixture: Fixture = new Fixture();
 
   constructor(
     private _bsModalService: BsModalService,
@@ -72,9 +74,18 @@ export class AcceptOddsModalComponent implements OnInit {
 
   public deal(betting) {
     console.log(betting);
+    console.log(this.account)
+    console.log(betting.bettingId)
+
+    if(this.account === betting.offer){
+      this._notify.error(`Self-bet is not allowed.`);
+      this.close('reload')
+      return;
+    }
+
     this._solobetService.deal(this.account, betting.matchId, betting.bettingId).subscribe(
       result => {
-        this._loadBettings(betting.matchId);
+        console.log(result)
         this._notify.success('Accept success');
         this.close('reload');
       },

@@ -93,6 +93,7 @@ export class SolobetService {
 
   getBetting(matchId, bettingId): Observable<Betting> {
 
+    console.log(matchId, bettingId)
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
         return instance.getBettingInfo.call(matchId, bettingId);
@@ -108,7 +109,7 @@ export class SolobetService {
           stake: this.toEther(result[4].toNumber()),
           status: result[5].toNumber(),
           homeOffer:"",awayOffer:"",homeDealer:"",awayDealer:""}));
-        observer.complete();
+          observer.complete();
       }).catch(err => {
         alert(err);
         observer.error(err);
@@ -119,13 +120,16 @@ export class SolobetService {
   deal(account, matchId, bettingId): Observable<any> {
     console.log(matchId)
     console.log(bettingId)
+    console.log(account)
+
 
     return Observable.create(observer => {
       this.getBetting(matchId, bettingId).subscribe(betting => {
-        console.log(betting);
         this.Solobet.deployed().then(instance => {
+          console.log(betting.amount)
           return instance.deal(matchId, bettingId, {from: account, value: betting.amount});
         }).then(betResult => {
+          console.log(betResult)
           observer.next(betResult);
           observer.complete();
         }).catch(err => {
@@ -150,7 +154,7 @@ export class SolobetService {
       this.Solobet.deployed().then(instance => {
         return instance.offerNewMatch(match.matchId, match.homeTeam, match.awayTeam, selectedTeam, match.time/1000, rate, {
           from: account,
-          value: amount * 1000000000000000000
+          value:  this.web3Ser.web3.toWei(amount, "ether")
         });
       }).then(result => {
         observer.next(result);

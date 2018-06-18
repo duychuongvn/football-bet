@@ -14,18 +14,18 @@
 
   <div class="row mb-3">
     <button type="button" class="btn btn-warning mr-3" (click)="openHandicap()">New Bet</button>
-    <button routerLink="/" type="button" class="btn btn-success">Return to home</button>
+    <!-- <button routerLink="/" type="button" class="btn btn-success">Return to home</button> -->
   </div>
 
   <div class="row mb-3">
     <table class="table table-bordered table-striped text-center">
-      <thead class="table-dark">
+      <thead>
         <tr>
           <th scope="col">#</th>
-          <th scope="col">{{fixture.homeTeamName}}</th>
-          <th scope="col">Odds</th>
-          <th scope="col">{{fixture.awayTeamName}}</th>
-          <th scope="col">Stake(ETH)</th>
+          <th scope="col"><img [src]="fixture.homeFlag" width="40px"> {{fixture.homeTeamName}}</th>
+          <th scope="col" class="pr-5 pl-5">Odds</th>
+          <th scope="col"> <img [src]="fixture.awayFlag" width="40px"> {{fixture.awayTeamName}}</th>
+          <th scope="col">Stake <img src="/assets/images/if_ETH_1175230.png" width="40px"></th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -34,7 +34,7 @@
           <th scope="row">{{i}}</th>
           <td scope="row">{{betting.homeOffer}}
           </td>
-          <td scope="row" class="text-danger">{{ betting.odds_string }}</td>
+          <td scope="row" class="text-danger">{{ betting.odds_string}}</td>
           <td scope="row">
             {{betting.awayOffer}}
           </td>

@@ -71,6 +71,7 @@ export class Web3Service {
 
   getBalance(account) : Observable<number> {
     return Observable.create(observable => {
+      console.log(account)
       this.web3.eth.getBalance(account, (err, balance)=> {
         observable.next(balance/1000000000000000000);
         observable.complete();

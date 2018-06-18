@@ -112,7 +112,6 @@ export class UserComponent {
     }
   }
 
-
   findMatch(matchId) {
     for (let i = 0; i < this.groupMatches.length; i++) {
       if (this.groupMatches[i].matchId == matchId) {

@@ -1,50 +1,61 @@
 <div class="modal-header">
-  <h4 class="modal-title pull-left">{{ title }}</h4>
+  <h4 class="modal-title text-center">{{ title }}</h4>
   <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 
 <div class="modal-body">
-  <div class="form-group">
-    <label class="font-weight-bold">Fixture Number:</label>
-    <span class="d-block font-weight-light text-info text-truncate" [attr.title]="handicap.id">#{{handicap.id_substring}}</span>
-  </div>
+  <table class="table text-center table-borderless">
+    <thead>
+      <tr>
+        <th scope="col"> {{fixture.homeTeamName}} </th>
+        <!-- <th><img [src]="fixture.homeFlag" width="60px"></th> -->
+        <th scope="col">Placed Bet</th>
+        <th scope="col"> {{fixture.awayTeamName}} </th>
+        <!-- <th><img [src]="fixture.awayFlag" width="60px"></th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td scope="row" class="btn" (click)="markTeam(fixture.homeTeamName)">
+          <img [src]="fixture.homeFlag" width="120px">
+        </td>
+        <td>
+          <div class="col mt-2">
+            <select class="form-control text-center" [(ngModel)]="handicap.odds">
+              <option class="text-center" [value]="item.value" *ngFor="let item of oddsArr">{{item.value}}</option>
+            </select>
+          </div>
+          <div class="mt-3">
+            <label class="text-success font-weight-bold">{{handicap.handicapDetail}}</label>
+          </div>
+        </td>
+        <td scope="row" class="btn" (click)="markTeam(fixture.awayTeamName)">
+          <img [src]="fixture.awayFlag" width="120px">
+        </td>
+      </tr>
 
-  <div class="form-group text-danger font-weight-bold d-flex">
-    <i class="material-icons">date_range</i>
-    <span class="d-inline-block">{{ handicap.date_string }} {{ handicap.time_string }}</span>
-  </div>
+      <tr>
+        <td>{{handicap.stake}} ETH</td>
+        <td>
+          <div class="input-group mb-2">
+            <div class="input-group-prepend">
+              <div class="input-group-text font-weight-bold">ETH</div>
+            </div>
+            <input [(ngModel)]="handicap.stake" type="number" min="0.01" class="form-control" id="inlineFormInputGroup" placeholder="Stake">
+          </div>
+        </td>
 
-  <div class="form-group row">
-      <div class="col-sm-6">
-          <label>Selected Team :</label>
-          <select [(ngModel)]="handicap.selectedTeam" class="form-control" id="teams">
-              <option [value]="i" *ngFor="let item of handicap.teams; let i = index">{{item}}</option>
-          </select>
-      </div>
-    <div class="col-sm-6">
-      <label>Odds</label>
-      <select class="form-control text-center" [(ngModel)]="handicap.odds">
-        <option [value]="item.value" *ngFor="let item of oddsArr">{{item.value}}</option>
-      </select>
-    </div>
-    <div class="col-sm-6 mt-3">
-      <label class="text-success font-weight-bold">{{handicap.handicapDetail}}</label>
-    </div>
-  </div>
+        <td> {{handicap.stake}} ETH</td>
+      </tr>
 
-  <div class="form-group row">
-      <div class="col-sm-6">
-          <label>Stake (ETH)</label>
-          <input type="number" min="1" class="form-control" placeholder="Stake"
-            [(ngModel)]="handicap.stake">
-      </div>
-  </div>
+    </tbody>
+  </table>
 
 </div>
 
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
-  <button type="button" (click)="offer()" class="btn btn-primary">{{ btnSubmit }}</button>
+  <button type="button" (click)="offer(handicap)" class="btn btn-primary">{{ btnSubmit }}</button>
 </div>

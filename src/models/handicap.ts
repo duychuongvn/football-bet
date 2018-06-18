@@ -89,7 +89,7 @@ export class Handicap {
   }
 
   public get odds_number(): number {
-    return +this.odds.toString();
+    return +this.odds;
   }
   private _stake: number;
   public get stake(): number {

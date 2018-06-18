@@ -18,13 +18,12 @@
 </div>
 
 <ul>
-
-    <li *ngFor="let match of groupMatches | matchPipe:{team:searchMatch, matchStatus: isFinished, bettingStatus: {open: isOpening, deal: isDeal}}">
-      <span> {{match.match.homeTeam}} {{match.match.homeScore}}-{{match.match.awayScore}}  {{match.match.awayTeam}}</span>
+    <li *ngFor="let item of groupMatches | matchPipe:{team:searchMatch, matchStatus: isFinished, bettingStatus: {open: isOpening, deal: isDeal}}">
+      <span> {{item.match.homeTeam}} {{item.match.homeScore}}-{{item.match.awayScore}}  {{item.match.awayTeam}}</span>
       <ul>
-        <li *ngFor="let betting of match.bettings | bettingPipe:{open: isOpening, deal: isDeal}">
-          <span  class="animate-if" ng-if="betting.chooseHomeTeam==true" >Bet for {{match.match.homeTeam}}</span>
-          <span  class="animate-if" ng-if="betting.chooseHomeTeam==false" >Bet for {{match.match.awayTeam}}</span>
+        <li *ngFor="let betting of item.bettings | bettingPipe:{open: isOpening, deal: isDeal}">
+          <span  class="animate-if" ng-if="betting.chooseHomeTeam==true" >Bet for {{item.match.homeTeam}}</span>
+          <span  class="animate-if" ng-if="betting.chooseHomeTeam==false" > Bet for {{item.match.awayTeam}}</span>
           <span>   {{betting.rate}} : {{betting.amount}}{{networkInfo.provider.symbol}}</span>
           <span>   {{betting.status}}</span>
         </li>

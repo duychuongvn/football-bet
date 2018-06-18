@@ -10,6 +10,7 @@ import { Betting } from 'models/betting';
 
 import { DealModalComponent } from 'app/deal-modal/deal-modal.component';
 import { AcceptOddsModalComponent } from 'app/accept-odds-modal/accept-odds-modal.component';
+import { Account } from 'models/account';
 
 @Component({
   selector: 'app-match-detail',
@@ -60,7 +61,7 @@ export class MatchDetailComponent implements OnInit {
   private _setProperties(p: any) {
     this.handicap = new Handicap(p);
     this.fixture = new Fixture(p);
-
+    console.log(this.fixture)
     let time = new Date(p.date);
     this.match.matchId = p.id.toString();
     this.match.homeTeam = p.homeTeamName;
@@ -109,7 +110,7 @@ export class MatchDetailComponent implements OnInit {
     const _opts = {
       class: 'modal-md',
       initialState: {
-        title: 'Bets Selection',
+        title: 'Place Bets',
         btnSubmit: 'Create',
         account: this.account,
         match: this.match,
@@ -141,12 +142,13 @@ export class MatchDetailComponent implements OnInit {
     const _opts = {
       class: 'modal-md',
       initialState: {
-        title: 'Accept Odds Modal',
+        title: 'Place Bets',
         btnSubmit: 'Accept',
         match: this.match,
         handicap: this.handicap,
         account: this.account,
-        betting: betting
+        betting: betting,
+        fixture: this.fixture
             }
     };
 
@@ -164,4 +166,5 @@ export class MatchDetailComponent implements OnInit {
 
     this._modalService.show(comp, opts);
   }
+
 }
