@@ -84,23 +84,7 @@ export class MatchDetailComponent implements OnInit {
 
     this._solobetService.loadBettings(id)
     .subscribe(res => {
-      console.log(res);
-      let _bettings = [];
-      setTimeout(() => {
-        res.bettings.map(betting => {
-          if(betting.selectedTeam === 0)
-          {
-            betting.homeOffer = betting.offer;
-            betting.awayOffer = betting.dealer;
-          }else{
-            betting.homeOffer = betting.dealer;
-            betting.awayOffer = betting.offer;
-          }
-
-          _bettings.push(betting);
-        });
-        this.bettings = _bettings;
-      }, 200);
+        this.bettings = res.bettings;
     }, errors => {
       this._notify.error(errors);
     });

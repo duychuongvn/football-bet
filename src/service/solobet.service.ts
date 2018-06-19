@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {fromPromise} from 'rxjs/observable/fromPromise';
 import {Web3Service} from './web3.service';
-import { Betting } from 'models/betting';
+import {Betting} from 'models/betting';
 import {log} from 'util';
 
 declare var require: any;
@@ -93,12 +93,13 @@ export class SolobetService {
 
   getBetting(matchId, bettingId): Observable<Betting> {
 
-    console.log(matchId, bettingId)
+    console.log(matchId, bettingId);
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
         return instance.getBettingInfo.call(matchId, bettingId);
       }).then(result => {
-        observer.next(new Betting({
+
+        let betting = new Betting({
           bettingId: bettingId,
           matchId: matchId,
           offer: result[0],
@@ -108,8 +109,20 @@ export class SolobetService {
           amount: result[4].toNumber(),
           stake: this.toEther(result[4].toNumber()),
           status: result[5].toNumber(),
-          homeOffer:"",awayOffer:"",homeDealer:"",awayDealer:""}));
-          observer.complete();
+          homeOffer: '', awayOffer: '', homeDealer: '', awayDealer: ''
+        });
+
+
+        if (betting.selectedTeam === 0) {
+          betting.homeOffer = betting.offer;
+          betting.awayOffer = betting.dealer;
+        } else {
+          betting.homeOffer = betting.dealer;
+          betting.awayOffer = betting.offer;
+        }
+
+        observer.next(betting);
+        observer.complete();
       }).catch(err => {
         alert(err);
         observer.error(err);
@@ -118,18 +131,18 @@ export class SolobetService {
   }
 
   deal(account, matchId, bettingId): Observable<any> {
-    console.log(matchId)
-    console.log(bettingId)
-    console.log(account)
+    console.log(matchId);
+    console.log(bettingId);
+    console.log(account);
 
 
     return Observable.create(observer => {
       this.getBetting(matchId, bettingId).subscribe(betting => {
         this.Solobet.deployed().then(instance => {
-          console.log(betting.amount)
+          console.log(betting.amount);
           return instance.deal(matchId, bettingId, {from: account, value: betting.amount});
         }).then(betResult => {
-          console.log(betResult)
+          console.log(betResult);
           observer.next(betResult);
           observer.complete();
         }).catch(err => {
@@ -152,9 +165,9 @@ export class SolobetService {
 
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
-        return instance.offerNewMatch(match.matchId, match.homeTeam, match.awayTeam, selectedTeam, match.time/1000, rate, {
+        return instance.offerNewMatch(match.matchId, match.homeTeam, match.awayTeam, selectedTeam, match.time / 1000, rate, {
           from: account,
-          value:  this.web3Ser.web3.toWei(amount, "ether")
+          value: this.web3Ser.web3.toWei(amount, 'ether')
         });
       }).then(result => {
         observer.next(result);
@@ -166,12 +179,12 @@ export class SolobetService {
   }
 
   updateScore(account, matchId: any, homeScore: number, awayScore: number) {
-    console.log(matchId)
-    console.log(homeScore)
-    console.log(awayScore)
-    console.log(account)
+    console.log(matchId);
+    console.log(homeScore);
+    console.log(awayScore);
+    console.log(account);
     this.Solobet.deployed().then(instance => {
-      return instance.updateScore(+matchId, homeScore, awayScore,{from: account});
+      return instance.updateScore(+matchId, homeScore, awayScore, {from: account});
     });
   }
 
@@ -202,9 +215,9 @@ export class SolobetService {
 
   getPlacedBalance(account): Observable<any> {
     return Observable.create(observ => {
-      this.Solobet.deployed().then(instance=>{
+      this.Solobet.deployed().then(instance => {
         return instance.getPlayerBalance.call(account);
-      }).then(balance=>{
+      }).then(balance => {
         observ.next(this.toEther(balance));
         observ.complete();
 
