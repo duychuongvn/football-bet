@@ -23,11 +23,14 @@ contract AsianSoloBet is Ownable, SoloBet {
     int[] memory odds = new int[](matchIds.length);
     for (uint32 i = 0; i < matchIds.length; i++) {
 
-      matchIds[i] = myBets[owner][i].matchId;
-      betIdxes[i] = uint256(myBets[owner][i].betIdx);
-      slHTeam[i] = myBets[owner][i].bet4Weaker;
-
-      odds[i] = bets[matchIds[i]][betIdxes[i]].odds;
+      matchIds[i] = myBets[bettingOwner][i].matchId;
+      betIdxes[i] = uint256(myBets[bettingOwner][i].betIdx);
+      if(bettingOwner == bets[matchIds[i]][betIdxes[i]].bMaker) {
+        odds[i] = bets[matchIds[i]][betIdxes[i]].odds;
+      } else {
+        odds[i] = bets[matchIds[i]][betIdxes[i]].odds * -1;
+      }
+      slHTeam[i] = myBets[bettingOwner][i].bet4HTeam;
       amounts[i] = bets[matchIds[i]][betIdxes[i]].amount;
       status[i] = uint256(bets[matchIds[i]][betIdxes[i]].status);
     }
@@ -78,8 +81,10 @@ contract AsianSoloBet is Ownable, SoloBet {
       Betting storage _betting = _bettings[i];
       if (_betting.status == BetStatus.Deal) {
         doTransfer(_match, _betting);
+        _betting.status = BetStatus.Done;
       } else if (_betting.status == BetStatus.Open) {
         refund(_betting);
+        _betting.status = BetStatus.Refunded;
       }
 
     }
@@ -105,10 +110,11 @@ contract AsianSoloBet is Ownable, SoloBet {
 //  }
 
   function cancelOffer(bytes32 matchId, uint256 bettingId) external returns (bool){
-    Betting memory _betting = bets[matchId][bettingId];
+    Betting storage _betting = bets[matchId][bettingId];
     require(_betting.bMaker == msg.sender);
     require(_betting.status == BetStatus.Open);
     refund(_betting);
+    _betting.status = BetStatus.Canceled;
     return true;
   }
 

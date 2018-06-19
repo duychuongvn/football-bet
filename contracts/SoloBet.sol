@@ -44,6 +44,12 @@ contract SoloBet is Ownable {
 
   }
 
+  struct MyBet {
+    uint32 betIdx;
+    bytes32 matchId;
+    bool bet4HTeam;
+  }
+
   address public feeOwner;
   mapping(bytes32 => Match) matches;
   mapping(bytes32 => Betting[]) bets;
@@ -51,13 +57,6 @@ contract SoloBet is Ownable {
   address[] players;
   mapping(address => MyBet[]) myBets;
 
-  struct MyBet {
-
-    uint32 betIdx;
-    bytes32 matchId;
-    bool bet4Weaker;
-
-  }
 
 
   function isPlayerNotExist(address player) internal view returns (bool) {

@@ -53,8 +53,6 @@ export class SolobetService {
 
         })
         .catch(e => {
-          alert(e);
-          console.log('------' + e);
           observer.error(e);
         });
     });
@@ -238,18 +236,32 @@ export class SolobetService {
         var betForHomeTeam = result[4];
         var status = result[5];
         for (let i = 0; i < matchIds.length; i++) {
-          bettingMatches.push({
+          let _betting = {
             'matchId': matchIds[i],
             match: null, 'bettingId':
               bettingIds[i].toNumber(),
-            'rate': rates[i].toNumber(),
+            'odds': rates[i].toNumber(),
             'amount': this.toEther(amounts[i].toNumber()),
             'chooseHomeTeam': betForHomeTeam[i],
             'betFor': null,
-            'status': status[i].toNumber()
-          });
-
-
+            'status': status[i].toNumber(),
+            'status_string':''
+          }
+          //Open, Deal, Canceled, Refunded, Done
+          console.log("======");
+          console.log(_betting)
+          if(_betting.status === 0) {
+            _betting.status_string = 'Open';
+          } else if (_betting.status === 1) {
+            _betting.status_string = 'On Goging';
+          }else if (_betting.status === 2) {
+            _betting.status_string = 'Canceled';
+          }else if (_betting.status === 3) {
+            _betting.status_string = 'Refunded';
+          }else if (_betting.status === 4) {
+            _betting.status_string = 'Done';
+          }
+          bettingMatches.push(_betting);
         }
 
         console.log(bettingMatches);
@@ -261,4 +273,10 @@ export class SolobetService {
   }
 
 
+  cancelBetting(account: any, betting: any) {
+    console.log(betting)
+    this.Solobet.deployed().then(instance => {
+      return instance.cancelOffer(betting.matchId, betting.bettingId,{from: account});
+    });
+  }
 }

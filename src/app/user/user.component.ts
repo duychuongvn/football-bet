@@ -19,6 +19,9 @@ export class UserComponent {
   isDeal: boolean;
   isFinished: boolean;
   isOpening: boolean;
+  isRefunded: boolean;
+  isCanceled: boolean;
+  isDone: true;
   groupMatchesFilter: any;
   accountBalance: any;
   placedBalance: number;
@@ -53,9 +56,13 @@ export class UserComponent {
   };
 
   init = () => {
+    this.searchMatch='';
     this.isDeal = true;
-    this.isFinished = false;
+    this.isFinished = true;
+    this.isCanceled = true;
+    this.isRefunded = true;
     this.isOpening = true;
+    this.isDone = true;
   };
 
   loadAccountBalance = () => {
@@ -81,6 +88,14 @@ export class UserComponent {
           for (let j = 0; j < result.length; j++) {
             if (this.groupMatches[j].matchId == match.matchId) {
               this.groupMatches[j].match = match;
+              let _bettings = this.groupMatches[j].bettings;
+              _bettings.map(item => {
+                if(item.chooseHomeTeam) {
+                  item.betFor = match.homeTeam;
+                } else {
+                  item.betFor = match.awayTeam;
+                }
+              });
               break;
             }
           }
@@ -88,10 +103,16 @@ export class UserComponent {
 
       }
 
-      console.log(this.groupMatches);
-
     });
   };
+
+
+  cancel =(betting) => {
+    if(confirm("Do you want to cancel?")) {
+      this.solobetService.cancelBetting(this.account, betting);
+    }
+
+  }
 
 
   convertBettingToGroupByMatches(bettingMatches) {
@@ -102,7 +123,6 @@ export class UserComponent {
       let betting = bettingMatches[i];
       let match = this.findMatch(betting.matchId);
 
-      console.log(betting);
       if (match) {
         match.bettings.push(betting);
       } else {
@@ -112,12 +132,11 @@ export class UserComponent {
       }
 
     }
-    console.log(this.groupMatches);
   }
 
   findMatch(matchId) {
     for (let i = 0; i < this.groupMatches.length; i++) {
-      if (this.groupMatches[i].matchId == matchId) {
+      if (this.groupMatches[i].matchId === matchId) {
         return this.groupMatches[i];
       }
 

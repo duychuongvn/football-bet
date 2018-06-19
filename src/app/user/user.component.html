@@ -14,11 +14,14 @@
   <br/>
   Betting status:
   <input class="input" type="checkbox" [(ngModel)]="isOpening" />Opening
-  <input class="input" type="checkbox" [(ngModel)]="isDeal" />Deal
+  <input class="input" type="checkbox" [(ngModel)]="isDeal" />On Going
+  <input class="input" type="checkbox" [(ngModel)]="isRefunded" />Refunded
+  <input class="input" type="checkbox" [(ngModel)]="isCanceled" />Canceled
+  <input class="input" type="checkbox" [(ngModel)]="isDone" />Done
 </div>
 
 <ul>
-    <li *ngFor="let item of groupMatches| matchPipe:{team:searchMatch, matchStatus: isFinished, bettingStatus: {open: isOpening, deal: isDeal}}">
+    <div *ngFor="let item of groupMatches| matchPipe:{team:searchMatch, matchStatus: isFinished, bettingStatus: {open: isOpening, deal: isDeal, canceled: isCanceled, refunded: isRefunded, done: isDone}}">
       <div style="height: 48px; display: flex; align-items: center; padding: 0px 60px 0px 3px; background-color: rgb(12, 39, 09); color: white;" data-toggle="collapse" [attr.data-target]="'#myBets'+item.matchId" aria-expanded="true" [attr.data-controls]="'#myBets'+item.matchId" class="">
         <span style="margin-right: auto; font-size: 17px; color: white; padding-left: 25px; font-weight: 600;">
           {{item.match.homeTeam}} vs {{item.match.awayTeam}}</span>
@@ -31,18 +34,18 @@
             <th scope="col" style="width: 25%;">Status</th>
             <th scope="col" style="width: 25%;">Actions</th></tr></thead>
           <tbody>
-          <tr *ngFor="let betting of item.bettings | bettingPipe:{open: isOpening, deal: isDeal}">
+          <tr *ngFor="let betting of item.bettings | bettingPipe:{open: isOpening, deal: isDeal, canceled: isCanceled, refunded: isRefunded, done: isDone}">
             <td>
-              {{item.match.homeTeam}} {{betting.odds}} @
+              {{betting.betFor}} {{betting.odds}} @
             </td>
             <td>
               {{betting.amount}} ETH
             </td>
             <td>
-              <span style="background-color: Red">Win</span>
+              <span >{{betting.status_string}}</span>
             </td>
             <td>
-              <button tooltip="Available when status is opening"> Cancle</button>
+              <button type="button" ooltip="Available when status is opening" class="btn btn-warning mr-3" (click)="cancel(betting)">Cancel</button>
             </td>
           </tr>
 
@@ -80,5 +83,5 @@
           <!--</tr>-->
           <!--</tbody>-->
         <!--</table>-->
-    </li>
+    </div>
   </ul>

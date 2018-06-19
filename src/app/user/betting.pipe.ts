@@ -6,9 +6,13 @@ export class BettingPipe implements PipeTransform {
     if (condition == null) return bettings;
 
 
+    console.log(condition)
     return bettings.filter(function (item) {
-      return ((item.status == 0 && condition.open)
-        || (item.status == 1 && condition.deal));
+      return ((item.status === 0 && condition.open)
+        || (item.status === 1 && condition.deal)
+        || (item.status === 2 && condition.canceled)
+        || (item.status === 3 && condition.refunded)
+        || (item.status === 4 && condition.done));
     });
   }
 }
