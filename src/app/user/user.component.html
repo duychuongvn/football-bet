@@ -18,15 +18,67 @@
 </div>
 
 <ul>
-    <li *ngFor="let item of groupMatches | matchPipe:{team:searchMatch, matchStatus: isFinished, bettingStatus: {open: isOpening, deal: isDeal}}">
-      <span> {{item.match.homeTeam}} {{item.match.homeScore}}-{{item.match.awayScore}}  {{item.match.awayTeam}}</span>
-      <ul>
-        <li *ngFor="let betting of item.bettings | bettingPipe:{open: isOpening, deal: isDeal}">
-          <span  class="animate-if" ng-if="betting.chooseHomeTeam==true" >Bet for {{item.match.homeTeam}}</span>
-          <span  class="animate-if" ng-if="betting.chooseHomeTeam==false" > Bet for {{item.match.awayTeam}}</span>
-          <span>   {{betting.rate}} : {{betting.amount}}{{networkInfo.provider.symbol}}</span>
-          <span>   {{betting.status}}</span>
-        </li>
-      </ul>
+    <li *ngFor="let item of groupMatches| matchPipe:{team:searchMatch, matchStatus: isFinished, bettingStatus: {open: isOpening, deal: isDeal}}">
+      <div style="height: 48px; display: flex; align-items: center; padding: 0px 60px 0px 3px; background-color: rgb(12, 39, 09); color: white;" data-toggle="collapse" [attr.data-target]="'#myBets'+item.matchId" aria-expanded="true" [attr.data-controls]="'#myBets'+item.matchId" class="">
+        <span style="margin-right: auto; font-size: 17px; color: white; padding-left: 25px; font-weight: 600;">
+          {{item.match.homeTeam}} vs {{item.match.awayTeam}}</span>
+        <!--<span data-toggle="collapse" data-target="{{item.matchId}}" aria-expanded="true" aria-controls="myBets" style="width: 0px; height: 0px; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 15px solid rgba(255, 255, 255, 0.85);" class=""></span></div>-->
+        <span data-toggle="collapse" [attr.data-target]="'#myBets'+item.matchId" aria-expanded="true" [attr.data-controls]="'#myBets'+item.matchId" style="width: 0px; height: 0px; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 15px solid rgba(255, 255, 255, 0.85);" class=""></span></div>
+      <div class="collapse show" id="myBets{{item.matchId}}" style="">
+        <table class="table table-hover">
+          <thead><tr><th scope="col" style="width: 25%;">Decision</th>
+            <th scope="col" style="width: 25%;">Amount</th>
+            <th scope="col" style="width: 25%;">Status</th>
+            <th scope="col" style="width: 25%;">Actions</th></tr></thead>
+          <tbody>
+          <tr *ngFor="let betting of item.bettings | bettingPipe:{open: isOpening, deal: isDeal}">
+            <td>
+              {{item.match.homeTeam}} {{betting.odds}} @
+            </td>
+            <td>
+              {{betting.amount}} ETH
+            </td>
+            <td>
+              <span style="background-color: Red">Win</span>
+            </td>
+            <td>
+              <button tooltip="Available when status is opening"> Cancle</button>
+            </td>
+          </tr>
+
+          </tbody>
+        </table>
+
+
+
+    </div>
+
+
+
+        <!--<table>-->
+          <!--<thead>-->
+            <!--<th>Handicap</th>-->
+            <!--<th>Balance</th>-->
+            <!--<th>Status</th>-->
+            <!--<th></th>-->
+          <!--</thead>-->
+          <!--<tbody>-->
+          <!---->
+          <!--<tr *ngFor="let betting of item.bettings | bettingPipe:{open: isOpening, deal: isDeal}">-->
+            <!--<td>-->
+              <!--{{item.match.homeTeam}} {{betting.odds}} @-->
+            <!--</td>-->
+            <!--<td>-->
+              <!--{{betting.amount}} ETH-->
+            <!--</td>-->
+            <!--<td>-->
+              <!--<span style="background-color: Red">Win</span>-->
+            <!--</td>-->
+            <!--<td>-->
+              <!--<button tooltip="Available when status is opening"> Cancle</button>-->
+            <!--</td>-->
+          <!--</tr>-->
+          <!--</tbody>-->
+        <!--</table>-->
     </li>
   </ul>

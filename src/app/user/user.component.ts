@@ -77,6 +77,7 @@ export class UserComponent {
       for (let i = 0; i < result.length; i++) {
         let matchId = result[i].matchId;
         this.solobetService.loadMatches(matchId).subscribe(match => {
+          console.log(match);
           for (let j = 0; j < result.length; j++) {
             if (this.groupMatches[j].matchId == match.matchId) {
               this.groupMatches[j].match = match;
@@ -101,6 +102,7 @@ export class UserComponent {
       let betting = bettingMatches[i];
       let match = this.findMatch(betting.matchId);
 
+      console.log(betting);
       if (match) {
         match.bettings.push(betting);
       } else {
@@ -110,6 +112,7 @@ export class UserComponent {
       }
 
     }
+    console.log(this.groupMatches);
   }
 
   findMatch(matchId) {
