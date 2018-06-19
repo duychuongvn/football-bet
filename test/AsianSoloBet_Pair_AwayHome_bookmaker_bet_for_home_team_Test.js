@@ -40,7 +40,7 @@ var assertThrow = async (fn, args) => {
       const feeOwner = contractOwner;
       const bookmaker = accounts[1]
       const punter = accounts[2];
-      const matchTime = 1548728850000;
+      const matchTime = 1548728850;
       const homeTeam = "RusSia";
       const awayTeam = "USA";
       let contract;

@@ -39,7 +39,7 @@ describe('When offer new match', () => {
   contract("AsianSoloBet", accounts => {
     const [firstAccount] = accounts;
     const owner = accounts[0]
-    const matchTime = 1548728850000;
+    const matchTime = 1548728850;
     const homeTeam = "Russia";
     const awayTeam = "USA";
     let contract;

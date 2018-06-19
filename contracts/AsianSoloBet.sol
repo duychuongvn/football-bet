@@ -88,22 +88,21 @@ contract AsianSoloBet is Ownable, SoloBet {
     return true;
   }
 
-  function claimStake(bytes32 matchId) public returns (bool) {
-    require(matches[matchId].status == MatchStatus.Finished);
-    bytes32[] memory matchIds = new bytes32[](myBets[msg.sender].length);
-    Betting[] storage _bettings = bets[matchId];
-
-    for (uint i = 0; i < matchIds.length; i++) {
-      Betting storage _betting = bets[matchId][myBets[msg.sender][i].betIdx];
-      if (_betting.status == BetStatus.Deal) {
-        doTransfer(matches[matchId], _betting);
-      } else if (_betting.status == BetStatus.Open) {
-        refund(_betting);
-      }
-    }
-    return true;
-
-  }
+//  function claimStake(bytes32 matchId, uint[]bettingIds) public returns (bool) {
+//    Match memory _match = matches[matchId];
+//    require(_match.status == MatchStatus.Finished);
+//    Betting memory _betting;
+//    for(uint i = 0;i < bettingIds.length; i++) {
+//       _betting = bets[matchId][bettingIds[i]];
+//      if(_betting.status == BetStatus.Deal) {
+//        doTransfer(_match, _betting);
+//      } else if(_betting.status == BetStatus.Open) {
+//        refund(_betting);
+//      }
+//    }
+//    return true;
+//
+//  }
 
   function cancelOffer(bytes32 matchId, uint256 bettingId) external returns (bool){
     Betting memory _betting = bets[matchId][bettingId];

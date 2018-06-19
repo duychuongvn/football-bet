@@ -41,7 +41,7 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
     const feeOwner = contractOwner;
     const bookmaker = accounts[1]
     const punter = accounts[2];
-    const matchTime = 1548728850000;
+    const matchTime = 1548728850;
     const homeTeam = "RusSia";
     const awayTeam = "USA";
     let contract;
@@ -945,6 +945,18 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win refund when the match is Russia 5-4 USA (USA lose)");
 
     });
+
+    it('should throw exception when the bet is deal by other account', async()=>{
+      contract.offerNewMatch(0x138, homeTeam, awayTeam, 1, matchTime, -200, {from: bookmaker, value: betAmount});
+      // punter deals with bookmaker means that
+      contract.deal(0x138, 0, {value: betAmount});
+      contract.deal(0x138, 0, {from:punter, value: betAmount}).then(result => {
+        assert(false, 'Should throw revert error when the betting is deal');
+      }).catch(err=> {
+        assert(true,'System throws revert error when the betting is deal')
+      })
+
+    })
 
 
   });
