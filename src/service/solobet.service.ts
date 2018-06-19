@@ -111,8 +111,6 @@ export class SolobetService {
           status: result[5].toNumber(),
           homeOffer: '', awayOffer: '', homeDealer: '', awayDealer: ''
         });
-
-
         if (betting.selectedTeam === 0) {
           betting.homeOffer = betting.offer;
           betting.awayOffer = betting.dealer;
