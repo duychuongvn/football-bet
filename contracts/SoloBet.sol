@@ -81,7 +81,7 @@ contract SoloBet is Ownable {
 
   function getTotalBettingMatches() public view returns (uint256);
 
-  function findMatch(bytes32 matchId) public view returns (string hT, string aT, uint hSc, uint aSc, uint time, MatchStatus status);
+  function findMatch(bytes32 matchId) public view returns (string hT, string aT, uint hSc, uint aSc, uint time, MatchStatus status, bool isScoreApproved);
 
   function getBettingInfo(bytes32 matchId, uint256 bettingId) public view returns (address bMaker, address punter, uint8 pair, int odds, uint256 amount, BetStatus status);
 

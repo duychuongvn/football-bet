@@ -50,7 +50,8 @@ contract AsianSoloBet is Ownable, SoloBet {
     uint homeScore,
     uint awayScore,
     uint time,
-    MatchStatus status) {
+    MatchStatus status,
+    bool isApproved) {
 
     Match memory _match = matches[matchId];
 
@@ -60,6 +61,7 @@ contract AsianSoloBet is Ownable, SoloBet {
     awayScore = _match.aSc;
     status = _match.status;
     time = _match.time;
+    isApproved = _match.isApproved;
   }
 
 
@@ -72,6 +74,7 @@ contract AsianSoloBet is Ownable, SoloBet {
   }
 
   function approveScore(bytes32 matchId) public onlyOwner returns (bool) {
+    require(!matches[matchId].isApproved);
     Match storage _match = matches[matchId];
     _match.isApproved = true;
 
@@ -119,7 +122,7 @@ contract AsianSoloBet is Ownable, SoloBet {
   }
 
   function rmBet(Match _match) internal returns (bool){
-    delete bets[_match.id];
+    //delete bets[_match.id];
     rmBetIdx(_match);
     return true;
   }

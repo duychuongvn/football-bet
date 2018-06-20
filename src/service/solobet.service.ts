@@ -30,7 +30,7 @@ export class SolobetService {
 
     return Observable.create(observer => {
 
-      var match = {matchId: '', homeTeam: '', awayTeam: '', homeScore: 0, awayScore: 0, time: 0, status: 0};
+      var match = {matchId: '', homeTeam: '', awayTeam: '', homeScore: 0, awayScore: 0, time: 0, status: 0, approved: false};
       this.Solobet
         .deployed()
         .then(instance => {
@@ -46,7 +46,14 @@ export class SolobetService {
           match.awayScore = result[index++].toNumber();
           match.time = result[index++].toNumber();
           match.status = result[index++].toNumber();
+          match.approved =result[index++]
 
+          if (match.status === 1) {
+            let currentime = new Date().getTime() / 1000;
+            if (currentime > match.time && currentime < match.time + 100 * 60) {
+              match.status = 2;
+            }
+          }
           observer.next(match);
           observer.complete();
 
@@ -68,9 +75,6 @@ export class SolobetService {
 
   loadBettings(matchId): Observable<any> {
 
-    // let _matchId = parseInt(matchId);
-
-
     let bettings = new Array();
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
@@ -91,7 +95,6 @@ export class SolobetService {
 
   getBetting(matchId, bettingId): Observable<Betting> {
 
-    console.log(matchId, bettingId);
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
         return instance.getBettingInfo.call(matchId, bettingId);
@@ -127,22 +130,17 @@ export class SolobetService {
   }
 
   deal(account, matchId, bettingId): Observable<any> {
-    console.log(matchId);
-    console.log(bettingId);
-    console.log(account);
 
 
     return Observable.create(observer => {
       this.getBetting(matchId, bettingId).subscribe(betting => {
         this.Solobet.deployed().then(instance => {
-          console.log(betting.amount);
           return instance.deal(matchId, bettingId, {from: account, value: betting.amount});
         }).then(betResult => {
-          console.log(betResult);
           observer.next(betResult);
           observer.complete();
         }).catch(err => {
-          alert(err);
+          observer.error(err);
         });
 
       });
@@ -151,13 +149,6 @@ export class SolobetService {
 
 
   newOffer(account, match, rate, amount, selectedTeam): Observable<any> {
-
-    console.log(account);
-    console.log(match);
-    console.log(rate);
-    console.log(amount);
-
-    // var matchTime = new Date(match.matchDate + ' ' + match.matchTime).getTime()/1000;
 
     return Observable.create(observer => {
       this.Solobet.deployed().then(instance => {
@@ -175,12 +166,8 @@ export class SolobetService {
   }
 
   updateScore(account, matchId: any, homeScore: number, awayScore: number) {
-    console.log(matchId);
-    console.log(homeScore);
-    console.log(awayScore);
-    console.log(account);
     this.Solobet.deployed().then(instance => {
-      return instance.updateScore(+matchId, homeScore, awayScore, {from: account});
+      return instance.updateScore(matchId, homeScore, awayScore, {from: account});
     });
   }
 
@@ -245,26 +232,25 @@ export class SolobetService {
             'chooseHomeTeam': betForHomeTeam[i],
             'betFor': null,
             'status': status[i].toNumber(),
-            'status_string':''
-          }
+            'status_string': ''
+          };
           //Open, Deal, Canceled, Refunded, Done
-          console.log("======");
-          console.log(_betting)
-          if(_betting.status === 0) {
+          console.log('======');
+          console.log(_betting);
+          if (_betting.status === 0) {
             _betting.status_string = 'Open';
           } else if (_betting.status === 1) {
             _betting.status_string = 'On Goging';
-          }else if (_betting.status === 2) {
+          } else if (_betting.status === 2) {
             _betting.status_string = 'Canceled';
-          }else if (_betting.status === 3) {
+          } else if (_betting.status === 3) {
             _betting.status_string = 'Refunded';
-          }else if (_betting.status === 4) {
+          } else if (_betting.status === 4) {
             _betting.status_string = 'Done';
           }
           bettingMatches.push(_betting);
         }
 
-        console.log(bettingMatches);
         observe.next(bettingMatches);
         observe.complete();
       });
@@ -274,9 +260,8 @@ export class SolobetService {
 
 
   cancelBetting(account: any, betting: any) {
-    console.log(betting)
     this.Solobet.deployed().then(instance => {
-      return instance.cancelOffer(betting.matchId, betting.bettingId,{from: account});
+      return instance.cancelOffer(betting.matchId, betting.bettingId, {from: account});
     });
   }
 }

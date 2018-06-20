@@ -2,7 +2,8 @@
 
 
 <br/>
-<div>
+<ul>
+<div style="padding: 0px 60px 0px 3px; background-color: rgb(230, 232, 237); color: Black;">
   Search Your Matches:
   <input class="input"
          type="text"
@@ -10,6 +11,8 @@
   />
   <br/>
 
+  Match status <input class="input" type="checkbox" [(ngModel)]="isUpComing"/>Up Coming
+  Match status <input class="input" type="checkbox" [(ngModel)]="isPlaying"/>Playing
   Match status <input class="input" type="checkbox" [(ngModel)]="isFinished"/>Finished
   <br/>
   Betting status:
@@ -19,9 +22,11 @@
   <input class="input" type="checkbox" [(ngModel)]="isCanceled" />Canceled
   <input class="input" type="checkbox" [(ngModel)]="isDone" />Done
 </div>
+</ul>
+<br/>
 
 <ul>
-    <div *ngFor="let item of groupMatches| matchPipe:{team:searchMatch, matchStatus: isFinished, bettingStatus: {open: isOpening, deal: isDeal, canceled: isCanceled, refunded: isRefunded, done: isDone}}">
+    <div *ngFor="let item of groupMatches| matchPipe:{team:searchMatch, matchStatus: {upcoming:isUpComing, playing:isPlaying, finished: isFinished}, bettingStatus: {open: isOpening, deal: isDeal, canceled: isCanceled, refunded: isRefunded, done: isDone}}">
       <div style="height: 48px; display: flex; align-items: center; padding: 0px 60px 0px 3px; background-color: rgb(12, 39, 09); color: white;" data-toggle="collapse" [attr.data-target]="'#myBets'+item.matchId" aria-expanded="true" [attr.data-controls]="'#myBets'+item.matchId" class="">
         <span style="margin-right: auto; font-size: 17px; color: white; padding-left: 25px; font-weight: 600;">
           {{item.match.homeTeam}} vs {{item.match.awayTeam}}</span>
@@ -45,7 +50,7 @@
               <span >{{betting.status_string}}</span>
             </td>
             <td>
-              <button type="button" ooltip="Available when status is opening" class="btn btn-warning mr-3" (click)="cancel(betting)">Cancel</button>
+              <button *ngIf="betting.status === 0" type="button" ooltip="Available when status is opening" class="btn btn-warning mr-3" (click)="cancel(betting)">Cancel</button>
             </td>
           </tr>
 

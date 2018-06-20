@@ -80,8 +80,9 @@ export class AdminComponent implements OnInit {
       for (let i = 0; i < result.length; i++) {
         this.solobetService.loadMatches(result[i]).subscribe(match => {
 
+          console.log(match);
           this.upcommingMatches.push(match);
-          this.fetchScore(match);
+         // this.fetchScore(match);
         });
       }
     });
@@ -92,8 +93,8 @@ export class AdminComponent implements OnInit {
     this.solobetService.updateScore(
       this.account,
       match.matchId,
-      match.homeGoals,
-      match.awayGoals
+      match.homeScore,
+      match.awayScore
     );
     // this.initMatches();
   };

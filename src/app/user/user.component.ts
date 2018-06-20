@@ -21,6 +21,8 @@ export class UserComponent {
   isOpening: boolean;
   isRefunded: boolean;
   isCanceled: boolean;
+  isUpComing: boolean;
+  isPlaying: boolean;
   isDone: true;
   groupMatchesFilter: any;
   accountBalance: any;
@@ -58,6 +60,8 @@ export class UserComponent {
   init = () => {
     this.searchMatch='';
     this.isDeal = true;
+    this.isUpComing = true;
+    this.isPlaying = true;
     this.isFinished = true;
     this.isCanceled = true;
     this.isRefunded = true;

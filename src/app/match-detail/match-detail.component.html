@@ -43,7 +43,9 @@
             <button type="button" class="btn btn-warning" (click)="openAcceptOdds(betting)">Deal</button>
           </td>
           <td *ngIf="betting.status !== 'Open'">
-              <button type="button" class="btn btn-info btn-info">Ongoing</button>
+            <span>
+              {{betting.status}}
+            </span>
             </td>
         </tr>
 
