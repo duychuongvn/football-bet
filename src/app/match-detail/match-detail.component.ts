@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Web3Service, SolobetService, NotifyService } from 'service/service';
+import {URLSearchParams} from '@angular/http';
 
 import { Fixture } from 'models/fixture';
 import { Handicap } from 'models/handicap';
@@ -12,6 +13,8 @@ import { DealModalComponent } from 'app/deal-modal/deal-modal.component';
 import { AcceptOddsModalComponent } from 'app/accept-odds-modal/accept-odds-modal.component';
 import { Account } from 'models/account';
 
+import { DOCUMENT } from '@angular/platform-browser';
+import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-match-detail',
   templateUrl: './match-detail.component.html',
@@ -25,11 +28,12 @@ export class MatchDetailComponent implements OnInit {
   public bettings: Betting[] = [];
   public betting: Betting = new Betting();
   public isLoading = false;
-
   public account: string;
 
   private _bettingsCount = 0;
   private _runTime;
+
+  private isSharePage: boolean = false;
 
   constructor(
     private _route: ActivatedRoute,
@@ -37,18 +41,23 @@ export class MatchDetailComponent implements OnInit {
     private _web3Service: Web3Service,
     private _solobetService: SolobetService,
     private _modalService: BsModalService,
-    private _notify: NotifyService
-  ) {}
+    private _notify: NotifyService,
+    @Inject(DOCUMENT) private document: any  ) {}
 
   ngOnInit() {
     this._getAccounts();
     this._route.queryParams.subscribe(p => {
-      if (p.id) {
+      console.log(p)
+      if (p.id && !p.bettingId) {
+        console.log("load beeting")
         this._setProperties(p);
         this._loadBettings(p.id);
-      } else {
-        this._router.navigate(['']);
+      }else if(p.bettingId){
+        console.log("_findBettingByMatchIdAndBettingId")
+          this._setProperties(p);
+          this._findBettingByMatchIdAndBettingId(p);
       }
+
     });
   }
 
@@ -159,4 +168,49 @@ export class MatchDetailComponent implements OnInit {
 
     this._modalService.show(comp, opts);
   }
+
+
+  private _findBettingByMatchIdAndBettingId(p: any){
+      let matchId = p.id;
+      let bettingId = p.bettingId;
+      console.log(bettingId, matchId)
+      if(matchId || bettingId){
+        this._solobetService.getBetting(matchId, bettingId).subscribe(betting => {
+          console.log(betting)
+          this.bettings.push(betting);
+          this.isSharePage = true;
+        },errors => {
+          this._notify.error(errors);
+        });
+      }
+
+  }
+
+  private _buildLink(betting){
+    let json = this.fixture.pickJson();
+    let params= new URLSearchParams();
+    for(let key in json){
+      params.set(key, json[key]);
+    }
+    params.set("bettingId", betting.bettingId);
+    console.log(params.toString());
+    this._copyLink(params.toString());
+  }
+
+
+  private _copyLink(val: string){
+
+    let selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = environment.contextpath+ "/match-detail?" +val;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
+  }
+
 }

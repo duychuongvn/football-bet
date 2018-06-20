@@ -4,6 +4,7 @@ import {fromPromise} from 'rxjs/observable/fromPromise';
 import {Web3Service} from './web3.service';
 import {Betting} from 'models/betting';
 import {log} from 'util';
+import { Match } from 'models/match';
 
 declare var require: any;
 const solobetArtifacts = require('../../build/contracts/AsianSoloBet.json');
@@ -30,7 +31,7 @@ export class SolobetService {
 
     return Observable.create(observer => {
 
-      var match = {matchId: '', homeTeam: '', awayTeam: '', homeScore: 0, awayScore: 0, time: 0, status: 0, approved: false};
+      var match = new Match();
       this.Solobet
         .deployed()
         .then(instance => {
@@ -42,8 +43,8 @@ export class SolobetService {
           match.matchId = matchId;
           match.homeTeam = result[index++];
           match.awayTeam = result[index++];
-          match.homeScore = result[index++].toNumber();
-          match.awayScore = result[index++].toNumber();
+          match.homeGoals = result[index++].toNumber();
+          match.awayGoals = result[index++].toNumber();
           match.time = result[index++].toNumber();
           match.status = result[index++].toNumber();
           match.approved =result[index++]

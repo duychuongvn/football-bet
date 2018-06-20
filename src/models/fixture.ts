@@ -70,6 +70,15 @@ export class Fixture {
     this._date = v;
   }
 
+
+  public get isOutOfDate(): boolean{
+    let currentDateTime = new Date().valueOf();
+    let matchDateTime = new Date(this._date).valueOf();
+      return currentDateTime > matchDateTime;
+  }
+
+
+
   private _status: string;
   public get status(): string {
     return this._status;
