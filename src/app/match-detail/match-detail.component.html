@@ -13,12 +13,13 @@
   </div>
 
   <div class="row mb-3">
-    <button type="button" class="btn btn-warning mr-3" (click)="openHandicap()">New Bet</button>
+    <button type="button" class="btn btn-warning mr-3" (click)="openHandicap()" [disabled]="isLoading">New Bet</button>
     <!-- <button routerLink="/" type="button" class="btn btn-success">Return to home</button> -->
   </div>
 
   <div class="row mb-3">
-    <table class="table table-bordered table-striped text-center">
+    <table class="table table-bordered table-striped text-center"
+      [ngClass]="{'loading': isLoading}">
       <thead class="thead-dark">
         <tr>
           <th scope="col">#</th>

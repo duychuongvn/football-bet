@@ -24,8 +24,12 @@ export class MatchDetailComponent implements OnInit {
   public match: Match = new Match();
   public bettings: Betting[] = [];
   public betting: Betting = new Betting();
+  public isLoading = false;
 
   public account: string;
+
+  private _bettingsCount = 0;
+  private _runTime;
 
   constructor(
     private _route: ActivatedRoute,
@@ -48,21 +52,12 @@ export class MatchDetailComponent implements OnInit {
     });
   }
 
-
-  private _fetchBetById(bettingId: string){
-    alert(this.match.matchId);
-    this._solobetService.getBetting(this.match.matchId,bettingId).subscribe(res => {
-      setTimeout(() => {
-        this.betting = res;
-      })
-    })
-  }
-
   private _setProperties(p: any) {
     this.handicap = new Handicap(p);
     this.fixture = new Fixture(p);
-    console.log(this.fixture)
+
     let time = new Date(p.date);
+    this.match = new Match(p);
     this.match.matchId = p.id.toString();
     this.match.homeTeam = p.homeTeamName;
     this.match.awayTeam = p.awayTeamName;
@@ -81,10 +76,16 @@ export class MatchDetailComponent implements OnInit {
   }
 
   private _loadBettings(id: string) {
-
     this._solobetService.loadBettings(id)
     .subscribe(res => {
+      setTimeout(() => {
         this.bettings = res.bettings;
+        if (this._runTime && this.bettings.length >= this._bettingsCount) {
+          clearInterval(this._runTime);
+          this._bettingsCount = 0;
+          this.isLoading = false;
+        }
+      }, 200);
     }, errors => {
       this._notify.error(errors);
     });
@@ -102,6 +103,8 @@ export class MatchDetailComponent implements OnInit {
         handicap: this.handicap
       }
     };
+
+    this._bettingsCount = this.bettings.length;
 
     this._openModalWithComponent(DealModalComponent, _opts);
   }
@@ -133,7 +136,7 @@ export class MatchDetailComponent implements OnInit {
         account: this.account,
         betting: betting,
         fixture: this.fixture
-            }
+      }
     };
 
     this._openModalWithComponent(AcceptOddsModalComponent, _opts);
@@ -142,7 +145,13 @@ export class MatchDetailComponent implements OnInit {
   private _openModalWithComponent(comp, opts?: ModalOptions) {
     const subscribe = this._modalService.onHidden.subscribe((res: any) => {
       if (res) {
-        this._loadBettings(this.match.matchId);
+        this._runTime = setInterval(() => {
+          this._loadBettings(this.match.matchId);
+        }, 2000);
+        this.isLoading = true;
+        this._bettingsCount += 1;
+      } else {
+        this._bettingsCount = 0;
       }
 
       subscribe.unsubscribe();
@@ -150,5 +159,4 @@ export class MatchDetailComponent implements OnInit {
 
     this._modalService.show(comp, opts);
   }
-
 }
