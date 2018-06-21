@@ -59,4 +59,6 @@ export class JhelperService {
         // this._cd.detectChanges();
       });
   }
+
+
 }

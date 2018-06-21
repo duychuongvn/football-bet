@@ -19,6 +19,8 @@ export class Match {
     return DateTime.fromISO(new Date(this.time * 1000).toISOString()).toFormat('ff');
     //  return DateTime.fromISO(this.time * 1000).toFormat('dd/MM/yyyy');
   }
+
+
   public set time(v: number) {
     this._time = v;
   }
