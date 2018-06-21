@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Web3Service, SolobetService, MatchService, UserService } from 'service/service';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Web3Service, SolobetService, UserService, EventEmitterService } from 'service/service';
 
 import { Account } from 'models/account';
 
@@ -9,22 +9,33 @@ import { Account } from 'models/account';
   styleUrls: ['./header.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
 
   public account: Account = new Account();
+  private _reloadPage;
 
   constructor(
     private _web3Service: Web3Service,
     private _solobetService: SolobetService,
-    private _matchService: MatchService,
     private _userService: UserService,
     private _cd: ChangeDetectorRef,
+    private _eventEmitter: EventEmitterService
   ) { }
 
   ngOnInit() {
     this._getAccount();
+
+    this._reloadPage = this._eventEmitter.caseNumber$
+      .subscribe(res => {
+        if (res.type === 'reload') {
+          this._getBalance();
+        }
+      });
   }
 
+  ngOnDestroy() {
+    this._reloadPage.unsubscribe();
+  }
 
   private async _getAccount() {
     this._web3Service.getAccounts()

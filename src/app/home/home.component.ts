@@ -78,7 +78,6 @@ export class HomeComponent implements OnInit {
     this._helper.fetchFixtures().subscribe(
 
       res => {
-        console.log(res)
         res.fixtures.map(fixture => {
           if (fixture.homeTeamName && fixture.awayTeamName && fixture.status !== 'FINISHED') {
             // if (fixture.homeTeamName && fixture.awayTeamName) {

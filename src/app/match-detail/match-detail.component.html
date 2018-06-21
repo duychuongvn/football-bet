@@ -51,10 +51,13 @@
             </span>
             </td>
             <td scope="row" [hidden]="isSharePage === true" >
-                <button [hidden]="isSharePage === true || betting.status !== 'Open'" (click)="_buildLink(betting)" type="button" class="btn btn-primary">Invite</button>
+              <button [hidden]="isSharePage === true || betting.status !== 'Open'" (click)="_buildLink(betting)" type="button" class="btn btn-primary">Invite</button>
             </td>
         </tr>
 
+        <tr *ngIf="bettings.length === 0">
+          <td colspan="7">No betting is existing. <a class="text-link" (click)="openHandicap()">Create your bet now.</a></td>
+        </tr>
       </tbody>
     </table>
   </div>
