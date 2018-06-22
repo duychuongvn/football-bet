@@ -13,7 +13,7 @@
   </div>
 
   <div class="row mb-3">
-    <button type="button" class="btn btn-warning mr-3" (click)="openHandicap()" [disabled]="isLoading">New Bet</button>
+    <button [hidden]="fixture.isOutOfDate === true" type="button" class="btn btn-success mr-3" (click)="openHandicap()" [disabled]="isLoading">New Bet</button>
     <!-- <button routerLink="/" type="button" class="btn btn-success">Return to home</button> -->
   </div>
 
@@ -27,7 +27,8 @@
           <th scope="col" class="pr-5 pl-5">Odds</th>
           <th scope="col"> <img [src]="fixture.awayFlag" width="40px"> {{fixture.awayTeamName}}</th>
           <th scope="col"><img src="/assets/images/ethereum.png" width="40px"></th>
-          <th scope="col"></th>
+          <th scope="col"><img src="/assets/images/if_17_3319627.png" width="40px"/> </th>
+          <th scope="col" [hidden]="isSharePage === true"><img src="/assets/images/if_Connect_connection_data_global_link_network_271507.png" width="40px" /></th>
         </tr>
       </thead>
       <tbody>
@@ -41,15 +42,22 @@
           </td>
           <td scope="row">{{ betting.stake}}</td>
           <td *ngIf="betting.status === 'Open'">
-            <button type="button" class="btn btn-warning" (click)="openAcceptOdds(betting)">Deal</button>
+            <button type="button" class="btn btn-info" (click)="openAcceptOdds(betting)">Deal</button>
+
           </td>
           <td *ngIf="betting.status !== 'Open'">
             <span>
               {{betting.status}}
             </span>
             </td>
+            <td scope="row" [hidden]="isSharePage === true" >
+              <button [hidden]="isSharePage === true || betting.status !== 'Open'" (click)="_buildLink(betting)" type="button" class="btn btn-primary">Invite</button>
+            </td>
         </tr>
 
+        <tr *ngIf="bettings.length === 0">
+          <td colspan="7">No betting is existing. <a class="text-link" (click)="openHandicap()">Create your bet now.</a></td>
+        </tr>
       </tbody>
     </table>
   </div>

@@ -1,5 +1,35 @@
 <app-header></app-header>
 
+<table class="table text-center table-bordered">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Date time</th>
+      <th scope="col">Matches Info</th>
+      <th scope="col">@</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let match of upcommingMatches">
+      <th scope="row">1</th>
+      <td>{{match.date_from_time}}</td>
+      <td>
+          <span>{{match.homeTeam}}</span>
+          <input class="col-1" type="text" [(ngModel)]="match.homeGoals" /> -
+          <input class="col-1" type="text" [(ngModel)]="match.awayGoals" /> <span>{{match.awayTeam}}</span>
+
+      </td>
+      <td>
+        <button (click)="updateScore(match)" type="button" class="btn btn-info mr-2">Update Score</button>
+        <button (click)="approveScore(match)" type="button" class="btn btn-info">Approve Score</button>
+
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+
+<!--
 <ul>
   <li *ngFor="let match of upcommingMatches">
 
@@ -8,11 +38,11 @@
        <input style="width: 50px"
               class="input"
               type="text"
-              [(ngModel)]="match.homeScore"/>
+              [(ngModel)]="match.homeGoals"/>
         -
        <input style="width: 50px"   class="input"
-              type="text" [(ngModel)]="match.awayScore" />
-          {{match.awayTeam}} - Date: {{match.time}}
+              type="text" [(ngModel)]="match.awayGoals" />
+          {{match.awayTeam}} - Date: {{match.date_from_time}}
 
       <button
 
@@ -33,5 +63,4 @@
 
   </li>
 
-</ul>
-
+</ul> -->

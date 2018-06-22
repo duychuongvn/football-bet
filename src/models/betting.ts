@@ -132,6 +132,10 @@ export class Betting {
     this._awayDealer = v;
   }
 
+  public get inviteLink(): string{
+    return "match-detail?matchId="+this._matchId + "&bettingId="+ this._bettingId;
+  }
+
   constructor(data?: BettingInterface) {
     if (data) {
       this.bettingId = data.bettingId;

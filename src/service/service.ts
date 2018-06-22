@@ -4,6 +4,7 @@ import { MatchService } from './match.service';
 import { JhelperService } from './jhelper.service';
 import { UserService } from './user.service';
 import { NotifyService } from './notify.service';
+import { EventEmitterService } from './event-emitter.service';
 
 export {
   SolobetService,
@@ -11,5 +12,6 @@ export {
   MatchService,
   JhelperService,
   UserService,
-  NotifyService
+  NotifyService,
+  EventEmitterService
 };

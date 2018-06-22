@@ -9,4 +9,5 @@ export interface MatchInterface {
   time: number;
   status: number;
   bettings: Betting[];
+  approved: boolean
 }

@@ -1,23 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Match } from 'models/match';
 
 import {
-  Web3Service,
   SolobetService,
-  JhelperService
+  JhelperService,
+  EventEmitterService
 } from 'service/service';
 
 import { Fixture } from 'models/fixture';
+
 import * as groupBy from 'lodash/groupBy';
 import * as map from 'lodash/map';
 import * as includes from 'lodash/includes';
+import * as clone from 'lodash/clone';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   public account: any;
   public accounts: any;
   public match: Match = new Match();
@@ -29,14 +31,28 @@ export class HomeComponent implements OnInit {
   public matchFixtures = [];
   public matchName: string = '';
 
+  private _searchPages;
+  private _oldMatch;
+
   constructor(
-    private _web3Service: Web3Service,
     private _solobetService: SolobetService,
-    private _helper: JhelperService
+    private _helper: JhelperService,
+    private _eventEmitter: EventEmitterService
   ) {}
 
   ngOnInit() {
     this.fetch();
+
+    this._searchPages = this._eventEmitter.caseNumber$
+      .subscribe(res => {
+        if (res.type === 'search') {
+          this.matchFixtures = this._searchMatch(res.data);
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this._searchPages.unsubscribe();
   }
 
   public loadMatches() {
@@ -63,7 +79,7 @@ export class HomeComponent implements OnInit {
 
   public deal(matchId) {
     this._solobetService.deal(this.account, matchId, 0).subscribe(
-      result => {
+      () => {
         this.loadBettings(matchId);
       },
       e => {
@@ -78,7 +94,6 @@ export class HomeComponent implements OnInit {
     this._helper.fetchFixtures().subscribe(
 
       res => {
-        console.log(res)
         res.fixtures.map(fixture => {
           if (fixture.homeTeamName && fixture.awayTeamName && fixture.status !== 'FINISHED') {
             // if (fixture.homeTeamName && fixture.awayTeamName) {
@@ -118,22 +133,26 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  public searchMatch() {
+  private _searchMatch(name: string) {
     let _term;
-    if (this.matchName.length > 1) {
+
+    if (!this._oldMatch) {
+      this._oldMatch = clone(this.matchFixtures);
+    }
+
+    if (name.length > 1) {
       _term = this.matchFixtures.filter(item => {
         return  item.value.find(val => {
           return includes(
             val.homeTeamName.toLowerCase() || val.awayTeamName.toLowerCase(),
-            this.matchName.toLowerCase()
+            name.toLowerCase()
           );
         });
       });
     } else {
-      _term = this.matchFixtures;
+      _term = this._oldMatch;
     }
     return _term;
   }
-
 
 }

@@ -31,7 +31,11 @@
             "scripts": [
               "./node_modules/jquery/dist/jquery.min.js",
               "src/assets/tether.min.js",
-              "./node_modules/bootstrap/dist/js/bootstrap.js"
+              "src/assets/clipboard.min.js",
+              "src/assets/angular.min.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.js",
+              "./node_modules/bootstrap/dist/js/bootstrap.js",
+              "./node_modules/ngclipboard/dist/ngclipboard.min.js"
             ]
           },
           "configurations": {

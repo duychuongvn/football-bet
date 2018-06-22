@@ -1,5 +1,6 @@
 import { MatchInterface } from 'interfaces/match'
 import { Betting } from 'models/betting'
+import { DateTime } from 'luxon';
 
 export class Match {
   private _status: number;
@@ -15,8 +16,11 @@ export class Match {
     return this._time;
   }
   public get date_from_time() {
-    return new Date(this.time);
+    return DateTime.fromISO(new Date(this.time * 1000).toISOString()).toFormat('ff');
+    //  return DateTime.fromISO(this.time * 1000).toFormat('dd/MM/yyyy');
   }
+
+
   public set time(v: number) {
     this._time = v;
   }
@@ -69,6 +73,17 @@ export class Match {
     this._bettings = v;
   }
 
+
+
+  private _approved : boolean;
+  public get approved() : boolean {
+    return this._approved;
+  }
+  public set approved(v : boolean) {
+    this._approved = v;
+  }
+
+
   constructor(data?: MatchInterface) {
     if (data) {
       this.matchId = data.matchId;
@@ -78,7 +93,8 @@ export class Match {
       this.awayGoals = data.awayGoals;
       this.status = data.status;
       this.time = data.time;
-      this.bettings = data.bettings
+      this.bettings = data.bettings;
+      this.approved = data.approved;
     }
   }
 }

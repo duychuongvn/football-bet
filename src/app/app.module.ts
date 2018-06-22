@@ -15,8 +15,9 @@ import {
   Web3Service,
   MatchService,
   UserService,
-  NotifyService
-} from "../service/service";
+  NotifyService,
+  EventEmitterService
+} from "service/service";
 
 const SERVICES = [
   SolobetService,
@@ -24,7 +25,8 @@ const SERVICES = [
   MatchService,
   MatchService,
   UserService,
-  NotifyService
+  NotifyService,
+  EventEmitterService
 ];
 
 @NgModule({

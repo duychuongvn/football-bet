@@ -9,17 +9,17 @@
   <table class="table text-center table-borderless">
     <thead>
       <tr>
-        <th scope="col"> {{fixture.homeTeamName}} </th>
-        <!-- <th><img [src]="fixture.homeFlag" width="60px"></th> -->
+        <th scope="col" [ngClass]="{ 'text-success team-active': activeTeam(0) }"> {{fixture.homeTeamName}} </th>
         <th scope="col">Placed Bet</th>
-        <th scope="col"> {{fixture.awayTeamName}} </th>
-        <!-- <th><img [src]="fixture.awayFlag" width="60px"></th> -->
+        <th scope="col" [ngClass]="{ 'text-success team-active': activeTeam(1) }"> {{fixture.awayTeamName}} </th>
       </tr>
     </thead>
     <tbody>
       <tr>
         <td scope="row" class="btn" (click)="markTeam(fixture.homeTeamName)">
-          <img [src]="fixture.homeFlag" width="120px">
+          <dir class="team-flag" [ngClass]="{ 'active': activeTeam(0) }">
+            <img [src]="fixture.homeFlag">
+          </dir>
         </td>
         <td>
           <div class="col mt-2">
@@ -32,7 +32,9 @@
           </div>
         </td>
         <td scope="row" class="btn" (click)="markTeam(fixture.awayTeamName)">
-          <img [src]="fixture.awayFlag" width="120px">
+          <dir class="team-flag" [ngClass]="{ 'active': activeTeam(1) }">
+            <img [src]="fixture.awayFlag">
+          </dir>
         </td>
       </tr>
 

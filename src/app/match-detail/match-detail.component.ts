@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Web3Service, SolobetService, NotifyService } from 'service/service';
+import { Web3Service, SolobetService, NotifyService, EventEmitterService } from 'service/service';
+import { URLSearchParams } from '@angular/http';
 
 import { Fixture } from 'models/fixture';
 import { Handicap } from 'models/handicap';
@@ -10,14 +11,17 @@ import { Betting } from 'models/betting';
 
 import { DealModalComponent } from 'app/deal-modal/deal-modal.component';
 import { AcceptOddsModalComponent } from 'app/accept-odds-modal/accept-odds-modal.component';
-import { Account } from 'models/account';
 
+import { DOCUMENT } from '@angular/platform-browser';
+import { environment } from 'environments/environment';
+
+import * as clone from 'lodash/clone';
 @Component({
   selector: 'app-match-detail',
   templateUrl: './match-detail.component.html',
   styleUrls: ['./match-detail.component.css']
 })
-export class MatchDetailComponent implements OnInit {
+export class MatchDetailComponent implements OnInit, OnDestroy {
 
   public fixture: Fixture = new Fixture();
   public handicap: Handicap = new Handicap();
@@ -25,31 +29,48 @@ export class MatchDetailComponent implements OnInit {
   public bettings: Betting[] = [];
   public betting: Betting = new Betting();
   public isLoading = false;
-
   public account: string;
 
   private _bettingsCount = 0;
   private _runTime;
 
+  private isSharePage: boolean = false;
+  private _searchPages;
+  private _oldBettings;
+
   constructor(
     private _route: ActivatedRoute,
-    private _router: Router,
     private _web3Service: Web3Service,
     private _solobetService: SolobetService,
     private _modalService: BsModalService,
-    private _notify: NotifyService
+    private _notify: NotifyService,
+    private _eventEmitter: EventEmitterService,
+    @Inject(DOCUMENT) private document: any
   ) {}
 
   ngOnInit() {
     this._getAccounts();
     this._route.queryParams.subscribe(p => {
-      if (p.id) {
+      if (p.id && !p.bettingId) {
         this._setProperties(p);
         this._loadBettings(p.id);
-      } else {
-        this._router.navigate(['']);
+      }else if(p.bettingId){
+        this._setProperties(p);
+        this._findBettingByMatchIdAndBettingId(p);
       }
+
     });
+
+    this._searchPages = this._eventEmitter.caseNumber$
+      .subscribe(res => {
+        if (res.type === 'search') {
+          this._searchBettings(res.data);
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this._searchPages.unsubscribe();
   }
 
   private _setProperties(p: any) {
@@ -84,6 +105,8 @@ export class MatchDetailComponent implements OnInit {
           clearInterval(this._runTime);
           this._bettingsCount = 0;
           this.isLoading = false;
+          this._oldBettings = clone(this.bettings);
+          this._eventEmitter.publishData({type: 'reload', data: null});
         }
       }, 200);
     }, errors => {
@@ -158,5 +181,57 @@ export class MatchDetailComponent implements OnInit {
     });
 
     this._modalService.show(comp, opts);
+  }
+
+
+  private _findBettingByMatchIdAndBettingId(p: any){
+      let matchId = p.id;
+      let bettingId = p.bettingId;
+      if(matchId || bettingId){
+        this._solobetService.getBetting(matchId, bettingId).subscribe(betting => {
+          this.bettings.push(betting);
+          this.isSharePage = true;
+        },errors => {
+          this._notify.error(errors);
+        });
+      }
+
+  }
+
+  private _buildLink(betting){
+    let json = this.fixture.pickJson();
+    let params= new URLSearchParams();
+    for(let key in json){
+      params.set(key, json[key]);
+    }
+    params.set("bettingId", betting.bettingId);
+    this._copyLink(params.toString());
+  }
+
+
+  private _copyLink(val: string){
+    let selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = environment.contextpath+ "/match-detail?" +val;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
+  }
+
+  private _searchBettings(search: any) {
+    if (!this._oldBettings) {
+      this._oldBettings = clone(this.bettings);
+    }
+
+    if (search.length > 1) {
+      this.bettings = this._oldBettings.filter((betting: Betting) => (betting.odds_string === search || betting.stake === +search));
+    } else {
+      this.bettings = this._oldBettings
+    }
   }
 }

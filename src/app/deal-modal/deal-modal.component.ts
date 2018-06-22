@@ -33,7 +33,7 @@ export class DealModalComponent implements OnInit {
     private _bsModalRef: BsModalRef,
     private _solobetService: SolobetService,
     private _notify: NotifyService
-  ) {}
+  ) { }
 
   ngOnInit() {
     console.log(this.fixture);
@@ -70,8 +70,13 @@ export class DealModalComponent implements OnInit {
         }
       );
   }
+
   public close(reason?: any) {
     this._bsModalService.setDismissReason(reason);
     this._bsModalRef.hide();
+  }
+
+  public activeTeam(teamNumber) {
+    return +this.handicap.selectedTeam === teamNumber;
   }
 }

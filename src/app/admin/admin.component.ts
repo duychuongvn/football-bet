@@ -8,6 +8,8 @@ import {
 } from "../../service/service";
 import { log } from "util";
 import { Fixture } from "models/fixture";
+import { Match } from "models/match";
+import { Betting } from "models/betting";
 
 @Component({
   selector: "app-admin",
@@ -17,17 +19,19 @@ import { Fixture } from "models/fixture";
 export class AdminComponent implements OnInit {
   account: any;
   accounts: any;
-  match = {
-    matchId: "",
-    homeTeam: "",
-    awayTeam: "",
-    homeGoals: 0,
-    awayGoals: 0,
-    time: 0,
-    status: 0
-  };
-  upcommingMatches: any[];
-  bettings: any;
+  // match = {
+  //   matchId: "",
+  //   homeTeam: "",
+  //   awayTeam: "",
+  //   homeGoals: 0,
+  //   awayGoals: 0,
+  //   time: 0,
+  //   status: 0
+  // };
+  match: Match = new Match();
+
+  upcommingMatches: Match[] = [];
+  bettings: Betting[];
   amount: 0;
   rate1: 0;
   rate2: 0;
@@ -75,14 +79,12 @@ export class AdminComponent implements OnInit {
   }
 
   public setup() {
-    this.upcommingMatches = new Array();
     this.solobetService.loadBettingMatches().subscribe(result => {
       for (let i = 0; i < result.length; i++) {
         this.solobetService.loadMatches(result[i]).subscribe(match => {
-
           console.log(match);
           this.upcommingMatches.push(match);
-         // this.fetchScore(match);
+          this.fetchScore(match);
         });
       }
     });
@@ -93,8 +95,8 @@ export class AdminComponent implements OnInit {
     this.solobetService.updateScore(
       this.account,
       match.matchId,
-      match.homeScore,
-      match.awayScore
+      match.homeGoals,
+      match.awayGoals
     );
     // this.initMatches();
   };
