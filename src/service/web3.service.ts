@@ -39,6 +39,7 @@ export class Web3Service {
   }
   getNetworkInfo() {
     let state = this.web3.currentProvider.publicConfigStore._state;
+    console.log(this.web3.currentProvider.publicConfigStore);
     // alert(state);
     let providers = this.getProviders();
 

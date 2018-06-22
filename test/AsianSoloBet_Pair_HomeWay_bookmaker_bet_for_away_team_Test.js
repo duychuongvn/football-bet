@@ -3,7 +3,7 @@ const betAmount = 1000000000000000000;// 2 Ether
 const amountAfterFee = betAmount * 95 / 100;
 const gasUsedToSendTx = 21000;
 const totalAmountReceivedAfterWin = betAmount + amountAfterFee - gasUsedToSendTx;// 5% fee and 21000 gas
-
+const refundAfterDraw = betAmount - betAmount * 5 / 100 /2;
 const halfAmountPaidAfterFee = betAmount * 95 / 100 / 2;
 const totalAmountReceivedWhenloseAHalf = halfAmountPaidAfterFee - gasUsedToSendTx;
 const totalAmountRecievedWhenWinAHalf = betAmount + totalAmountReceivedWhenloseAHalf;
@@ -52,8 +52,6 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
 
     it('should transfer a half to bookmaker when  pair is Russia 0:1/4 USA (0.25) and bookmaker choose USA and the match draw', async () => {
 
-      const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
-      const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
       contract.offerNewMatch(0x126, homeTeam, awayTeam, 1, matchTime, 25, {from: bookmaker, value: betAmount});
 
       contract.deal(0x126, 0, {from: punter, value: betAmount});
@@ -70,7 +68,6 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
 
       const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
-
       //cannot verify exact amount deu to lack of gas
       assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountRecievedWhenWinAHalf), "Bookmaker win half amount when the match is draw")
       assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal + totalAmountReceivedWhenloseAHalf), "Punter lose half amount when the match is draw")
@@ -134,7 +131,7 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
     });
 
 
-    it('should transfer stake to punter when  pair is [Rusia 0:1/2 USA] (0.5) and bookmaker choose USA and the Russia win 1-0 ', async () => {
+    it('should transfer stake to punter when  pair is [Russia 0:1/2 USA] (0.5) and bookmaker choose USA and the Russia win 1-0 ', async () => {
 
       const amountOfBookMakerBeforeOffer = await web3.eth.getBalance(bookmaker).toNumber();
       const amountOfPunterBeforeDeal = await  web3.eth.getBalance(punter).toNumber();
@@ -341,7 +338,7 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer), "Bookmaker lose all amount when result is Rusia 2-0 USA")
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer ), "Bookmaker lose all amount when result is Rusia 2-0 USA")
       assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all amount when result is  Rusia 2-0 USA");
 
     });
@@ -363,10 +360,9 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
 
       const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
-
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + amountAfterFee - gasUsedToSendTx), "Bookmaker receive refund when the match result is Russia 2-1 USA")
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal + amountAfterFee - gasUsedToSendTx), "Bookmaker receive refund when the match result is Russia 2-1 USA");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + refundAfterDraw ), "Bookmaker receive refund when the match result is Russia 2-1 USA")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal + refundAfterDraw ), "Bookmaker receive refund when the match result is Russia 2-1 USA");
 
     });
     it('should transfer to bookmaker when  pair is [Russia 0:1 USA] (1.00) and bookmaker choose USA and the match is draw ', async () => {
@@ -466,8 +462,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountRecievedWhenWinAHalf) , "Bookmaker win a half  when the match is Russia 3-2 USA" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedWhenloseAHalf), "Punter lose a half when the mach is Russia 3-2 USA");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountRecievedWhenWinAHalf), "Bookmaker win a half  when the match is Russia 3-2 USA")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal + totalAmountReceivedWhenloseAHalf), "Punter lose a half when the mach is Russia 3-2 USA");
 
     });
 
@@ -491,8 +487,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin) , "Bookmaker win all  when the match is Russia 3-3 USA (draw)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal ), "Punter loset all when the mach is Russia 3-3 USA (draw)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker win all  when the match is Russia 3-3 USA (draw)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter loset all when the mach is Russia 3-3 USA (draw)");
 
     });
 
@@ -518,8 +514,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin) , "Bookmaker win all  when the match is Russia 3-4 USA (Russia lose)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal ), "Punter lose all when the mach is Russia 3-4 USA (Russia lose)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker win all  when the match is Russia 3-4 USA (Russia lose)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter lose all when the mach is Russia 3-4 USA (Russia lose)");
 
     });
 
@@ -545,8 +541,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker lose all  when the match is Russia 3-1 USA (Russia win)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all when the mach is Russia 3-1 USA (Russia win)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer), "Bookmaker lose all  when the match is Russia 3-1 USA (Russia win)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all when the mach is Russia 3-1 USA (Russia win)");
 
     });
 
@@ -572,8 +568,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin) , "Bookmaker win all  when the match is Russia 3-2 USA (Russia win 1 goal)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal ), "Punter lose all when the mach is Russia 3-1 USA (Russia win 1 goal)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker win all  when the match is Russia 3-2 USA (Russia win 1 goal)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter lose all when the mach is Russia 3-1 USA (Russia win 1 goal)");
 
     });
 
@@ -600,8 +596,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin) , "Bookmaker wins all  when the match is Russia 3-3 USA (Russia draw)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal), "Punter loses all when the mach is Russia 3-3 USA (Russia draw)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker wins all  when the match is Russia 3-3 USA (Russia draw)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter loses all when the mach is Russia 3-3 USA (Russia draw)");
 
     });
 
@@ -627,8 +623,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin) , "Bookmaker wins all  when the match is Russia 1-2 USA (Russia lose)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal), "Punter loses all when the mach is Russia 1-2 USA (Russia lose)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker wins all  when the match is Russia 1-2 USA (Russia lose)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter loses all when the mach is Russia 1-2 USA (Russia lose)");
 
     });
 
@@ -654,8 +650,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer) , "Bookmaker loses in all  when the match is Russia 4-1 USA (Russia win >= 3 goals)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all when the match is Russia 4-1 USA (Russia win >= 3 goals)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer), "Bookmaker loses in all  when the match is Russia 4-1 USA (Russia win >= 3 goals)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter win all when the match is Russia 4-1 USA (Russia win >= 3 goals)");
 
     });
 
@@ -681,8 +677,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedWhenloseAHalf) , "Bookmaker loses a half  when the match is Russia 4-2 USA (Russia win 2 goals)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + totalAmountRecievedWhenWinAHalf), "Punter loses a half all when the match is Russia 4-1 USA (Russia win 2 goals)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedWhenloseAHalf), "Bookmaker loses a half  when the match is Russia 4-2 USA (Russia win 2 goals)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal + totalAmountRecievedWhenWinAHalf), "Punter loses a half all when the match is Russia 4-1 USA (Russia win 2 goals)");
 
     });
 
@@ -708,8 +704,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin) , "Bookmaker wins all when the match is Russia 4-3 USA (Russia win 1 goal)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal  ), "Punter loses all when the match is Russia 4-3 USA (Russia win 1 goal)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker wins all when the match is Russia 4-3 USA (Russia win 1 goal)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter loses all when the match is Russia 4-3 USA (Russia win 1 goal)");
 
     });
 
@@ -735,8 +731,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin) , "Bookmaker wins all when the match is Russia 4-4 USA (Russia draw)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal ), "Punter loses all when the match is Russia 4-4 USA (Russia draw)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker wins all when the match is Russia 4-4 USA (Russia draw)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter loses all when the match is Russia 4-4 USA (Russia draw)");
 
     });
 
@@ -762,8 +758,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin) , "Bookmaker wins all when the match is Russia 4-5 USA (Russia lose)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal), "Punter loses all when the match is Russia 4-5 USA (Russia lose)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker wins all when the match is Russia 4-5 USA (Russia lose)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter loses all when the match is Russia 4-5 USA (Russia lose)");
 
     });
 
@@ -789,8 +785,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer ) , "Bookmaker loses all when the match is Russia 4-1 USA (Russia win 3 goals)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal  + totalAmountReceivedAfterWin), "Punter wins all when the match is Russia 4-1 USA (Russia win 3 goals)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer), "Bookmaker loses all when the match is Russia 4-1 USA (Russia win 3 goals)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal + totalAmountReceivedAfterWin), "Punter wins all when the match is Russia 4-1 USA (Russia win 3 goals)");
 
     });
 
@@ -816,8 +812,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + amountAfterFee) , "Bookmaker receives refund when the match is Russia 4-2 USA (Russia win 2 goals)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + amountAfterFee ), "Punter recieves refund when the match is Russia 4-2 USA (Russia win 2 goals)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + refundAfterDraw), "Bookmaker receives refund when the match is Russia 4-2 USA (Russia win 2 goals)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal + refundAfterDraw), "Punter recieves refund when the match is Russia 4-2 USA (Russia win 2 goals)");
 
     });
 
@@ -843,8 +839,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin) , "Bookmaker wins all when the match is Russia 4-3 USA (Russia win 1 goals)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal  ), "Punter loses refund when the match is Russia 4-3 USA (Russia win 1 goals)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker wins all when the match is Russia 4-3 USA (Russia win 1 goals)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter loses refund when the match is Russia 4-3 USA (Russia win 1 goals)");
 
     });
 
@@ -870,8 +866,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer +totalAmountReceivedAfterWin ) , "Bookmaker wins all when the match is Russia 4-4 USA (Russia draw)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal  ), "Punter loses refund when the match is Russia 4-4 USA (Russia draw)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker wins all when the match is Russia 4-4 USA (Russia draw)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter loses refund when the match is Russia 4-4 USA (Russia draw)");
 
     });
 
@@ -898,8 +894,8 @@ describe('When admin approve score and pair is Russia x/x USA (Russia is stronge
       const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
       //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer +totalAmountReceivedAfterWin) , "Bookmaker win all when the match is Russia 4-5 USA (Russia lose)" )
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal  ), "Punter loses refund when the match is Russia 4-5 USA (Russia lose)");
+      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker win all when the match is Russia 4-5 USA (Russia lose)")
+      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter loses refund when the match is Russia 4-5 USA (Russia lose)");
 
     });
 
