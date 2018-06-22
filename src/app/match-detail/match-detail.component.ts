@@ -32,7 +32,7 @@ export class MatchDetailComponent implements OnInit {
   private _bettingsCount = 0;
   private _runTime;
 
-  private isSharePage: boolean = false;
+  public isSharePage: boolean = false;
 
   constructor(
     private _route: ActivatedRoute,
