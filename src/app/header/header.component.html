@@ -25,6 +25,7 @@
       placeholder="Search match"
       aria-label="Search"
       name="search-name"
-      [(ngModel)]="matchName">
+      [(ngModel)]="searchText"
+      (input)="search()">
   </form>
 </nav>

@@ -18,5 +18,4 @@ export class EventEmitterService {
   publishData(data: DataEmitter) {
     this.caseNumber.next(data);
   }
-
 }

@@ -12,6 +12,7 @@ import { Account } from 'models/account';
 export class HeaderComponent implements OnInit, OnDestroy {
 
   public account: Account = new Account();
+  public searchText: string = '';
   private _reloadPage;
 
   constructor(
@@ -60,5 +61,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.account.placed_balance = balance;
         this._cd.detectChanges();
       });
+  }
+
+  public search() {
+    this._eventEmitter.publishData({ type: 'search', data: this.searchText});
   }
 }
