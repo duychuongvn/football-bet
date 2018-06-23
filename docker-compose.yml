@@ -4,7 +4,7 @@ services:
     image: football-bet
     build: '.'
     ports:
-      - 8082:80
+      - 80:80
         # app:
         #   image: football-bet
         #   build: '.'

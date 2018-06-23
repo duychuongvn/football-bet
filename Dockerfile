@@ -1,13 +1,19 @@
 #Stage 0, based on Node.js, to build and compile Angular
 FROM node:10.3 as node
 # RUN mkdir /usr/deploy
+
+
 WORKDIR /app
+
+RUN npm install -g truffle
 
 COPY package.json /app/
 
 RUN npm install
 
 COPY ./ /app/
+
+RUN truffle compile
 
 ARG env=
 
