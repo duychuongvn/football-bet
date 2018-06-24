@@ -28,6 +28,3 @@ COPY --from=node /app/dist/football-bet /usr/share/nginx/html/football-bet
 COPY --from=node /app/build /usr/share/nginx/html/build
 
 COPY ./nginx-custom.conf /etc/nginx/conf.d/default.conf
-
-
-

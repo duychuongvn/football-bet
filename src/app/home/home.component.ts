@@ -96,17 +96,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       res => {
         res.fixtures.map(fixture => {
           if (fixture.homeTeamName && fixture.awayTeamName && fixture.status !== 'FINISHED') {
-            // if (fixture.homeTeamName && fixture.awayTeamName) {
              let fixtureId = this._helper.hashId(fixture.homeTeamName, fixture.awayTeamName, fixture.date);
              let _fixture = new Fixture(fixture);
              _fixture.id = fixtureId;
-             _fixture.homeFlag = "/assets/images/flag/Flag_of_"+_fixture.homeTeamName + ".svg";
-             _fixture.awayFlag = "/assets/images/flag/Flag_of_"+_fixture.awayTeamName + ".svg";
+
+             _fixture.homeFlag = "/assets/images/flag/Flag_of_"+_fixture.homeTeamNameWithUnderScore+".svg";
+             _fixture.awayFlag = "/assets/images/flag/Flag_of_"+_fixture.awayTeamNameWithUnderScore+".svg";
             this._fixtures.push(_fixture);
           }
         });
-        // this.fetchFlag();
-
         this.matchFixtures = map(
           groupBy(this._fixtures, 'date_string', ['asc']),
           (value, key) => ({
@@ -119,21 +117,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         console.log(errors);
       }
     );
-  }
-
-  private fetchFlag(): any {
-    this._helper.fetchTeam().subscribe(resp => {
-      resp.teams.map(team => {
-        this._fixtures.forEach(item => {
-          if (item.homeTeamName === team.name) {
-            item.homeFlag = team.crestUrl;
-          }
-          if (item.awayTeamName === team.name) {
-            item.awayFlag = team.crestUrl;
-          }
-        });
-      });
-    });
   }
 
   private _searchMatch(name: string) {

@@ -40,6 +40,9 @@ export class Fixture {
     this._homeTeamName = v;
   }
 
+  public get homeTeamNameWithUnderScore(){
+    return this._homeTeamName.replace(" ", "_");
+  }
   private _awayTeamId: number;
   public get awayTeamId(): number {
     return this._awayTeamId;
@@ -54,6 +57,10 @@ export class Fixture {
   }
   public set awayTeamName(v: string) {
     this._awayTeamName = v;
+  }
+
+  public get awayTeamNameWithUnderScore(){
+    return this._awayTeamName.replace(" ", "_");
   }
 
   private _date: string;
