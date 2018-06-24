@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Web3Service, SolobetService, NotifyService, EventEmitterService } from 'service/service';
@@ -13,13 +13,15 @@ import { DealModalComponent } from 'app/deal-modal/deal-modal.component';
 import { AcceptOddsModalComponent } from 'app/accept-odds-modal/accept-odds-modal.component';
 
 import { DOCUMENT } from '@angular/platform-browser';
-import { environment } from '../../environments/environment';
+import { environment } from 'environments/environment';
+
+import * as clone from 'lodash/clone';
 @Component({
   selector: 'app-match-detail',
   templateUrl: './match-detail.component.html',
   styleUrls: ['./match-detail.component.css']
 })
-export class MatchDetailComponent implements OnInit {
+export class MatchDetailComponent implements OnInit, OnDestroy {
 
   public fixture: Fixture = new Fixture();
   public handicap: Handicap = new Handicap();
@@ -33,6 +35,8 @@ export class MatchDetailComponent implements OnInit {
   private _runTime;
 
   public isSharePage: boolean = false;
+  private _searchPages;
+  private _oldBettings;
 
   constructor(
     private _route: ActivatedRoute,
@@ -56,6 +60,17 @@ export class MatchDetailComponent implements OnInit {
       }
 
     });
+
+    this._searchPages = this._eventEmitter.caseNumber$
+      .subscribe(res => {
+        if (res.type === 'search') {
+          this._searchBettings(res.data);
+        }
+      });
+  }
+
+  ngOnDestroy() {
+    this._searchPages.unsubscribe();
   }
 
   private _setProperties(p: any) {
@@ -90,7 +105,7 @@ export class MatchDetailComponent implements OnInit {
           clearInterval(this._runTime);
           this._bettingsCount = 0;
           this.isLoading = false;
-
+          this._oldBettings = clone(this.bettings);
           this._eventEmitter.publishData({type: 'reload', data: null});
         }
       }, 200);
@@ -208,4 +223,15 @@ export class MatchDetailComponent implements OnInit {
     document.body.removeChild(selBox);
   }
 
+  private _searchBettings(search: any) {
+    if (!this._oldBettings) {
+      this._oldBettings = clone(this.bettings);
+    }
+
+    if (search.length > 1) {
+      this.bettings = this._oldBettings.filter((betting: Betting) => (betting.odds_string === search || betting.stake === +search));
+    } else {
+      this.bettings = this._oldBettings
+    }
+  }
 }

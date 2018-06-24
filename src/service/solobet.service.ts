@@ -20,7 +20,12 @@ export class SolobetService {
   constructor(
     private web3Ser: Web3Service,
   ) {
-    this.Solobet.setProvider(web3Ser.web3.currentProvider);
+    try{
+      this.Solobet.setProvider(web3Ser.web3.currentProvider);
+    } catch (e) {
+      alert("Wrong network");
+    }
+
     this.Solobet.deployed().then(instance => {
       this.solobetInstance = instance;
     });
@@ -233,7 +238,8 @@ export class SolobetService {
             'chooseHomeTeam': betForHomeTeam[i],
             'betFor': null,
             'status': status[i].toNumber(),
-            'status_string': ''
+            'status_string': '',
+            'receivedAmount':0
           };
           //Open, Deal, Canceled, Refunded, Done
           console.log('======');

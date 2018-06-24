@@ -4,6 +4,7 @@ const betAmount = 1000000000000000000;// 2 Ether
 const  amountAfterFee = betAmount * 95 / 100;
 const  gasUsedToSendTx = 21000;
 const totalAmountReceivedAfterWin = betAmount + amountAfterFee - gasUsedToSendTx;// 5% fee and 21000 gas
+const refundAfterDraw = betAmount - betAmount * 5 / 100 /2;
 
 const halfAmountPaidAfterFee = betAmount * 95 / 100/2;
 const totalAmountReceivedWhenloseAHalf = halfAmountPaidAfterFee - gasUsedToSendTx;
@@ -395,8 +396,8 @@ var assertThrow = async (fn, args) => {
         const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
         //cannot verify exact amount due to lack of gas
-        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + amountAfterFee - gasUsedToSendTx) , "Bookmaker receive refund when the match result is Russia 2-1 USA" )
-        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + amountAfterFee - gasUsedToSendTx), "Bookmaker receive refund when the match result is Russia 2-1 USA");
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + refundAfterDraw) , "Bookmaker receive refund when the match result is Russia 2-1 USA" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + refundAfterDraw), "Bookmaker receive refund when the match result is Russia 2-1 USA");
 
       });
 
@@ -861,8 +862,8 @@ var assertThrow = async (fn, args) => {
         const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
 
         //cannot verify exact amount due to lack of gas
-        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + amountAfterFee) , "Bookmaker receives refund when the match is Russia 4-2 USA (Russia win 2 goals)" )
-        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + amountAfterFee ), "Punter recieves refund when the match is Russia 4-2 USA (Russia win 2 goals)");
+        assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + refundAfterDraw) , "Bookmaker receives refund when the match is Russia 4-2 USA (Russia win 2 goals)" )
+        assert.equal(toGwei(amountOfPunterAfterApproveMatchScore),toGwei(amountOfPunterAfterDeal + refundAfterDraw ), "Punter recieves refund when the match is Russia 4-2 USA (Russia win 2 goals)");
 
       });
 

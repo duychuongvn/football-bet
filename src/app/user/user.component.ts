@@ -58,7 +58,7 @@ export class UserComponent {
   };
 
   init = () => {
-    this.searchMatch='';
+    this.searchMatch = '';
     this.isDeal = true;
     this.isUpComing = true;
     this.isPlaying = true;
@@ -80,7 +80,7 @@ export class UserComponent {
     this.solobetService.getPlacedBalance(this.account).subscribe(balance => {
       this.placedBalance = balance;
     });
-  }
+  };
 
   loadMyBettingMatches = () => {
     this.solobetService.loadBettingMatchesByAccount(this.account).subscribe(result => {
@@ -88,17 +88,25 @@ export class UserComponent {
       for (let i = 0; i < result.length; i++) {
         let matchId = result[i].matchId;
         this.solobetService.loadMatches(matchId).subscribe(match => {
-          console.log(match);
           for (let j = 0; j < result.length; j++) {
             if (this.groupMatches[j].matchId == match.matchId) {
               this.groupMatches[j].match = match;
               let _bettings = this.groupMatches[j].bettings;
               _bettings.map(item => {
-                if(item.chooseHomeTeam) {
+                if (item.chooseHomeTeam) {
                   item.betFor = match.homeTeam;
                 } else {
                   item.betFor = match.awayTeam;
                 }
+                if(item.status === 4) {
+                  this.calculateResult(item, match);
+                } else if(item.status === 3) {
+                  item.receivedAmount = item.amount;
+                }  else {
+                  item.receivedAmount = '-';
+                }
+
+             //   this.sortMatches();
               });
               break;
             }
@@ -110,13 +118,73 @@ export class UserComponent {
     });
   };
 
+  sortMatches() {
+    for (var i = 0; i < this.groupMatches.length ; i++) {
+      console.log(this.groupMatches[i].match.time );
+    }
+    for (var i = 0; i < this.groupMatches.length - 1; i++) {
+      for (var j = i + 1; j < this.groupMatches.length; j++) {
+        if (this.groupMatches[i].match.time < this.groupMatches[j].match.time) {
+          console.log(this.groupMatches[i].match.time + ' - ' + this.groupMatches[j].match.time + '>>')
 
-  cancel =(betting) => {
-    if(confirm("Do you want to cancel?")) {
-      this.solobetService.cancelBetting(this.account, betting);
+          var temp = this.groupMatches[i];
+          this.groupMatches[i] = this.groupMatches[j];
+          this.groupMatches[j] = temp;
+          console.log(this.groupMatches[i].match.time + ' - ' + this.groupMatches[j].match.time)
+        }
+      }
+    }
+    for (var i = 0; i < this.groupMatches.length ; i++) {
+      console.log(this.groupMatches[i].match.time );
     }
 
   }
+
+  calculateResult(betting, match) {
+    let selectedTeamScore;
+    let againstTeamScore;
+
+    if (betting.betFor === match.homeTeam) {
+      selectedTeamScore = match.homeGoals;
+      againstTeamScore = match.awayGoals;
+
+    } else {
+      againstTeamScore = match.homeGoals;
+      selectedTeamScore = match.awayGoals;
+    }
+    if (match.status === 4) {
+      betting.receivedAmount = this.calculateAmount(selectedTeamScore - againstTeamScore, betting.odds, betting.amount);
+    } else {
+      betting.receivedAmount = '-';
+    }
+
+  }
+
+
+  /**
+   * bet: Germany - Sweden
+   * odds: Sweden @ 0.75
+   * scores: Germany 1 - 0 Sweden
+   * goaldifference = 0 - 1
+   */
+
+  public calculateAmount(goaldifference: number, odds: number, amount): number {
+    let result = 0;
+    if (odds + goaldifference == 0.25) result = amount + amount * 95 / 100 / 2;
+    else if (odds + goaldifference == -0.25) result = amount * 95 / 100 / 2;
+    else if (odds + goaldifference == 0) result = amount - amount * 5 / 100 / 2;
+    else if (odds + goaldifference > 0.25) result = amount + amount * 95 / 100;
+    if (odds + goaldifference < -0.25) return 0;
+
+    return +result.toFixed(2);
+  }
+
+  cancel = (betting) => {
+    if (confirm('Do you want to cancel?')) {
+      this.solobetService.cancelBetting(this.account, betting);
+    }
+
+  };
 
 
   convertBettingToGroupByMatches(bettingMatches) {
