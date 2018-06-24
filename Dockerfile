@@ -5,7 +5,7 @@ FROM node:10.3 as node
 
 WORKDIR /app
 
-RUN npm cache clear
+RUN npm cache clear --force
 
 RUN npm install -g truffle
 
