@@ -1,0 +1,12 @@
+version: '3.1'
+services:
+  app:
+    image: football-bet
+    build: '.'
+    ports:
+      - 4200:80
+        # app:
+        #   image: football-bet
+        #   build: '.'
+        #   ports:
+        #     - 8082:80
