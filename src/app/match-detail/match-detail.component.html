@@ -42,7 +42,7 @@
           </td>
           <td scope="row">{{ betting.stake}}</td>
           <td *ngIf="betting.status === 'Open'">
-            <button type="button" class="btn btn-info" (click)="openAcceptOdds(betting)">Deal</button>
+            <button type="button" class="btn btn-info" (click)="openAcceptOdds(betting)">Bet</button>
 
           </td>
           <td *ngIf="betting.status !== 'Open'">

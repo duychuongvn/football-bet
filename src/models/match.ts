@@ -83,8 +83,14 @@ export class Match {
     this._approved = v;
   }
 
+  private _openBet: number;
+  private _settledBet: number;
+  private _totalBet: number;
 
   constructor(data?: MatchInterface) {
+    this.totalBet = 0;
+    this.openBet = 0;
+    this.settledBet = 0;
     if (data) {
       this.matchId = data.matchId;
       this.homeTeam = data.homeTeam;
@@ -96,5 +102,29 @@ export class Match {
       this.bettings = data.bettings;
       this.approved = data.approved;
     }
+  }
+
+  get openBet(): number {
+    return this._openBet;
+  }
+
+  set openBet(value: number) {
+    this._openBet = value;
+  }
+
+  get settledBet(): number {
+    return this._settledBet;
+  }
+
+  set settledBet(value: number) {
+    this._settledBet = value;
+  }
+
+  get totalBet(): number {
+    return this._totalBet;
+  }
+
+  set totalBet(value: number) {
+    this._totalBet = value;
   }
 }

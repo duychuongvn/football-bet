@@ -96,21 +96,44 @@ contract AsianSoloBet is Ownable, SoloBet {
     return true;
   }
 
-  //  function claimStake(bytes32 matchId, uint[]bettingIds) public returns (bool) {
-  //    Match memory _match = matches[matchId];
-  //    require(_match.status == MatchStatus.Finished);
-  //    Betting memory _betting;
-  //    for(uint i = 0;i < bettingIds.length; i++) {
-  //       _betting = bets[matchId][bettingIds[i]];
-  //      if(_betting.status == BetStatus.Deal) {
-  //        doTransfer(_match, _betting);
-  //      } else if(_betting.status == BetStatus.Open) {
-  //        refund(_betting);
+  event LogClaim(bytes32 matchid, uint betidx, uint256 amount);
+  event logrefund(bytes32 matchid, uint betidx, uint256 amount);
+  function claimStake(bytes32 matchId) public returns (bool) {
+    Match memory _match = matches[matchId];
+    require(_match.status == MatchStatus.Finished);
+    uint betCount = myBets[msg.sender].length;
+    for (uint i = 0; i < betCount; i++) {
+
+      if (myBets[msg.sender][i].matchId == matchId) {
+        Betting storage _betting = bets[matchId][myBets[msg.sender][i].betIdx];
+        if (_betting.status == BetStatus.Deal) {
+          doTransfer(_match, _betting);
+          _betting.status = BetStatus.Done;
+        } else if (_betting.status == BetStatus.Open) {
+          refund(_betting);
+          _betting.status = BetStatus.Refunded;
+        }
+      }
+    }
+    return true;
+
+  }
+
+  //    function claimStake(bytes32 matchId, uint[]bettingIds) public returns (bool) {
+  //      Match memory _match = matches[matchId];
+  //      require(_match.status == MatchStatus.Finished);
+  //      Betting storage _betting;
+  //      for(uint i = 0;i < bettingIds.length; i++) {
+  //         _betting = bets[matchId][bettingIds[i]];
+  //        if(_betting.status == BetStatus.Deal) {
+  //          doTransfer(_match, _betting);
+  //        } else if(_betting.status == BetStatus.Open) {
+  //          refund(_betting);
+  //        }
   //      }
-  //    }
-  //    return true;
+  //      return true;
   //
-  //  }
+  //    }
 
   function cancelOffer(bytes32 matchId, uint256 bettingId) external returns (bool){
     Betting storage _betting = bets[matchId][bettingId];
@@ -121,13 +144,13 @@ contract AsianSoloBet is Ownable, SoloBet {
     return true;
   }
 
-  function rmBet(Match _match) internal returns (bool){
+  function rmBet(Match _match) private returns (bool){
     //delete bets[_match.id];
     rmBetIdx(_match);
     return true;
   }
 
-  function rmBetIdx(Match _match) internal returns (bool) {
+  function rmBetIdx(Match _match) private returns (bool) {
 
     uint32 toDelete = _match.idx;
     uint32 lastIdx = uint32(betIndexes.length - 1);
@@ -137,7 +160,7 @@ contract AsianSoloBet is Ownable, SoloBet {
     return true;
   }
 
-  function transferFund(address receiver, uint256 amount) internal returns (bool) {
+  function transferFund(address receiver, uint256 amount) private returns (bool) {
     if (receiver != 0x0) {
       receiver.transfer(amount - GAS_PRICE);
       emit Transfer(msg.sender, receiver, amount - GAS_PRICE);
@@ -176,7 +199,7 @@ contract AsianSoloBet is Ownable, SoloBet {
       fundings[0] = Funding(_betting.bMaker, calculateAmount(int(_match.aSc) - int(_match.hSc), _betting.odds, _betting.amount), _betting);
     }
 
-    uint punterAmount =  _betting.amount + _betting.amount * 95 / 100 - fundings[0].amount;
+    uint punterAmount = _betting.amount + _betting.amount * 95 / 100 - fundings[0].amount;
     if (punterAmount > 0) {
       fundings[1] = Funding(_betting.punter, punterAmount, _betting);
     }

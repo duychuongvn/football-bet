@@ -247,7 +247,7 @@ export class SolobetService {
           if (_betting.status === 0) {
             _betting.status_string = 'Open';
           } else if (_betting.status === 1) {
-            _betting.status_string = 'On Goging';
+            _betting.status_string = 'Settled';
           } else if (_betting.status === 2) {
             _betting.status_string = 'Canceled';
           } else if (_betting.status === 3) {
@@ -269,6 +269,12 @@ export class SolobetService {
   cancelBetting(account: any, betting: any) {
     this.Solobet.deployed().then(instance => {
       return instance.cancelOffer(betting.matchId, betting.bettingId, {from: account});
+    });
+  }
+
+  claimStake(account: any, matchId: any) {
+    this.Solobet.deployed().then(instance => {
+      return instance.claimStake(matchId, {from: account});
     });
   }
 }

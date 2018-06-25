@@ -105,8 +105,13 @@ export class UserComponent {
                 }  else {
                   item.receivedAmount = '-';
                 }
+                if(item.status === 0) {
+                  match.openBet ++;
+                } else if (item.status === 1 ){
+                  match.settledBet ++;
+                }
+                match.totalBet++;
 
-             //   this.sortMatches();
               });
               break;
             }
@@ -119,24 +124,17 @@ export class UserComponent {
   };
 
   sortMatches() {
-    for (var i = 0; i < this.groupMatches.length ; i++) {
-      console.log(this.groupMatches[i].match.time );
-    }
+
     for (var i = 0; i < this.groupMatches.length - 1; i++) {
       for (var j = i + 1; j < this.groupMatches.length; j++) {
         if (this.groupMatches[i].match.time < this.groupMatches[j].match.time) {
-          console.log(this.groupMatches[i].match.time + ' - ' + this.groupMatches[j].match.time + '>>')
-
           var temp = this.groupMatches[i];
           this.groupMatches[i] = this.groupMatches[j];
           this.groupMatches[j] = temp;
-          console.log(this.groupMatches[i].match.time + ' - ' + this.groupMatches[j].match.time)
         }
       }
     }
-    for (var i = 0; i < this.groupMatches.length ; i++) {
-      console.log(this.groupMatches[i].match.time );
-    }
+
 
   }
 
@@ -157,6 +155,8 @@ export class UserComponent {
     } else {
       betting.receivedAmount = '-';
     }
+
+
 
   }
 
@@ -204,6 +204,10 @@ export class UserComponent {
       }
 
     }
+  }
+
+  claim = (match) => {
+        this.solobetService.claimStake(this.account, match.matchId);
   }
 
   findMatch(matchId) {

@@ -26,14 +26,20 @@
 <br/>
 
 <ul>
+
     <div *ngFor="let item of groupMatches| matchPipe:{team:searchMatch, matchStatus: {upcoming:isUpComing, playing:isPlaying, finished: isFinished}, bettingStatus: {open: isOpening, deal: isDeal, canceled: isCanceled, refunded: isRefunded, done: isDone}}">
+      <button *ngIf="item.match.status == 4 && (item.match.settledBet > 0 || item.match.openBet > 0)" (click)="claim(item.match)">Claim Stake</button>
       <div style="height: 48px; display: flex; align-items: center; padding: 0px 60px 0px 3px; background-color: rgb(12, 39, 09); color: white;" data-toggle="collapse" [attr.data-target]="'#myBets'+item.matchId" aria-expanded="true" [attr.data-controls]="'#myBets'+item.matchId" class="">
+
         <span style="margin-right: auto; font-size: 17px; color: white; padding-left: 25px; font-weight: 600;">
           {{item.match.homeTeam}}
           <span *ngIf="item.match.status == 4"> {{item.match.homeGoals}} - {{item.match.awayGoals}} </span>
           <span *ngIf="item.match.status != 4"> vs </span>
 
           {{item.match.awayTeam}}</span>
+
+           <span></span>
+
         <!--<span data-toggle="collapse" data-target="{{item.matchId}}" aria-expanded="true" aria-controls="myBets" style="width: 0px; height: 0px; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 15px solid rgba(255, 255, 255, 0.85);" class=""></span></div>-->
         <span data-toggle="collapse" [attr.data-target]="'#myBets'+item.matchId" aria-expanded="true" [attr.data-controls]="'#myBets'+item.matchId" style="width: 0px; height: 0px; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 15px solid rgba(255, 255, 255, 0.85);" class=""></span></div>
       <div class="collapse show" id="myBets{{item.matchId}}" style="">
