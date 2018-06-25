@@ -34,7 +34,7 @@ export class MatchDetailComponent implements OnInit, OnDestroy {
   private _bettingsCount = 0;
   private _runTime;
 
-  private isSharePage: boolean = false;
+  public isSharePage: boolean = false;
   private _searchPages;
   private _oldBettings;
 

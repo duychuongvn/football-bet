@@ -9,19 +9,19 @@ import { MatchDetailModule } from 'app/match-detail/match-detail.module';
 const appRoutes: Routes = [
   {
     path: '',
-    loadChildren: () => HomeModule
+    loadChildren: 'app/home/home.module#HomeModule'
   },
   {
     path: 'admin',
-    loadChildren: () => AdminModule
+    loadChildren: 'app/admin/admin.module#AdminModule'
   },
   {
     path: 'user',
-    loadChildren: () => UserModule
+    loadChildren: 'app/user/user.module#UserModule'
   },
   {
     path: 'match-detail',
-    loadChildren: () => MatchDetailModule
+    loadChildren: 'app/match-detail/match-detail.module#MatchDetailModule'
   },
   {
     path: '**',
