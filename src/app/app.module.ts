@@ -1,23 +1,15 @@
-import { BrowserModule } from "@angular/platform-browser";
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule } from "@angular/core";
-import { RouterModule } from "@angular/router";
-import { HttpClientModule } from "@angular/common/http";
-import { HttpModule } from "@angular/http";
-import { FormsModule } from "@angular/forms";
-import { ToastrModule } from 'ngx-toastr';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NgModule} from '@angular/core';
+import {HttpClientModule} from '@angular/common/http';
+import {HttpModule} from '@angular/http';
+import {FormsModule} from '@angular/forms';
+import {ToastrModule} from 'ngx-toastr';
 
-import { AppRoutingModule } from "app/app.router";
-import { AppComponent } from "./app.component";
+import {AppRoutingModule} from 'app/app.router';
+import {AppComponent} from './app.component';
 
-import {
-  SolobetService,
-  Web3Service,
-  MatchService,
-  UserService,
-  NotifyService,
-  EventEmitterService
-} from "service/service";
+import {EventEmitterService, MatchService, NotifyService, SolobetService, UserService, Web3Service} from 'service/service';
 
 const SERVICES = [
   SolobetService,
@@ -43,7 +35,8 @@ const SERVICES = [
     })
   ],
   declarations: [AppComponent],
-  providers: [SERVICES],
+  providers: SERVICES,
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+}
