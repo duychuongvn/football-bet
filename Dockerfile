@@ -17,9 +17,9 @@ COPY ./ /app/
 
 RUN truffle compile
 
-ARG env=
+ARG env=production
 
-RUN npm run build --aot=false -- --configuration $env
+RUN npm run build --prod --aot=true -- --configuration $env
 
 #Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
 FROM nginx:1.13
