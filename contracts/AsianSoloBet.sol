@@ -96,8 +96,6 @@ contract AsianSoloBet is Ownable, SoloBet {
     return true;
   }
 
-  event LogClaim(bytes32 matchid, uint betidx, uint256 amount);
-  event logrefund(bytes32 matchid, uint betidx, uint256 amount);
   function claimStake(bytes32 matchId) public returns (bool) {
     Match memory _match = matches[matchId];
     require(_match.status == MatchStatus.Finished);
@@ -119,21 +117,6 @@ contract AsianSoloBet is Ownable, SoloBet {
 
   }
 
-  //    function claimStake(bytes32 matchId, uint[]bettingIds) public returns (bool) {
-  //      Match memory _match = matches[matchId];
-  //      require(_match.status == MatchStatus.Finished);
-  //      Betting storage _betting;
-  //      for(uint i = 0;i < bettingIds.length; i++) {
-  //         _betting = bets[matchId][bettingIds[i]];
-  //        if(_betting.status == BetStatus.Deal) {
-  //          doTransfer(_match, _betting);
-  //        } else if(_betting.status == BetStatus.Open) {
-  //          refund(_betting);
-  //        }
-  //      }
-  //      return true;
-  //
-  //    }
 
   function cancelOffer(bytes32 matchId, uint256 bettingId) external returns (bool){
     Betting storage _betting = bets[matchId][bettingId];

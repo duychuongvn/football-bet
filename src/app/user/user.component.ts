@@ -73,7 +73,7 @@ export class UserComponent {
     this.userService.getBalance(this.account).subscribe(balance => {
       this.accountBalance = balance;
     });
-    this.networkSympol = this.web3Service.networkSymbol;
+    // this.networkSympol = this.web3Service.networkSymbol;
     this.loadPlacedBalance();
   };
   loadPlacedBalance = () => {

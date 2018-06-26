@@ -4,7 +4,7 @@ import {fromPromise} from 'rxjs/observable/fromPromise';
 import {Web3Service} from './web3.service';
 import {Betting} from 'models/betting';
 import {log} from 'util';
-import { Match } from 'models/match';
+import {Match} from 'models/match';
 
 declare var require: any;
 const solobetArtifacts = require('../../build/contracts/AsianSoloBet.json');
@@ -15,21 +15,22 @@ export class SolobetService {
 
   Solobet = contract(solobetArtifacts);
 
-  solobetInstance: any;
-
   constructor(
     private web3Ser: Web3Service,
   ) {
-    try{
+    try {
       this.Solobet.setProvider(web3Ser.web3.currentProvider);
     } catch (e) {
-      alert("Wrong network");
+      console.log(e);
     }
 
-    this.Solobet.deployed().then(instance => {
-      this.solobetInstance = instance;
-    });
+    this.initProvider();
+    // this.initDefaultInstance();
   }
+
+  initProvider = () => {
+    this.Solobet.setProvider(this.web3Ser.web3.currentProvider);
+  };
 
 
   loadMatches(matchId): Observable<any> {
@@ -52,7 +53,7 @@ export class SolobetService {
           match.awayGoals = result[index++].toNumber();
           match.time = result[index++].toNumber();
           match.status = result[index++].toNumber();
-          match.approved =result[index++]
+          match.approved = result[index++];
 
           if (match.status === 1) {
             let currentime = new Date().getTime() / 1000;
@@ -72,12 +73,6 @@ export class SolobetService {
 
   }
 
-  loadMatchById(matchId) {
-
-    this.solobetInstance.findMatch.call(matchId).then(result => {
-
-    });
-  }
 
   loadBettings(matchId): Observable<any> {
 
@@ -239,7 +234,7 @@ export class SolobetService {
             'betFor': null,
             'status': status[i].toNumber(),
             'status_string': '',
-            'receivedAmount':0
+            'receivedAmount': 0
           };
           //Open, Deal, Canceled, Refunded, Done
           console.log('======');

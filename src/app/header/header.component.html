@@ -8,16 +8,26 @@
   <a href="/faq">FAQs</a>
   <a href="/contact">Support</a>
 <br/>
-  <div class="accounts font-weight-bold">
-    <p class="mb-0">Your Info:
-      <span class="text-info font-weight-normal">{{account.network?.name}} <span class="badge badge-primary">{{ account.address }}</span></span>
-    </p>
-    <p class="mb-0">Your Balance:
-      <span class="badge badge-primary">{{ account.available_banlance_string }}</span>
-      - Placed:
-      <span class="badge badge-danger">{{ account.placed_balance_string }}</span>
-    </p>
+  <div id="metamask-info">
+    <div *ngIf="networkAvailable" class="accounts font-weight-bold">
+
+      <p class="mb-0">Your Info:
+        <span class="text-info font-weight-normal">{{account.network?.name}} <span class="badge badge-primary">{{ account.address }}</span></span>
+      </p>
+      <p class="mb-0">Your Balance:
+        <span class="badge badge-primary">{{ account.available_banlance_string }}</span>
+        - Placed:
+        <span class="badge badge-danger">{{ account.placed_balance_string }}</span>
+      </p>
+    </div>
+    <div *ngIf="!networkAvailable" class="accounts font-weight-bold" style="color: red">
+
+      <span *ngIf="loggedInMetaMask">Please select Ethereum Main Net</span>
+      <span *ngIf="!loggedInMetaMask">Please select Sign In MetaMask</span>
+    </div>
+
   </div>
+
 
   <!-- <form class="form-inline">
     <input class="form-control mr-sm-2"

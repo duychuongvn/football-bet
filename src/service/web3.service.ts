@@ -14,9 +14,6 @@ declare var window: any;
 export class Web3Service {
 
   public web3: any;
-  networkSymbol: any;
-  accountBalance: number;
-  networkInfo: any;
   constructor() {
     this.checkAndInstantiateWeb3();
   }
@@ -27,42 +24,38 @@ export class Web3Service {
       // Use Mist/MetaMask's provider
       this.web3 = new Web3(window.web3.currentProvider);
     } else {
-      alert('Need to install meta mask');
+      throw 'Need to install meta mask';
     }
   }
 
 
-  getAccountInfo() : Observable<any> {
-    return Observable.create(ob => {
-      ob.next(this.getNetworkInfo());
-    });
-  }
   getNetworkInfo() {
-    let state = this.web3.currentProvider.publicConfigStore._state;
-    console.log(this.web3.currentProvider.publicConfigStore);
-    // alert(state);
-    let providers = this.getProviders();
+    if(this.web3) {
+      let state = this.web3.currentProvider.publicConfigStore._state;
 
-    for(var i = 0; i < providers.length; i++) {
-      let provider = providers[i]
-      if(state.networkVersion == provider.chainId) {
-
-        return {selectedAddress: state.selectedAddress, provider: provider};
+      let providers = this.getProviders();
+      for(var i = 0; i < providers.length; i++) {
+        let provider = providers[i]
+        console.log(provider)
+        if(parseInt(state.networkVersion) === provider.chainId) {
+          return {selectedAddress: state.selectedAddress, provider: provider};
+        }
       }
+
+      throw "Unsupport selected network";
     }
+    throw "Metamask required";
 
-    return {selectedAccount: state.selectedAddress, provider: {name: "Ethereum Private Network", symbol: "ETH", chainId: 88}};
-
-    //throw "Metamask required";
   }
 
   getProviders(){
 
     let providers = new Array();
     providers.push({name: "Ethereum", symbol: "ETH", chainId: 1});
-    providers.push({name: "Ethereum Kova Testnet", symbol: "ETH", chainId: 3});
+    // providers.push({name: "Ethereum Kova Testnet", symbol: "ETH", chainId: 42});
     providers.push({name: "Ethereum Rinkeby Testnet", symbol: "ETH", chainId: 4});
     providers.push({name: "Etherzero", symbol: "ETZ", chainId: 88});
+    providers.push({name: "Etherzero Private Test Net", symbol: "ETH", chainId: 4447});
 
     return providers;
   }
@@ -72,16 +65,12 @@ export class Web3Service {
 
   getBalance(account) : Observable<number> {
     return Observable.create(observable => {
-      console.log(account)
       this.web3.eth.getBalance(account, (err, balance)=> {
-        observable.next(balance/1000000000000000000);
-        observable.complete();
-      })
-    })
-  }
 
-  getNetworkSympol() {
-    return this.networkSymbol;
+        observable.next(balance / 1000000000000000000);
+        observable.complete();
+      });
+    });
   }
 
   getAccounts(): Observable<any> {
@@ -95,10 +84,6 @@ export class Web3Service {
         if (accs.length === 0) {
           observer.error('Couldn\'t get any accounts! Make sure your Ethereum client is configured correctly.');
         }
-
-        this.web3.eth.getBalance(accs[0],(err, balance)=>{
-          this.accountBalance = balance / 1000000000000000000;
-        });
         observer.next(accs);
         observer.complete();
       });
