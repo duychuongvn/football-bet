@@ -32,16 +32,13 @@ export class Web3Service {
   getNetworkInfo() {
     if(this.web3) {
       let state = this.web3.currentProvider.publicConfigStore._state;
-
       let providers = this.getProviders();
       for(var i = 0; i < providers.length; i++) {
         let provider = providers[i]
-        console.log(provider)
         if(parseInt(state.networkVersion) === provider.chainId) {
           return {selectedAddress: state.selectedAddress, provider: provider};
         }
       }
-
       throw "Unsupport selected network";
     }
     throw "Metamask required";
@@ -65,7 +62,7 @@ export class Web3Service {
 
   getBalance(account) : Observable<number> {
     return Observable.create(observable => {
-      this.web3.eth.getBalance(account, (err, balance)=> {
+      this.web3.eth.getBalance(account, (err, balance) => {
 
         observable.next(balance / 1000000000000000000);
         observable.complete();

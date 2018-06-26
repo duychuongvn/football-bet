@@ -15,7 +15,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public account: Account = new Account();
   public searchText: string = '';
   public networkAvailable: boolean;
-  public loggedInMetaMask: boolean;
   private _reloadPage;
 
 
@@ -36,34 +35,28 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this._reloadPage = this._eventEmitter.caseNumber$
       .subscribe(res => {
         if (res.type === 'reload') {
-          //  this._getBalance();
+          this._getBalance();
         }
       });
   }
 
   loadNetworkInfo = async () => {
     this.networkAvailable = false;
-    this.loggedInMetaMask = false;
-    try {
-      this.account.network = this._web3Service.getNetworkInfo().provider;
-      this.loggedInMetaMask = true;
-      this._cd.detectChanges();
-    } catch (e) {
-      if (e === 'Unsupport selected network') {
-        this.loggedInMetaMask = true;
-      } else {
-        this.loggedInMetaMask = false;
-      }
-    }
-
     this._solobetService.Solobet.deployed().then(instance => {
-      this.networkAvailable = true;
+
+      const network = this._web3Service.getNetworkInfo();
+      this.account.network = network.provider;
+      this.account.address = network.selectedAddress;
+      if (this.account.address === undefined) {
+        this.networkAvailable = false;
+      } else {
+        this.networkAvailable = true;
+      }
       this._cd.detectChanges();
-    }).catch(e => {
-      this.networkAvailable = false;
     });
+
     this._cd.detectChanges();
-  };
+  }
 
   ngOnDestroy() {
     this._reloadPage.unsubscribe();
@@ -81,10 +74,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private async _getBalance() {
     this._userService.getBalance(this.account.address)
       .subscribe(res => {
-        // console.log(res);
-        // alert(res)
         this.account.available_banlance = res;
-
+        this._getPlacedBalance();
+        this._cd.detectChanges();
       });
   }
 
