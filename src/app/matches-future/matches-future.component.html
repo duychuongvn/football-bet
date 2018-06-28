@@ -1,7 +1,7 @@
-<div class="card text-white bg-info my-3" *ngFor="let fixtures of matchFixtures">
-  <div class="card-header">{{ fixtures.key }}</div>
+<div class="card box-shadow my-3" *ngFor="let fixtures of matchFixtures">
+  <div class="card-header bg-white">{{ fixtures.key }}</div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item list-group-item-info" *ngFor="let fixture of fixtures.value">
+    <li class="list-group-item" *ngFor="let fixture of fixtures.value">
       <p class="my-0 font-weight-bold text-">
         {{ fixture.time_string }}
       </p>

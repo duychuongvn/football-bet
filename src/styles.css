@@ -1,4 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+  background-image: url('assets/images/hl_bg_banner.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.nav-link {
+  color: #fff;
+}
+
+.nav-link:hover {
+  color: #fff;
+}
+
+.nav-link.active {
+  border-bottom: 2px solid #fff;
+}
+
+.box-shadow {
+  box-shadow: 0 0 5px #fff;
+}
+
 .pointer {cursor: pointer;}
 
 .text-link {
