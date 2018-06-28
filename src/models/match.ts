@@ -1,6 +1,6 @@
 import { MatchInterface } from 'interfaces/match'
 import { Betting } from 'models/betting'
-import { DateTime } from 'luxon';
+import * as moment from 'moment';
 
 export class Match {
   private _status: number;
@@ -16,10 +16,9 @@ export class Match {
     return this._time;
   }
   public get date_from_time() {
-    return DateTime.fromISO(new Date(this.time * 1000).toISOString()).toFormat('ff');
+    return moment(new Date(this.time * 1000).toISOString()).format('ff');
     //  return DateTime.fromISO(this.time * 1000).toFormat('dd/MM/yyyy');
   }
-
 
   public set time(v: number) {
     this._time = v;

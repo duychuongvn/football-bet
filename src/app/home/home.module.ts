@@ -9,7 +9,21 @@ import { HomeComponent } from './home.component';
 const _route: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: 'app/matches-today/matches-today.module#MatchesTodayModule'
+      },
+      {
+        path: 'tomorrow',
+        loadChildren: 'app/matches-tomorrow/matches-tomorrow.module#MatchesTomorrowModule'
+      },
+      {
+        path: 'future',
+        loadChildren: 'app/matches-future/matches-future.module#MatchesFutureModule'
+      }
+    ]
   }
 ];
 

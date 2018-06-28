@@ -1,21 +1,22 @@
 <app-header></app-header>
 
 <div class="container-fluid">
-  <div class="card-columns">
-    <div class="card text-white bg-info " *ngFor="let fixture of matchFixtures">
-      <div class="card-header">{{ fixture.key }}</div>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item list-group-item-info" *ngFor="let match of fixture.value">
-          <p class="my-0 font-weight-bold text-">
-            {{ match.time_string }}
-          </p>
-          <p class="float-left my-0 pl-4">
-            <img [src]="match.homeFlag" width="30px"> {{ match.match }}
-            <img [src]="match.awayFlag" width="30px">
-          </p>
-          <a routerLink="/match-detail" [queryParams]="match.pickJson()" class="badge badge-primary float-right mt-2">Info</a>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-8">
+      <ul class="nav nav-pills nav-justified">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/']" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">Today</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/tomorrow']" routerLinkActive="active">Tomorrow</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/future']" routerLinkActive="active">Future Matches</a>
         </li>
       </ul>
+
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>

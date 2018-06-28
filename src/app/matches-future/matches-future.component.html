@@ -1,0 +1,15 @@
+<div class="card text-white bg-info my-3" *ngFor="let fixtures of matchFixtures">
+  <div class="card-header">{{ fixtures.key }}</div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item list-group-item-info" *ngFor="let fixture of fixtures.value">
+      <p class="my-0 font-weight-bold text-">
+        {{ fixture.time_string }}
+      </p>
+      <p class="float-left my-0 pl-4">
+        <img [src]="fixture.homeFlag" width="30px"> {{ fixture.match }}
+        <img [src]="fixture.awayFlag" width="30px">
+      </p>
+      <a routerLink="/match-detail" [queryParams]="fixture.pickJson()" class="badge badge-primary float-right mt-2">Info</a>
+    </li>
+  </ul>
+</div>

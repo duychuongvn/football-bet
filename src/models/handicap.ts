@@ -1,8 +1,7 @@
 import { HandicapInterface } from "interfaces/handicap";
-import { DateTime } from "luxon";
+import * as moment from 'moment';
 
 import { ODDS_TYPE, PAIR_TYPE } from "enums/handicap";
-import { parseIntAutoRadix } from "@angular/common/src/i18n/format_number";
 
 export class Handicap {
   public static readonly oddsArray: Array<Object> = [
@@ -108,7 +107,7 @@ export class Handicap {
   }
 
   public get date_string(): string {
-    return DateTime.fromISO(this._date).toFormat("f");
+    return moment(this._date).format("f");
   }
 
   private _selectedPair: string;

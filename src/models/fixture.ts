@@ -1,4 +1,4 @@
-import { DateTime } from 'luxon';
+import * as moment from 'moment';
 import { FixtureInterface } from '../interfaces/fixture';
 import { FixtureResult } from './fixtureResult';
 
@@ -68,23 +68,20 @@ export class Fixture {
     return this._date;
   }
   public get date_string(): string {
-    return DateTime.fromISO(this._date).toFormat('dd/MM/yyyy');
+    return moment(this._date).format('LL [(]dddd[)]');
   }
   public get time_string(): string {
-    return DateTime.fromISO(this._date).toFormat('HH:mm a');
+    return moment(this._date).format('HH:mm a');
   }
   public set date(v: string) {
     this._date = v;
   }
-
 
   public get isOutOfDate(): boolean{
     let currentDateTime = new Date().valueOf();
     let matchDateTime = new Date(this._date).valueOf();
       return currentDateTime > matchDateTime;
   }
-
-
 
   private _status: string;
   public get status(): string {
@@ -125,7 +122,6 @@ export class Fixture {
   public get isFinished(): boolean{
     return this.status === "FINISHED";
   }
-
 
   constructor(data?: FixtureInterface) {
     if (data) {
