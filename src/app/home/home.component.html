@@ -5,14 +5,14 @@
     <div class="col-md-4"></div>
     <div class="col-md-8">
       <ul class="nav nav-justified">
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/']" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">Today</a>
+        <li class="nav-item" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="['/']">Today</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/tomorrow']" routerLinkActive="active">Tomorrow</a>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="['/tomorrow']">Tomorrow</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" [routerLink]="['/future']" routerLinkActive="active">Future Matches</a>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" [routerLink]="['/future']">Future Matches</a>
         </li>
       </ul>
 

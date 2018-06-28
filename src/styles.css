@@ -13,8 +13,19 @@ body {
   color: #fff;
 }
 
-.nav-link.active {
-  border-bottom: 2px solid #fff;
+.nav-item::after {
+  background: #fff;
+  content: '';
+  display: block;
+  height: 2px;
+  margin: 0 auto;
+  transition: all .2s ease;
+  width: 0%;
+}
+
+.nav-item:hover::after,
+.nav-item.active::after {
+  width: 95%;
 }
 
 .box-shadow {
