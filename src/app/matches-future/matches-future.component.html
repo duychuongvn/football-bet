@@ -1,19 +1,19 @@
-<div class="card box-shadow my-3" *ngFor="let fixtures of matchFixtures" [hidden]="!matchFixtures.length">
-  <div class="card-header bg-white font-weight-bold">{{ fixtures.key }}</div>
+<div class="card card-match text-white my-3" *ngFor="let fixtures of matchFixtures" [hidden]="!matchFixtures.length">
+  <div class="card-header font-weight-bold">{{ fixtures.key }}</div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item" *ngFor="let fixture of fixtures.value">
       <p class="my-0 font-weight-bold text-">
         {{ fixture.time_string }}
       </p>
-      <p class="float-left my-0 pl-4">
-        <img [src]="fixture.homeFlag" width="30px"> {{ fixture.match }}
-        <img [src]="fixture.awayFlag" width="30px">
+      <p class="match-flag">
+        <img class="box-shadow--sm flag-img" [src]="fixture.homeFlag"> {{ fixture.match }}
+        <img class="box-shadow--sm flag-img" [src]="fixture.awayFlag">
       </p>
-      <a routerLink="/match-detail" [queryParams]="fixture.pickJson()" class="badge badge-primary float-right mt-2">Info</a>
+      <a routerLink="/match-detail" [queryParams]="fixture.pickJson()" class="arrow-detail"></a>
     </li>
   </ul>
 </div>
 
-<div class="alert box-shadow alert-success mt-3" role="alert" [hidden]="matchFixtures.length">
+<div class="alert alert-success mt-3" role="alert" [hidden]="matchFixtures.length">
   Do not found match !
 </div>

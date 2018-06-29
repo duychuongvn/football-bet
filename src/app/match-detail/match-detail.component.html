@@ -1,15 +1,18 @@
 <app-header></app-header>
 
 <div class="container">
-  <div class="row mb-3">
-    <div>
-      <h1 class="text-info">{{ fixture.match }}</h1>
-
-      <div class="d-flex">
-        <i class="material-icons">date_range</i>
-        <span class="d-inline-block">{{ fixture.date_string }} {{ fixture.time_string }}</span>
-      </div>
+  <div class="match-banner">
+    <div class="match-date">
+      <i class="material-icons mr-2">date_range</i>
+      <span class="d-inline-block">{{ fixture.date_string }}</span>
     </div>
+    <p class="match-title">
+      <img [src]="fixture.homeFlag" class="mr-3"> {{ fixture.match }}
+      <img [src]="fixture.awayFlag" class="ml-3">
+    </p>
+    <p class="match-title_sub">World Cup russia 2018</p>
+
+    <p class="match-time"><i class="material-icons">access_time</i> {{ fixture.time_string }}</p>
   </div>
 
   <div class="row mb-3">
@@ -18,9 +21,9 @@
   </div>
 
   <div class="row mb-3">
-    <table class="table table-bordered table-striped text-center"
+    <table class="table table-bordered table-striped table-light text-center"
       [ngClass]="{'loading': isLoading}">
-      <thead class="thead-dark">
+      <thead>
         <tr>
           <th scope="col">#</th>
           <th scope="col"><img [src]="fixture.homeFlag" width="40px"> {{fixture.homeTeamName}}</th>

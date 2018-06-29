@@ -14,3 +14,53 @@ table.loading > tbody:before {
   background-size: 50px 50px;
   content: "";
 }
+
+.match-banner {
+  background-image: url('../../assets/images/Banner-Football-Ball.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 145px;
+  padding: 17px 25px 16px 170px;
+  color: #fff;
+  position: relative;
+}
+
+.match-banner .match-date {
+  display: flex;
+  margin: 5px 0;
+}
+
+.match-banner .match-title {
+  margin-bottom: 0;
+  font-size: 40px;
+  line-height: 40px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+}
+
+.match-banner .match-title img {
+  width: 50px;
+}
+
+.match-banner .match-title_sub {
+  margin-bottom: 0;
+  font-size: 11px;
+  text-transform: capitalize;
+}
+
+.match-banner .match-time {
+  position: absolute;
+  top: 37%;
+  right: 68px;
+  display: flex;
+  font-size: 40px;
+  margin-bottom: 0;
+  line-height: 40px;
+  text-transform: uppercase;
+}
+
+.match-banner .match-time i {
+  font-size: 40px;
+  margin-right: 5px;
+}
