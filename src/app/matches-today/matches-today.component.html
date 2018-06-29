@@ -1,5 +1,5 @@
-<div class="card box-shadow my-3">
-  <div class="card-header bg-white">{{ currentDateString }}</div>
+<div class="card box-shadow my-3" [hidden]="!fixtures.length">
+  <div class="card-header bg-white font-weight-bold">{{ currentDateString }}</div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item" *ngFor="let fixture of fixtures">
       <p class="my-0 font-weight-bold text-">
@@ -12,4 +12,8 @@
       <a routerLink="/match-detail" [queryParams]="fixture.pickJson()" class="badge badge-primary float-right mt-2">Info</a>
     </li>
   </ul>
+</div>
+
+<div class="alert box-shadow alert-success mt-3" role="alert" [hidden]="fixtures.length">
+  Do not found match !
 </div>
