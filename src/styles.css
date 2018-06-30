@@ -28,7 +28,9 @@ body {
   width: 95%;
 }
 
-.card.card-match {
+.card.card-match,
+.alert-match,
+.table-match {
   background-color: rgba(0,46,102,.8);
   box-shadow: 0px 0px 4px #fff, 0px 0px 2px #fff;
   border: 1px solid rgba(255, 255, 255, 0.65);
@@ -84,4 +86,45 @@ body {
 .text-link {
   color: #007bff !important;
   cursor: pointer;
+}
+
+/**
+ * Coming soon
+ */
+.countdown {
+  width: 100%;
+  height: 100px;
+  background: none;
+}
+
+.countdown .measurements {
+  color: white;
+  margin-right: 0;
+  padding: 0;
+  min-width: 100px;
+  text-align: center;
+}
+
+.countdown .divider {
+  font-size: 40px;
+  margin-top: -61px;
+  margin-right: -10px;
+}
+
+.countdown .measurements-number {
+  margin-bottom: 0;
+  font-size: 40px;
+}
+
+.countdown .measurements-text {
+  padding-left: 3px;
+}
+
+.countdown .measurements-text::after {
+  background: #fff;
+  content: '';
+  display: block;
+  height: 2px;
+  margin: 0 auto;
+  width: 60%;
 }

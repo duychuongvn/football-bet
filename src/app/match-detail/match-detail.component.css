@@ -27,7 +27,7 @@ table.loading > tbody:before {
 
 .match-banner .match-date {
   display: flex;
-  margin: 5px 0;
+  margin: 10px 0 5px;
 }
 
 .match-banner .match-title {

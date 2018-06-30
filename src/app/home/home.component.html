@@ -1,12 +1,20 @@
 <app-header></app-header>
 
-<div class="container-fluid">
+<div class="container-fluid mt-4">
   <div class="row">
-    <div class="col-md-4"></div>
-    <div class="col-md-8">
+    <div class="col-md-5 match-banner">
+      <div class="mb-introduct">
+        <p>Peer to Peer Bettings.</p>
+        <p>Anonymous Accounts.</p>
+        <p>Low Juice.</p>
+
+        <button class="btn btn-success">How it works</button>
+      </div>
+    </div>
+    <div class="col-md-7">
       <ul class="nav nav-justified">
         <li class="nav-item" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">
-          <a class="nav-link" [routerLink]="['/']">Today</a>
+          <a class="nav-link" [routerLink]="['']">Today</a>
         </li>
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['/tomorrow']">Tomorrow</a>
