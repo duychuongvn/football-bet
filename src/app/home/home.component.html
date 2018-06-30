@@ -1,17 +1,8 @@
-<app-header></app-header>
+<app-slider></app-slider>
 
 <div class="container-fluid mt-4">
   <div class="row">
-    <div class="col-md-5 match-banner">
-      <div class="mb-introduct">
-        <p>Peer to Peer Bettings.</p>
-        <p>Anonymous Accounts.</p>
-        <p>Low Juice.</p>
-
-        <button class="btn btn-success">How it works</button>
-      </div>
-    </div>
-    <div class="col-md-7">
+    <div class="col-sm-6">
       <ul class="nav nav-justified">
         <li class="nav-item" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">
           <a class="nav-link" [routerLink]="['']">Today</a>
@@ -25,6 +16,29 @@
       </ul>
 
       <router-outlet></router-outlet>
+    </div>
+    <div class="col-sm-6">
+      <div class="card card-match text-white my-3">
+        <div class="card-header font-weight-bold">Introduct Website</div>
+        <div class="card-body"></div>
+      </div>
+
+      <div class="card card-match text-white my-3">
+        <div class="card-header font-weight-bold">Recommend Bettings</div>
+        <div class="card-body"></div>
+      </div>
+
+      <div class="card card-match text-white my-3">
+        <div class="card-header font-weight-bold">How to install Metamask & connect Network</div>
+        <div class="card-body">
+          <p class="mb-0">- Go to website <a href="https://metamask.io/">Metamask</a></p>
+        </div>
+      </div>
+
+      <div class="card card-match text-white my-3">
+        <div class="card-header font-weight-bold">Top Account Winer</div>
+        <div class="card-body"></div>
+      </div>
     </div>
   </div>
 </div>

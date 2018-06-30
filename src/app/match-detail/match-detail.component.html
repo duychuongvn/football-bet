@@ -1,5 +1,3 @@
-<app-header></app-header>
-
 <div class="container">
   <div class="match-banner">
     <div class="match-date">
@@ -15,10 +13,9 @@
     <p class="match-time"><i class="material-icons">access_time</i> {{ fixture.time_string }}</p>
   </div>
 
-  <div class="row mb-3">
+  <!-- <div class="row mb-3">
     <button [hidden]="fixture.isOutOfDate === true" type="button" class="btn btn-success mr-3" (click)="openHandicap()" [disabled]="isLoading">New Bet</button>
-    <!-- <button routerLink="/" type="button" class="btn btn-success">Return to home</button> -->
-  </div>
+  </div> -->
 
   <div class="row mb-3">
     <table class="table table-bordered table-striped table-match text-white text-center"
@@ -64,4 +61,11 @@
       </tbody>
     </table>
   </div>
+</div>
+
+<div class="btn-new-bet" (click)="openHandicap()">
+  <button class="btn btn-success d-flex">
+    <i class="material-icons mr-2">add_circle_outline</i>
+    New Bet
+  </button>
 </div>

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
-import { HeaderModule } from 'app/header/header.module';
+import { SliderModule } from 'app/slider/slider.module';
 
 import { HomeComponent } from './home.component';
 
@@ -32,7 +32,7 @@ const _route: Routes = [
   imports: [
     CommonModule,
     FormsModule,
-    HeaderModule,
+    SliderModule,
     RouterModule.forChild(_route)
   ],
   declarations: [

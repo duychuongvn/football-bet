@@ -1,28 +1,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AdminComponent } from './admin.component';
+import { ComingSoonComponent } from './coming-soon.component';
 
 const _router: Routes = [
   {
     path: '',
-    component: AdminComponent
+    component: ComingSoonComponent
   }
 ];
 
 @NgModule({
   imports: [
     CommonModule,
-    FormsModule,
     RouterModule.forChild(_router)
   ],
-  declarations: [
-    AdminComponent
-  ],
-  exports: [
-    AdminComponent
-  ]
+  declarations: [ComingSoonComponent],
+  exports: [ComingSoonComponent]
 })
-export class AdminModule { }
+export class ComingSoonModule { }
