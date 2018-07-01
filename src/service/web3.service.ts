@@ -39,7 +39,8 @@ export class Web3Service {
           return {selectedAddress: state.selectedAddress, provider: provider};
         }
       }
-      throw "Unsupport selected network";
+      // throw "Unsupport selected network";
+      return {selectedAddress: state.selectedAddress, provider: {name: "Etherzero Private Test Net", symbol: "ETH", chainId: 4447}};
     }
     throw "Metamask required";
 

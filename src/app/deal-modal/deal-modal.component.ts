@@ -8,7 +8,6 @@ import { Handicap } from "models/handicap";
 import { Match } from "models/match";
 
 import { PAIR_TYPE } from "enums/handicap";
-import { ODDS } from "enums/odds";
 
 @Component({
   selector: "app-deal-modal",
@@ -36,7 +35,6 @@ export class DealModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(this.fixture);
     this.pairs = [
       { id: PAIR_TYPE.REVERT, value: this.handicap.pairTeam },
       { id: PAIR_TYPE.INVERSE, value: this.handicap.inversePairTeam }
@@ -52,20 +50,16 @@ export class DealModalComponent implements OnInit {
   }
 
   public offer(handicap: Handicap) {
-    this._solobetService
-      .newOffer(
+    this._solobetService.newOffer(
         this.account,
         this.match,
         handicap.odds_number * 100,
         handicap.stake,
         handicap.selectedTeam
-      )
-      .subscribe(
-        () => {
+      ).subscribe(() => {
           this._notify.success("Create success");
           this.close("reload");
-        },
-        e => {
+        }, e => {
           this._notify.error(`Error occur when offer this match ${e.msg}`);
         }
       );

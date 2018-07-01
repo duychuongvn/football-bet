@@ -46,7 +46,7 @@ export class MatchesTomorrowComponent implements OnInit {
     this._helper.fetchFixtures()
       .subscribe((res: any) => {
         res.fixtures.map(fixture => {
-          if (fixture.homeTeamName && fixture.awayTeamName && fixture.status !== 'FINISHED' && this.currentDate.isSame(fixture.date, 'day')) {
+          if (!!fixture.homeTeamName && !!fixture.awayTeamName && fixture.status !== 'FINISHED' && this.currentDate.isSame(fixture.date, 'day')) {
              let fixtureId = this._helper.hashId(fixture.homeTeamName, fixture.awayTeamName, fixture.date);
              let _fixture = new Fixture(fixture);
              _fixture.id = fixtureId;

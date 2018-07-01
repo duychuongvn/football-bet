@@ -167,7 +167,7 @@ export class MatchDetailComponent implements OnInit, OnDestroy {
 
   private _openModalWithComponent(comp, opts?: ModalOptions) {
     const subscribe = this._modalService.onHidden.subscribe((res: any) => {
-      if (res) {
+      if (res === 'reload') {
         this._runTime = setInterval(() => {
           this._loadBettings(this.match.matchId);
         }, 2000);
@@ -183,7 +183,6 @@ export class MatchDetailComponent implements OnInit, OnDestroy {
     this._modalService.show(comp, opts);
   }
 
-
   private _findBettingByMatchIdAndBettingId(p: any){
       let matchId = p.id;
       let bettingId = p.bettingId;
@@ -195,7 +194,6 @@ export class MatchDetailComponent implements OnInit, OnDestroy {
           this._notify.error(errors);
         });
       }
-
   }
 
   private _buildLink(betting){
