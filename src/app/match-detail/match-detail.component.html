@@ -63,7 +63,7 @@
   </div>
 </div>
 
-<div class="btn-new-bet" (click)="openHandicap()">
+<div class="btn-new-bet" (click)="openHandicap()" [hidden]="fixture.isOutOfDate === true">
   <button class="btn btn-success d-flex">
     <i class="material-icons mr-2">add_circle_outline</i>
     New Bet
