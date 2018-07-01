@@ -1,16 +1,15 @@
 <!-- Image and text -->
 <nav class="navbar">
-  <a class="navbar-brand" href="/">
-    <img src="/assets/images/icon.png" width="30" height="30" class="d-inline-block align-top mr-3" alt="">
+  <a class="navbar-brand" [routerLink]="['/']">
+    <img src="/assets/images/icon.png" width="30" height="30" class="d-inline-block align-top mr-3">
     Football Bet
   </a>
-  <a href="/user">Match Odds</a>
-  <a href="/faq">FAQs</a>
-  <a href="/contact">Support</a>
+  <a [routerLink]="['/user']">Match Odds</a>
+  <!-- <a [routerLink]="['/faq']">FAQs</a>
+  <a [routerLink]="['/contact']">Support</a> -->
 <br/>
   <div id="metamask-info">
     <div *ngIf="networkAvailable" class="accounts font-weight-bold">
-
       <p class="mb-0">Your Info:
         <span class="text-info font-weight-normal">{{account.network?.name}} <span class="badge badge-primary">{{ account.address }}</span></span>
       </p>
@@ -23,17 +22,5 @@
     <div *ngIf="!networkAvailable" class="accounts font-weight-bold" style="color: red">
       <span>Please Sign In MetaMask And Select Ethereum Network</span>
     </div>
-
   </div>
-
-
-  <!-- <form class="form-inline">
-    <input class="form-control mr-sm-2"
-      type="search"
-      placeholder="Search match"
-      aria-label="Search"
-      name="search-name"
-      [(ngModel)]="matchName">
-  </form> -->
-
 </nav>
