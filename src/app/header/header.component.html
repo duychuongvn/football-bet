@@ -4,12 +4,14 @@
     <img src="/assets/images/icon.png" width="30" height="30" class="d-inline-block align-top mr-3">
     Football Bet
   </a>
+
   <a [routerLink]="['/user']">Match Odds</a>
   <!-- <a [routerLink]="['/faq']">FAQs</a>
   <a [routerLink]="['/contact']">Support</a> -->
-<br/>
+
+
   <div id="metamask-info">
-    <div *ngIf="networkAvailable" class="accounts font-weight-bold">
+    <!-- <div *ngIf="networkAvailable" class="accounts font-weight-bold">
       <p class="mb-0">Your Info:
         <span class="text-info font-weight-normal">{{account.network?.name}} <span class="badge badge-primary">{{ account.address }}</span></span>
       </p>
@@ -18,9 +20,14 @@
         - Placed:
         <span class="badge badge-danger">{{ account.placed_balance_string }}</span>
       </p>
-    </div>
+    </div> -->
     <div *ngIf="!networkAvailable" class="accounts font-weight-bold" style="color: red">
       <span>Please Sign In MetaMask And Select Ethereum Network</span>
     </div>
   </div>
+
+  <a class="open-sidebar" *ngIf="networkAvailable" (click)="openSidebar()">
+    <i class="material-icons mr-3">account_circle</i>
+    <span class="badge badge-primary">{{ account.available_banlance_string }}</span>
+  </a>
 </nav>

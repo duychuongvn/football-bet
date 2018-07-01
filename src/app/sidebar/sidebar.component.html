@@ -1,0 +1,19 @@
+<div class="sidebar" [ngClass]="{'in-open': isOpen, 'in-close': !isOpen}">
+  <div class="sb-close text-white d-flex p-2 font-weight-bold" (click)="closeSidebar()">
+    <i class="material-icons mr-2 font-weight-bold">arrow_forward</i>
+    Close Tab
+  </div>
+
+  <div class="sb-content text-white">
+    <h3 class="title text-center">{{ account.network?.name }}</h3>
+
+    <div class="text-center py-2">
+      <p class="mb-0">Address</p>
+      <p><span class="badge badge-primary">{{ account.address }}</span></p>
+      <p class="mb-0">Your Balance</p>
+      <p><span class="badge badge-primary">{{ account.available_banlance_string }}</span></p>
+      <p class="mb-0">Placed</p>
+      <p class="mb-0"><span class="badge badge-danger">{{ account.placed_balance_string }}</span></p>
+    </div>
+  </div>
+</div>

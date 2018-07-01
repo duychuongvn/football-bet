@@ -1,8 +1,7 @@
 import {Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
 import {Web3Service, SolobetService, UserService, EventEmitterService} from 'service/service';
 
-import {Account} from 'models/account';
-import {async} from 'rxjs/internal/scheduler/async';
+import { Account } from 'models/account';
 
 @Component({
   selector: 'app-header',
@@ -40,9 +39,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
   }
 
-  loadNetworkInfo = async () => {
+  loadNetworkInfo () {
     this.networkAvailable = false;
-    this._solobetService.Solobet.deployed().then(instance => {
+    this._solobetService.Solobet.deployed().then(() => {
 
       const network = this._web3Service.getNetworkInfo();
       this.account.network = network.provider;
@@ -62,7 +61,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this._reloadPage.unsubscribe();
   }
 
-  private async _getAccount() {
+  private _getAccount() {
     this._web3Service.getAccounts()
       .subscribe(res => {
         this.account.address = res[0];
@@ -71,7 +70,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
   }
 
-  private async _getBalance() {
+  private _getBalance() {
     this._userService.getBalance(this.account.address)
       .subscribe(res => {
         this.account.available_banlance = res;
@@ -90,5 +89,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   public search() {
     this._eventEmitter.publishData({type: 'search', data: this.searchText});
+  }
+
+  public openSidebar() {
+    this._eventEmitter.publishData({type: 'account-infor-open', data: {
+      account: this.account
+    }});
   }
 }
