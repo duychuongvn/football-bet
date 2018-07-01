@@ -27,7 +27,7 @@ table.loading > tbody:before {
 
 .match-banner .match-date {
   display: flex;
-  margin: 5px 0;
+  margin: 10px 0 5px;
 }
 
 .match-banner .match-title {
@@ -63,4 +63,15 @@ table.loading > tbody:before {
 .match-banner .match-time i {
   font-size: 40px;
   margin-right: 5px;
+}
+
+.btn-new-bet {
+  position: fixed;
+  cursor: pointer;
+  bottom: 20px;
+  right: 20px;
+}
+
+.btn-new-bet .btn {
+  box-shadow: 0 0 5px #fff;
 }

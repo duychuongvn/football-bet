@@ -19,6 +19,10 @@ const appRoutes: Routes = [
     loadChildren: 'app/match-detail/match-detail.module#MatchDetailModule'
   },
   {
+    path: 'coming-soon',
+    loadChildren: 'app/coming-soon/coming-soon.module#ComingSoonModule'
+  },
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full'

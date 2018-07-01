@@ -1,0 +1,22 @@
+.sl-item {
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 400px;
+  background-position-y: 55%;
+}
+
+.slider_01 {
+  background-image: url('../../assets/slider/slider_01.jpg');
+}
+
+.slider_02 {
+  background-image: url('../../assets/slider/slider_02.jpg');
+}
+
+.slider_03 {
+  background-image: url('../../assets/slider/slider_03.png');
+}
+
+.slider_04 {
+  background-image: url('../../assets/slider/slider_04.jpg');
+}

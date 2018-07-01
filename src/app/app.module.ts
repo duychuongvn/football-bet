@@ -6,6 +6,8 @@ import {HttpModule} from '@angular/http';
 import {FormsModule} from '@angular/forms';
 import {ToastrModule} from 'ngx-toastr';
 
+import { HeaderModule } from 'app/header/header.module';
+
 import {AppRoutingModule} from 'app/app.router';
 import {AppComponent} from './app.component';
 
@@ -29,6 +31,7 @@ const SERVICES = [
     HttpModule,
     AppRoutingModule,
     FormsModule,
+    HeaderModule,
     ToastrModule.forRoot({
       timeOut: 3000,
       preventDuplicates: true,
