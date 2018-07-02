@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-
 import { JhelperService, NotifyService } from 'service/service';
 
 import { Fixture } from 'models/fixture';

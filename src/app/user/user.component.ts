@@ -1,11 +1,11 @@
-import {Component, NgZone, OnInit, Pipe, PipeTransform} from '@angular/core';
-import {Web3Service, SolobetService, MatchService, UserService} from '../../service/service';
-
+import { Component, NgZone, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Web3Service, SolobetService, UserService, NotifyService } from 'service/service';
 
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',
-  styleUrls: ['./user.component.css']
+  styleUrls: ['./user.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class UserComponent {
@@ -28,33 +28,39 @@ export class UserComponent {
   accountBalance: any;
   placedBalance: number;
 
-  constructor(private _ngZone: NgZone,
-              private  web3Service: Web3Service,
-              private  solobetService: SolobetService,
-              private matchService: MatchService,
-              private userService: UserService) {
+  private _matchId: string;
 
+  public isLoading = false;
 
+  constructor(
+    private _ngZone: NgZone,
+    private  web3Service: Web3Service,
+    private  solobetService: SolobetService,
+    private userService: UserService,
+    private _notify: NotifyService,
+    private _cd: ChangeDetectorRef
+  ) {
     this.onReady();
-
   }
 
   onReady = () => {
 
-    this.web3Service.getAccounts().subscribe(accs => {
-      this.accounts = accs;
-      this.account = this.accounts[0];
+    this.web3Service.getAccounts()
+      .subscribe(accs => {
+        this.accounts = accs;
+        this.account = this.accounts[0];
 
-      // This is run from window:load and ZoneJS is not aware of it we
-      // need to use _ngZone.run() so that the UI updates on promise resolution
-      this._ngZone.run(() => {
-          this.init();
-          this.loadMyBettingMatches();
-          this.loadAccountBalance();
-
-        }
-      );
-    }, err => alert(err));
+        // This is run from window:load and ZoneJS is not aware of it we
+        // need to use _ngZone.run() so that the UI updates on promise resolution
+        this._ngZone.run(() => {
+            this.init();
+            this.loadMyBettingMatches();
+            this.loadAccountBalance();
+          }
+        );
+      }, err => {
+        this._notify.error(err);
+      });
   };
 
   init = () => {
@@ -83,8 +89,11 @@ export class UserComponent {
   };
 
   loadMyBettingMatches = () => {
+    this.isLoading = true;
+
     this.solobetService.loadBettingMatchesByAccount(this.account).subscribe(result => {
       this.convertBettingToGroupByMatches(result);
+      this._matchId = result[0].matchId;
       for (let i = 0; i < result.length; i++) {
         let matchId = result[i].matchId;
         this.solobetService.loadMatches(matchId).subscribe(match => {
@@ -111,20 +120,18 @@ export class UserComponent {
                   match.settledBet ++;
                 }
                 match.totalBet++;
-
+                this._cd.markForCheck();
               });
               break;
             }
           }
         });
-
       }
-
+      this.isLoading = false;
     });
   };
 
   sortMatches() {
-
     for (var i = 0; i < this.groupMatches.length - 1; i++) {
       for (var j = i + 1; j < this.groupMatches.length; j++) {
         if (this.groupMatches[i].match.time < this.groupMatches[j].match.time) {
@@ -134,8 +141,6 @@ export class UserComponent {
         }
       }
     }
-
-
   }
 
   calculateResult(betting, match) {
@@ -155,9 +160,6 @@ export class UserComponent {
     } else {
       betting.receivedAmount = '-';
     }
-
-
-
   }
 
 
@@ -207,7 +209,7 @@ export class UserComponent {
   }
 
   claim = (match) => {
-        this.solobetService.claimStake(this.account, match.matchId);
+    this.solobetService.claimStake(this.account, match.matchId);
   }
 
   findMatch(matchId) {
@@ -218,6 +220,14 @@ export class UserComponent {
 
     }
     return null;
+  }
+
+  public showAccordion(matchId: string) {
+    this._matchId = matchId;
+  }
+
+  public isShowAccordion(matchId: string) {
+    return this._matchId === matchId;
   }
 }
 

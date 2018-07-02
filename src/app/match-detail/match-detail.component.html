@@ -13,10 +13,6 @@
     <p class="match-time"><i class="material-icons">access_time</i> {{ fixture.time_string }}</p>
   </div>
 
-  <!-- <div class="row mb-3">
-    <button [hidden]="fixture.isOutOfDate === true" type="button" class="btn btn-success mr-3" (click)="openHandicap()" [disabled]="isLoading">New Bet</button>
-  </div> -->
-
   <div class="row mb-3">
     <table class="table table-bordered table-striped table-match text-white text-center"
       [ngClass]="{'loading': isLoading}">

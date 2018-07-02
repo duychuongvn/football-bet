@@ -237,8 +237,6 @@ export class SolobetService {
             'receivedAmount': 0
           };
           //Open, Deal, Canceled, Refunded, Done
-          console.log('======');
-          console.log(_betting);
           if (_betting.status === 0) {
             _betting.status_string = 'Open';
           } else if (_betting.status === 1) {

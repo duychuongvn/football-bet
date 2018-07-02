@@ -13,12 +13,11 @@ export class MatchDetailService {
   constructor(private _Router:Router) { }
 
   display(_match) : Observable<any>{
-    console.log("==========")
-      return Observable.create(observer => {
-        observer.next(_match);
-        observer.complete();
-        this._Router.navigate(["/match-detail"]);
-      })
+    return Observable.create(observer => {
+      observer.next(_match);
+      observer.complete();
+      this._Router.navigate(["/match-detail"]);
+    })
   }
 
 }

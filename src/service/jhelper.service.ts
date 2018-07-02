@@ -37,7 +37,6 @@ export class JhelperService {
   public _getAccount(account: Account) {
     this._web3Service.getAccounts()
       .subscribe(res => {
-        console.log(res)
         account.address = res[0];
         this._getBalance(account);
       });

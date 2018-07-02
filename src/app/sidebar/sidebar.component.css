@@ -18,3 +18,14 @@
 .sidebar.in-open {
   right: 0;
 }
+
+@media (max-width: 414px) {
+  .sidebar {
+    right: -300px;
+    width: 300px;
+  }
+
+  .sb-content {
+    padding: 0 20px;
+  }
+}

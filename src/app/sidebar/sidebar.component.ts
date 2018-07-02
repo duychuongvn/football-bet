@@ -25,8 +25,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
         if (res.type === 'account-infor-open') {
           this.isOpen = true;
           this.account = res.data.account;
-
-          console.log(this.account);
         }
       })
   }

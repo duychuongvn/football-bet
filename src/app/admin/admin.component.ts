@@ -1,12 +1,11 @@
-import { Component, NgZone, OnInit } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 
 import {
   Web3Service,
   SolobetService,
-  MatchService,
   JhelperService
 } from "../../service/service";
-import { log } from "util";
+
 import { Fixture } from "models/fixture";
 import { Match } from "models/match";
 import { Betting } from "models/betting";
@@ -42,10 +41,8 @@ export class AdminComponent implements OnInit {
   }
 
   constructor(
-    private _ngZone: NgZone,
     private _web3Service: Web3Service,
     private solobetService: SolobetService,
-    private matchService: MatchService,
     private _helper: JhelperService
   ) {}
 
@@ -82,7 +79,6 @@ export class AdminComponent implements OnInit {
     this.solobetService.loadBettingMatches().subscribe(result => {
       for (let i = 0; i < result.length; i++) {
         this.solobetService.loadMatches(result[i]).subscribe(match => {
-          console.log(match);
           this.upcommingMatches.push(match);
           this.fetchScore(match);
         });
@@ -91,7 +87,6 @@ export class AdminComponent implements OnInit {
   }
 
   public updateScore(match){
-    console.log(match)
     this.solobetService.updateScore(
       this.account,
       match.matchId,
