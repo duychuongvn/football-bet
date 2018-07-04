@@ -7,7 +7,6 @@ export const environment = {
   HttpProvider: "http://localhost:9545",
   NetworkSymbol: "ETH",
   contextpath: "http://localhost:4200"
-
 };
 
 /*

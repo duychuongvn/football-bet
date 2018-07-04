@@ -9,7 +9,7 @@
         <img class="box-shadow--sm flag-img" [src]="fixture.homeFlag"> {{ fixture.match }}
         <img class="box-shadow--sm flag-img" [src]="fixture.awayFlag">
       </p>
-      <a routerLink="/match-detail" [queryParams]="fixture.pickJson()" class="arrow-detail"></a>
+      <a (click)="gotoDetail(fixture)" class="arrow-detail"></a>
     </li>
   </ul>
 </div>

@@ -28,15 +28,17 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.loadNetworkInfo();
-    this._getAccount();
+    if (this._web3Service.web3) {
+      this.loadNetworkInfo();
+      this._getAccount();
 
-    this._reloadPage = this._eventEmitter.caseNumber$
-      .subscribe(res => {
-        if (res.type === 'reload') {
-          this._getBalance();
-        }
-      });
+      this._reloadPage = this._eventEmitter.caseNumber$
+        .subscribe(res => {
+          if (res.type === 'reload') {
+            this._getBalance();
+          }
+        });
+    }
   }
 
   loadNetworkInfo () {

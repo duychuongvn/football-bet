@@ -72,6 +72,7 @@ body {
   padding: 5px;
   transform: rotate(-45deg);
   -webkit-transform: rotate(-45deg);
+  cursor: pointer;
 }
 
 .card.card-match .list-group-item .arrow-detail {
@@ -173,4 +174,28 @@ body {
   transform: translateY(0%);
   transition-delay: 0s, 0s, 0.3s;
   padding: 20px;
+}
+
+.close:not(:disabled):not(.disabled) {
+  outline: none;
+}
+
+.modal-dialog {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: auto;
+}
+
+@media(max-width: 768px) {
+  .modal-dialog {
+    min-height: calc(100vh - 20px);
+  }
+}
+
+.modal-title_sub {
+  display: block;
+  font-size: 13px;
+  color: gray;
 }

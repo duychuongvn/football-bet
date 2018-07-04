@@ -1,9 +1,5 @@
-import {Injectable} from '@angular/core';
-
-import {Observable} from 'rxjs/Observable';
-import {fromPromise} from 'rxjs/observable/fromPromise';
-
-import {environment} from '../environments/environment';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
 
 declare var require: any;
 const Web3 = require('web3');
@@ -14,54 +10,50 @@ declare var window: any;
 export class Web3Service {
 
   public web3: any;
-  constructor() {
-    this.checkAndInstantiateWeb3();
-  }
+  constructor() { }
 
-  checkAndInstantiateWeb3 = () => {
+  public checkAndInstantiateWeb3() {
     // Checking if Web3 has been injected by the browser (Mist/MetaMask)
     if (typeof window.web3 !== 'undefined') {
       // Use Mist/MetaMask's provider
       this.web3 = new Web3(window.web3.currentProvider);
     } else {
-      throw 'Need to install meta mask';
+      return false;
     }
   }
 
-
-  getNetworkInfo() {
-    if(this.web3) {
+  public getNetworkInfo() {
+    if (this.web3) {
       let state = this.web3.currentProvider.publicConfigStore._state;
       let providers = this.getProviders();
-      for(var i = 0; i < providers.length; i++) {
+      for (var i = 0; i < providers.length; i++) {
         let provider = providers[i]
-        if(parseInt(state.networkVersion) === provider.chainId) {
-          return {selectedAddress: state.selectedAddress, provider: provider};
+        if (parseInt(state.networkVersion) === provider.chainId) {
+          return { selectedAddress: state.selectedAddress, provider: provider };
         }
       }
       // throw "Unsupport selected network";
-      return {selectedAddress: state.selectedAddress, provider: {name: "Etherzero Private Test Net", symbol: "ETH", chainId: 4447}};
+      return { selectedAddress: state.selectedAddress, provider: { name: "Etherzero Private Test Net", symbol: "ETH", chainId: 4447 } };
     }
     throw "Metamask required";
-
   }
 
-  getProviders(){
-
+  getProviders() {
     let providers = new Array();
-    providers.push({name: "Ethereum", symbol: "ETH", chainId: 1});
+    providers.push({ name: "Ethereum", symbol: "ETH", chainId: 1 });
     // providers.push({name: "Ethereum Kova Testnet", symbol: "ETH", chainId: 42});
-    providers.push({name: "Ethereum Rinkeby Testnet", symbol: "ETH", chainId: 4});
-    providers.push({name: "Etherzero", symbol: "ETZ", chainId: 88});
-    providers.push({name: "Etherzero Private Test Net", symbol: "ETH", chainId: 4447});
+    providers.push({ name: "Ethereum Rinkeby Testnet", symbol: "ETH", chainId: 4 });
+    providers.push({ name: "Etherzero", symbol: "ETZ", chainId: 88 });
+    providers.push({ name: "Etherzero Private Test Net", symbol: "ETH", chainId: 4447 });
 
     return providers;
   }
+
   toSHA3(value) {
     return this.web3.sha3(value);
   }
 
-  getBalance(account) : Observable<number> {
+  getBalance(account): Observable<number> {
     return Observable.create(observable => {
       this.web3.eth.getBalance(account, (err, balance) => {
 
@@ -72,7 +64,6 @@ export class Web3Service {
   }
 
   getAccounts(): Observable<any> {
-
     return Observable.create(observer => {
       this.web3.eth.getAccounts((err, accs) => {
         if (err != null) {

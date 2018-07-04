@@ -31,7 +31,7 @@ export class JhelperService {
 
   public hashId(homeTeamName: string, awayTeamName: string, date: any): any {
     const _time = new Date(date);
-    return this._web3Service.toSHA3(homeTeamName +awayTeamName + _time.getTime()/1000);
+    return this._web3Service.toSHA3(homeTeamName + awayTeamName + _time.getTime()/1000);
   }
 
   public _getAccount(account: Account) {

@@ -1,7 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { JhelperService, NotifyService } from 'service/service';
+import { Router } from '@angular/router';
+import { JhelperService, Web3Service, NotifyService, EventEmitterService } from 'service/service';
 
 import { Fixture } from 'models/fixture';
+import { METAMASK } from 'enums/metamask';
 
 import * as orderBy from 'lodash/orderBy';
 import * as moment from 'moment';
@@ -28,9 +30,12 @@ export class MatchesTodayComponent implements OnInit {
   }
 
   constructor(
+    private _router: Router,
+    private _web3Service: Web3Service,
     private _helper: JhelperService,
     private _notify: NotifyService,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _eventEmitter: EventEmitterService
   ) {
     this._currentDate = moment().local();
   }
@@ -63,5 +68,18 @@ export class MatchesTodayComponent implements OnInit {
         this._notify.error(errors);
       }
     );
+  }
+
+  public gotoDetail(fixture?: Fixture) {
+    if (!this._web3Service.web3) {
+      this._eventEmitter.publishData({ type: METAMASK.INSTALL })
+    } else {
+      this._web3Service.getAccounts()
+        .subscribe(() => {
+          this._router.navigate(['/match-detail'], { queryParams: fixture.pickJson() });
+        }, () => {
+          this._eventEmitter.publishData({ type: METAMASK.LOGIN });
+        });
+    }
   }
 }

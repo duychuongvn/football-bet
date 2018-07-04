@@ -1,7 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { JhelperService, NotifyService } from 'service/service';
+import { Router } from '@angular/router';
+import { JhelperService, Web3Service, NotifyService, EventEmitterService } from 'service/service';
 
 import { Fixture } from 'models/fixture';
+import { METAMASK } from 'enums/metamask';
 
 import * as groupBy from 'lodash/groupBy';
 import * as map from 'lodash/map';
@@ -21,9 +23,12 @@ export class MatchesFutureComponent implements OnInit {
   private _currentDate: moment.Moment;
 
   constructor(
+    private _router: Router,
+    private _web3Service: Web3Service,
     private _helper: JhelperService,
     private _notify: NotifyService,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _eventEmitter: EventEmitterService
   ) {
     this._currentDate = moment().local().add(2, 'd');
   }
@@ -39,12 +44,13 @@ export class MatchesFutureComponent implements OnInit {
       .subscribe((res: any) => {
         res.fixtures.map(fixture => {
           if (!!fixture.homeTeamName && !!fixture.awayTeamName && fixture.status !== 'FINISHED' && this._currentDate.isSameOrBefore(fixture.date, 'day')) {
-             let fixtureId = this._helper.hashId(fixture.homeTeamName, fixture.awayTeamName, fixture.date);
-             let _fixture = new Fixture(fixture);
-             _fixture.id = fixtureId;
+            let _fixture = new Fixture(fixture);
+            if (!!this._web3Service.web3) {
+              _fixture.id = this._helper.hashId(fixture.homeTeamName, fixture.awayTeamName, fixture.date);
+            }
 
-             _fixture.homeFlag = "/assets/images/flag/Flag_of_"+_fixture.homeTeamNameWithUnderScore+".svg";
-             _fixture.awayFlag = "/assets/images/flag/Flag_of_"+_fixture.awayTeamNameWithUnderScore+".svg";
+            _fixture.homeFlag = "/assets/images/flag/Flag_of_"+_fixture.homeTeamNameWithUnderScore+".svg";
+            _fixture.awayFlag = "/assets/images/flag/Flag_of_"+_fixture.awayTeamNameWithUnderScore+".svg";
             this._fixtures.push(_fixture);
           }
         });
@@ -63,4 +69,16 @@ export class MatchesFutureComponent implements OnInit {
     );
   }
 
+  public gotoDetail(fixture?: Fixture) {
+    if (!this._web3Service.web3) {
+      this._eventEmitter.publishData({ type: METAMASK.INSTALL })
+    } else {
+      this._web3Service.getAccounts()
+        .subscribe(() => {
+          this._router.navigate(['/match-detail'], { queryParams: fixture.pickJson() });
+        }, () => {
+          this._eventEmitter.publishData({ type: METAMASK.LOGIN });
+        });
+    }
+  }
 }

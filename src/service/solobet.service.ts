@@ -17,18 +17,9 @@ export class SolobetService {
 
   constructor(
     private web3Ser: Web3Service,
-  ) {
-    try {
-      this.Solobet.setProvider(web3Ser.web3.currentProvider);
-    } catch (e) {
-      console.log(e);
-    }
+  ) { }
 
-    this.initProvider();
-    // this.initDefaultInstance();
-  }
-
-  initProvider = () => {
+  public initProvider() {
     this.Solobet.setProvider(this.web3Ser.web3.currentProvider);
   };
 
