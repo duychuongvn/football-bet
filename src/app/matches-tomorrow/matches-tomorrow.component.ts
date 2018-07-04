@@ -32,7 +32,7 @@ export class MatchesTomorrowComponent implements OnInit {
     private _notify: NotifyService,
     private _cd: ChangeDetectorRef
   ) {
-    this._currentDate = moment().local().add(1, 'd');
+    this.currentDate = moment().local().add(1, 'd');
   }
 
   ngOnInit() {
