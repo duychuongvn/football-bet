@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Router } from '@angular/router';
 import { JhelperService, NotifyService } from 'service/service';
 
 import { Fixture } from 'models/fixture';
@@ -29,7 +28,6 @@ export class MatchesTodayComponent implements OnInit {
   }
 
   constructor(
-    private _router: Router,
     private _helper: JhelperService,
     private _notify: NotifyService,
     private _cd: ChangeDetectorRef
@@ -58,14 +56,9 @@ export class MatchesTodayComponent implements OnInit {
           }
         });
 
-        if (!this.fixtures[0]) {
-          this._router.navigate(['/tomorrow']);
-          this._notify.warning('No matches found!');
-        } else {
-          this.fixtures = orderBy(this.fixtures, ['date_string'], ['asc']);
+        this.fixtures = orderBy(this.fixtures, ['date_string'], ['asc']);
 
-          this._cd.markForCheck();
-        }
+        this._cd.markForCheck();
       }, (errors: any) => {
         this._notify.error(errors);
       }
