@@ -52,7 +52,7 @@
         </tr>
 
         <tr *ngIf="bettings.length === 0">
-          <td colspan="7">No betting is existing. <a class="text-link" (click)="openHandicap()">Create your bet now.</a></td>
+          <td colspan="7">No betting is existing. <a class="text-link" (click)="openHandicap()" [hidden]="fixture.isOutOfDate === true">Create your bet now.</a></td>
         </tr>
       </tbody>
     </table>

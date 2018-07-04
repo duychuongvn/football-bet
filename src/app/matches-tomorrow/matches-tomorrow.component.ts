@@ -58,8 +58,9 @@ export class MatchesTomorrowComponent implements OnInit {
           }
         });
 
-        if (!this.fixtures[0].id) {
+        if (!this.fixtures[0]) {
           this._router.navigate(['/future']);
+          this._notify.info('No matches found!');
         } else {
           this.fixtures = orderBy(this.fixtures, ['date_string'], ['asc']);
 

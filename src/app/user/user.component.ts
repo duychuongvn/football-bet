@@ -34,8 +34,8 @@ export class UserComponent {
 
   constructor(
     private _ngZone: NgZone,
-    private  web3Service: Web3Service,
-    private  solobetService: SolobetService,
+    private web3Service: Web3Service,
+    private solobetService: SolobetService,
     private userService: UserService,
     private _notify: NotifyService,
     private _cd: ChangeDetectorRef
@@ -53,10 +53,10 @@ export class UserComponent {
         // This is run from window:load and ZoneJS is not aware of it we
         // need to use _ngZone.run() so that the UI updates on promise resolution
         this._ngZone.run(() => {
-            this.init();
-            this.loadMyBettingMatches();
-            this.loadAccountBalance();
-          }
+          this.init();
+          this.loadMyBettingMatches();
+          this.loadAccountBalance();
+        }
         );
       }, err => {
         this._notify.error(err);
@@ -92,41 +92,44 @@ export class UserComponent {
     this.isLoading = true;
 
     this.solobetService.loadBettingMatchesByAccount(this.account).subscribe(result => {
-      this.convertBettingToGroupByMatches(result);
-      this._matchId = result[0].matchId;
-      for (let i = 0; i < result.length; i++) {
-        let matchId = result[i].matchId;
-        this.solobetService.loadMatches(matchId).subscribe(match => {
-          for (let j = 0; j < result.length; j++) {
-            if (this.groupMatches[j].matchId == match.matchId) {
-              this.groupMatches[j].match = match;
-              let _bettings = this.groupMatches[j].bettings;
-              _bettings.map(item => {
-                if (item.chooseHomeTeam) {
-                  item.betFor = match.homeTeam;
-                } else {
-                  item.betFor = match.awayTeam;
-                }
-                if(item.status === 4) {
-                  this.calculateResult(item, match);
-                } else if(item.status === 3) {
-                  item.receivedAmount = item.amount;
-                }  else {
-                  item.receivedAmount = '-';
-                }
-                if(item.status === 0) {
-                  match.openBet ++;
-                } else if (item.status === 1 ){
-                  match.settledBet ++;
-                }
-                match.totalBet++;
-                this._cd.markForCheck();
-              });
-              break;
+      if (!!result[0]) {
+        this.convertBettingToGroupByMatches(result);
+        this._matchId = result[0].matchId;
+        for (let i = 0; i < result.length; i++) {
+          let matchId = result[i].matchId;
+          this.solobetService.loadMatches(matchId).subscribe(match => {
+            for (let j = 0; j < result.length; j++) {
+              if (this.groupMatches[j].matchId == match.matchId) {
+                this.groupMatches[j].match = match;
+                let _bettings = this.groupMatches[j].bettings;
+                _bettings.map(item => {
+                  if (item.chooseHomeTeam) {
+                    item.betFor = match.homeTeam;
+                  } else {
+                    item.betFor = match.awayTeam;
+                  }
+                  if (item.status === 4) {
+                    this.calculateResult(item, match);
+                  } else if (item.status === 3) {
+                    item.receivedAmount = item.amount;
+                  } else {
+                    item.receivedAmount = '-';
+                  }
+                  if (item.status === 0) {
+                    match.openBet++;
+                  } else if (item.status === 1) {
+                    match.settledBet++;
+                  }
+                  match.totalBet++;
+                  this._cd.markForCheck();
+                });
+                break;
+              }
             }
-          }
-        });
+          });
+        }
       }
+
       this.isLoading = false;
     });
   };
@@ -200,7 +203,7 @@ export class UserComponent {
       if (match) {
         match.bettings.push(betting);
       } else {
-        match = {matchId: betting.matchId, match: {}, bettings: [betting]};
+        match = { matchId: betting.matchId, match: {}, bettings: [betting] };
         this.groupMatches.push(match);
 
       }

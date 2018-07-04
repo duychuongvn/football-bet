@@ -1,12 +1,12 @@
 <div class="container-fluid">
-  <div class="input-group input-bet">
+  <div class="input-group input-bet" [hidden]="!this.groupMatches">
     <input class="form-control" type="text" [(ngModel)]="searchMatch" placeholder="Search Your Matches"/>
     <div class="input-group-append">
       <i class="material-icons">search</i>
     </div>
   </div>
 
-  <div class="card card-match text-white">
+  <div class="card card-match text-white" [hidden]="!this.groupMatches">
     <div class="card-body">
       <div class="row form-group">
         <label class="col-md-2">Match status</label>
@@ -111,7 +111,7 @@
     </div>
   </div>
 
-  <div class="alert alert-match text-white mt-3" role="alert" *ngIf="isLoading && !this.groupMatches.length">
+  <div class="alert alert-match text-white mt-3" role="alert" [hidden]="isLoading && !!this.groupMatches">
     <p class="mb-0"><strong class="mr-2">No bets found!</strong>Who knows you will be a millionaire. <a class="text-link" [routerLink]="['']">Click here</a> to start betting.</p>
   </div>
 </div>
