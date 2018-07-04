@@ -41,7 +41,7 @@ export class AcceptOddsModalComponent implements OnInit {
   public deal(betting) {
     if(this.account === betting.offer){
       this._notify.error(`Self-bet is not allowed.`);
-      this.close('reload')
+      this.close();
       return;
     }
 
