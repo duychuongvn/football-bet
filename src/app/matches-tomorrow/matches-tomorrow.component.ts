@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { JhelperService, Web3Service, NotifyService, EventEmitterService } from 'service/service';
 
@@ -31,6 +31,7 @@ export class MatchesTomorrowComponent implements OnInit {
 
   constructor(
     private _router: Router,
+    private _zone: NgZone,
     private _web3Service: Web3Service,
     private _helper: JhelperService,
     private _notify: NotifyService,
@@ -75,9 +76,9 @@ export class MatchesTomorrowComponent implements OnInit {
       this._eventEmitter.publishData({ type: METAMASK.INSTALL })
     } else {
       this._web3Service.getAccounts()
-        .subscribe(() => {
+        .subscribe(() => this._zone.run(() => {
           this._router.navigate(['/match-detail'], { queryParams: fixture.pickJson() });
-        }, () => {
+        }), () => {
           this._eventEmitter.publishData({ type: METAMASK.LOGIN });
         });
     }

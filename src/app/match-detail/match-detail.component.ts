@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Web3Service, SolobetService, NotifyService, EventEmitterService } from 'service/service';
@@ -21,7 +21,7 @@ import * as clone from 'lodash/clone';
   templateUrl: './match-detail.component.html',
   styleUrls: ['./match-detail.component.css']
 })
-export class MatchDetailComponent implements OnInit, OnDestroy {
+export class MatchDetailComponent implements OnInit {
 
   public fixture: Fixture = new Fixture();
   public handicap: Handicap = new Handicap();
@@ -46,7 +46,7 @@ export class MatchDetailComponent implements OnInit, OnDestroy {
     private _notify: NotifyService,
     private _eventEmitter: EventEmitterService,
     @Inject(DOCUMENT) private document: any
-  ) {}
+  ) { }
 
   ngOnInit() {
     this._getAccounts();
@@ -54,23 +54,12 @@ export class MatchDetailComponent implements OnInit, OnDestroy {
       if (p.id && !p.bettingId) {
         this._setProperties(p);
         this._loadBettings(p.id);
-      }else if(p.bettingId){
+      } else if (p.bettingId) {
         this._setProperties(p);
         this._findBettingByMatchIdAndBettingId(p);
       }
 
     });
-
-    this._searchPages = this._eventEmitter.caseNumber$
-      .subscribe(res => {
-        if (res.type === 'search') {
-          this._searchBettings(res.data);
-        }
-      });
-  }
-
-  ngOnDestroy() {
-    this._searchPages.unsubscribe();
   }
 
   private _setProperties(p: any) {
@@ -90,28 +79,28 @@ export class MatchDetailComponent implements OnInit, OnDestroy {
 
   private _getAccounts() {
     this._web3Service.getAccounts()
-    .subscribe( accs => {
+      .subscribe(accs => {
         this.account = accs[0];
       }, err => alert(err)
-    );
+      );
   }
 
   private _loadBettings(id: string) {
     this._solobetService.loadBettings(id)
-    .subscribe(res => {
-      setTimeout(() => {
-        this.bettings = res.bettings;
-        if (this._runTime && this.bettings.length >= this._bettingsCount) {
-          clearInterval(this._runTime);
-          this._bettingsCount = 0;
-          this.isLoading = false;
-          this._oldBettings = clone(this.bettings);
-          this._eventEmitter.publishData({type: 'reload', data: null});
-        }
-      }, 200);
-    }, errors => {
-      this._notify.error(errors);
-    });
+      .subscribe(res => {
+        setTimeout(() => {
+          this.bettings = res.bettings;
+          if (this._runTime && this.bettings.length >= this._bettingsCount) {
+            clearInterval(this._runTime);
+            this._bettingsCount = 0;
+            this.isLoading = false;
+            this._oldBettings = clone(this.bettings);
+            this._eventEmitter.publishData({ type: 'reload', data: null });
+          }
+        }, 200);
+      }, errors => {
+        this._notify.error(errors);
+      });
   }
 
   public openHandicap() {
@@ -183,23 +172,23 @@ export class MatchDetailComponent implements OnInit, OnDestroy {
     this._modalService.show(comp, opts);
   }
 
-  private _findBettingByMatchIdAndBettingId(p: any){
-      let matchId = p.id;
-      let bettingId = p.bettingId;
-      if(matchId || bettingId){
-        this._solobetService.getBetting(matchId, bettingId).subscribe(betting => {
-          this.bettings.push(betting);
-          this.isSharePage = true;
-        },errors => {
-          this._notify.error(errors);
-        });
-      }
+  private _findBettingByMatchIdAndBettingId(p: any) {
+    let matchId = p.id;
+    let bettingId = p.bettingId;
+    if (matchId || bettingId) {
+      this._solobetService.getBetting(matchId, bettingId).subscribe(betting => {
+        this.bettings.push(betting);
+        this.isSharePage = true;
+      }, errors => {
+        this._notify.error(errors);
+      });
+    }
   }
 
-  private _buildLink(betting){
+  private _buildLink(betting) {
     let json = this.fixture.pickJson();
-    let params= new URLSearchParams();
-    for(let key in json){
+    let params = new URLSearchParams();
+    for (let key in json) {
       params.set(key, json[key]);
     }
     params.set("bettingId", betting.bettingId);
@@ -207,13 +196,13 @@ export class MatchDetailComponent implements OnInit, OnDestroy {
   }
 
 
-  private _copyLink(val: string){
+  private _copyLink(val: string) {
     let selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
     selBox.style.left = '0';
     selBox.style.top = '0';
     selBox.style.opacity = '0';
-    selBox.value = environment.contextpath+ "/match-detail?" +val;
+    selBox.value = environment.contextpath + "/match-detail?" + val;
     document.body.appendChild(selBox);
     selBox.focus();
     selBox.select();
