@@ -31,14 +31,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.handleMetaMaskUpdate();
     if (this._web3Service.web3) {
       this.loadNetworkInfo();
-      this._getAccount();
-
-      this._reloadPage = this._eventEmitter.caseNumber$
-        .subscribe(res => {
-          if (res.type === 'reload') {
-            this._getBalance();
-          }
-        });
     }
   }
 
@@ -65,6 +57,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.networkAvailable = false;
       } else {
         this.networkAvailable = true;
+        this._getAccount();
       }
       this._cd.detectChanges();
     });
