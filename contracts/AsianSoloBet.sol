@@ -5,10 +5,6 @@ import "./SoloBet.sol";
 
 contract AsianSoloBet is Ownable, SoloBet {
 
-  uint256 GAS_PRICE = 21000;
-  //  uint256 GAS_LIMIT = 1; // 1Gwei
-
-
   function AsianSoloBet() public {
     feeOwner = msg.sender;
   }
@@ -145,8 +141,7 @@ contract AsianSoloBet is Ownable, SoloBet {
 
   function transferFund(address receiver, uint256 amount) private returns (bool) {
     if (receiver != 0x0) {
-      receiver.transfer(amount - GAS_PRICE);
-      emit Transfer(msg.sender, receiver, amount - GAS_PRICE);
+      receiver.transfer(amount);
     }
   }
 
@@ -272,7 +267,6 @@ contract AsianSoloBet is Ownable, SoloBet {
     for (uint i = 0; i < players.length; i++) {
       if (balances[players[i]] > 0) {
         players[i].transfer(balances[players[i]]);
-        emit Transfer(address(this), players[i], balances[players[i]]);
       }
     }
 

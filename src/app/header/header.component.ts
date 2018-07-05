@@ -1,7 +1,7 @@
 import {Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
 import {Web3Service, SolobetService, UserService, EventEmitterService} from 'service/service';
 
-import { Account } from 'models/account';
+import {Account} from 'models/account';
 
 @Component({
   selector: 'app-header',
@@ -28,6 +28,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.handleMetaMaskUpdate();
     if (this._web3Service.web3) {
       this.loadNetworkInfo();
       this._getAccount();
@@ -41,7 +42,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadNetworkInfo () {
+  handleMetaMaskUpdate = () => {
+    this._web3Service.web3.currentProvider.publicConfigStore.on('update', e => {
+      if (e.selectedAddress != null && e.selectedAddress != this.account.address) {
+        this.loadNetworkInfo();
+      } else if (e.selectedAddress == null) {
+        this.networkAvailable = false;
+        this.account.address = null;
+        this._cd.detectChanges();
+      }
+    });
+  };
+
+  loadNetworkInfo() {
     this.networkAvailable = false;
     this._solobetService.Solobet.deployed().then(() => {
 
@@ -94,8 +107,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   public openSidebar() {
-    this._eventEmitter.publishData({type: 'account-infor-open', data: {
-      account: this.account
-    }});
+    this._eventEmitter.publishData({
+      type: 'account-infor-open', data: {
+        account: this.account
+      }
+    });
   }
 }

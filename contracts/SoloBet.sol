@@ -8,7 +8,6 @@ contract SoloBet is Ownable {
   enum BetStatus {Open, Deal, Canceled, Refunded, Done}
 
   event LogDeal(address bMaker, address punter, bytes32 matchId, uint256 betingId);
-  event Transfer(address indexed _from, address indexed _to, uint256 _value);
 
   struct Match {
 
@@ -100,6 +99,5 @@ contract SoloBet is Ownable {
 
   function withDrawFee() public onlyOwner {
     owner.transfer(balances[feeOwner]);
-    emit Transfer(address(this), owner, balances[feeOwner]);
   }
 }
