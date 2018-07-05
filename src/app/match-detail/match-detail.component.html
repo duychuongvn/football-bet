@@ -10,52 +10,63 @@
     </p>
     <p class="match-title_sub">World Cup russia 2018</p>
 
-    <p class="match-time"><i class="material-icons">access_time</i> {{ fixture.time_string }}</p>
+    <p class="match-time">
+      <i class="material-icons">access_time</i> {{ fixture.time_string }}</p>
   </div>
 
   <div class="row mb-3">
-    <table class="table table-bordered table-striped table-match text-white text-center"
-      [ngClass]="{'loading': isLoading}">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col"><img [src]="fixture.homeFlag" width="40px"> {{fixture.homeTeamName}}</th>
-          <th scope="col" class="pr-5 pl-5">Odds</th>
-          <th scope="col"> <img [src]="fixture.awayFlag" width="40px"> {{fixture.awayTeamName}}</th>
-          <th scope="col"><img src="/assets/images/ethereum.png" width="40px"></th>
-          <th scope="col"><img src="/assets/images/if_17_3319627.png" width="40px"/> </th>
-          <th scope="col" [hidden]="isSharePage === true"><img src="/assets/images/if_Connect_connection_data_global_link_network_271507.png" width="40px" /></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let betting of bettings; let i = index">
-          <th scope="row">{{i}}</th>
-          <td scope="row">{{betting.homeOffer}}
-          </td>
-          <td scope="row" class="text-danger">{{ betting.odds_string}}</td>
-          <td scope="row">
-            {{betting.awayOffer}}
-          </td>
-          <td scope="row">{{ betting.stake}}</td>
-          <td *ngIf="betting.status === 'Open'">
-            <button type="button" class="btn btn-info" (click)="openAcceptOdds(betting)">Bet</button>
-
-          </td>
-          <td *ngIf="betting.status !== 'Open'">
-            <span>
-              {{betting.status}}
-            </span>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped table-match text-white text-center" [ngClass]="{'loading': isLoading}">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">
+              <img [src]="fixture.homeFlag" width="40px" class="mr-2">{{fixture.homeTeamName}}</th>
+            <th scope="col" class="pr-5 pl-5">Odds</th>
+            <th scope="col">
+              <img [src]="fixture.awayFlag" width="40px" class="mr-2">{{fixture.awayTeamName}}</th>
+            <th scope="col">
+              <img src="/assets/images/ethereum.png" width="40px">
+            </th>
+            <th scope="col">
+              <img src="/assets/images/if_17_3319627.png" width="40px" /> </th>
+            <th scope="col" [hidden]="isSharePage === true">
+              <img src="/assets/images/if_Connect_connection_data_global_link_network_271507.png" width="40px" />
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let betting of bettings; let i = index">
+            <th scope="row">{{i}}</th>
+            <td scope="row">{{betting.homeOffer}}
             </td>
-            <td scope="row" [hidden]="isSharePage === true" >
-              <button [hidden]="isSharePage === true || betting.status !== 'Open'" (click)="_buildLink(betting)" type="button" class="btn btn-primary">Invite</button>
+            <td scope="row" class="text-danger">{{ betting.odds_string}}</td>
+            <td scope="row">
+              {{betting.awayOffer}}
             </td>
-        </tr>
+            <td scope="row">{{ betting.stake}}</td>
+            <td *ngIf="betting.status === 'Open'">
+              <button type="button" class="btn btn-info" (click)="openAcceptOdds(betting)">Bet</button>
 
-        <tr *ngIf="bettings.length === 0">
-          <td colspan="7">No betting is existing. <a class="text-link" (click)="openHandicap()" [hidden]="fixture.isOutOfDate === true">Create your bet now.</a></td>
-        </tr>
-      </tbody>
-    </table>
+            </td>
+            <td *ngIf="betting.status !== 'Open'">
+              <span>
+                {{betting.status}}
+              </span>
+            </td>
+            <td scope="row" [hidden]="isSharePage === true">
+              <button [hidden]="isSharePage === true || betting.status !== 'Open'" (click)="buildLink(betting)" type="button" class="btn btn-primary">Invite</button>
+            </td>
+          </tr>
+
+          <tr *ngIf="bettings.length === 0">
+            <td colspan="7">No betting is existing.
+              <a class="text-link" (click)="openHandicap()" [hidden]="fixture.isOutOfDate === true">Create your bet now.</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 

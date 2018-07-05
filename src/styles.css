@@ -199,3 +199,10 @@ body {
   font-size: 13px;
   color: gray;
 }
+
+.input-match {
+  background-color: transparent;
+  border: 1px solid #DCDCDD;
+  color: #fff;
+  text-align: center;
+}

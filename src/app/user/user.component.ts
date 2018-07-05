@@ -129,7 +129,7 @@ export class UserComponent {
           });
         }
       }
-
+      console.log(this.groupMatches);
       this.isLoading = false;
     });
   };

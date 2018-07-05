@@ -16,7 +16,7 @@ export class Match {
     return this._time;
   }
   public get date_from_time() {
-    return moment(new Date(this.time * 1000).toISOString()).format('ff');
+    return moment(new Date(this.time * 1000).toISOString()).format('LL [(]dddd[)]');
     //  return DateTime.fromISO(this.time * 1000).toFormat('dd/MM/yyyy');
   }
 

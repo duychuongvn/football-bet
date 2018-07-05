@@ -12,7 +12,6 @@ import { Betting } from 'models/betting';
 import { DealModalComponent } from 'app/deal-modal/deal-modal.component';
 import { AcceptOddsModalComponent } from 'app/accept-odds-modal/accept-odds-modal.component';
 
-import { DOCUMENT } from '@angular/platform-browser';
 import { environment } from 'environments/environment';
 
 import * as clone from 'lodash/clone';
@@ -35,7 +34,6 @@ export class MatchDetailComponent implements OnInit {
   private _runTime;
 
   public isSharePage: boolean = false;
-  private _searchPages;
   private _oldBettings;
 
   constructor(
@@ -44,8 +42,7 @@ export class MatchDetailComponent implements OnInit {
     private _solobetService: SolobetService,
     private _modalService: BsModalService,
     private _notify: NotifyService,
-    private _eventEmitter: EventEmitterService,
-    @Inject(DOCUMENT) private document: any
+    private _eventEmitter: EventEmitterService
   ) { }
 
   ngOnInit() {
@@ -185,7 +182,7 @@ export class MatchDetailComponent implements OnInit {
     }
   }
 
-  private _buildLink(betting) {
+  public buildLink(betting) {
     let json = this.fixture.pickJson();
     let params = new URLSearchParams();
     for (let key in json) {
@@ -194,7 +191,6 @@ export class MatchDetailComponent implements OnInit {
     params.set("bettingId", betting.bettingId);
     this._copyLink(params.toString());
   }
-
 
   private _copyLink(val: string) {
     let selBox = document.createElement('textarea');
@@ -208,17 +204,6 @@ export class MatchDetailComponent implements OnInit {
     selBox.select();
     document.execCommand('copy');
     document.body.removeChild(selBox);
-  }
-
-  private _searchBettings(search: any) {
-    if (!this._oldBettings) {
-      this._oldBettings = clone(this.bettings);
-    }
-
-    if (search.length > 1) {
-      this.bettings = this._oldBettings.filter((betting: Betting) => (betting.odds_string === search || betting.stake === +search));
-    } else {
-      this.bettings = this._oldBettings
-    }
+    this._notify.info('Copy Successful Crypto P2P Betting');
   }
 }

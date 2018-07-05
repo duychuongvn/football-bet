@@ -107,7 +107,7 @@ export class Handicap {
   }
 
   public get date_string(): string {
-    return moment(this._date).format("f");
+    return moment(this._date).format("LL [(]dddd[)]");
   }
 
   private _selectedPair: string;

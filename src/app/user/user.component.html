@@ -1,28 +1,28 @@
 <div class="container-fluid">
-  <div class="input-group input-bet" [hidden]="!this.groupMatches">
-    <input class="form-control" type="text" [(ngModel)]="searchMatch" placeholder="Search Your Matches"/>
+  <div class="input-group input-bet" *ngIf="groupMatches?.length !== 0">
+    <input class="form-control" type="text" [(ngModel)]="searchMatch" placeholder="Search Your Matches" />
     <div class="input-group-append">
       <i class="material-icons">search</i>
     </div>
   </div>
 
-  <div class="card card-match text-white" [hidden]="!this.groupMatches">
+  <div class="card card-match text-white" *ngIf="groupMatches?.length !== 0">
     <div class="card-body">
       <div class="row form-group">
         <label class="col-md-2">Match status</label>
         <div class="col-md-9">
           <label class="bet-ckb mr-4">Up Coming
-            <input class="input" type="checkbox" [(ngModel)]="isUpComing"/>
+            <input class="input" type="checkbox" [(ngModel)]="isUpComing" />
             <span class="checkmark"></span>
           </label>
 
           <label class="bet-ckb mr-4">Playing
-            <input class="input" type="checkbox" [(ngModel)]="isPlaying"/>
+            <input class="input" type="checkbox" [(ngModel)]="isPlaying" />
             <span class="checkmark"></span>
           </label>
 
           <label class="bet-ckb">Finished
-            <input class="input" type="checkbox" [(ngModel)]="isFinished"/>
+            <input class="input" type="checkbox" [(ngModel)]="isFinished" />
             <span class="checkmark"></span>
           </label>
         </div>
@@ -75,43 +75,47 @@
     </div>
 
     <div class="accr-body" [ngClass]="{'active': isShowAccordion(item.matchId)}">
-      <table class="table table-hover text-white">
-        <thead><tr><th scope="col" style="width: 25%;">Decision</th>
-          <th scope="col" style="width: 25%;">Bet Amount</th>
-          <th scope="col" style="width: 25%;">Status</th>
-          <th scope="col" style="width: 25%;">Receive Amount</th>
-          <th scope="col" style="width: 25%;">Actions</th></tr></thead>
-        <tbody>
-        <tr *ngFor="let betting of item.bettings | bettingPipe:{open: isOpening, deal: isDeal, canceled: isCanceled, refunded: isRefunded, done: isDone}">
-          <td>
-            {{betting.betFor}} {{betting.odds}} @
-          </td>
-          <td>
-            {{betting.amount}} ETH
-          </td>
-          <td>
-            <span >{{betting.status_string}}</span>
-          </td>
-          <td>
-            {{betting.receivedAmount}} ETH
-          </td>
-          <td>
-            <button
-              *ngIf="betting.status === 0" type="button"
-              tooltip="Available when status is opening"
-              class="btn btn-danger btn-sm d-flex"
-              (click)="cancel(betting)">
-              <i class="material-icons">highlight_off</i>
-            </button>
-          </td>
-        </tr>
-
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table class="table table-hover text-white">
+          <thead>
+            <tr>
+              <th scope="col" style="width: 25%;">Decision</th>
+              <th scope="col" style="width: 25%;">Bet Amount</th>
+              <th scope="col" style="width: 25%;">Status</th>
+              <th scope="col" style="width: 25%;">Receive Amount</th>
+              <th scope="col" style="width: 25%;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let betting of item.bettings | bettingPipe:{open: isOpening, deal: isDeal, canceled: isCanceled, refunded: isRefunded, done: isDone}">
+              <td>
+                {{betting.betFor}} {{betting.odds}} @
+              </td>
+              <td>
+                {{betting.amount}} ETH
+              </td>
+              <td>
+                <span>{{betting.status_string}}</span>
+              </td>
+              <td>
+                {{betting.receivedAmount}} ETH
+              </td>
+              <td>
+                <button *ngIf="betting.status === 0" type="button" tooltip="Available when status is opening" class="btn btn-danger btn-sm d-flex"
+                  (click)="cancel(betting)">
+                  <i class="material-icons">highlight_off</i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
-  <div class="alert alert-match text-white mt-3" role="alert" [hidden]="isLoading && !!this.groupMatches">
-    <p class="mb-0"><strong class="mr-2">No bets found!</strong>Who knows you will be a millionaire. <a class="text-link" [routerLink]="['']">Click here</a> to start betting.</p>
+  <div class="alert alert-match text-white mt-3" role="alert" *ngIf="groupMatches?.length === 0">
+    <p class="mb-0">
+      <strong class="mr-2">No bets found!</strong>Who knows you will be a millionaire.
+      <a class="text-link" [routerLink]="['']">Click here</a> to start betting.</p>
   </div>
 </div>
