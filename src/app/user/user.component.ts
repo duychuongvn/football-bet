@@ -159,7 +159,7 @@ export class UserComponent {
       selectedTeamScore = match.awayGoals;
     }
     if (match.status === 4) {
-      betting.receivedAmount = this.calculateAmount(selectedTeamScore - againstTeamScore, betting.odds, betting.amount);
+      betting.receivedAmount = this.calculateAmount((selectedTeamScore - againstTeamScore) * 100, betting.odds, betting.amount);
     } else {
       betting.receivedAmount = '-';
     }
