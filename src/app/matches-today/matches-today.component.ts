@@ -52,12 +52,12 @@ export class MatchesTodayComponent implements OnInit {
       .subscribe((res: any) => {
         res.fixtures.map(fixture => {
           if (!!fixture.homeTeamName && !!fixture.awayTeamName && fixture.status !== 'FINISHED' && this.currentDate.isSame(fixture.date, 'day')) {
-             let fixtureId = this._helper.hashId(fixture.homeTeamName, fixture.awayTeamName, fixture.date);
-             let _fixture = new Fixture(fixture);
+             const fixtureId = this._helper.hashId(fixture.homeTeamName, fixture.awayTeamName, fixture.date);
+             const _fixture = new Fixture(fixture);
              _fixture.id = fixtureId;
 
-             _fixture.homeFlag = "/assets/images/flag/Flag_of_"+_fixture.homeTeamNameWithUnderScore+".svg";
-             _fixture.awayFlag = "/assets/images/flag/Flag_of_"+_fixture.awayTeamNameWithUnderScore+".svg";
+             _fixture.homeFlag = '/assets/images/flag/Flag_of_' + _fixture.homeTeamNameWithUnderScore + '.svg';
+             _fixture.awayFlag = '/assets/images/flag/Flag_of_' + _fixture.awayTeamNameWithUnderScore + '.svg';
             this.fixtures.push(_fixture);
           }
         });
@@ -73,7 +73,7 @@ export class MatchesTodayComponent implements OnInit {
 
   public gotoDetail(fixture?: Fixture) {
     if (!this._web3Service.web3) {
-      this._eventEmitter.publishData({ type: METAMASK.INSTALL })
+      this._eventEmitter.publishData({ type: METAMASK.INSTALL });
     } else {
       this._web3Service.getAccounts()
         .subscribe(() => this._zone.run(() => {

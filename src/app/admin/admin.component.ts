@@ -1,19 +1,19 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit } from '@angular/core';
 
 import {
   Web3Service,
   SolobetService,
   JhelperService
-} from "../../service/service";
+} from '../../service/service';
 
-import { Fixture } from "models/fixture";
-import { Match } from "models/match";
-import { Betting } from "models/betting";
+import { Fixture } from 'models/fixture';
+import { Match } from 'models/match';
+import { Betting } from 'models/betting';
 
 @Component({
-  selector: "app-admin",
-  templateUrl: "./admin.component.html",
-  styleUrls: ["./admin.component.css"]
+  selector: 'app-admin',
+  templateUrl: './admin.component.html',
+  styleUrls: ['./admin.component.css']
 })
 export class AdminComponent implements OnInit {
   account: any;
@@ -49,9 +49,9 @@ export class AdminComponent implements OnInit {
   public fetchScore(match) {
     this._helper.fetchFixtures().subscribe(res => {
       res.fixtures.map(fixture => {
-        let _fixture = new Fixture(fixture);
+        const _fixture = new Fixture(fixture);
         if (_fixture.isFinished) {
-          let _matchId = this._helper.hashId(
+          const _matchId = this._helper.hashId(
             fixture.homeTeamName,
             fixture.awayTeamName,
             fixture.date
@@ -86,7 +86,7 @@ export class AdminComponent implements OnInit {
     });
   }
 
-  public updateScore(match){
+  public updateScore(match) {
     this.solobetService.updateScore(
       this.account,
       match.matchId,
@@ -94,9 +94,9 @@ export class AdminComponent implements OnInit {
       match.awayGoals
     );
     // this.initMatches();
-  };
+  }
   approveScore = match => {
     this.solobetService.approveScore(this.account, match.matchId);
     // this.initMatches();
-  };
+  }
 }

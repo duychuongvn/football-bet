@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
-import { SolobetService, NotifyService } from "service/service";
+import { SolobetService, NotifyService } from 'service/service';
 import { Handicap } from 'models/handicap';
 import { Match } from 'models/match';
 import { Betting } from 'models/betting';
-import { Fixture } from "models/fixture";
+import { Fixture } from 'models/fixture';
 
 
 @Component({
@@ -22,7 +22,7 @@ export class AcceptOddsModalComponent implements OnInit {
   public account: string;
   public bettings: Betting[] = [];
   public betting: Betting = new Betting();
-  public bettingId: any
+  public bettingId: any;
   public fixture: Fixture = new Fixture();
 
   constructor(
@@ -39,7 +39,7 @@ export class AcceptOddsModalComponent implements OnInit {
   }
 
   public deal(betting) {
-    if(this.account === betting.offer){
+    if (this.account === betting.offer) {
       this._notify.error(`Self-bet is not allowed.`);
       this.close();
       return;
@@ -49,7 +49,7 @@ export class AcceptOddsModalComponent implements OnInit {
     .subscribe(() => {
         this._notify.success('Accept success');
         this.close('reload');
-      },e => {
+      }, e => {
         this._notify.error(`Error occur when offer this match ${e.msg}`);
       }
     );

@@ -1,18 +1,18 @@
-import { Component, OnInit } from "@angular/core";
-import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
+import { Component, OnInit } from '@angular/core';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
-import { SolobetService, NotifyService } from "service/service";
+import { SolobetService, NotifyService } from 'service/service';
 
-import { Fixture } from "models/fixture";
-import { Handicap } from "models/handicap";
-import { Match } from "models/match";
+import { Fixture } from 'models/fixture';
+import { Handicap } from 'models/handicap';
+import { Match } from 'models/match';
 
-import { PAIR_TYPE } from "enums/handicap";
+import { PAIR_TYPE } from 'enums/handicap';
 
 @Component({
-  selector: "app-deal-modal",
-  templateUrl: "./deal-modal.component.html",
-  styleUrls: ["./deal-modal.component.css"]
+  selector: 'app-deal-modal',
+  templateUrl: './deal-modal.component.html',
+  styleUrls: ['./deal-modal.component.css']
 })
 export class DealModalComponent implements OnInit {
   public title: string;
@@ -43,9 +43,9 @@ export class DealModalComponent implements OnInit {
 
   public markTeam(teamName: string) {
     if (teamName === this.handicap.homeTeamName) {
-      this.handicap.selectedTeam = "0";
+      this.handicap.selectedTeam = '0';
     } else {
-      this.handicap.selectedTeam = "1";
+      this.handicap.selectedTeam = '1';
     }
   }
 
@@ -57,8 +57,8 @@ export class DealModalComponent implements OnInit {
         handicap.stake,
         handicap.selectedTeam
       ).subscribe(() => {
-          this._notify.success("Create success");
-          this.close("reload");
+          this._notify.success('Create success');
+          this.close('reload');
         }, e => {
           this._notify.error(`Error occur when offer this match ${e.msg}`);
         }

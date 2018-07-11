@@ -45,13 +45,13 @@ export class MatchesFutureComponent implements OnInit {
       .subscribe((res: any) => {
         res.fixtures.map(fixture => {
           if (!!fixture.homeTeamName && !!fixture.awayTeamName && fixture.status !== 'FINISHED' && this._currentDate.isSameOrBefore(fixture.date, 'day')) {
-            let _fixture = new Fixture(fixture);
+            const _fixture = new Fixture(fixture);
             if (!!this._web3Service.web3) {
               _fixture.id = this._helper.hashId(fixture.homeTeamName, fixture.awayTeamName, fixture.date);
             }
 
-            _fixture.homeFlag = "/assets/images/flag/Flag_of_"+_fixture.homeTeamNameWithUnderScore+".svg";
-            _fixture.awayFlag = "/assets/images/flag/Flag_of_"+_fixture.awayTeamNameWithUnderScore+".svg";
+            _fixture.homeFlag = '/assets/images/flag/Flag_of_' + _fixture.homeTeamNameWithUnderScore + '.svg';
+            _fixture.awayFlag = '/assets/images/flag/Flag_of_' + _fixture.awayTeamNameWithUnderScore + '.svg';
             this._fixtures.push(_fixture);
           }
         });
@@ -72,7 +72,7 @@ export class MatchesFutureComponent implements OnInit {
 
   public gotoDetail(fixture?: Fixture) {
     if (!this._web3Service.web3) {
-      this._eventEmitter.publishData({ type: METAMASK.INSTALL })
+      this._eventEmitter.publishData({ type: METAMASK.INSTALL });
     } else {
       this._web3Service.getAccounts()
         .subscribe(() => this._zone.run(() => {
