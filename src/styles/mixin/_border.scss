@@ -1,0 +1,20 @@
+@mixin border-radius($radius) {
+  -moz-border-radius: $radius;
+  -webkit-border-radius: $radius;
+  border-radius: $radius;
+}
+
+@mixin border-radius-focus($topleft, $topright, $bottomright, $bottomleft) {
+  -moz-border-radius-bottomleft: $bottomleft;
+  -moz-border-radius-bottomright: $bottomright;
+  -moz-border-radius-topleft: $topleft;
+  -moz-border-radius-topright: $topright;
+  -webkit-border-bottom-left-radius: $bottomleft;
+  -webkit-border-bottom-right-radius: $bottomright;
+  -webkit-border-top-left-radius: $topleft;
+  -webkit-border-top-right-radius: $topright;
+  border-bottom-left-radius: $bottomleft;
+  border-bottom-right-radius: $bottomright;
+  border-top-left-radius: $topleft;
+  border-top-right-radius: $topright;
+}
