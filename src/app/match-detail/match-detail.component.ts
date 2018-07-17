@@ -1,26 +1,31 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Web3Service, SolobetService, NotifyService, EventEmitterService } from 'service/service';
-import { URLSearchParams } from '@angular/http';
+import {Component, OnInit, Inject} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {BsModalService, ModalOptions} from 'ngx-bootstrap/modal';
+import {Web3Service, SolobetService, NotifyService, EventEmitterService, MatchService} from 'service/service';
+import {URLSearchParams} from '@angular/http';
 
-import { Fixture } from 'models/fixture';
-import { Handicap } from 'models/handicap';
-import { Match } from 'models/match';
-import { Betting } from 'models/betting';
+import {Fixture} from 'models/fixture';
+import {Handicap} from 'models/handicap';
+import {Match} from 'models/match';
+import {Betting} from 'models/betting';
 
-import { DealModalComponent } from 'app/deal-modal/deal-modal.component';
-import { AcceptOddsModalComponent } from 'app/accept-odds-modal/accept-odds-modal.component';
+import {DealModalComponent} from 'app/deal-modal/deal-modal.component';
+import {AcceptOddsModalComponent} from 'app/accept-odds-modal/accept-odds-modal.component';
 
-import { environment } from 'environments/environment';
+import {environment} from 'environments/environment';
 
 import * as clone from 'lodash/clone';
+import {Subscription} from 'rxjs';
+
 @Component({
   selector: 'app-match-detail',
   templateUrl: './match-detail.component.html',
-  styleUrls: ['./match-detail.component.css']
+  styleUrls: ['./match-detail.component.scss']
 })
 export class MatchDetailComponent implements OnInit {
+
+
+  static ROUTER = 'match-detail';
 
   public fixture: Fixture = new Fixture();
   public handicap: Handicap = new Handicap();
@@ -33,37 +38,50 @@ export class MatchDetailComponent implements OnInit {
   private _bettingsCount = 0;
   private _runTime;
 
-  public isSharePage: boolean = false;
+  public isSharePage = false;
   private _oldBettings;
+  public data;
 
   constructor(
     private _route: ActivatedRoute,
+    private _router: Router,
     private _web3Service: Web3Service,
     private _solobetService: SolobetService,
     private _modalService: BsModalService,
     private _notify: NotifyService,
-    private _eventEmitter: EventEmitterService
-  ) { }
+    private _eventEmitter: EventEmitterService,
+    private _matchesService: MatchService
+  ) {
+    this.data = this._matchesService.reqData;
+    sessionStorage.setItem('fixtureJson', this.data);
+  }
 
   ngOnInit() {
     this._getAccounts();
-    this._route.queryParams.subscribe(p => {
-      if (p.id && !p.bettingId) {
-        this._setProperties(p);
-        this._loadBettings(p.id);
-      } else if (p.bettingId) {
-        this._setProperties(p);
-        this._findBettingByMatchIdAndBettingId(p);
-      }
+    console.log('00000=====================', this.data);
+    console.log('localstorge', sessionStorage.getItem('fixtureJson'));
+    if (!this.data) {
+      this.data = JSON.parse(sessionStorage.getItem('fixtureJson'));
+    }
+    if (this.data.id && !this.data.bettingId) {
+      console.log('loading data');
+      this._setProperties(this.data);
+      this._loadBettings(this.data.id);
+    } else if (this.data.bettingId) {
+      console.log('have betting');
 
-    });
+      this._setProperties(this.data);
+      this._findBettingByMatchIdAndBettingId(this.data);
+    } else {
+      console.log('do nothing');
+    }
   }
 
   private _setProperties(p: any) {
     this.handicap = new Handicap(p);
     this.fixture = new Fixture(p);
 
-    let time = new Date(p.date);
+    const time = new Date(p.date);
     this.match = new Match(p);
     this.match.matchId = p.id.toString();
     this.match.homeTeam = p.homeTeamName;
@@ -77,8 +95,8 @@ export class MatchDetailComponent implements OnInit {
   private _getAccounts() {
     this._web3Service.getAccounts()
       .subscribe(accs => {
-        this.account = accs[0];
-      }, err => alert(err)
+          this.account = accs[0];
+        }, err => alert(err)
       );
   }
 
@@ -92,7 +110,7 @@ export class MatchDetailComponent implements OnInit {
             this._bettingsCount = 0;
             this.isLoading = false;
             this._oldBettings = clone(this.bettings);
-            this._eventEmitter.publishData({ type: 'reload', data: null });
+            this._eventEmitter.publishData({type: 'reload', data: null});
           }
         }, 200);
       }, errors => {
@@ -170,8 +188,8 @@ export class MatchDetailComponent implements OnInit {
   }
 
   private _findBettingByMatchIdAndBettingId(p: any) {
-    let matchId = p.id;
-    let bettingId = p.bettingId;
+    const matchId = p.id;
+    const bettingId = p.bettingId;
     if (matchId || bettingId) {
       this._solobetService.getBetting(matchId, bettingId).subscribe(betting => {
         this.bettings.push(betting);
@@ -183,22 +201,22 @@ export class MatchDetailComponent implements OnInit {
   }
 
   public buildLink(betting) {
-    let json = this.fixture.pickJson();
-    let params = new URLSearchParams();
-    for (let key in json) {
+    const json = this.fixture.pickJson();
+    const params = new URLSearchParams();
+    for (const key of Object.keys(json)) {
       params.set(key, json[key]);
     }
-    params.set("bettingId", betting.bettingId);
+    params.set('bettingId', betting.bettingId);
     this._copyLink(params.toString());
   }
 
   private _copyLink(val: string) {
-    let selBox = document.createElement('textarea');
+    const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
     selBox.style.left = '0';
     selBox.style.top = '0';
     selBox.style.opacity = '0';
-    selBox.value = environment.contextpath + "/match-detail?" + val;
+    selBox.value = environment.contextpath + '/match-detail?' + val;
     document.body.appendChild(selBox);
     selBox.focus();
     selBox.select();

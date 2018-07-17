@@ -12,7 +12,7 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-matches-future',
   templateUrl: './matches-future.component.html',
-  styleUrls: ['./matches-future.component.css'],
+  styleUrls: ['./matches-future.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatchesFutureComponent implements OnInit {

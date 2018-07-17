@@ -7,7 +7,6 @@ import 'rxjs/add/operator/map';
 declare var require: any;
 
 const httpOptions = {
-  //headers: new HttpHeaders({'Content-Type': 'application/json'})
   headers: new HttpHeaders({
     'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json'
@@ -18,6 +17,8 @@ const API_KEY = '243fcce4927d5972d2bc02951ebc15245d90c78af66f9afa74120ce87b8ebc3
 
 @Injectable()
 export class MatchService {
+
+  public reqData: any;
 
   constructor(private http: HttpClient) {
   }

@@ -11,7 +11,7 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-matches-tomorrow',
   templateUrl: './matches-tomorrow.component.html',
-  styleUrls: ['./matches-tomorrow.component.css'],
+  styleUrls: ['./matches-tomorrow.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatchesTomorrowComponent implements OnInit {

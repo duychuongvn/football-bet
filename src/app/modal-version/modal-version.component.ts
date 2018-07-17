@@ -4,7 +4,7 @@ import { BsModalRef } from "ngx-bootstrap/modal";
 @Component({
   selector: 'app-modal-version',
   templateUrl: './modal-version.component.html',
-  styleUrls: ['./modal-version.component.css']
+  styleUrls: ['./modal-version.component.scss']
 })
 export class ModalVersionComponent implements OnInit {
 

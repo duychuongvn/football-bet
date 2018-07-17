@@ -11,7 +11,7 @@ import { Fixture } from 'models/fixture';
 @Component({
   selector: 'app-accept-odds-modal',
   templateUrl: './accept-odds-modal.component.html',
-  styleUrls: ['./accept-odds-modal.component.css']
+  styleUrls: ['./accept-odds-modal.component.scss']
 })
 export class AcceptOddsModalComponent implements OnInit {
 

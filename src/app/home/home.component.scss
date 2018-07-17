@@ -1,7 +1,6 @@
 .match-banner {
-  background-image: url('../../assets/images/match-banner.jpg');
   background-size: cover;
-  background-repeat: no-repeat;
+  background: url('../../assets/images/match-banner.jpg') no-repeat;
   height: 100vh;
   padding: 0;
 }

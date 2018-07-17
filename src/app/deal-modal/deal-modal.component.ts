@@ -12,7 +12,7 @@ import { PAIR_TYPE } from 'enums/handicap';
 @Component({
   selector: 'app-deal-modal',
   templateUrl: './deal-modal.component.html',
-  styleUrls: ['./deal-modal.component.css']
+  styleUrls: ['./deal-modal.component.scss']
 })
 export class DealModalComponent implements OnInit {
   public title: string;

@@ -4,7 +4,7 @@ import { BsModalRef } from "ngx-bootstrap/modal";
 @Component({
   selector: 'app-modal-install-metamask',
   templateUrl: './modal-install-metamask.component.html',
-  styleUrls: ['./modal-install-metamask.component.css']
+  styleUrls: ['./modal-install-metamask.component.scss']
 })
 export class ModalInstallMetamaskComponent implements OnInit {
 
