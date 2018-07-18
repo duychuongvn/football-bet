@@ -9,6 +9,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { HeaderModule } from 'app/header/header.module';
 import { SidebarModule } from 'app/sidebar/sidebar.module';
+import { FooterModule } from 'app/footer/footer.module';
 import { ModalVersionModule } from 'app/modal-version/modal-version.module';
 import { ModalInstallMetamaskModule } from 'app/modal-install-metamask/modal-install-metamask.module';
 
@@ -36,6 +37,7 @@ const SERVICES = [
     AppRoutingModule,
     FormsModule,
     HeaderModule,
+    FooterModule,
     SidebarModule,
     ModalVersionModule,
     ModalInstallMetamaskModule,
