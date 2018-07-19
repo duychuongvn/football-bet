@@ -7,13 +7,13 @@ import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
-import { HeaderModule } from 'app/header/header.module';
-import { SidebarModule } from 'app/sidebar/sidebar.module';
-import { FooterModule } from 'app/footer/footer.module';
-import { ModalVersionModule } from 'app/modal-version/modal-version.module';
-import { ModalInstallMetamaskModule } from 'app/modal-install-metamask/modal-install-metamask.module';
+import { HeaderModule } from './header/header.module';
+import { SidebarModule } from './sidebar/sidebar.module';
+import { FooterModule } from './footer/footer.module';
+import { ModalVersionModule } from './modal-version/modal-version.module';
+import { ModalInstallMetamaskModule } from './modal-install-metamask/modal-install-metamask.module';
 
-import { AppRoutingModule } from 'app/app.router';
+import { AppRoutingModule } from './app.router';
 import { AppComponent } from './app.component';
 
 import { EventEmitterService, MatchService, NotifyService, SolobetService, UserService, Web3Service } from 'service/service';

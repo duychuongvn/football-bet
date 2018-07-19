@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { FixtureInterface } from '../interfaces/fixture';
+import { FixtureInterface } from 'interfaces/fixture';
 import { FixtureResult } from './fixtureResult';
 
 export class Fixture {

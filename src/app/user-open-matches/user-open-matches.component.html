@@ -1,0 +1,56 @@
+<ul class="fb-filter">
+  <li class="filter-item" *ngFor="let filter of arrUserType" [ngClass]="{ 'active': isActiveFilter(filter.id) }">
+    <a class="badge" [ngClass]="{ 'badge-info': isActiveFilter(filter.id), 'badge-secondary': !isActiveFilter(filter.id) }" (click)="selectedType(filter.id)">
+      {{ filter.text }}
+      <span class="ml-1">({{ filter.number }})</span>
+    </a>
+  </li>
+</ul>
+
+<accordion closeOthers="true" class="match-accr-wrap">
+  <accordion-group
+    *ngFor="let uMatch of userMatches"
+    [panelClass]="'match-accr-item'">
+    <div class="accor-header" accordion-heading>
+      <div class="date">
+        <span>{{ uMatch.month }}</span>
+        <span>{{ uMatch.day }}</span>
+      </div>
+
+      <div class="title">
+        <p>{{ uMatch.name }}</p>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">odds</th>
+            <th scope="col">stake</th>
+            <th scope="col">return</th>
+            <th scope="col">betting status</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let match of uMatch.odds">
+            <td>{{ match.id }}</td>
+            <td>{{ match.odds }}</td>
+            <td>{{ match.stakeString }}</td>
+            <td>{{ match.returnString }}</td>
+            <td>{{ match.status }}</td>
+            <td>
+              <button class="btn btn-sm btn-danger" tooltip="Cancel"
+                (click)="openCancel(match)"
+                [disabled]="!match.isOpen">
+                <i class="fa fa-ban"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </accordion-group>
+</accordion>

@@ -1,0 +1,32 @@
+.btn {
+
+  &-default {
+    border: 1px solid $color-gray--80;
+
+    &:hover {
+      background-color: $color-gray--80;
+      color: $color-white;
+    }
+  }
+
+  &-submit {
+    background-color: $color-submit;
+    border-color: $color-submit;
+
+    &:hover {
+      background-color: $color-submit-hover;
+      border-color: $color-submit-hover;
+      color: $color-white;
+    }
+  }
+
+  &-danger.disabled,
+  &-danger:disabled {
+    background-color: $color-gray--80;
+    border-color: $color-gray--80;
+  }
+
+  &:focus {
+    outline: none
+  }
+}

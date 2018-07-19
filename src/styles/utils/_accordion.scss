@@ -1,0 +1,91 @@
+.match-accr-wrap {
+  display: block;
+  margin: 15px;
+
+  .match-accr-item {
+    background-color: $bg_bet;
+    color: $color-white;
+    border-radius: 0;
+
+    .card-header {
+      padding: .45rem 1.25rem;
+      background-color: 0;
+      border-bottom: 1px solid $color-white;
+      border-left: 3px solid $color-green;
+      cursor: pointer;
+
+      &:first-child {
+        border-radius: 0;
+      }
+
+      .accor-header {
+        display: flex;
+        align-items: center;
+
+        .date {
+          text-align: center;
+          font-weight: bold;
+          line-height: .9;
+
+          span {
+            display: block;
+
+            &:first-child {
+              margin-bottom: 3px;
+            }
+          }
+        }
+
+        .title {
+          margin-left: 20px;
+          width: 100%;
+
+          &::after {
+            background: $color_white;
+            content: '';
+            display: block;
+            height: 2px;
+            transition: all .2s ease;
+            width: 0%;
+          }
+
+          p {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .panel-open {
+    .match-accr-item {
+      .card-header {
+        border-bottom: 0;
+
+        .accor-header .title::after {
+          width: 100%;
+        }
+      }
+
+      .panel-body {
+        border-left: 3px solid $rgba-greem--8;
+        border-bottom: 1px solid $color-white;
+        padding-left: 4rem;
+        padding-top: 0;
+
+        .table {
+          margin-bottom: 0;
+
+          thead tr th {
+            border-top: 0;
+            text-transform: uppercase;
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    margin: 15px 0 0;
+  }
+}

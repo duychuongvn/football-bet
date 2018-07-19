@@ -11,7 +11,22 @@ import {BettingPipe} from './betting.pipe';
 const _router: Routes = [
   {
     path: '',
-    component: UserComponent
+    component: UserComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'open',
+        pathMatch: 'full'
+      },
+      {
+        path: 'open',
+        loadChildren: '../user-open-matches/user-open-matches.module#UserOpenMatchesModule'
+      },
+      {
+        path: 'finished',
+        loadChildren: '../user-finished-matches/user-finished-matches.module#UserFinishedMatchesModule'
+      }
+    ]
   }
 ];
 

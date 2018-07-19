@@ -4,7 +4,7 @@ import {
   Web3Service,
   SolobetService,
   JhelperService
-} from '../../service/service';
+} from 'service/service';
 
 import { Fixture } from 'models/fixture';
 import { Match } from 'models/match';

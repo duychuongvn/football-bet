@@ -32,6 +32,25 @@ export class UserComponent {
 
   public isLoading = false;
 
+  public recommendMatch = [
+    {
+      id: 1,
+      name: 'brazil - mexico'
+    },
+    {
+      id: 2,
+      name: 'sweden - switzerland'
+    },
+    {
+      id: 3,
+      name: 'colombia - england'
+    },
+    {
+      id: 4,
+      name: 'colombia1 - england1'
+    }
+  ];
+
   constructor(
     private _ngZone: NgZone,
     private web3Service: Web3Service,

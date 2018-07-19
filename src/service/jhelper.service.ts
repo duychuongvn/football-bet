@@ -1,10 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
-import { Team } from "../models/team";
-import { Web3Service } from "service/web3.service";
-import {UserService} from 'service/user.service';
+import { Team } from "models/team";
+import { Web3Service } from "./web3.service";
+import {UserService} from './user.service';
 
-import {SolobetService} from 'service/solobet.service';
+import {SolobetService} from './solobet.service';
 import { Account } from "models/account";
 
 @Injectable({
