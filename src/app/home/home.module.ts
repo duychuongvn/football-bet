@@ -3,8 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
-import { SliderModule } from 'app/slider/slider.module';
-
 import { HomeComponent } from './home.component';
 
 const _route: Routes = [
@@ -32,7 +30,6 @@ const _route: Routes = [
   imports: [
     CommonModule,
     FormsModule,
-    SliderModule,
     RouterModule.forChild(_route)
   ],
   declarations: [

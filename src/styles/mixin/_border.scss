@@ -4,6 +4,12 @@
   border-radius: $radius;
 }
 
+@mixin border-left($border, $blur, $color) {
+  -moz-border-left: $border $blur $color;
+  -webkit-border-left: $border $blur $color;
+  border-left: $border $blur $color;
+}
+
 @mixin border-radius-focus($topleft, $topright, $bottomright, $bottomleft) {
   -moz-border-radius-bottomleft: $bottomleft;
   -moz-border-radius-bottomright: $bottomright;

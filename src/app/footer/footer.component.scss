@@ -24,6 +24,18 @@ footer {
       color: $color-white;
       text-decoration: underline;
     }
+
+    @media (max-width: 812px) {
+      &.join {
+        margin-top: 30px;
+      }
+    }
+
+    @media (max-width: 736px) {
+      &.contact {
+        margin-top: 30px;
+      }
+    }
   }
 
   .social {
@@ -57,7 +69,7 @@ footer {
         transition: 0.3s;
 
         .fa {
-          font-size: 1.2rem;
+          font-size: 1.7rem;
         }
       }
 

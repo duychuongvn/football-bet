@@ -23,6 +23,10 @@ const appRoutes: Routes = [
     loadChildren: 'app/coming-soon/coming-soon.module#ComingSoonModule'
   },
   {
+    path: 'how-it-works',
+    loadChildren: 'app/how-it-work/how-it-work.module#HowItWorkModule'
+  },
+  {
     path: '**',
     redirectTo: '',
     pathMatch: 'full'

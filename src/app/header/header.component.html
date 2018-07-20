@@ -7,15 +7,15 @@
 
   <div class="collapse navbar-collapse">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item" routerLinkActive="active" *ngIf="networkAvailable">
-        <a class="nav-link" [routerLink]="['/user']">Match Odds</a>
-      </li>
-      <!-- <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['/faq']">FAQs</a>
+      <li class="nav-item" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['']">Match Odds</a>
       </li>
       <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['/contact']">Support</a>
-      </li> -->
+        <a class="nav-link" [routerLink]="['/how-it-works']">How it works</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active" *ngIf="networkAvailable">
+        <a class="nav-link" [routerLink]="['/user']">My bet</a>
+      </li>
     </ul>
   </div>
 
