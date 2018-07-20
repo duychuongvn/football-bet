@@ -5,7 +5,7 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
-import { ModalUserCancelModule } from 'app/modal-user-cancel/modal-user-cancel.module';
+import { ModalUserCancelModule } from '../modal-user-cancel/modal-user-cancel.module';
 
 import { UserFinishedMatchesComponent } from './user-finished-matches.component';
 

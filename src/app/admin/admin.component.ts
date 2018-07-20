@@ -6,9 +6,9 @@ import {
   JhelperService
 } from 'service/service';
 
-import { Fixture } from 'models/fixture';
+import { Fixture } from 'models/fixture_bk';
 import { Match } from 'models/match';
-import { Betting } from 'models/betting';
+import { Betting } from 'models/betting_bk';
 
 @Component({
   selector: 'app-admin',

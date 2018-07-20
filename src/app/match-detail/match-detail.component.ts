@@ -4,13 +4,13 @@ import {BsModalService, ModalOptions} from 'ngx-bootstrap/modal';
 import {Web3Service, SolobetService, NotifyService, EventEmitterService, MatchService} from 'service/service';
 import {URLSearchParams} from '@angular/http';
 
-import {Fixture} from 'models/fixture';
+import {Fixture} from 'models/fixture_bk';
 import {Handicap} from 'models/handicap';
 import {Match} from 'models/match';
-import {Betting} from 'models/betting';
+import {Betting} from 'models/betting_bk';
 
-import {DealModalComponent} from 'app/deal-modal/deal-modal.component';
-import {AcceptOddsModalComponent} from 'app/accept-odds-modal/accept-odds-modal.component';
+import {DealModalComponent} from '../deal-modal/deal-modal.component';
+import {AcceptOddsModalComponent} from '../accept-odds-modal/accept-odds-modal.component';
 
 import {environment} from 'environments/environment';
 
@@ -23,7 +23,6 @@ import {Subscription} from 'rxjs';
   styleUrls: ['./match-detail.component.scss']
 })
 export class MatchDetailComponent implements OnInit {
-
 
   static ROUTER = 'match-detail';
 
@@ -57,24 +56,24 @@ export class MatchDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._getAccounts();
-    console.log('00000=====================', this.data);
-    console.log('localstorge', sessionStorage.getItem('fixtureJson'));
-    if (!this.data) {
-      this.data = JSON.parse(sessionStorage.getItem('fixtureJson'));
-    }
-    if (this.data.id && !this.data.bettingId) {
-      console.log('loading data');
-      this._setProperties(this.data);
-      this._loadBettings(this.data.id);
-    } else if (this.data.bettingId) {
-      console.log('have betting');
+    // this._getAccounts();
+    // console.log('00000=====================', this.data);
+    // console.log('localstorge', sessionStorage.getItem('fixtureJson'));
+    // if (!this.data) {
+    //   this.data = JSON.parse(sessionStorage.getItem('fixtureJson'));
+    // }
+    // if (this.data.id && !this.data.bettingId) {
+    //   console.log('loading data');
+    //   this._setProperties(this.data);
+    //   this._loadBettings(this.data.id);
+    // } else if (this.data.bettingId) {
+    //   console.log('have betting');
 
-      this._setProperties(this.data);
-      this._findBettingByMatchIdAndBettingId(this.data);
-    } else {
-      console.log('do nothing');
-    }
+    //   this._setProperties(this.data);
+    //   this._findBettingByMatchIdAndBettingId(this.data);
+    // } else {
+    //   console.log('do nothing');
+    // }
   }
 
   private _setProperties(p: any) {

@@ -1,0 +1,5 @@
+<div class="sdc_img-wrap" [ngStyle]="{'width': imgWidth, 'height': imgHeight}">
+  <img [src]="imgUrl" (error)="onError()" (load)="onLoad()">
+  <div class="sdc_img-item" [ngStyle]="{'background-image': bgUrl }" *ngIf="!loadingImg"></div>
+  <div class="sdc_img-load" *ngIf="loadingImg"></div>
+</div>

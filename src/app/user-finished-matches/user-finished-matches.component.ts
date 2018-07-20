@@ -7,9 +7,9 @@ import { User } from 'models/user';
 import { UserOdds } from 'models/user-odds';
 import { UserInterface } from 'interfaces/user';
 
-import { ModalUserCancelComponent } from 'app/modal-user-cancel/modal-user-cancel.component';
+import { ModalUserCancelComponent } from '../modal-user-cancel/modal-user-cancel.component';
 
-import { MATCHES } from 'app/user-open-matches/data';
+import { MATCHES } from '../user-open-matches/data';
 
 @Component({
   selector: 'app-user-finished-matches',

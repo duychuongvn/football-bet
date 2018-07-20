@@ -43,18 +43,25 @@
         .title {
           margin-left: 15px;
           width: 100%;
+          position: relative;
 
           &::after {
             background: $color_white;
+            position: absolute;
+            bottom: -8px;
             content: '';
             display: block;
-            height: 2px;
-            @include transition(all, .2s, ease);
+            height: 1px;
+            @include transition(all, .7s, ease);
             width: 0%;
           }
 
           p {
             margin-bottom: 0;
+          }
+
+          .accr-ball--active {
+            display: none;
           }
         }
       }
@@ -66,8 +73,22 @@
       .card-header {
         border-bottom: 0;
 
-        .accor-header .title::after {
-          width: 100%;
+        .accor-header .title {
+          font-weight: bold;
+
+          p {
+            display: inline-block;
+          }
+
+          &::after {
+            width: 100%;
+          }
+
+          .accr-ball--active {
+            display: inline-block;
+            margin-left: 10px;
+            color: $color-green;
+          }
         }
       }
 
@@ -75,6 +96,7 @@
         border-left: 3px solid $rgba-green-opacity;
         border-bottom: 1px solid $color-white;
         padding-top: 0;
+        padding-left: 3rem;
 
         .table {
           margin-bottom: 0;
@@ -82,6 +104,16 @@
           thead tr th {
             border-top: 0;
             text-transform: uppercase;
+          }
+
+          .betting-detail {
+            font-size: 1.3rem;
+            color: $color-white;
+            cursor: pointer;
+
+            &:hover {
+              color: $color-green;
+            }
           }
         }
       }
@@ -100,11 +132,23 @@
     }
   }
 
-  &.accr-user {
-    margin: 15px;
+  &.accr {
+    &-user {
+      margin: 15px;
 
-    .panel-open .match-accr-item .panel-body {
-      padding-left: 4rem;
+      .card-header .accor-header .title::after {
+        bottom: -14px;
+      }
+
+      .panel-open .match-accr-item .panel-body {
+        padding-left: 3.7rem;
+      }
+    }
+
+    &-fixtures {
+      .table tbody tr:first-child td {
+        border-top: 0;
+      }
     }
   }
 

@@ -8,8 +8,11 @@
   </nav>
 </div>
 
-<accordion closeOthers="true" class="match-accr-wrap">
-  <accordion-group [panelClass]="'match-accr-item'">
+<accordion closeOthers="true" class="match-accr-wrap accr-fixtures">
+  <accordion-group
+    *ngFor="let fixture of fixtures; let key = index"
+    [panelClass]="'match-accr-item'"
+    [isOpen]="key === 0">
     <div class="accor-header" accordion-heading>
       <div class="accr-arrow">
         <i class="fa fa-plus arrow-open"></i>
@@ -17,23 +20,44 @@
       </div>
 
       <div class="title">
-        <p>Premier League</p>
+        <p>{{ fixture.name }}</p>
+        <div class="accr-ball--active">
+          <i class="fa fa-futbol-o fa-spin"></i>
+        </div>
       </div>
     </div>
-    This is accordion
-  </accordion-group>
-  <accordion-group [panelClass]="'match-accr-item'">
-    <div class="accor-header" accordion-heading>
-      <div class="accr-arrow">
-        <i class="fa fa-plus arrow-open"></i>
-        <i class="fa fa-minus arrow-close"></i>
-      </div>
 
-      <div class="title">
-        <p>UEFA Champions League</p>
-      </div>
+    <div class="table-responsive pt-3">
+      <table class="table table-hover">
+        <tbody>
+          <tr *ngFor="let betting of fixture.bettings">
+            <td>
+              <div class="betting-wrap">
+                <sdc-image
+                  imgWidth="30px"
+                  imgHeight="20px"
+                  [imgUrl]="betting.homeTeamFlag"
+                  [imgName]="betting.homeTeam"></sdc-image>
+                <p>{{ betting.bettingName }}</p>
+                <sdc-image
+                  imgWidth="30px"
+                  imgHeight="20px"
+                  [imgUrl]="betting.awayTeamFlag"
+                  [imgName]="betting.awayTeam"></sdc-image>
+              </div>
+            </td>
+            <td>100</td>
+            <td>100</td>
+            <td class="text-center">
+              <a class="betting-detail" [routerLink]="['/match-detail']">
+                <i class="fa fa-chevron-circle-right"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    This is accordion
+
   </accordion-group>
 </accordion>
 

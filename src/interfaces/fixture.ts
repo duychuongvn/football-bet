@@ -1,4 +1,5 @@
 import { FixtureResult } from "models/fixtureResult";
+import { NewBettingInterface } from './betting';
 
 export interface FixtureInterface {
   id: number|string,
@@ -12,5 +13,12 @@ export interface FixtureInterface {
   awayFlag: string,
   homeFlag: string,
   result: FixtureResult
+};
 
+
+export interface NewFixtureInterface {
+  id: number,
+  name: string,
+  date: string,
+  bettings: NewBettingInterface[]
 };

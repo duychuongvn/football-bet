@@ -1,5 +1,5 @@
 import { MatchInterface } from 'interfaces/match'
-import { Betting } from 'models/betting'
+import { Betting } from './betting_bk'
 import * as moment from 'moment';
 
 export class Match {
@@ -71,8 +71,6 @@ export class Match {
   public set bettings(v: Betting[]) {
     this._bettings = v;
   }
-
-
 
   private _approved : boolean;
   public get approved() : boolean {

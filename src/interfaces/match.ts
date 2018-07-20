@@ -1,4 +1,4 @@
-import {Betting} from 'models/betting'
+import {Betting} from 'models/betting_bk'
 
 export interface MatchInterface {
   matchId: any;

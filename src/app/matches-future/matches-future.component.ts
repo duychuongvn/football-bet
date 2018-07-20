@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, NgZone }
 import { Router } from '@angular/router';
 import { JhelperService, Web3Service, NotifyService, EventEmitterService } from 'service/service';
 
-import { Fixture } from 'models/fixture';
+import { Fixture } from 'models/fixture_bk';
 import { METAMASK } from 'enums/metamask';
 
 import * as groupBy from 'lodash/groupBy';

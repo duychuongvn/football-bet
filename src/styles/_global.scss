@@ -75,3 +75,13 @@
     }
   }
 }
+
+.betting-wrap {
+  display: flex;
+  align-items: center;
+
+  p {
+    margin: 0 5px 0;
+    line-height: 1.2;
+  }
+}

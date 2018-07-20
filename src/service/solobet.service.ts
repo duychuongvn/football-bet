@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {fromPromise} from 'rxjs/observable/fromPromise';
 import {Web3Service} from './web3.service';
-import {Betting} from 'models/betting';
+import {Betting} from 'models/betting_bk';
 import {log} from 'util';
 import {Match} from 'models/match';
 

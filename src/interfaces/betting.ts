@@ -1,4 +1,4 @@
-export interface BettingInterface{
+export interface BettingInterface {
   bettingId: any,
   matchId: any,
   amount: number,
@@ -12,4 +12,11 @@ export interface BettingInterface{
   awayOffer: string,
   homeDealer: string,
   awayDealer: string
-}
+};
+
+export interface NewBettingInterface {
+  id: number,
+  date: string,
+  homeTeam: string,
+  awayTeam: string
+};

@@ -1,10 +1,11 @@
 @import url('https://fonts.googleapis.com/css?family=Barlow+Condensed&subset=latin-ext');
 
 @import 'variables';
-@import 'global';
 @import 'mixin/index';
 @import 'inheritance/index';
 @import 'utils/index';
+
+@import 'global';
 
 // import Page;
 @import 'pages/index';

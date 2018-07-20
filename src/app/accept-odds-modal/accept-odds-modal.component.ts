@@ -4,7 +4,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { SolobetService, NotifyService } from 'service/service';
 import { Handicap } from 'models/handicap';
 import { Match } from 'models/match';
-import { Betting } from 'models/betting';
+import { Betting } from 'models/betting_bk';
 import { Fixture } from 'models/fixture';
 
 

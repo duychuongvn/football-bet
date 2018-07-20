@@ -1,0 +1,42 @@
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.sdc_img {
+  &-wrap {
+    position: relative;
+
+    img {
+      display: none;
+    }
+  }
+
+  &-item {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+  }
+
+  &-load {
+    animation: spin 1s infinite linear;
+    border: .25rem solid rgba(23, 22, 22, 0.2);
+    border-radius: 50%;
+    border-top-color: #ee49a3;
+    height: 24px;
+    position: absolute;
+    left: calc(50% - 15px);
+    right: 0;
+    top: calc(50% - 15px);
+    width: 24px;
+  }
+}
