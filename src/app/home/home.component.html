@@ -1,20 +1,5 @@
 <div class="row">
-  <div class="col-md-8 col-sm-12">
-    <ul class="nav nav-justified">
-      <li class="nav-item" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['']">Today</a>
-      </li>
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['/tomorrow']">Tomorrow</a>
-      </li>
-      <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['/future']">Future Matches</a>
-      </li>
-    </ul>
-
-    <router-outlet></router-outlet>
-  </div>
-  <div class="col-md-4 col-sm-12">
+  <div class="col-lg-4 col-md-12 col-sm-12">
     <div class="card card-match text-white my-3">
       <div class="card-header font-weight-bold">Crypto P2P Betting</div>
       <div class="card-body">
@@ -37,5 +22,20 @@
         </p>
       </div>
     </div> -->
+  </div>
+  <div class="col-lg-8 col-md-12 col-sm-12">
+    <ul class="nav nav-justified">
+      <li class="nav-item" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['']">Today</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/tomorrow']">Tomorrow</a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" [routerLink]="['/future']">Future Matches</a>
+      </li>
+    </ul>
+
+    <router-outlet></router-outlet>
   </div>
 </div>

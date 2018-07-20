@@ -1,0 +1,77 @@
+.filter {
+  &-wrap {
+    display: flex;
+    justify-content: space-between;
+
+    p {
+      margin-bottom: 0;
+    }
+
+    @media (max-width: 414px) {
+      display: block;
+      text-align: center;
+    }
+  }
+
+  &-box {
+    display: inherit;
+
+    .fl {
+      &-item {
+        margin-right: 15px;
+        position: relative;
+        cursor: pointer;
+        color: $color-gray--80;
+
+        &:not([href]):not([tabindex]) {
+          color: $color-gray--80;
+        }
+
+        &::before {
+          position: absolute;
+          content: '';
+          right: -9px;
+          top: 4px;
+          height: 70%;
+          width: 2px;
+          background: $color-white;
+        }
+
+        &::after {
+          background: $color_white;
+          content: '';
+          display: block;
+          height: 2px;
+          transition: all .2s ease;
+          width: 0%;
+        }
+
+        &:last-child {
+          margin-right: 0;
+
+          &::before {
+            display: none;
+          }
+        }
+
+        &.active, &:hover {
+          color: $color-white;
+
+          &:not([href]):not([tabindex]) {
+            color: $color-white;
+          }
+
+          &::after {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 414px) {
+      display: flex;
+      margin-top: 10px;
+      justify-content: center;
+    }
+  }
+}

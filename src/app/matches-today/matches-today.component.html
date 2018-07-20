@@ -1,4 +1,43 @@
-<div class="card card-match text-white my-3" [hidden]="!fixtures.length">
+<div class="alert alert-match text-white mt-3 filter-wrap" role="alert">
+  <p>{{ currentDateString }}</p>
+
+  <nav class="filter-box">
+    <a class="fl-item active">Current Bet</a>
+    <a class="fl-item">Settled</a>
+    <a class="fl-item">Open</a>
+  </nav>
+</div>
+
+<accordion closeOthers="true" class="match-accr-wrap">
+  <accordion-group [panelClass]="'match-accr-item'">
+    <div class="accor-header" accordion-heading>
+      <div class="accr-arrow">
+        <i class="fa fa-plus arrow-open"></i>
+        <i class="fa fa-minus arrow-close"></i>
+      </div>
+
+      <div class="title">
+        <p>Premier League</p>
+      </div>
+    </div>
+    This is accordion
+  </accordion-group>
+  <accordion-group [panelClass]="'match-accr-item'">
+    <div class="accor-header" accordion-heading>
+      <div class="accr-arrow">
+        <i class="fa fa-plus arrow-open"></i>
+        <i class="fa fa-minus arrow-close"></i>
+      </div>
+
+      <div class="title">
+        <p>UEFA Champions League</p>
+      </div>
+    </div>
+    This is accordion
+  </accordion-group>
+</accordion>
+
+<!-- <div class="card card-match text-white my-3" [hidden]="!fixtures.length">
   <div class="card-header font-weight-bold">{{ currentDateString }}</div>
   <ul class="list-group list-group-flush">
     <li (click)="gotoDetail(fixture)" class="list-group-item pointer" *ngFor="let fixture of fixtures">
@@ -12,8 +51,8 @@
       <a (click)="gotoDetail(fixture)" class="arrow-detail"></a>
     </li>
   </ul>
-</div>
+</div> -->
 
-<div class="alert alert-match text-white mt-3" role="alert" [hidden]="fixtures.length">
+<!-- <div class="alert alert-match text-white mt-3" role="alert" [hidden]="fixtures.length">
   No matches found!
-</div>
+</div> -->

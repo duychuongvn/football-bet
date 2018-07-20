@@ -28,6 +28,7 @@ footer {
     @media (max-width: 812px) {
       &.join {
         margin-top: 30px;
+        text-align: center;
       }
     }
 
@@ -44,6 +45,11 @@ footer {
       margin: 10px 0 0;
       list-style: none;
       overflow: hidden;
+
+      @media (max-width: 812px) {
+        width: 220px;
+        margin: 0 auto;
+      }
     }
 
     &-item {
@@ -79,6 +85,14 @@ footer {
         transition: 0.2s;
         top: -3px;
         opacity: 0.8;
+      }
+
+      &:last-child {
+        margin-right: 0;
+
+        a {
+          padding-right: 0;
+        }
       }
     }
   }

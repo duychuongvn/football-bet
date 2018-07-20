@@ -1,6 +1,10 @@
 .match-accr-wrap {
-  display: block;
-  margin: 15px;
+
+  .accr-arrow .arrow-close {
+    opacity: 0;
+    display: none;
+    @include transition(opacity, 0.5s, linear);
+  }
 
   .match-accr-item {
     background-color: $bg_bet;
@@ -37,7 +41,7 @@
         }
 
         .title {
-          margin-left: 20px;
+          margin-left: 15px;
           width: 100%;
 
           &::after {
@@ -45,7 +49,7 @@
             content: '';
             display: block;
             height: 2px;
-            transition: all .2s ease;
+            @include transition(all, .2s, ease);
             width: 0%;
           }
 
@@ -68,9 +72,8 @@
       }
 
       .panel-body {
-        border-left: 3px solid $rgba-greem--8;
+        border-left: 3px solid $rgba-green-opacity;
         border-bottom: 1px solid $color-white;
-        padding-left: 4rem;
         padding-top: 0;
 
         .table {
@@ -83,9 +86,31 @@
         }
       }
     }
+
+    .accr-arrow .arrow-close {
+      display: block;
+      opacity: 1;
+      margin-top: 4px;
+    }
+
+    .accr-arrow .arrow-open {
+      opacity: 0;
+      display:none;
+      @include transition(opacity, 0.5s, linear);
+    }
+  }
+
+  &.accr-user {
+    margin: 15px;
+
+    .panel-open .match-accr-item .panel-body {
+      padding-left: 4rem;
+    }
   }
 
   @media (max-width: 1024px) {
-    margin: 15px 0 0;
+    &.accr-user {
+      margin: 15px 0 0;
+    }
   }
 }

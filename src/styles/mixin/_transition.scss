@@ -1,0 +1,7 @@
+@mixin transition ($scope, $duration, $animation) {
+  transition: $scope $duration $animation;
+  -webkit-transition: $scope $duration $animation;
+  -moz-transition: $scope $duration $animation;
+  -o-transition: $scope $duration $animation;
+  -ms-transition: $scope $duration $animation;
+}

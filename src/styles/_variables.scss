@@ -1,6 +1,6 @@
 $color-white: #fff;
 $color-yellow: #ffc107;
-$color-green: #28a745;
+$color-green: #12e642;
 $color-info: #17a2b8;
 $color-blue-gray: #4e7180;
 
@@ -9,13 +9,13 @@ $color-gray--dd: #dcdcdd;
 $color-blue--ff: #007bff;
 
 $rgba-gray--65: rgba(255, 255, 255, .65);
-$rgba-gray--9: rgba(255, 255, 255, .9);
-$rgba-blue--8: rgba(0, 46, 102, .8);
-$rgba-greem--8: rgba(40, 167, 69, .6);
-$rgba-blue-gray: rgba(78, 113, 128, .6);
+$rgba-gray-opacity: rgba(255, 255, 255, .9);
+$rgba-blue-opacity: rgba(0, 46, 102, .8);
+$rgba-green-opacity: rgba(18, 230, 66, .5);
+$rgba-blue-gray-opacity: rgba(78, 113, 128, .8);
 
-$bg_bet: $rgba-blue-gray;
+$bg_bet: $rgba-blue-gray-opacity;
 
 // Button
 $color-submit: $color-blue-gray;
-$color-submit-hover: $rgba-blue-gray;
+$color-submit-hover: $rgba-blue-gray-opacity;
