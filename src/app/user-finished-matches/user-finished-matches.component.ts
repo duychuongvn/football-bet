@@ -9,7 +9,7 @@ import { UserInterface } from 'interfaces/user';
 
 import { ModalUserCancelComponent } from '../modal-user-cancel/modal-user-cancel.component';
 
-import { MATCHES } from '../user-open-matches/data';
+import { MATCHES, SORTODDS_OPTS, SORTODDS_CHILD_OPTS } from '../user-open-matches/data';
 
 @Component({
   selector: 'app-user-finished-matches',
@@ -22,6 +22,13 @@ export class UserFinishedMatchesComponent implements OnInit {
   public arrUserType: Array<Object> = [];
 
   public userMatches: User[] = [];
+
+  public oddsOpts = SORTODDS_OPTS;
+
+  public oddsChildOpts = SORTODDS_CHILD_OPTS.date;
+
+  public sortBySelected = 1;
+  public sortBySelected1 = 1;
 
   constructor(
     private _bsModalService: BsModalService

@@ -7,10 +7,21 @@
   </li>
 </ul>
 
+<div class="betting-sort">
+  <p class="title">Sort by</p>
+  <div class="sort-item sort-sm">
+    <ng-select class="bet-select"
+      [items]="oddsOpts" [(ngModel)]="sortBySelected" bindLabel="name" bindValue="id" [hideSelected]="true"
+      [clearable]="false" [searchable]="false"></ng-select>
+  </div>
+  <div class="sort-item sort-md">
+    <ng-select class="bet-select" [items]="oddsChildOpts" [(ngModel)]="sortBySelected1" bindLabel="name" bindValue="id" [hideSelected]="true"
+      [clearable]="false"></ng-select>
+  </div>
+</div>
+
 <accordion closeOthers="true" class="match-accr-wrap accr-user">
-  <accordion-group
-    *ngFor="let uMatch of userMatches"
-    [panelClass]="'match-accr-item'">
+  <accordion-group *ngFor="let uMatch of userMatches; let key = index" [panelClass]="'match-accr-item'" [isOpen]="key === 0">
     <div class="accor-header" accordion-heading>
       <div class="date">
         <span>{{ uMatch.month }}</span>
@@ -19,9 +30,13 @@
 
       <div class="title">
         <p>{{ uMatch.name }}</p>
+
+        <div class="stake">
+          <p>Total stake: 10 ETH</p>
+        </div>
       </div>
     </div>
-    <div class="table-responsive">
+    <div class="table-responsive pt-3">
       <table class="table table-hover">
         <thead>
           <tr>
@@ -40,12 +55,14 @@
             <td>{{ match.odds }}</td>
             <td>{{ match.stakeString }}</td>
             <td>{{ match.returnString }}</td>
-            <td>{{ match.status }}</td>
+            <td [ngClass]="match.statusClass">
+              {{ match.status }}
+              <i class="fa fa-check-circle" *ngIf="match.isSettled"></i>
+            </td>
             <td>
-              <button class="btn btn-sm btn-danger" tooltip="Cancel"
-                (click)="openCancel(match)"
-                [disabled]="!match.isOpen">
+              <button class="btn btn-sm btn-cancel" tooltip="Cancel" (click)="openCancel(match)" [disabled]="!match.isOpen">
                 <i class="fa fa-ban"></i>
+                Cancel
               </button>
             </td>
           </tr>

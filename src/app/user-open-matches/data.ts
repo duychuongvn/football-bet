@@ -23,7 +23,7 @@ export const MATCHES = [
         odds: 'denmark +3',
         stake: Math.floor(Math.random() * 10) + 1,
         return: 0,
-        status: 'settled'
+        status: 'cancelled'
       },
       {
         id: 4,
@@ -71,3 +71,36 @@ export const MATCHES = [
   }
 ]
 
+export const SORTODDS_OPTS = [
+  {
+    id: 1,
+    name: 'Date'
+  },
+  {
+    id: 2,
+    name: 'Stake'
+  }
+];
+
+export const SORTODDS_CHILD_OPTS = {
+  date: [
+    {
+      id: 1,
+      name: 'Most recent'
+    },
+    {
+      id: 2,
+      name: 'Latest to newest'
+    }
+  ],
+  stake: [
+    {
+      id: 1,
+      name: 'high to low'
+    },
+    {
+      id: 2,
+      name: 'low to high'
+    }
+  ]
+}

@@ -1,17 +1,41 @@
 <div class="match-banner">
   <div class="match-date">
     <i class="material-icons mr-2">date_range</i>
-    <span class="d-inline-block">{{ fixture.date_string }}</span>
+    <span class="d-inline-block">{{ betting.dateBetting }}</span>
   </div>
-  <p class="match-title">
-    <img [src]="fixture.homeFlag" class="mr-3"> {{ fixture.match }}
-    <img [src]="fixture.awayFlag" class="ml-3">
-  </p>
-  <p class="match-title_sub">World Cup russia 2018</p>
+
+  <div class="betting-wrap betting-md">
+    <div class="match-img">
+      <sdc-image
+        imgWidth="100%"
+        imgHeight="100%"
+        [imgUrl]="betting.homeTeamFlag"
+        [imgName]="betting.homeTeam"></sdc-image>
+    </div>
+    <p>{{ betting.bettingName }}</p>
+    <div class="match-img">
+      <sdc-image
+        imgWidth="100%"
+        imgHeight="100%"
+        [imgUrl]="betting.awayTeamFlag"
+        [imgName]="betting.awayTeam"></sdc-image>
+    </div>
+  </div>
+
+  <p class="match-title">World Cup russia 2018</p>
 
   <p class="match-time">
-    <i class="material-icons">access_time</i> {{ fixture.time_string }}</p>
+    <i class="material-icons">access_time</i> {{ betting.timeString }}
+  </p>
 </div>
+
+<div class="btn-new-bet" (click)="openHandicap()">
+  <button class="btn btn-success d-inline-flex">
+    <i class="material-icons mr-2">add_circle_outline</i>
+    New Bet
+  </button>
+</div>
+
 
 <!-- <div class="row mb-3">
   <div class="table-responsive">
@@ -66,11 +90,4 @@
       </tbody>
     </table>
   </div>
-</div>
-
-<div class="btn-new-bet" (click)="openHandicap()" [hidden]="fixture.isOutOfDate === true">
-  <button class="btn btn-success d-flex">
-    <i class="material-icons mr-2">add_circle_outline</i>
-    New Bet
-  </button>
 </div> -->

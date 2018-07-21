@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgSelectModule, NG_SELECT_DEFAULT_CONFIG } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+
 import { Routes, RouterModule } from '@angular/router';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -19,6 +22,8 @@ const _router: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    NgSelectModule,
+    FormsModule,
     RouterModule.forChild(_router),
     AccordionModule.forRoot(),
     TooltipModule.forRoot(),
@@ -26,6 +31,14 @@ const _router: Routes = [
     ModalUserCancelModule
   ],
   declarations: [UserOpenMatchesComponent],
-  exports: [UserOpenMatchesComponent]
+  exports: [UserOpenMatchesComponent],
+  providers: [
+    {
+      provide: NG_SELECT_DEFAULT_CONFIG,
+      useValue: {
+          notFoundText: 'Custom not found'
+      }
+    }
+  ]
 })
 export class UserOpenMatchesModule { }

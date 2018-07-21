@@ -9,6 +9,19 @@
 
 <div class="clearfix"></div>
 
+<div class="betting-sort">
+  <p class="title">Sort by</p>
+  <div class="sort-item sort-sm">
+    <ng-select class="bet-select"
+      [items]="oddsOpts" [(ngModel)]="sortBySelected" bindLabel="name" bindValue="id" [hideSelected]="true"
+      [clearable]="false" [searchable]="false"></ng-select>
+  </div>
+  <div class="sort-item sort-md">
+    <ng-select class="bet-select" [items]="oddsChildOpts" [(ngModel)]="sortBySelected1" bindLabel="name" bindValue="id" [hideSelected]="true"
+      [clearable]="false"></ng-select>
+  </div>
+</div>
+
 <accordion closeOthers="true" class="match-accr-wrap accr-user">
   <accordion-group *ngFor="let uMatch of userMatches" [panelClass]="'match-accr-item'">
     <div class="accor-header" accordion-heading>

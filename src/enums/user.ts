@@ -15,5 +15,8 @@ export enum USER_TYPE_FINISHED {
 export enum USER_STATUS {
   OPEN = 'open',
   SETTLED = 'settled',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
+  WON = 'won',
+  LOST = 'lost',
+  REFUNDED = 'refunded'
 }

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { SdcImageModule } from 'shared/sdc-image/sdc-image.module';
 import { DealModalModule } from '../deal-modal/deal-modal.module';
 import { AcceptOddsModalModule } from '../accept-odds-modal/accept-odds-modal.module';
 
@@ -20,7 +21,8 @@ const _route: Routes = [
     RouterModule.forChild(_route),
     ModalModule.forRoot(),
     DealModalModule,
-    AcceptOddsModalModule
+    AcceptOddsModalModule,
+    SdcImageModule
   ],
   declarations: [
     MatchDetailComponent

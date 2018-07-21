@@ -1,0 +1,13 @@
+.text {
+  &-settled {
+    color: $color-blue;
+  }
+
+  &-open {
+    color: $color-green;
+  }
+
+  &-cancelled {
+    color: $color-red;
+  }
+}

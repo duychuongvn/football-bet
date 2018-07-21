@@ -12,6 +12,9 @@ export class Fixture extends BaseModel {
   public get name(): string {
     return this._name;
   }
+  public get nameCount(): string {
+    return `${this.name} (${this.bettings.length})`;
+  }
   public set name(v: string) {
     this._name = v;
   }
@@ -24,11 +27,11 @@ export class Fixture extends BaseModel {
     this._date = v;
   }
 
-  private _bettings: NewBettingInterface[];
-  public get bettings(): NewBettingInterface[] {
+  private _bettings: Betting[];
+  public get bettings(): Betting[] {
     return this._bettings;
   }
-  public set bettings(v: NewBettingInterface[]) {
+  public set bettings(v: Betting[]) {
     this._bettings = v;
   }
 

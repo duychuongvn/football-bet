@@ -20,13 +20,25 @@
     }
   }
 
+  &-cancel {
+    background-color: $color-white;
+    color: $color-red;
+    line-height: 0;
+    border-color: $color-red;
+    font-weight: bold;
+  }
+
+  &-cancel.disabled,
+  &-cancel:disabled,
   &-danger.disabled,
   &-danger:disabled {
     background-color: $color-gray--80;
     border-color: $color-gray--80;
+    color: $color-gray-white;
   }
 
   &:focus {
     outline: none
   }
+
 }

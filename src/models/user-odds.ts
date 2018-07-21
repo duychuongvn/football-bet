@@ -51,6 +51,28 @@ export class UserOdds extends BaseModel {
   public get isSettled(): boolean {
     return this.status === USER_STATUS.SETTLED;
   }
+  public get isWon(): boolean {
+    return this.status === USER_STATUS.WON;
+  }
+  public get isLost(): boolean {
+    return this.status === USER_STATUS.LOST;
+  }
+  public get isRefunded(): boolean {
+    return this.status === USER_STATUS.REFUNDED;
+  }
+  public get statusClass(): string {
+    switch (this.status) {
+      case USER_STATUS.OPEN:
+        return ``;
+      case USER_STATUS.SETTLED:
+      case USER_STATUS.WON:
+      case USER_STATUS.LOST:
+        return `text-open`;
+      case USER_STATUS.CANCELLED:
+      case USER_STATUS.REFUNDED:
+        return `text-cancelled`;
+    }
+  }
 
   public get oddsCancel(): string {
     return `This odds ${this.odds} with ${this.stakeString} will be cancelled.`

@@ -1,0 +1,54 @@
+.ng-select.bet-select {
+  outline: none;
+
+  .ng-select-container {
+
+    .ng-value-container {
+      color: $color-white;
+
+      .ng-placeholder {
+        color: $color-white;
+      }
+    }
+
+    &::after {
+      border-color: $color-white;
+    }
+  }
+
+  .ng-arrow-wrapper .ng-arrow {
+    color: $color-white;
+  }
+
+  &.ng-select-single .ng-select-container {
+    .ng-clear-wrapper {
+      color: $color-white;
+    }
+
+    .ng-value-container,
+    .ng-value-container .ng-value {
+      outline: none;
+    }
+  }
+
+  &.ng-select-focused .ng-select-container .ng-arrow-wrapper .ng-arrow {
+    color: $color-white;
+  }
+
+  .ng-dropdown-panel {
+    background-color: $rgba-blue-gray-opacity;
+
+    .ng-dropdown-panel-items .ng-option {
+      color: $color-white;
+      border-bottom: 1px solid $color-white;
+
+      &.ng-option-marked {
+        background-color: $color-blue-gray;
+      }
+
+      &.ng-option-selected {
+        display: none;
+      }
+    }
+  }
+}

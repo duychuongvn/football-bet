@@ -3,33 +3,24 @@
 
 .match-banner {
   @include bg-img--cover('../../assets/images/Banner-Football-Ball.png');
-  height: 145px;
-  padding: 17px 25px 16px 170px;
+  min-height: 176px;
+  padding: 23px 18px 18px 190px;
   color: $color-white;
   position: relative;
 
   .match {
     &-date {
       display: flex;
-      margin: 10px 0 5px;
+      margin: 10px 0;
     }
 
     &-title {
       margin-bottom: 0;
-      font-size: 40px;
-      line-height: 40px;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
+      font-size: 1.1rem;
+      text-transform: capitalize;
 
-      img {
-        width: 50px;
-      }
-
-      &_sub {
-        margin-bottom: 0;
-        font-size: 11px;
-        text-transform: capitalize;
+      @media (max-width: 667px) {
+        font-size: 1rem;
       }
     }
 
@@ -47,17 +38,91 @@
         font-size: 40px;
         margin-right: 5px;
       }
+
+      @media (max-width: 812px) {
+        right: 20px;
+      }
+
+      @media (max-width: 736px) {
+        display: grid;
+        text-align: center;
+        top: 24%;
+        right: 5px;
+      }
+
+      @media (max-width: 667px) {
+        top: 22%;
+      }
+
+      @media (max-width: 414px) {
+        top: 20%;
+      }
+
+      @media (max-width: 375px) {
+        font-size: 2rem;
+
+        i {
+          font-size: 2rem;
+        }
+      }
+
+      @media (max-width: 320px) {
+        left: 0;
+        top: 35px;
+      }
     }
+
+    &-img {
+      width: 60px;
+      height: 30px;
+
+      @media (max-width: 812px) {
+        width: 50px;
+        height: 25px;
+      }
+
+      @media (max-width: 667px) {
+        width: 40px;
+        height: 25px;
+      }
+
+      @media (max-width: 375px) {
+        width: 30px;
+        height: 20px;
+      }
+    }
+  }
+
+  .betting-wrap {
+    margin-bottom: 10px;
+
+    @media (max-width: 667px) {
+      &.betting-md {
+        p {
+          font-size: 1.2rem;
+          line-height: 1.2;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 667px) {
+    background-position: 50% 50%;
+    padding: 20px 10px 0;
+    min-height: 150px;
+  }
+
+  @media (max-width: 320px) {
+    padding-top: 100px;
+    min-height: 230px;
   }
 }
 
 .btn-new-bet {
-  position: fixed;
-  cursor: pointer;
-  bottom: 20px;
-  right: 20px;
+  text-align: right;
+  margin-right: 17px;
 
-  .btn {
-    box-shadow: 0 0 5px $color-white;
+  @media (max-width: 1024px) {
+    margin-right: 0;
   }
 }
