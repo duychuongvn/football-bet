@@ -126,3 +126,20 @@
     margin-right: 0;
   }
 }
+
+.odds-action {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+
+  .btn {
+    // line-height: 0;
+    // border-color: $color-green;
+    // color: $color-green;
+    font-weight: bold;
+
+    .fa {
+      margin-right: 5px;
+    }
+  }
+}

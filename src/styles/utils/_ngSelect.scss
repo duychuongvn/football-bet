@@ -4,25 +4,25 @@
   .ng-select-container {
 
     .ng-value-container {
-      color: $color-white;
+      color: $color-blue-dark;
 
       .ng-placeholder {
-        color: $color-white;
+        color: $color-blue-dark;
       }
     }
 
     &::after {
-      border-color: $color-white;
+      border-color: $color-blue-dark;
     }
   }
 
   .ng-arrow-wrapper .ng-arrow {
-    color: $color-white;
+    color: $color-blue-dark;
   }
 
   &.ng-select-single .ng-select-container {
     .ng-clear-wrapper {
-      color: $color-white;
+      color: $color-blue-dark;
     }
 
     .ng-value-container,
@@ -32,7 +32,7 @@
   }
 
   &.ng-select-focused .ng-select-container .ng-arrow-wrapper .ng-arrow {
-    color: $color-white;
+    color: $color-blue-dark;
   }
 
   .ng-dropdown-panel {
@@ -41,6 +41,8 @@
     .ng-dropdown-panel-items .ng-option {
       color: $color-white;
       border-bottom: 1px solid $color-white;
+      line-height: 2rem;
+      min-height: 2rem;
 
       &.ng-option-marked {
         background-color: $color-blue-gray;
@@ -48,6 +50,64 @@
 
       &.ng-option-selected {
         display: none;
+      }
+    }
+  }
+
+  &.bet-select--odds {
+    width: 100%;
+    padding-bottom: 0;
+
+    .ng-select-container {
+      min-height: auto;
+
+      .ng-value-container {
+        padding: 0 0 .1em;
+        border-top: 0;
+      }
+    }
+
+    &.ng-select-single .ng-select-container .ng-arrow-wrapper {
+      bottom: 4px;
+
+      .ng-arrow {
+        margin: 0;
+      }
+    }
+
+    .ng-dropdown-panel {
+      top: 100%;
+    }
+  }
+
+  &.bet-select--color {
+    &-white {
+      .ng-select-container {
+        .ng-value-container {
+          color: $color-white;
+
+          .ng-placeholder {
+            color: $color-white;
+          }
+        }
+
+        &::after {
+          border-color: $color-white;
+        }
+      }
+
+      .ng-arrow-wrapper .ng-arrow {
+        color: $color-white;
+      }
+
+      &.ng-select-single .ng-select-container {
+        .ng-clear-wrapper {
+          color: $color-white;
+        }
+      }
+
+      &.ng-select-focused .ng-select-container .ng-arrow-wrapper .ng-arrow {
+        color: $color-white;
       }
     }
   }

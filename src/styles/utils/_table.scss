@@ -15,3 +15,16 @@ table.loading {
     content: "";
   }
 }
+
+.table-odds {
+  color: $color-white;
+
+  thead tr th {
+    border-top: 0;
+    background-color: $color-blue-dark;
+  }
+
+  tbody {
+    background-color: $rgba-blue-gray-opacity;
+  }
+}

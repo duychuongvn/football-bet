@@ -1,9 +1,11 @@
 .modal-content {
   border-radius: 0;
+  background-color: $color-white-gray;
 
   .md {
     &-header {
-      &-info {
+      &-info,
+      &-odds {
         justify-content: center;
         border-bottom: 3px solid $color-info;
         padding: .6rem 1rem;
@@ -13,6 +15,11 @@
           font-size: 2rem;
           line-height: 0;
         }
+      }
+
+      &-odds {
+        color: $color-blue;
+        border-color: $color-blue;
       }
     }
 

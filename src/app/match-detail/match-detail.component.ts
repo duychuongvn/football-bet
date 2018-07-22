@@ -124,23 +124,25 @@ export class MatchDetailComponent implements OnInit {
   //     });
   // }
 
-  // public openHandicap() {
-  //   const _opts = {
-  //     class: 'modal-md',
-  //     initialState: {
-  //       title: 'Place Bets',
-  //       btnSubmit: 'Create',
-  //       account: this.account,
-  //       match: this.match,
-  //       fixture: this.fixture,
-  //       handicap: this.handicap
-  //     }
-  //   };
+  public openHandicap() {
+    const _opts = {
+      class: 'modal-md',
+      ignoreBackdropClick: true,
+      initialState: {
+        title: 'Place Bets',
+        btnSubmit: 'Create',
+        betting: this.betting
+        // account: this.account,
+        // match: this.match,
+        // fixture: this.fixture,
+        // handicap: this.handicap
+      }
+    };
 
-  //   this._bettingsCount = this.bettings.length;
+    // this._bettingsCount = this.bettings.length;
 
-  //   this._openModalWithComponent(DealModalComponent, _opts);
-  // }
+    this._openModalWithComponent(DealModalComponent, _opts);
+  }
 
   // public openDeal() {
   //   const _opts = {

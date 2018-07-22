@@ -5,6 +5,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { SdcImageModule } from 'shared/sdc-image/sdc-image.module';
 import { DealModalModule } from '../deal-modal/deal-modal.module';
 import { AcceptOddsModalModule } from '../accept-odds-modal/accept-odds-modal.module';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { MatchDetailComponent } from './match-detail.component';
 
@@ -20,6 +21,7 @@ const _route: Routes = [
     CommonModule,
     RouterModule.forChild(_route),
     ModalModule.forRoot(),
+    TooltipModule.forRoot(),
     DealModalModule,
     AcceptOddsModalModule,
     SdcImageModule

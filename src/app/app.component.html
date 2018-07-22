@@ -1,5 +1,11 @@
 <app-header></app-header>
-<app-sidebar></app-sidebar>
+<ng-progress
+  [meteor]="true"
+  [ease]="'easeInOutQuint'"
+  [spinner]="false"
+  [color]="'#52D6A4'"
+  [trickleSpeed]="250"
+  [thick]="true"></ng-progress>
 
 <div class="container-fluid full-height">
   <router-outlet></router-outlet>

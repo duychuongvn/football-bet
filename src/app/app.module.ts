@@ -1,16 +1,16 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule, enableProdMode } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { ToastrModule } from 'ngx-toastr';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { NgProgressModule } from '@ngx-progressbar/core';
+import { NgProgressRouterModule } from '@ngx-progressbar/router';
 
 import { HeaderModule } from './header/header.module';
-import { SidebarModule } from './sidebar/sidebar.module';
 import { FooterModule } from './footer/footer.module';
-import { ModalVersionModule } from './modal-version/modal-version.module';
 import { ModalInstallMetamaskModule } from './modal-install-metamask/modal-install-metamask.module';
 
 import { AppRoutingModule } from './app.router';
@@ -38,14 +38,14 @@ const SERVICES = [
     FormsModule,
     HeaderModule,
     FooterModule,
-    SidebarModule,
-    ModalVersionModule,
     ModalInstallMetamaskModule,
     ModalModule.forRoot(),
     ToastrModule.forRoot({
       timeOut: 3000,
       preventDuplicates: true,
-    })
+    }),
+    NgProgressModule.forRoot(),
+    NgProgressRouterModule
   ],
   declarations: [AppComponent],
   providers: SERVICES,

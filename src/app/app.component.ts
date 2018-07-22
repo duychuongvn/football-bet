@@ -5,7 +5,6 @@ import { Web3Service, SolobetService, EventEmitterService } from 'service/servic
 
 import { METAMASK } from 'enums/metamask';
 
-import { ModalVersionComponent } from './modal-version/modal-version.component';
 import { ModalInstallMetamaskComponent } from './modal-install-metamask/modal-install-metamask.component';
 
 import { Subscription } from 'rxjs/Subscription';

@@ -147,3 +147,44 @@
     background-color: $color-green;
   }
 }
+
+.addr-ellipsis {
+  display: inline-block;
+
+  &--md {
+    @include text-ellipsis(150px);
+  }
+}
+
+.odds {
+  &-team {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.4rem;
+    padding: 10px;
+    cursor: pointer;
+
+    .ico-selected {
+      display: none
+    }
+
+    .team-name {
+      margin-top: 10px;
+    }
+
+    &.team-selected {
+      background-color: $rgba-blue-gray-opacity;
+      border: 2px solid $color-blue-dark;
+      color: #fff;
+      border-radius: 10px;
+
+      .ico-selected {
+        display: block;
+      }
+
+      .ico-unselected {
+        display: none;
+      }
+    }
+  }
+}

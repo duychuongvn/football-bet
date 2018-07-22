@@ -12,12 +12,12 @@
 <div class="betting-sort">
   <p class="title">Sort by</p>
   <div class="sort-item sort-sm">
-    <ng-select class="bet-select"
+    <ng-select class="bet-select bet-select--color-white"
       [items]="oddsOpts" [(ngModel)]="sortBySelected" bindLabel="name" bindValue="id" [hideSelected]="true"
       [clearable]="false" [searchable]="false"></ng-select>
   </div>
   <div class="sort-item sort-md">
-    <ng-select class="bet-select" [items]="oddsChildOpts" [(ngModel)]="sortBySelected1" bindLabel="name" bindValue="id" [hideSelected]="true"
+    <ng-select class="bet-select bet-select--color-white" [items]="oddsChildOpts" [(ngModel)]="sortBySelected1" bindLabel="name" bindValue="id" [hideSelected]="true"
       [clearable]="false"></ng-select>
   </div>
 </div>

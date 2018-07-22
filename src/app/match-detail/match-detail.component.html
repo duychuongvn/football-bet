@@ -36,6 +36,85 @@
   </button>
 </div>
 
+<div class="table-responsive mt-3">
+  <table class="table table-hover table-odds">
+    <thead>
+      <tr>
+        <th width="50px" class="text-center">#</th>
+        <th width="200px">
+          <div class="d-flex">
+            <sdc-image
+              imgWidth="40px"
+              imgHeight="25px"
+              [imgUrl]="betting.homeTeamFlag"
+              [imgName]="betting.homeTeam"></sdc-image>
+              <span class="ml-2">{{ betting.homeTeam }}</span>
+          </div>
+        </th>
+        <th class="text-center">Odds</th>
+        <th width="200px">
+          <div class="d-flex">
+            <sdc-image
+              imgWidth="40px"
+              imgHeight="25px"
+              [imgUrl]="betting.awayTeamFlag"
+              [imgName]="betting.awayTeam"></sdc-image>
+              <span class="ml-2">{{ betting.awayTeam }}</span>
+          </div>
+        </th>
+        <th class="text-center">Stake</th>
+        <th width="220px"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td class="text-center">1</td>
+        <td>
+          <span class="addr-ellipsis addr-ellipsis--md">0x0e4af4fd5b3add1137d268be1ea325f61e534c82</span>
+        </td>
+        <td class="text-center">1</td>
+        <td>
+          <span class="addr-ellipsis addr-ellipsis--md">0x0e4af4fd5b3add1137d268be1ea325f61e534c82</span>
+        </td>
+        <td class="text-center">1</td>
+        <td>
+          <div class="odds-action">
+            <button class="btn btn-sm btn-success" tooltip="Betting">
+              <i class="fa fa-handshake-o"></i> Betting
+            </button>
+            <button class="btn btn-sm btn-primary" tooltip="Sharing">
+              <i class="fa fa-share-alt"></i>
+              Sharing
+            </button>
+          </div>
+        </td>
+      </tr>
+      <tr>
+          <td class="text-center">1</td>
+          <td>
+            <span class="addr-ellipsis addr-ellipsis--md">0x0e4af4fd5b3add1137d268be1ea325f61e534c82</span>
+          </td>
+          <td class="text-center">1</td>
+          <td>
+            <span class="addr-ellipsis addr-ellipsis--md">0x0e4af4fd5b3add1137d268be1ea325f61e534c82</span>
+          </td>
+          <td class="text-center">1</td>
+          <td>
+            <div class="odds-action">
+              <button class="btn btn-sm btn-success" tooltip="Betting">
+                <i class="fa fa-handshake-o"></i> Betting
+              </button>
+              <button class="btn btn-sm btn-primary" tooltip="Sharing">
+                <i class="fa fa-share-alt"></i>
+                Sharing
+              </button>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+</div>
 
 <!-- <div class="row mb-3">
   <div class="table-responsive">

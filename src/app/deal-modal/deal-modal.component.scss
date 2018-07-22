@@ -1,46 +1,24 @@
-.team-flag {
-  width: 120px;
-  height: 80px;
+@import '../../styles/variables';
+
+.odds-option {
   display: flex;
-  padding: 10px;
-  margin: 0;
-}
+  margin-bottom: 15px;
 
-.team-flag img {
-  width: 100%;
-  height: auto;
-}
+  span {
+    width: 80px;
+  }
 
-.team-flag.active {
-  position: relative;
-}
+  .input-odds {
+    border-color: $color-blue-gray;
+    border-radius: 0;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    background-color: transparent;
+    padding: 0;
 
-.team-flag.active::before {
-  content: "";
-  position: absolute;
-  height: 20px;
-  width: 20px;
-  background-color: #28a745;
-  border-radius: 50%;
-  top: 0;
-  right: 0;
-  box-shadow: 0 0 10px #bebec5;
-}
-
-.team-flag.active::after {
-  top: 4px;
-  right: 7px;
-  width: 5px;
-  height: 10px;
-  border: solid white;
-  border-width: 0 3px 3px 0;
-  -webkit-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-  content: "";
-  position: absolute;
-}
-
-.team-active {
-  text-shadow: 0 0 5px #f7f0f0, 0 0 5px #c4c4ca, 0 0 5px #dcdcdd, 0 0 5px #dcdcdd;
+    &:focus {
+      box-shadow: none;
+    }
+  }
 }

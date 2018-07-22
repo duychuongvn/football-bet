@@ -1,12 +1,55 @@
-<div class="modal-header">
-  <h4 class="modal-title text-center">{{ title }}</h4>
-  <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
-    <span aria-hidden="true">&times;</span>
-  </button>
+<div class="modal-header md-header-odds">
+  <h5 class="modal-title">
+    <i class="fa fa-soccer-ball-o" aria-hidden="true"></i>
+    Create New Bet
+  </h5>
 </div>
 
 <div class="modal-body">
-  <table class="table text-center table-borderless">
+  <div class="row align-items-center">
+    <div class="col-sm-4">
+      <div class="odds-team team-selected">
+        <i class="fa fa-check-circle ico-selected"></i>
+        <i class="fa fa-circle-o ico-unselected"></i>
+        <p class="team-name">{{ betting.homeTeam }}</p>
+        <sdc-image
+          imgWidth="100%"
+          imgHeight="70px"
+          [imgUrl]="betting.homeTeamFlag"
+          [imgName]="betting.homeTeam"></sdc-image>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="odds-option">
+        <span>Odds</span>
+        <ng-select class="bet-select bet-select--odds"
+          [items]="oddsArray" [(ngModel)]="oddsSelected" bindLabel="value" bindValue="id" [hideSelected]="true"
+          [clearable]="false" [searchable]="false" (ngModelChange)="oddsChanged()" ></ng-select>
+      </div>
+      <div class="odds-option">
+        <span>Stake</span>
+        <input type="number" class="form-control input-odds">
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="odds-team">
+        <i class="fa fa-check-circle ico-selected"></i>
+        <i class="fa fa-circle-o ico-unselected"></i>
+        <p class="team-name">{{ betting.awayTeam }}</p>
+        <sdc-image
+          imgWidth="100%"
+          imgHeight="70px"
+          [imgUrl]="betting.awayTeamFlag"
+          [imgName]="betting.awayTeam"></sdc-image>
+      </div>
+    </div>
+  </div>
+
+  <div class="odds-option mt-3 mb-0 justify-content-center">
+    <p class="mb-0">Potential Return: 11.355 ETH</p>
+  </div>
+
+  <!-- <table class="table text-center table-borderless">
     <thead>
       <tr>
         <th scope="col" [ngClass]="{ 'text-success team-active': activeTeam(0) }"> {{fixture.homeTeamName}} </th>
@@ -53,10 +96,10 @@
       </tr>
 
     </tbody>
-  </table>
+  </table> -->
 </div>
 
-<div class="modal-footer">
-  <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
+<div class="modal-footer md-footer-info">
+  <button type="button" class="btn btn-default" (click)="close()">Close</button>
   <button type="button" (click)="offer(handicap)" class="btn btn-primary">{{ btnSubmit }}</button>
 </div>

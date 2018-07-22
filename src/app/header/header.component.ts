@@ -1,7 +1,7 @@
-import {Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
-import {Web3Service, SolobetService, UserService, EventEmitterService} from 'service/service';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Web3Service, SolobetService, UserService } from 'service/service';
 
-import {Account} from 'models/account';
+import { Account } from 'models/account';
 
 @Component({
   selector: 'app-header',
@@ -9,23 +9,18 @@ import {Account} from 'models/account';
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit {
 
   public account: Account = new Account();
   public searchText: string = '';
   public networkAvailable: boolean;
-  private _reloadPage;
-
 
   constructor(
     private _web3Service: Web3Service,
     private _solobetService: SolobetService,
     private _userService: UserService,
-    private _cd: ChangeDetectorRef,
-    private _eventEmitter: EventEmitterService
-  ) {
-
-  }
+    private _cd: ChangeDetectorRef
+  ) { }
 
   ngOnInit() {
     this.handleMetaMaskUpdate();
@@ -65,10 +60,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this._cd.detectChanges();
   }
 
-  ngOnDestroy() {
-    this._reloadPage.unsubscribe();
-  }
-
   private _getAccount() {
     this._web3Service.getAccounts()
       .subscribe(res => {
@@ -93,17 +84,5 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.account.placed_balance = balance;
         this._cd.detectChanges();
       });
-  }
-
-  public search() {
-    this._eventEmitter.publishData({type: 'search', data: this.searchText});
-  }
-
-  public openSidebar() {
-    this._eventEmitter.publishData({
-      type: 'account-infor-open', data: {
-        account: this.account
-      }
-    });
   }
 }
