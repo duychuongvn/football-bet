@@ -59,7 +59,7 @@ export class UserComponent {
     private _notify: NotifyService,
     private _cd: ChangeDetectorRef
   ) {
-    this.onReady();
+    // this.onReady();
   }
 
   onReady = () => {

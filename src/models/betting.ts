@@ -5,6 +5,14 @@ import * as moment from 'moment';
 
 export class Betting extends BaseModel {
 
+  private _hashId: string;
+  public get hashId(): string {
+    return this._hashId;
+  }
+  public set hashId(v: string) {
+    this._hashId = v;
+  }
+
   private _date: string;
   public get date(): string {
     return this._date;
@@ -50,7 +58,7 @@ export class Betting extends BaseModel {
 
   public get gotoDetail(): Object {
     return {
-      id: this.id,
+      id: this.hashId,
       homeTeam: this.homeTeam,
       awayTeam: this.awayTeam,
       date: this.date
@@ -61,6 +69,7 @@ export class Betting extends BaseModel {
     super(data);
 
     if (data) {
+      this.hashId   = data.hashId;
       this.homeTeam = data.homeTeam;
       this.awayTeam = data.awayTeam;
       this.date     = data.date;

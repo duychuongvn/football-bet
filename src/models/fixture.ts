@@ -4,8 +4,6 @@ import { NewBettingInterface } from 'interfaces/betting';
 
 import { Betting } from './betting';
 
-import * as moment from 'moment';
-
 export class Fixture extends BaseModel {
 
   private _name: string;

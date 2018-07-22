@@ -16,6 +16,7 @@ export interface BettingInterface {
 
 export interface NewBettingInterface {
   id: number,
+  hashId?: string,
   date: string,
   homeTeam: string,
   awayTeam: string
