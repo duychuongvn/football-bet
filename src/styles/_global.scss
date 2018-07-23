@@ -188,3 +188,48 @@
     }
   }
 }
+
+.bet-social {
+  font-size: 2rem;
+
+  .social-item {
+    margin-right: 30px;
+    cursor: pointer;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &.social-twitter {
+      color: $color-twitter;
+
+      &:hover {
+        color: $color-twitter--hover;
+      }
+    }
+
+    &.social-facebook {
+      color: $color-facebook;
+
+      &:hover {
+        color: $color-facebook--hover;
+      }
+    }
+
+    &.social-google {
+      color: $color-google;
+
+      &:hover {
+        color: $color-google--hover;
+      }
+    }
+
+    &.social-github {
+      color: $color-github;
+
+      &:hover {
+        color: $color-github--hover;
+      }
+    }
+  }
+}

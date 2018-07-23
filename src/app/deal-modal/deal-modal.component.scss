@@ -8,6 +8,14 @@
     width: 80px;
   }
 
+  .odds-group {
+    text-align: right;
+
+    span {
+      font-size: .9rem;
+    }
+  }
+
   .input-odds {
     border-color: $color-blue-gray;
     border-radius: 0;

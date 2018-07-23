@@ -1,5 +1,6 @@
 .ng-select.bet-select {
   outline: none;
+  cursor: pointer;
 
   .ng-select-container {
 
@@ -8,6 +9,10 @@
 
       .ng-placeholder {
         color: $color-blue-dark;
+      }
+
+      .ng-input > input {
+        cursor: pointer;
       }
     }
 
@@ -43,6 +48,7 @@
       border-bottom: 1px solid $color-white;
       line-height: 2rem;
       min-height: 2rem;
+      padding: 0 5px;
 
       &.ng-option-marked {
         background-color: $color-blue-gray;
@@ -72,6 +78,23 @@
 
       .ng-arrow {
         margin: 0;
+      }
+    }
+
+    .ng-dropdown-panel {
+      top: 100%;
+    }
+  }
+
+  &.bet-select--sort {
+    padding: 0;
+
+    .ng-select-container {
+      min-height: 0;
+
+      .ng-value-container {
+        padding-top: 0;
+        border: 0;
       }
     }
 

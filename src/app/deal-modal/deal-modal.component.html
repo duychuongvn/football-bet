@@ -1,7 +1,7 @@
 <div class="modal-header md-header-odds">
   <h5 class="modal-title">
-    <i class="fa fa-soccer-ball-o" aria-hidden="true"></i>
-    Create New Bet
+    <i class="fa fa-soccer-ball-o fa-spin" aria-hidden="true"></i>
+    {{ title }}
   </h5>
 </div>
 
@@ -28,7 +28,10 @@
       </div>
       <div class="odds-option">
         <span>Stake</span>
-        <input type="number" class="form-control input-odds">
+        <div class="odds-group">
+          <input type="number" class="form-control input-odds">
+          <span class="sub">ETH</span>
+        </div>
       </div>
     </div>
     <div class="col-sm-4">
@@ -45,7 +48,8 @@
     </div>
   </div>
 
-  <div class="odds-option mt-3 mb-0 justify-content-center">
+  <div class="d-block text-center mt-3 mb-0">
+    <p class="mb-0">Bet with: <a class="text-link">0x0e4af4fd5b3add1137d268be1ea325f61e534c82</a></p>
     <p class="mb-0">Potential Return: 11.355 ETH</p>
   </div>
 

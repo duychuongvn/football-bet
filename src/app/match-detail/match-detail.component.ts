@@ -11,7 +11,10 @@ import { Betting } from 'models/betting';
 import { NewBettingInterface } from 'interfaces/betting';
 
 import { DealModalComponent } from '../deal-modal/deal-modal.component';
+import { ModalSharingBetComponent } from 'app/modal-sharing-bet/modal-sharing-bet.component';
 import { AcceptOddsModalComponent } from '../accept-odds-modal/accept-odds-modal.component';
+
+import { SORTODDS_OPTS, SORTODDS_CHILD_OPTS } from './data';
 
 // import { environment } from 'environments/environment';
 
@@ -26,6 +29,12 @@ import { AcceptOddsModalComponent } from '../accept-odds-modal/accept-odds-modal
 export class MatchDetailComponent implements OnInit {
 
   public betting: Betting = new Betting();
+
+  protected oddsOpts = SORTODDS_OPTS;
+  protected oddsChildOpts = SORTODDS_CHILD_OPTS.date;
+
+  protected sortBySelected = 1;
+  protected sortBySelected1 = 1;
 
   // static ROUTER = 'match-detail';
 
@@ -129,7 +138,7 @@ export class MatchDetailComponent implements OnInit {
       class: 'modal-md',
       ignoreBackdropClick: true,
       initialState: {
-        title: 'Place Bets',
+        title: 'Create new bet',
         btnSubmit: 'Create',
         betting: this.betting
         // account: this.account,
@@ -142,6 +151,14 @@ export class MatchDetailComponent implements OnInit {
     // this._bettingsCount = this.bettings.length;
 
     this._openModalWithComponent(DealModalComponent, _opts);
+  }
+
+  public openModalShareBet() {
+    const _opts = {
+      class: 'modal-md'
+    };
+
+    this._openModalWithComponent(ModalSharingBetComponent, _opts);
   }
 
   // public openDeal() {
@@ -160,22 +177,24 @@ export class MatchDetailComponent implements OnInit {
   //   this._openModalWithComponent(DealModalComponent, _opts);
   // }
 
-  // public openAcceptOdds(betting) {
-  //   const _opts = {
-  //     class: 'modal-md',
-  //     initialState: {
-  //       title: 'Place Bets',
-  //       btnSubmit: 'Accept',
-  //       match: this.match,
-  //       handicap: this.handicap,
-  //       account: this.account,
-  //       betting: betting,
-  //       fixture: this.fixture
-  //     }
-  //   };
+  public openAcceptOdds(betting) {
+    const _opts = {
+      class: 'modal-md',
+      ignoreBackdropClick: true,
+      initialState: {
+        title: 'Settle Bet',
+        btnSubmit: 'Settle',
+        betting: this.betting
+        // match: this.match,
+        // handicap: this.handicap,
+        // account: this.account,
+        // betting: betting,
+        // fixture: this.fixture
+      }
+    };
 
-  //   this._openModalWithComponent(AcceptOddsModalComponent, _opts);
-  // }
+    this._openModalWithComponent(DealModalComponent, _opts);
+  }
 
   private _openModalWithComponent(comp, opts?: ModalOptions) {
     // const subscribe = this._modalService.onHidden.subscribe((res: any) => {

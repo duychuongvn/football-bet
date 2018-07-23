@@ -6,19 +6,11 @@
 
   <div class="betting-wrap betting-md">
     <div class="match-img">
-      <sdc-image
-        imgWidth="100%"
-        imgHeight="100%"
-        [imgUrl]="betting.homeTeamFlag"
-        [imgName]="betting.homeTeam"></sdc-image>
+      <sdc-image imgWidth="100%" imgHeight="100%" [imgUrl]="betting.homeTeamFlag" [imgName]="betting.homeTeam"></sdc-image>
     </div>
     <p>{{ betting.bettingName }}</p>
     <div class="match-img">
-      <sdc-image
-        imgWidth="100%"
-        imgHeight="100%"
-        [imgUrl]="betting.awayTeamFlag"
-        [imgName]="betting.awayTeam"></sdc-image>
+      <sdc-image imgWidth="100%" imgHeight="100%" [imgUrl]="betting.awayTeamFlag" [imgName]="betting.awayTeam"></sdc-image>
     </div>
   </div>
 
@@ -29,11 +21,46 @@
   </p>
 </div>
 
-<div class="btn-new-bet" (click)="openHandicap()">
-  <button class="btn btn-success d-inline-flex">
-    <i class="material-icons mr-2">add_circle_outline</i>
-    New Bet
-  </button>
+<div class="text-right">
+  <div class="btn-new-bet" (click)="openHandicap()">
+    <button class="btn btn-success d-inline-flex">
+      <i class="material-icons mr-2">add_circle_outline</i>
+      New Bet
+    </button>
+  </div>
+</div>
+
+<div class="input-search mt-3">
+  <input class="input-search--item" type="text" [(ngModel)]="searchMatch" placeholder="Search Your Odds" maxlength="100" />
+  <div class="input-search--icon">
+    <i class="material-icons">search</i>
+  </div>
+</div>
+
+<div class="match-sort">
+  <ul class="fb-filter">
+    <li class="filter-item">
+      <a class="badge badge-secondary">All Bet (100)</a>
+    </li>
+    <li class="filter-item">
+      <a class="badge badge-secondary">Settled (75)</a>
+    </li>
+    <li class="filter-item">
+      <a class="badge badge-secondary">Open (25)</a>
+    </li>
+  </ul>
+
+  <div class="betting-sort">
+    <p class="title">Sort by</p>
+    <div class="sort-item sort-sm">
+      <ng-select class="bet-select bet-select--sort bet-select--color-white" [items]="oddsOpts" [(ngModel)]="sortBySelected" bindLabel="name"
+        bindValue="id" [hideSelected]="true" [clearable]="false" [searchable]="false"></ng-select>
+    </div>
+    <div class="sort-item sort-md">
+      <ng-select class="bet-select bet-select--sort bet-select--color-white" [items]="oddsChildOpts" [(ngModel)]="sortBySelected1"
+        bindLabel="name" bindValue="id" [hideSelected]="true" [clearable]="false" [searchable]="false"></ng-select>
+    </div>
+  </div>
 </div>
 
 <div class="table-responsive mt-3">
@@ -43,23 +70,15 @@
         <th width="50px" class="text-center">#</th>
         <th width="200px">
           <div class="d-flex">
-            <sdc-image
-              imgWidth="40px"
-              imgHeight="25px"
-              [imgUrl]="betting.homeTeamFlag"
-              [imgName]="betting.homeTeam"></sdc-image>
-              <span class="ml-2">{{ betting.homeTeam }}</span>
+            <sdc-image imgWidth="40px" imgHeight="25px" [imgUrl]="betting.homeTeamFlag" [imgName]="betting.homeTeam"></sdc-image>
+            <span class="ml-2">{{ betting.homeTeam }}</span>
           </div>
         </th>
         <th class="text-center">Odds</th>
         <th width="200px">
           <div class="d-flex">
-            <sdc-image
-              imgWidth="40px"
-              imgHeight="25px"
-              [imgUrl]="betting.awayTeamFlag"
-              [imgName]="betting.awayTeam"></sdc-image>
-              <span class="ml-2">{{ betting.awayTeam }}</span>
+            <sdc-image imgWidth="40px" imgHeight="25px" [imgUrl]="betting.awayTeamFlag" [imgName]="betting.awayTeam"></sdc-image>
+            <span class="ml-2">{{ betting.awayTeam }}</span>
           </div>
         </th>
         <th class="text-center">Stake</th>
@@ -80,7 +99,7 @@
         <td class="text-center">1</td>
         <td>
           <div class="odds-action">
-            <button class="btn btn-sm btn-success" tooltip="Betting">
+            <button class="btn btn-sm btn-success" tooltip="Betting" (click)="openAcceptOdds()">
               <i class="fa fa-handshake-o"></i> Betting
             </button>
             <button class="btn btn-sm btn-primary" tooltip="Sharing">
@@ -91,27 +110,27 @@
         </td>
       </tr>
       <tr>
-          <td class="text-center">1</td>
-          <td>
-            <span class="addr-ellipsis addr-ellipsis--md">0x0e4af4fd5b3add1137d268be1ea325f61e534c82</span>
-          </td>
-          <td class="text-center">1</td>
-          <td>
-            <span class="addr-ellipsis addr-ellipsis--md">0x0e4af4fd5b3add1137d268be1ea325f61e534c82</span>
-          </td>
-          <td class="text-center">1</td>
-          <td>
-            <div class="odds-action">
-              <button class="btn btn-sm btn-success" tooltip="Betting">
-                <i class="fa fa-handshake-o"></i> Betting
-              </button>
-              <button class="btn btn-sm btn-primary" tooltip="Sharing">
-                <i class="fa fa-share-alt"></i>
-                Sharing
-              </button>
-            </div>
-          </td>
-        </tr>
+        <td class="text-center">1</td>
+        <td>
+          <span class="addr-ellipsis addr-ellipsis--md">0x0e4af4fd5b3add1137d268be1ea325f61e534c82</span>
+        </td>
+        <td class="text-center">1</td>
+        <td>
+          <span class="addr-ellipsis addr-ellipsis--md">0x0e4af4fd5b3add1137d268be1ea325f61e534c82</span>
+        </td>
+        <td class="text-center">1</td>
+        <td>
+          <div class="odds-action">
+            <button class="btn btn-sm btn-success" tooltip="Betting" (click)="openAcceptOdds()">
+              <i class="fa fa-handshake-o"></i> Betting
+            </button>
+            <button class="btn btn-sm btn-primary" tooltip="Sharing">
+              <i class="fa fa-share-alt"></i>
+              Sharing
+            </button>
+          </div>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>

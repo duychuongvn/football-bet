@@ -1,13 +1,12 @@
 <div class="modal-header">
-  <h4 class="modal-title pull-left">{{ title }}</h4>
-  <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
-    <span aria-hidden="true">&times;</span>
-  </button>
+  <h5 class="modal-title pull-left">
+
+  </h5>
 </div>
 
 <div class="modal-body">
 
-  <table class="table text-center table-borderless">
+  <!-- <table class="table text-center table-borderless">
     <thead>
       <tr>
         <th scope="col"> {{fixture.homeTeamName}} </th>
@@ -36,11 +35,11 @@
         </td>
       </tr>
     </tbody>
-  </table>
+  </table> -->
 
 </div>
 
-<div class="modal-footer">
+<div class="modal-footer md-footer-info">
   <button type="button" class="btn btn-secondary" (click)="close()">Close</button>
   <button type="button" class="btn btn-primary" (click)="deal(betting)">{{ btnSubmit }}</button>
 </div>

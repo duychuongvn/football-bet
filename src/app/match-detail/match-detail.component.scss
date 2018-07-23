@@ -119,7 +119,7 @@
 }
 
 .btn-new-bet {
-  text-align: right;
+  display: inline-block;
   margin-right: 17px;
 
   @media (max-width: 1024px) {
@@ -141,5 +141,15 @@
     .fa {
       margin-right: 5px;
     }
+  }
+}
+
+.match-sort {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .fb-filter, .betting-sort {
+    margin: 0;
   }
 }

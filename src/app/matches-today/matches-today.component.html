@@ -31,7 +31,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let betting of fixture.bettings">
+          <tr *ngFor="let betting of fixture.bettings" [routerLink]="['/match-detail']" [queryParams]="betting.gotoDetail">
             <td>
               <div class="betting-wrap">
                 <sdc-image
