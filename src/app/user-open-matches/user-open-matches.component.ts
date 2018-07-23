@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, NgZone } from '@angular/core';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { UserBaseComponent } from 'app/user/user-base.component';
 import { USER_TYPE_OPEN } from 'enums/user';

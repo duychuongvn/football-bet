@@ -23,21 +23,21 @@ export abstract class UserBaseComponent implements OnInit {
   protected sortBySelected1 = 1;
 
   constructor(
-    protected _bsModalService: BsModalService
+    protected bsModalService: BsModalService
   ) {}
 
   ngOnInit() {
     this.addUserType();
-    this._getUserMatches();
+    this.getUserMatches();
   }
 
-  private _getUserMatches() {
+  protected getUserMatches() {
     MATCHES.filter((item: UserInterface) => {
       this.userMatches.push(new User(item));
     });
   }
 
-  public addUserType() {
+  protected addUserType() {
     for(let i in this.userTypeOpts) {
       this.arrUserType.push({
         id: i,
@@ -47,15 +47,15 @@ export abstract class UserBaseComponent implements OnInit {
     }
   }
 
-  public isActiveFilter(type) {
+  protected isActiveFilter(type) {
     return this.userTypeSelect === this.userTypeOpts[type];
   }
 
-  public selectedType(type) {
+  protected selectedType(type) {
     this.userTypeSelect = this.userTypeOpts[type];
   }
 
   protected openModalComponent(comp, modalOptions: ModalOptions) {
-    this._bsModalService.show(comp, modalOptions);
+    this.bsModalService.show(comp, modalOptions);
   }
 }
