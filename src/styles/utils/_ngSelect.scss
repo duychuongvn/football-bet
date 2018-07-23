@@ -103,6 +103,12 @@
     }
   }
 
+  &.bet-value--center {
+    .ng-select-container .ng-value-container {
+      justify-content: center;
+    }
+  }
+
   &.bet-select--color {
     &-white {
       .ng-select-container {

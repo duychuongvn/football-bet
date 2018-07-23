@@ -4,6 +4,12 @@
   border-radius: $radius;
 }
 
+@mixin border($width, $blur, $color) {
+  -moz-border: $width $blur $color;
+  -webkit-border: $width $blur $color;
+  border: $width $blur $color;
+}
+
 @mixin border-left($border, $blur, $color) {
   -moz-border-left: $border $blur $color;
   -webkit-border-left: $border $blur $color;

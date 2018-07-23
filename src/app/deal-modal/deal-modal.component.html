@@ -22,7 +22,7 @@
     <div class="col-sm-4">
       <div class="odds-option">
         <span>Odds</span>
-        <ng-select class="bet-select bet-select--odds"
+        <ng-select class="bet-select bet-select--odds bet-value--center"
           [items]="oddsArray" [(ngModel)]="oddsSelected" bindLabel="value" bindValue="id" [hideSelected]="true"
           [clearable]="false" [searchable]="false" (ngModelChange)="oddsChanged()" ></ng-select>
       </div>

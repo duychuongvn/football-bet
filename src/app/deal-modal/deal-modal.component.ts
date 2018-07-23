@@ -48,9 +48,7 @@ export class DealModalComponent implements OnInit {
   }
 
 
-  public oddsChanged() {
-    console.log(this.oddsSelected);
-  }
+  public oddsChanged() { }
 
   // public markTeam(teamName: string) {
   //   if (teamName === this.handicap.homeTeamName) {

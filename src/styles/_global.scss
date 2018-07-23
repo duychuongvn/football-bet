@@ -162,6 +162,8 @@
     font-weight: bold;
     font-size: 1.4rem;
     padding: 10px;
+    @include box-shadow(0, 0, 2px, $color-blue-gray);
+    @include border-radius(10px);
     cursor: pointer;
 
     .ico-selected {
@@ -174,9 +176,9 @@
 
     &.team-selected {
       background-color: $rgba-blue-gray-opacity;
-      border: 2px solid $color-blue-dark;
+      @include border(2px, solid, $color-blue-dark);
+      @include box-shadow(0, 0, 10px, $color-blue-dark);
       color: #fff;
-      border-radius: 10px;
 
       .ico-selected {
         display: block;
