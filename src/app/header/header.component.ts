@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, HostListener } from '@angular/core';
 import { Web3Service, SolobetService, UserService } from 'service/service';
 
 import { Account } from 'models/account';
@@ -14,6 +14,7 @@ export class HeaderComponent implements OnInit {
   public account: Account = new Account();
   public searchText: string = '';
   public networkAvailable: boolean;
+  public isOpenProfile = false;
 
   constructor(
     private _web3Service: Web3Service,
@@ -21,6 +22,15 @@ export class HeaderComponent implements OnInit {
     private _userService: UserService,
     private _cd: ChangeDetectorRef
   ) { }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.isOpenProfile = false;
+  }
+
+  public toggleProfile(status) {
+    this.isOpenProfile = status;
+  }
 
   ngOnInit() {
     this.handleMetaMaskUpdate();
