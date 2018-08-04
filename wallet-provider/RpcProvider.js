@@ -8,18 +8,27 @@ var Transaction = require('ethereumjs-tx');
 
 function RpcProvider(privateKey, provider_url) {
   this.provider_url = provider_url;
-  this.wallet = ethwallet.fromPrivateKey(Buffer.from(privateKey, 'hex'));
+  var wallet = ethwallet.fromPrivateKey(Buffer.from(privateKey, 'hex'));
+  this.wallets = {};
+  this.addresses = [];
+  var addr = '0x' + wallet.getAddress().toString('hex');
+  this.addresses.push(addr);
+  this.wallets[addr] = wallet;
 
+
+  const tmp_accounts = this.addresses;
+  const tmp_wallets = this.wallets;
   this.engine = new ProviderEngine();
   this.engine.addProvider(new HookedSubprovider({
-    getAccounts: function (cb) {
-      cb(null, (new Array()).push(this.wallet));
+    getAccounts: function(cb) { cb(null, tmp_accounts) },
+    getPrivateKey: function(address, cb) {
+      if (!tmp_wallets[address]) { return cb('Account not found'); }
+      else { cb(null, tmp_wallets[address].getPrivateKey().toString('hex')); }
     },
-    getPrivateKey: function (address, cb) {
-      cb(null, this.wallet.getPrivateKey().toString('hex'));
-    },
-    signTransaction: function (txParams, cb) {
-      let pkey = this.wallet.getPrivateKey();
+    signTransaction: function(txParams, cb) {
+      let pkey;
+      if (tmp_wallets[txParams.from]) { pkey = tmp_wallets[txParams.from].getPrivateKey(); }
+      else { cb('Account not found'); }
       var tx = new Transaction(txParams);
       tx.sign(pkey);
       var rawTx = '0x' + tx.serialize().toString('hex');
@@ -27,8 +36,8 @@ function RpcProvider(privateKey, provider_url) {
     }
   }));
   this.engine.addProvider(new FiltersSubprovider());
-  this.engine.addProvider(new ProviderSubprovider(new Web3.providers.HttpProvider(this.provider_url)));
-  this.engine.start();
+  this.engine.addProvider(new ProviderSubprovider(new Web3.providers.HttpProvider(provider_url)));
+  this.engine.start(); // Required by the provider engine.
 };
 
 RpcProvider.prototype.sendAsync = function () {
@@ -38,6 +47,17 @@ RpcProvider.prototype.sendAsync = function () {
 RpcProvider.prototype.send = function () {
   return this.engine.send.apply(this.engine, arguments);
 };
+// returns the address of the given address_index, first checking the cache
+RpcProvider.prototype.getAddress = function(idx) {
+  console.log('getting addresses', this.addresses[0], idx)
+  if (!idx) { return this.addresses[0]; }
+  else { return this.addresses[idx]; }
+}
+
+// returns the addresses cache
+RpcProvider.prototype.getAddresses = function() {
+  return this.addresses;
+}
 
 // returns the address of the given address_index, first checking the cache
 module.exports = RpcProvider;
