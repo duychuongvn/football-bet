@@ -53,19 +53,21 @@ export class HeaderComponent implements OnInit {
 
   loadNetworkInfo() {
     this.networkAvailable = false;
-    this._solobetService.Solobet.deployed().then(() => {
 
-      const network = this._web3Service.getNetworkInfo();
-      this.account.network = network.provider;
-      this.account.address = network.selectedAddress;
-      if (this.account.address === undefined) {
-        this.networkAvailable = false;
-      } else {
-        this.networkAvailable = true;
-        this._getAccount();
-      }
-      this._cd.detectChanges();
-    });
+
+    // this._solobetService.Solobet.deployed().then(() => {
+    //     //
+          const network = this._web3Service.getNetworkInfo();
+          this.account.network = network.provider;
+          this.account.address = network.selectedAddress;
+          if (this.account.address === undefined) {
+            this.networkAvailable = false;
+          } else {
+            this.networkAvailable = true;
+            this._getAccount();
+          }
+          this._cd.detectChanges();
+        // });
 
     this._cd.detectChanges();
   }

@@ -7,7 +7,7 @@ import { NgSelectModule, NG_SELECT_DEFAULT_CONFIG } from '@ng-select/ng-select';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { SdcImageModule } from 'shared/sdc-image/sdc-image.module';
 import { DealModalModule } from '../deal-modal/deal-modal.module';
-import { AcceptOddsModalModule } from '../accept-odds-modal/accept-odds-modal.module';
+// import { AcceptOddsModalModule } from '../accept-odds-modal/accept-odds-modal.module';
 import { ModalSharingBetModule } from 'app/modal-sharing-bet/modal-sharing-bet.module';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
@@ -29,7 +29,6 @@ const _route: Routes = [
     TooltipModule.forRoot(),
     NgSelectModule,
     DealModalModule,
-    AcceptOddsModalModule,
     ModalSharingBetModule,
     SdcImageModule
   ],

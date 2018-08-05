@@ -1,7 +1,7 @@
 // var HDWalletProvider = require("truffle-hdwallet-provider");
 // var mnemonic = "trigger cancel decorate place sound fashion nut bag swift casual silent shell";
 var RpcProvider = require('./wallet-provider/RpcProvider.js');
-const admin_key = 'your private key';
+const admin_key = 'private  key';
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
@@ -25,17 +25,17 @@ module.exports = {
       },
       port:9646,
       network_id: 90,
-      gasPrice:20000000000,
-      gasLimit:4000000
+      gasPrice:23900000000,
+      gasLimit:6500000
 
     },
-    rinkeby: {
-      provider: function() {
-        return new  RpcProvider(admin_key,"https://rinkeby.infura.io")
-      },
-      network_id: 4,
-      gasPrice:3000000000
-    },
+    // rinkeby: {
+    //   provider: function() {
+    //     return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io")
+    //   },
+    //   network_id: 4,
+    //   gasPrice:3000000000
+    // },
     ganache: {
       host: "127.0.0.1",
       port: 8545,

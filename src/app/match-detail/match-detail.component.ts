@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-// import { Web3Service, SolobetService, NotifyService, EventEmitterService, MatchService } from 'service/service';
+import { Web3Service, SolobetService, NotifyService, EventEmitterService, MatchService } from 'service/service';
 // import { URLSearchParams } from '@angular/http';
 
 // import { Fixture } from 'models/fixture_bk';
@@ -12,7 +12,7 @@ import { NewBettingInterface } from 'interfaces/betting';
 
 import { DealModalComponent } from '../deal-modal/deal-modal.component';
 import { ModalSharingBetComponent } from 'app/modal-sharing-bet/modal-sharing-bet.component';
-import { AcceptOddsModalComponent } from '../accept-odds-modal/accept-odds-modal.component';
+// import { AcceptOddsModalComponent } from '../accept-odds-modal/accept-odds-modal.component';
 
 import { SORTODDS_OPTS, SORTODDS_CHILD_OPTS } from './data';
 
@@ -44,7 +44,7 @@ export class MatchDetailComponent implements OnInit {
   // public bettings: Betting[] = [];
   // public betting: Betting = new Betting();
   // public isLoading = false;
-  // public account: string;
+  public account: string;
 
   // private _bettingsCount = 0;
   // private _runTime;
@@ -56,8 +56,8 @@ export class MatchDetailComponent implements OnInit {
   constructor(
     private _route: ActivatedRoute,
     private _router: Router,
-    // private _web3Service: Web3Service,
-    // private _solobetService: SolobetService,
+    private _web3Service: Web3Service,
+    private _solobetService: SolobetService,
     private _modalService: BsModalService,
     // private _notify: NotifyService,
     // private _eventEmitter: EventEmitterService,
@@ -72,7 +72,7 @@ export class MatchDetailComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this._getAccounts();
+    this._getAccounts();
     // console.log('00000=====================', this.data);
     // console.log('localstorge', sessionStorage.getItem('fixtureJson'));
     // if (!this.data) {
@@ -107,13 +107,13 @@ export class MatchDetailComponent implements OnInit {
   //   this.match.status = 0;
   // }
 
-  // private _getAccounts() {
-  //   this._web3Service.getAccounts()
-  //     .subscribe(accs => {
-  //       this.account = accs[0];
-  //     }, err => alert(err)
-  //     );
-  // }
+  private _getAccounts() {
+    this._web3Service.getAccounts()
+      .subscribe(accs => {
+        this.account = accs[0];
+      }, err => alert(err)
+      );
+  }
 
   // private _loadBettings(id: string) {
   //   this._solobetService.loadBettings(id)
@@ -210,8 +210,11 @@ export class MatchDetailComponent implements OnInit {
 
     //   subscribe.unsubscribe();
     // });
-
-    this._modalService.show(comp, opts);
+    alert('a');
+    this._solobetService.newOffer(this.account, {'matchId':this._web3Service.toSHA3('12'), 'homeTeam': 'VN', 'awayTeam': 'KR', 'time': 12345487354}, 100,0,1).subscribe(e=>{
+      alert(e);
+    });
+ //   this._modalService.show(comp, opts);
   }
 
   // private _findBettingByMatchIdAndBettingId(p: any) {
