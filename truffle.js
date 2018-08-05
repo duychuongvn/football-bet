@@ -1,7 +1,7 @@
 // var HDWalletProvider = require("truffle-hdwallet-provider");
 // var mnemonic = "trigger cancel decorate place sound fashion nut bag swift casual silent shell";
 var RpcProvider = require('./wallet-provider/RpcProvider.js');
-const admin_key = 'your private key';
+const admin_key = '1b5abcbd07d26094e56c827df0a2c8f75b721cd81d210db1af67669097deef61';
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
