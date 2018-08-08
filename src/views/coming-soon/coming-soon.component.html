@@ -1,0 +1,30 @@
+<v-app class="coming-soon">
+  <div id="large-header" class="large-header" style="height: 270px;">
+    <canvas id="demo-canvas"></canvas>
+  </div>
+
+  <v-container fluid>
+    <v-layout align-center justify-center row fill-height>
+      <v-flex text-xs-center>
+        <div>
+          <h1 class="bether-logo display-3 line-height-1 font-weight-black mb-3">
+            Bether
+            <span class="d-block text-left title">Betting without borders</span>
+          </h1>
+        </div>
+        <flip-countdown deadline="2018/08/11 00:00:00" class="countdown-lg" />
+        <div class="headline white--text mb-5">
+          <p class="mb-1">The 1st crypto peer to peer betting system</p>
+          <p>will be coming soon</p>
+        </div>
+        <v-tooltip top lazy v-for="icon in socialIcons" :key="icon.name">
+          <v-btn class="mx-3 white--text" icon slot="activator" :color="icon.color">
+            <v-icon size="24px">{{ icon.name }}</v-icon>
+          </v-btn>
+          <span>{{ icon.tooltip }}</span>
+        </v-tooltip>
+      </v-flex>
+    </v-layout>
+  </v-container>
+
+</v-app>

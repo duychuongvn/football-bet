@@ -1,0 +1,67 @@
+<v-dialog v-model="isStoreBetting" persistent width="700" lazy v-if="isStoreBetting">
+  <v-card color="blue-grey lighten-6" dark>
+    <v-card-title class="title" primary-title>{{ dialogTitle }}</v-card-title>
+
+    <v-divider color="white"></v-divider>
+
+    <v-card-text>
+      <v-container class="pa-0" fluid grid-list-lg>
+        <v-layout row wrap>
+          <v-flex
+            :xs4="!odds"
+            :xs6="!!odds"
+            v-if="!odds || (!!odds && isAwayTeamActive)">
+            <v-card class="cursor-pointer"
+              :raised="isHomeTeamActive"
+              :hover="isAwayTeamActive"
+              :class="{ 'teal lighten-1': isHomeTeamActive || !!odds, 'grey lighten-2': isAwayTeamActive && !odds }">
+              <v-card-media :src="homeTeamFlag" height="120px" @click="changeTeam(0)"></v-card-media>
+              <v-card-title class="headline justify-content-center"
+                :class="{ 'teal--text': isAwayTeamActive && !odds }"
+                @click="changeTeam(0)">{{ homeTeam }} {{ oddsSignHome }}</v-card-title>
+            </v-card>
+          </v-flex>
+          <v-flex
+            :xs4="!odds"
+            :xs6="!!odds"
+            :class="{ 'align-self-center': !!odds }"
+            :order-xs2="!!odds && isHomeTeamActive">
+            <v-select hide-selected dark v-model="oddsSelected" color="white" class="bet-select-center" content-class="bet-select" append-icon="fas fa-chevron-down font-sm"
+              :items="oddsType" label="Odds" v-if="!odds"></v-select>
+            <v-text-field v-model="stakeSelected" dark color="white" label="Stake" type="number" suffix="ETH" min="1" v-if="!odds"></v-text-field>
+
+            <div v-if="!!odds">
+              <p class="headline">Odds: {{ oddsString }}</p>
+              <p class="headline">Stake: {{ odds.stake }} ETH</p>
+            </div>
+
+          </v-flex>
+          <v-flex
+            :xs4="!odds"
+            :xs6="!!odds"
+            v-if="!odds || (!!odds && isHomeTeamActive)"
+            :order-xs1="!!odds && isHomeTeamActive">
+            <v-card class="cursor-pointer" :raised="isAwayTeamActive" :hover="isHomeTeamActive"
+            :class="{ 'teal lighten-1': isAwayTeamActive || !!odds, 'grey lighten-2': isHomeTeamActive && !odds }">
+              <v-card-media :src="awayTeamFlag" height="120px" @click="changeTeam(1)"></v-card-media>
+              <v-card-title class="headline justify-content-center"
+                :class="{ 'teal--text': isHomeTeamActive && !odds, 'white--text': !!odds && isHomeTeamActive }" @click="changeTeam(1)">{{ awayTeam }} {{ oddsSignAway }}</v-card-title>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-card-text>
+
+    <v-card-text class="text-xs-center">
+      <p class="mb-0" v-if="!!odds">Bet with:
+        <a class="light-green--text">{{ oddsWith }}</a>
+      </p>
+      <p class="mb-0">Potential Return: {{ potential }} ETH</p>
+    </v-card-text>
+
+    <v-card-actions class="justify-content-center">
+      <v-btn outline @click="closeDialog(null)">Close</v-btn>
+      <v-btn color="teal lighten-1" @click="saveBet">Save</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>

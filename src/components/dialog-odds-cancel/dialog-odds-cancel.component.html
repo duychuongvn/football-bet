@@ -1,0 +1,18 @@
+<v-dialog v-model="isOddsCancel" persistent width="300">
+  <v-card raised color="blue-grey lighten-6" dark>
+    <v-card-title class="justify-content-center">
+      <v-icon size="30">fas fa-question-circle</v-icon>
+    </v-card-title>
+
+    <v-divider color="white"></v-divider>
+
+    <v-card-text class="text-xs-center my-2">
+      {{ msg }}
+    </v-card-text>
+
+    <v-card-actions class="justify-content-center">
+      <v-btn small outline @click="closeDialog">Close</v-btn>
+      <v-btn small color="red lighten-1" @click="cancelMyOdds">Cancel</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>

@@ -1,0 +1,27 @@
+<v-card raised dark color="blue-grey lighten-6-opacity">
+  <v-expansion-panel class="accor-fixture" :value="0">
+    <v-expansion-panel-content v-for="fixture in allFixtures" :key="fixture.id" class="bg-transparent" expand-icon="fas fa-chevron-down font-sm">
+      <div class="text-uppercase" slot="header">{{ fixture.name }}</div>
+
+      <v-card-text>
+        <v-data-table :headers="headersTb" :items="fixture.bettings" hide-actions class="bg-transparent table-fixture">
+          <template slot="items" slot-scope="props">
+            <tr @click="gotoDetails(props.item)">
+              <td>
+                <div class="betting-wrap">
+                  <image-comp imgWidth="30px" imgHeight="20px" :imgPath="props.item.homeTeamFlag" :imgName="props.item.homeTeam"></image-comp>
+                  <p class="bet-name">{{ props.item.bettingName }}</p>
+                  <image-comp imgWidth="30px" imgHeight="20px" :imgPath="props.item.awayTeamFlag" :imgName="props.item.awayTeam"></image-comp>
+                </div>
+              </td>
+              <td class="text-xs-center">100</td>
+              <td class="text-xs-center">75</td>
+              <td class="text-xs-center">25</td>
+            </tr>
+          </template>
+        </v-data-table>
+      </v-card-text>
+
+    </v-expansion-panel-content>
+  </v-expansion-panel>
+</v-card>

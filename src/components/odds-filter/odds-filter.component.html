@@ -1,0 +1,21 @@
+<v-layout row wrap>
+  <v-flex xs12>
+    <v-text-field :counter="50" maxlength="50" label="Search Your Matches" dark color="white" prepend-icon="fab fa-searchengin"></v-text-field>
+  </v-flex>
+
+  <v-flex xs12>
+    <v-layout align-center row wrap>
+      <v-flex md2 sm3 xs12>
+        <p class="white--text mb-0">Recommended Matches:</p>
+      </v-flex>
+
+      <v-flex md10 sm9 xs12>
+        <v-chip v-for="bet in recommendMatch" :key="bet.id" color="blue-grey lighten-6" text-color="white">
+          <v-icon size="20" left>fas fa-futbol</v-icon>
+          {{ bet.name }}
+        </v-chip>
+      </v-flex>
+    </v-layout>
+  </v-flex>
+</v-layout>
+

@@ -1,0 +1,74 @@
+<v-dialog v-model="isDialog" width="500">
+  <v-card color="blue-grey lighten-6 overflow-hidden" dark>
+    <v-card-title class="title" primary-title>Share your bet</v-card-title>
+
+    <v-divider color="white"></v-divider>
+
+    <v-card-text class="text-xs-center">
+      <v-icon size="60">fab fa-ethereum</v-icon>
+      <p class="mb-0 mt-4">Your request has been submitted!</p>
+      <p>Please wait for a few minutes before your transaction is confirmed.</p>
+
+      <v-tooltip bottom lazy>
+        <v-btn color="blue accent-2" slot="activator"
+          v-clipboard:copy="sharePath"
+          v-clipboard:success="onCopy">
+          <v-icon left>fas fa-copy</v-icon>
+          Copy Link betting
+        </v-btn>
+        <span>Copy Link</span>
+      </v-tooltip>
+
+    </v-card-text>
+
+    <v-divider color="white"></v-divider>
+
+    <v-card-text class="text-xs-center">
+      <social-sharing url="https://vuejs.org/"
+        title="Bether"
+        description="Betting without borders"
+        quote="Vue is a progressive framework for building user interfaces."
+        hashtags="betting,football,ethereum,blockchain"
+        twitter-user="vuejs"
+        inline-template>
+        <section>
+          <network network="facebook">
+            <v-tooltip top lazy>
+              <v-btn class="mx-3 white--text" icon slot="activator" color="blue darken-3">
+                <v-icon size="24px">fab fa-facebook-f</v-icon>
+              </v-btn>
+              <span>Facebook</span>
+            </v-tooltip>
+          </network>
+
+          <network network="twitter">
+            <v-tooltip top lazy>
+              <v-btn class="mx-3 white--text" icon slot="activator" color="light-blue darken-1">
+                <v-icon size="24px">fab fa-twitter</v-icon>
+              </v-btn>
+              <span>Twitter</span>
+            </v-tooltip>
+          </network>
+
+          <network network="googleplus">
+            <v-tooltip top lazy>
+              <v-btn class="mx-3 white--text" icon slot="activator" color="red darken-1">
+                <v-icon size="24px">fab fa-google-plus-g</v-icon>
+              </v-btn>
+              <span>Google</span>
+            </v-tooltip>
+          </network>
+
+          <network network="telegram">
+            <v-tooltip top lazy>
+              <v-btn class="mx-3 white--text" icon slot="activator" color="light-blue darken-1">
+                <v-icon size="24px">fab fa-telegram-plane</v-icon>
+              </v-btn>
+              <span>Telegram</span>
+            </v-tooltip>
+          </network>
+        </section>
+      </social-sharing>
+    </v-card-text>
+  </v-card>
+</v-dialog>

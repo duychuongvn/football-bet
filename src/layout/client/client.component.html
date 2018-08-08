@@ -1,0 +1,14 @@
+<v-app class="crypto-app">
+  <headcomp />
+
+  <v-content>
+    <v-slide-y-transition mode="out-in">
+      <router-view/>
+    </v-slide-y-transition>
+    <vue-progress-bar></vue-progress-bar>
+  </v-content>
+
+  <footercomp />
+  <notify-comp />
+  <dialog-base />
+</v-app>

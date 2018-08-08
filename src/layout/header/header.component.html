@@ -1,0 +1,84 @@
+<section>
+  <v-toolbar dark :class="isFixed ? 'blue-grey lighten-6' : 'blue-grey lighten-6-opacity' "
+    :fixed="isFixed">
+    <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
+    <v-toolbar-title>
+      <v-icon left class="mr-2">fab fa-gitlab</v-icon>
+      Crypto P2P Betting
+    </v-toolbar-title>
+    <v-divider vertical class="ml-3"></v-divider>
+    <v-toolbar-items class="hidden-sm-and-down">
+      <v-btn flat :to="{ name: 'home' }" exact exact-active-class="teal lighten-1">Match Odds</v-btn>
+      <v-divider vertical></v-divider>
+      <v-btn flat v-if="isAccount" :to="{ name: 'profile'}" exact-active-class="teal lighten-1">My Bets</v-btn>
+      <v-divider vertical v-if="isAccount"></v-divider>
+      <v-btn flat @click="openHowItWork">How it works</v-btn>
+      <v-divider vertical></v-divider>
+      <v-btn flat :to="{ name: 'faq' }">FAQs</v-btn>
+      <v-divider vertical></v-divider>
+    </v-toolbar-items>
+
+    <v-spacer></v-spacer>
+
+    <v-toolbar-title v-if="!isAccount" class="body-1">Not connected to Ethereum node. Install Metamask to connect.</v-toolbar-title>
+    <v-menu lazy transition="slide-x-reverse-transition" left offset-y v-else allow-overflow :close-on-content-click="false">
+      <v-btn color="teal lighten-1" slot="activator" ref="menuButton">
+        <v-icon left>fab fa-gitlab</v-icon>
+        User
+      </v-btn>
+
+      <v-card width="350px">
+        <v-list>
+          <v-list-tile avatar>
+            <v-list-tile-avatar size="50">
+              <image-comp imgWidth="50px" imgHeight="40px" :imgPath="avatarMMask" imgName="metamask"></image-comp>
+              <!-- <img :src="avatarMMask" alt="Meta_Mask"> -->
+            </v-list-tile-avatar>
+
+            <v-list-tile-content>
+              <v-list-tile-title>{{ networkName }}</v-list-tile-title>
+              <v-list-tile-sub-title>{{ accountAddr }}</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+
+        <v-divider></v-divider>
+
+        <v-list two-line>
+          <v-list-tile>
+            <v-list-tile-avatar>
+              <v-icon color="blue darken-1primary">fas fa-wallet</v-icon>
+            </v-list-tile-avatar>
+
+            <v-list-tile-content>
+              <v-list-tile-title>{{ accountBalance }}</v-list-tile-title>
+              <v-list-tile-sub-title>Ether wagered</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+
+          <v-list-tile>
+            <v-list-tile-avatar>
+              <v-icon color="blue darken-1primary">fas fa-smile</v-icon>
+            </v-list-tile-avatar>
+
+            <v-list-tile-content>
+              <v-list-tile-title>{{ accountBalance }}</v-list-tile-title>
+              <v-list-tile-sub-title>Ether won</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+
+          <v-list-tile>
+            <v-list-tile-avatar>
+              <v-icon color="blue darken-1primary">fas fa-futbol</v-icon>
+            </v-list-tile-avatar>
+
+            <v-list-tile-content>
+              <v-list-tile-title>100,000</v-list-tile-title>
+              <v-list-tile-sub-title>Total bets</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+      </v-card>
+    </v-menu>
+  </v-toolbar>
+</section>

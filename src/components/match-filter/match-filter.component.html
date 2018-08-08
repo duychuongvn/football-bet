@@ -1,0 +1,12 @@
+<v-layout row wrap>
+  <v-flex xs12>
+    <v-text-field v-model="bettingSearch" :counter="50" maxlength="50" label="Search Your Odds" dark color="white" prepend-icon="fab fa-searchengin"></v-text-field>
+  </v-flex>
+
+  <v-flex xs12>
+    <v-chip label v-for="filter in listFilter" :key="filter.key" :outline="!isActiveFilter(filter.key)" :class="isActiveFilter(filter.key) ? 'white--text': 'cursor-pointer'"
+      :color="isActiveFilter(filter.key) ? 'teal lighten-1': ''" @click="changedFilter(filter.key)">
+      {{ filter.name }} ({{ filter.number }})
+    </v-chip>
+  </v-flex>
+</v-layout>

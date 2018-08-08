@@ -1,216 +1,160 @@
-@import url('https://fonts.googleapis.com/css?family=Barlow+Condensed&subset=latin-ext');
+@import './utils/variables';
 
-@import 'variables';
-@import 'mixin/index';
-@import 'inheritance/index';
-@import 'utils/index';
-
-@import 'global';
-
-// import Page;
-@import 'pages/index';
-
-/* You can add global styles to this file, and also import other style files */
-body {
-  @include bg-img--cover('../assets/images/bitcoin-node.jpg', true);
-  min-height: 100vh;
-  @extend %font-barlow-condensed;
-  letter-spacing: .6px;
+.crypto-app {
+  background-image: url('../assets/images/bitcoin-node.jpg') !important;
+  background-size: cover !important;
+  background-position: 50% 50% !important;
 }
 
-.nav-link {
-  color: $color_white;
+.blue-grey {
+  &.lighten-6 {
+    background-color: $color-blue-gray !important;
+    border-color: $color-blue-gray !important;
+  }
 
-  &:hover {
-    color: $color_white;
+  &.lighten-6-opacity {
+    background-color: $rgba-blue-gray-opacity !important;
+    border-color: $rgba-blue-gray-opacity !important;
   }
 }
 
-.nav-item {
-  &::after {
-    background: $color_white;
-    content: '';
-    display: block;
-    height: 2px;
-    margin: 0 auto;
-    @include transition(all, .2s, ease);
-    width: 0%;
-  }
+.bg-transparent {
+  background-color: transparent !important;
 
-  &:hover::after,
-  &.active::after {
-    width: 95%;
+  .v-datatable.v-table {
+    background-color: transparent !important;
   }
 }
 
-.card.card-match,
-.alert-match,
-.table-match,
-.input-bet,
-.bet-accordion {
-  background-color: $bg_bet;
-  @include box-shadow(0px, 0px, 4px, $color_white);
-  border: 1px solid $rgba-gray--65;
+.accor-fixture {
+  .v-expansion-panel__header {
+    background-color: $color-blue-dark;
+    border-left: 3px solid #00E676;
+  }
+
+  .v-card__text {
+    border-left: 3px solid #B9F6CA;
+  }
 }
 
-.card.card-match .card-header {
-  border-bottom: 1px solid $rgba-gray--65;
-}
+.table-fixture {
+  .v-datatable {
+    &.v-table {
+      thead {
+        text-transform: uppercase;
+        font-weight: bold;
 
-.card.card-match .list-group-item {
-  background-color: transparent;
-  border-bottom: 1px solid $rgba-gray--65;
-  position: relative;
-}
+        .v-datatable__progress {
+          background-color: #00E676;
+        }
+      }
 
-.card.card-match .list-group-item .match-flag {
-  @extend %flex-center;
-  margin: 10px 0 0 15px;
-}
+      tbody > tr {
+        > td {
+          cursor: pointer;
+        }
 
-.match-flag {
-  .flag-img {
-    width: 40px;
-    margin-right: 10px;
+        &:hover {
+          background-color: $color-blue-gray;
+        }
+      }
+    }
 
-    &:last-child {
-      margin-right: 0;
-      margin-left: 10px;
+    .v-datatable__actions {
+      background-color: transparent;
+      border-top-color: #00E676
     }
   }
 }
 
-.arrow-detail {
-  border: solid $color_white;
-  border-width: 0px 3px 3px 0;
-  display: block;
-  padding: 5px;
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-  cursor: pointer;
-}
-
-.card.card-match .list-group-item .arrow-detail {
-  position: absolute;
-  right: 20px;
-  top: calc(50% - 4px);
-}
-
-.box-shadow--sm {
-  @include box-shadow(0, 0, 5px, $color_white);
-}
-
-.pointer {
-  cursor: pointer;
-}
-
-.text-link {
-  color: $color-blue !important;
-  cursor: pointer;
-}
-
-.input-bet {
-  margin-bottom: 15px;
-
-  &:last-child {
-    margin-bottom: 0;
-  }
-
-  .form-control {
-    background-color: transparent;
-    border: 0;
-    color: $color_white;
-    outline: none;
-
-    &:focus {
-      box-shadow: none;
-    }
-  }
-
-  .input-group-append i.material-icons {
-    color: $color_white;
-    line-height: 36px;
-  }
-}
-
-.bet-accordion {
-  margin-top: 20px;
-
-  .accr-header {
-    overflow: hidden;
-    color: $color_white;
-    font-size: 25px;
-    line-height: 20px;
-    padding: 10px 20px;
-    text-transform: capitalize;
-    cursor: pointer;
-
-    &::after {
-      background: $color_white;
-      content: '';
-      display: block;
-      height: 2px;
-      margin: 0 auto;
-      @include transition(all, .2s, ease);
-      width: 0;
-    }
-
-    .material-icons {
-      float: right;
-      font-size: 40px;
-      line-height: 20px;
-      margin-right: -20px;
-    }
-  }
-
-  &.active .accr-header::after {
-    width: 100%;
-    margin: 10px auto 0;
-  }
-
-  .accr-body {
-    visibility: hidden; /* hides sub-menu */
-    opacity: 0;
-    height: 0;
-    transition: all 0.3s ease-in-out 0s, visibility 0s linear 0.3s, z-index 0s linear 0.01s;
-
-    &.active {
-      visibility: visible; /* shows sub-menu */
-      opacity: 1;
-      height: auto;
-      transform: translateY(0%);
-      transition-delay: 0s, 0s, 0.3s;
-      padding: 20px;
-    }
-  }
-}
-
-.close:not(:disabled):not(.disabled) {
-  outline: none;
-}
-
-.modal-dialog {
-  min-height: calc(100vh - 60px);
+.betting-wrap {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  overflow: auto;
 
-  @media(max-width: 768px) {
-    min-height: calc(100vh - 20px);
+  .bet-name {
+    margin: 0 5px;
+
+    &--lg {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    &--xlg {
+      font-size: 1.9rem;
+      font-weight: bold;
+    }
   }
 }
 
-.modal-title_sub {
-  display: block;
-  font-size: 13px;
-  color: $color-gray--80;
+.font-sm {
+  font-size: 1rem;
 }
 
-.input-match {
-  background-color: transparent;
-  border: 1px solid $color-gray--dd;
-  color: $color_white;
-  text-align: center;
+.justify {
+  &-content {
+    &-center {
+      justify-content: center;
+    }
+  }
 }
 
+.align {
+  &-flex-end {
+    align-self: flex-end;
+  }
+
+  &-self {
+    &-center {
+      align-self: center
+    }
+  }
+}
+
+.cursor {
+  &-pointer {
+    cursor: pointer;
+    .v-chip__content {
+      cursor: pointer;
+    }
+  }
+}
+
+.bet-select-center {
+  &.theme--dark .v-select__selections {
+    justify-content: center;
+  }
+
+  &.v-text-field input {
+    display: none;
+  }
+}
+
+.bet-select {
+  background-color: $color-blue-gray !important;
+  border-color: $color-blue-gray !important;
+  margin-top: 34px;
+
+  .theme--dark {
+    &.v-card, .v-list {
+      background-color: transparent;
+    }
+  }
+
+  .v-list__tile {
+    height: 30px;
+  }
+}
+
+.modal-close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.line-height-1 {
+  line-height: 1 !important;
+}

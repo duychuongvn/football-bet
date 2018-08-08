@@ -1,0 +1,61 @@
+<v-container fluid grid-list-md>
+  <v-layout>
+    <v-flex>
+      <v-card dark raised color="blue-grey lighten-6-opacity" v-if="isAccount">
+        <v-card-title primary-title>
+          <h1 class="headline">Manager Bettings</h1>
+        </v-card-title>
+
+        <v-divider color="white"></v-divider>
+
+        <v-card-text>
+          <v-layout row wrap>
+            <v-flex xs3>
+              <v-select
+                v-model="matchId"
+                :items="allBetting"
+                item-text="bettingName"
+                item-value="matchId"
+                content-class="bet-select"
+                dark color="white" label="List Betting"></v-select>
+            </v-flex>
+            <v-flex xs12 v-if="matchId">
+
+              <v-layout row wrap align-center justify-center>
+                <v-flex xs12>
+                  <h3 class="title">{{ matchDate }}</h3>
+                </v-flex>
+                <v-flex xs2>
+                  <div class="betting-wrap justify-center">
+                    <image-comp imgWidth="60px" imgHeight="30px" :imgPath="homeTeamFlag" :imgName="homeTeam"></image-comp>
+                    <p class="bet-name bet-name--lg">{{ homeTeam }}</p>
+                  </div>
+                </v-flex>
+                <v-flex xs2>
+                  <v-text-field color="white" label="Home Goals" v-model="homeGoals"></v-text-field>
+                </v-flex>
+                <v-flex xs1 text-xs-center>
+                  <span>:</span>
+                </v-flex>
+                <v-flex xs2>
+                  <v-text-field color="white" label="Away Goals" v-model="awayGoals"></v-text-field>
+                </v-flex>
+                <v-flex xs2>
+                  <div class="betting-wrap justify-center">
+                    <image-comp imgWidth="60px" imgHeight="30px" :imgPath="awayTeamFlag" :imgName="awayTeam"></image-comp>
+                    <p class="bet-name bet-name--lg">{{ awayTeam }}</p>
+                  </div>
+                </v-flex>
+                <v-flex xs3 text-xs-center>
+                  <v-btn color="teal lighten-1" @click="updateScoreMatch">Update</v-btn>
+                  <v-btn color="teal lighten-1" @click="approveScoreMatch">Approve</v-btn>
+                </v-flex>
+              </v-layout>
+
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+      </v-card>
+    </v-flex>
+  </v-layout>
+</v-container>

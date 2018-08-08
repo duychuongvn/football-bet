@@ -1,0 +1,21 @@
+<v-footer dark height="auto" color="transparent" class="mt-5">
+  <v-card flat tile color="transparent" width="100%">
+
+    <v-card-text class="text-xs-center">
+      <v-tooltip top lazy v-for="icon in socialIcons" :key="icon.name">
+        <v-btn class="mx-3 white--text" icon slot="activator" :color="icon.color">
+          <v-icon size="24px">{{ icon.name }}</v-icon>
+        </v-btn>
+        <span>{{ icon.tooltip }}</span>
+      </v-tooltip>
+    </v-card-text>
+
+    <v-divider class="teal lighten-1"></v-divider>
+
+    <v-card-text class="white--text text-xs-center">
+      All Rights reserved
+      <strong>Bether</strong> &copy; 2018
+      - <router-link :to="{ name: 'terms-and-conditions' }" class="cyan--text">Terms and Conditions</router-link>
+    </v-card-text>
+  </v-card>
+</v-footer>

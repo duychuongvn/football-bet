@@ -1,0 +1,13 @@
+<section class="fixture">
+  <v-card raised dark color="blue-grey lighten-6-opacity">
+    <v-card-text class="pa-0">
+      <v-tabs fixed-tabs color="transparent"  slider-color="teal lighten-2">
+        <v-tab v-for="label in fixtureTitle" :key="label.key" @click="changedTimeBet(label.key)">
+          {{ label.name }}
+        </v-tab>
+      </v-tabs>
+    </v-card-text>
+  </v-card>
+
+  <fixture-item-comp :bettingTime="betTime" class="mt-3"></fixture-item-comp>
+</section>

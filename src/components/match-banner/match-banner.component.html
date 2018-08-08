@@ -1,0 +1,31 @@
+<v-layout row wrap>
+  <v-flex xs12>
+    <v-card dark color="blue-grey lighten-6-opacity">
+      <v-card-text>
+        <div class="mb-2 text-uppercase">
+          <v-icon class="mr-2">fas fa-calendar-alt</v-icon>
+          {{ match.dateTimeString }}
+        </div>
+
+        <div class="betting-wrap mb-1">
+          <image-comp
+            imgWidth="60px" imgHeight="30px"
+            :imgPath="match.homeTeamFlag" :imgName="match.homeTeam"></image-comp>
+          <p class="bet-name bet-name--lg">{{ match.bettingName }}</p>
+          <image-comp
+            imgWidth="60px" imgHeight="30px"
+            :imgPath="match.awayTeamFlag" :imgName="match.awayTeam"></image-comp>
+        </div>
+
+        <span>World Cup Russia 2018</span>
+      </v-card-text>
+    </v-card>
+  </v-flex>
+
+  <v-flex xs12 text-xs-right>
+    <v-btn dark color="teal lighten-1 ma-0" @click="createBet">
+      <v-icon left>fas fa-plus-square</v-icon>
+      New Bet
+    </v-btn>
+  </v-flex>
+</v-layout>

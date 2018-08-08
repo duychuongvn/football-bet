@@ -1,0 +1,4 @@
+<div class="img-wrap" :style="{ 'width': imgWidth, 'height': imgHeight }">
+  <img class="img-item" :src="imgPath" @load="imageLoading" @error="imageError">
+  <div class="img-bg" :style="{ 'background-image': imagePath }" v-if="!isLoading"></div>
+</div>

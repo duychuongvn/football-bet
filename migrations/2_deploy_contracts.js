@@ -1,4 +1,4 @@
-var SoloBet = artifacts.require("./AsianSoloBet.sol");
+var AsianSoloBet = artifacts.require("./AsianSoloBet.sol");
 module.exports = function(deployer) {
-  deployer.deploy(SoloBet);
+  deployer.deploy(AsianSoloBet);
 };
