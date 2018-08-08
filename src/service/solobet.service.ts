@@ -17,7 +17,8 @@ export class SolobetService {
 
   constructor(
     private web3Ser: Web3Service,
-  ) { }
+  ) {
+  }
 
   public initProvider() {
     this.Solobet.setProvider(this.web3Ser.web3.currentProvider);

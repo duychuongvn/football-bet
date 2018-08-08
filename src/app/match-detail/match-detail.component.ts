@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Web3Service, SolobetService, NotifyService, EventEmitterService } from 'service/service';
+import { Web3Service, SolobetService, NotifyService, EventEmitterService , BetherService} from 'service/service';
 import { URLSearchParams } from '@angular/http';
 
 import { Fixture } from 'models/fixture';
@@ -42,7 +42,8 @@ export class MatchDetailComponent implements OnInit {
     private _solobetService: SolobetService,
     private _modalService: BsModalService,
     private _notify: NotifyService,
-    private _eventEmitter: EventEmitterService
+    private _eventEmitter: EventEmitterService,
+    private _betheService: BetherService
   ) { }
 
   ngOnInit() {
@@ -83,6 +84,8 @@ export class MatchDetailComponent implements OnInit {
   }
 
   private _loadBettings(id: string) {
+    alert('a');
+    this._betheService.getBettings(0x133);
     this._solobetService.loadBettings(id)
       .subscribe(res => {
         setTimeout(() => {

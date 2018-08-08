@@ -1,7 +1,8 @@
 pragma solidity ^0.4.21;
 
 import "./Ownable.sol";
-contract BetherContract is Ownable{
+
+contract BetherContract is Ownable {
 
   function BetherContract(){
 
@@ -10,7 +11,7 @@ contract BetherContract is Ownable{
   enum Team {Home, Away}
   enum MatchStatus {NotAvailable, Waiting, Playing, Canceled, Finished}
   enum BetStatus {Open, Deal, Canceled, Refunded, Done, Settled}
-
+  address public feeOwner;
   mapping(address => uint256) balances;
   mapping(uint8 => string) leagues;
   mapping(bytes32 => address) betContracts;
@@ -20,6 +21,9 @@ contract BetherContract is Ownable{
   mapping(bytes32 => Match) matches;
   mapping(bytes32 => uint16[]) matchBets;
   mapping(uint16 => uint16[]) betSettled;
+  mapping(address => bool) admins;
+
+
   address[] players;
 
 
@@ -64,7 +68,13 @@ contract BetherContract is Ownable{
 
   }
 
-  function updateLeague(uint8 id, string ipfsHash) public returns (bool){
+
+  modifier canUpdate() {
+    require(msg.sender == owner || admins[msg.sender]);
+    _;
+  }
+
+  function updateLeague(uint8 id, string ipfsHash) canUpdate public returns (bool){
     leagues[id] = ipfsHash;
 
   }
@@ -74,6 +84,7 @@ contract BetherContract is Ownable{
   }
 
   event LogNewBetting(uint16 bettingIdx);
+
   function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint selectedTeam, uint time, int8 odds) public payable returns (bool) {
 
     require(time > now);
@@ -111,17 +122,17 @@ contract BetherContract is Ownable{
 
     require(_betting.bMaker != msg.sender);
     require(_betting.status != BetStatus.Settled);
-    require(_betting.bAmount -_betting.settledAmount >= msg.value);
+    require(_betting.bAmount - _betting.settledAmount >= msg.value);
 
     if (isPlayerNotExist(msg.sender)) {
       players.push(msg.sender);
     }
 
     _betting.settledAmount += msg.value;
-    if(_betting.settledAmount == _betting.bAmount) {
-      _betting.status= BetStatus.Settled;
+    if (_betting.settledAmount == _betting.bAmount) {
+      _betting.status = BetStatus.Settled;
     } else {
-      _betting.status= BetStatus.Deal;
+      _betting.status = BetStatus.Deal;
     }
 
     uint16 betIdx = uint16(settles.push(Settle(bettingIdx, msg.sender, msg.value)) - 1);
@@ -187,7 +198,8 @@ contract BetherContract is Ownable{
   function getPlayerBalance(address player) public view returns (uint256) {
     return balances[player];
   }
-  function updateScore(bytes32 matchId, uint homeScore, uint awayScore) public onlyOwner returns (bool) {
+
+  function updateScore(bytes32 matchId, uint homeScore, uint awayScore) public canUpdate returns (bool) {
     Match storage _match = matches[matchId];
     _match.homeScore = uint8(homeScore);
     _match.awayScore = uint8(awayScore);
@@ -195,31 +207,46 @@ contract BetherContract is Ownable{
     return true;
   }
 
-  event LogP(uint256 i);
-  function approveScore(bytes32 matchId) public onlyOwner returns (bool) {
+
+  function approveScore(bytes32 matchId) public canUpdate returns (bool) {
     require(!matches[matchId].isApproved);
     Match storage _match = matches[matchId];
     _match.isApproved = true;
-    emit LogP(matchBets[matchId].length);
 
     for (uint256 i = 0; i < matchBets[matchId].length; i++) {
 
-      Betting memory _betting = bets[i];
-      if (_betting.status == BetStatus.Deal|| _betting.status == BetStatus.Settled) {
-        doTransfer(_match, _betting,0);
+      Betting storage _betting = bets[i];
+      if (_betting.status == BetStatus.Deal || _betting.status == BetStatus.Settled) {
+        doTransfer(_match, _betting, 0);
         _betting.status = BetStatus.Done;
       }
-//      else if (_betting.status == BetStatus.Open) {
-//        refund(_betting);
-//        _betting.status = BetStatus.Refunded;
-//      }
+      else if (_betting.status == BetStatus.Open) {
+        refund(_betting);
+        _betting.status = BetStatus.Refunded;
+      }
 
     }
 
-  //  rmBet(_match);
+    //  rmBet(_match);
     return true;
   }
 
+
+  function cancelOffer(uint256 bettingId) external returns (bool){
+    Betting storage _betting = bets[bettingId];
+    require(_betting.bMaker == msg.sender);
+    require(_betting.status == BetStatus.Open);
+    refund(_betting);
+    _betting.status = BetStatus.Canceled;
+    return true;
+  }
+
+  function refund(Betting _betting) internal returns (bool) {
+    transferFund(_betting.bMaker, _betting.bAmount);
+    _betting.status = BetStatus.Refunded;
+    balances[_betting.bMaker] = balances[_betting.bMaker] - _betting.bAmount;
+    return true;
+  }
 
   function doTransfer(Match _match, Betting _betting, uint16 betIndex) internal returns (bool) {
 
@@ -232,15 +259,16 @@ contract BetherContract is Ownable{
     }
 
     balances[_betting.bMaker] = balances[_betting.bMaker] - _betting.bAmount;
-//    balances[_betting.punter] = balances[_betting.punter] - _betting.amount;
-  //  balances[feeOwner] = balances[feeOwner] + _betting.amount - _betting.amount * 95 / 100;
+    balances[feeOwner] = balances[feeOwner] + (_betting.settledAmount - _betting.settledAmount * 95 / 100);
     _betting.status = BetStatus.Done;
   }
+
   function transferFund(address receiver, uint256 amount) private returns (bool) {
     if (receiver != 0x0) {
       receiver.transfer(amount);
     }
   }
+
   function getFunding(Match _match, Betting _betting, uint16 betIdx) internal returns (Funding[]) {
 
     BookmakerResult bmResult;
@@ -254,29 +282,36 @@ contract BetherContract is Ownable{
     Funding[] memory fundings = new Funding[](betSettled[betIdx].length + 1);
     if (bmResult == BookmakerResult.Win) {
       fundings[0] = Funding(_betting.bMaker, _betting.bAmount + _betting.settledAmount * 95 / 100);
+      for (uint i = 0; i < betSettled[betIdx].length; i++) {
+        balances[settles[betSettled[betIdx][i]].punter] -= settles[betSettled[betIdx][i]].amount;
+      }
     } else if (bmResult == BookmakerResult.Draw) {
       fundings[0] = Funding(_betting.bMaker, _betting.bAmount + (_betting.settledAmount - _betting.settledAmount * 5 / 100 / 2));
-      for (uint i = 0; i < betSettled[betIdx].length; i++) {
+      for (i = 0; i < betSettled[betIdx].length; i++) {
         fundings[i + 1] = Funding(settles[betSettled[betIdx][i]].punter, settles[betSettled[betIdx][i]].amount - settles[betSettled[betIdx][i]].amount * 5 / 100 / 2);
+        balances[settles[betSettled[betIdx][i]].punter] -= settles[betSettled[betIdx][i]].amount;
       }
     } else if (bmResult == BookmakerResult.WinAHalf) {
       fundings[0] = Funding(_betting.bMaker, _betting.bAmount + (_betting.settledAmount + _betting.settledAmount * 95 / 100 / 2));
-      for ( i = 0; i < betSettled[betIdx].length; i++) {
+      for (i = 0; i < betSettled[betIdx].length; i++) {
         fundings[i + 1] = Funding(settles[betSettled[betIdx][i]].punter, settles[betSettled[betIdx][i]].amount - settles[betSettled[betIdx][i]].amount * 95 / 100 / 2);
+        balances[settles[betSettled[betIdx][i]].punter] -= settles[betSettled[betIdx][i]].amount;
       }
     } else if (bmResult == BookmakerResult.LoseAHalf) {
       fundings[0] = Funding(_betting.bMaker, _betting.bAmount + _betting.settledAmount * 95 / 100 / 2);
-      for ( i = 0; i < betSettled[betIdx].length; i++) {
+      for (i = 0; i < betSettled[betIdx].length; i++) {
         fundings[i + 1] = Funding(settles[betSettled[betIdx][i]].punter, settles[betSettled[betIdx][i]].amount + settles[betSettled[betIdx][i]].amount * 95 / 100 / 2);
+        balances[settles[betSettled[betIdx][i]].punter] -= settles[betSettled[betIdx][i]].amount;
       }
     }
     else {
       fundings[0] = Funding(_betting.bMaker, _betting.bAmount - _betting.settledAmount);
-      for ( i = 0; i < betSettled[betIdx].length; i++) {
+      for (i = 0; i < betSettled[betIdx].length; i++) {
         fundings[i + 1] = Funding(settles[betSettled[betIdx][i]].punter, settles[betSettled[betIdx][i]].amount + settles[betSettled[betIdx][i]].amount * 95 / 100);
+        balances[settles[betSettled[betIdx][i]].punter] -= settles[betSettled[betIdx][i]].amount;
       }
-    }
 
+    }
 
     return fundings;
   }
@@ -288,14 +323,21 @@ contract BetherContract is Ownable{
     if ((odds + goaldifference * 100) > 25) return BookmakerResult.Win;
     return BookmakerResult.Lose;
   }
-  //  function calculateAmount(int goaldifference, int odds, uint amount) private returns (uint256) {
-  //    if ((odds + goaldifference * 100) == 25) return amount + amount * 95 / 100 / 2;
-  //    if ((odds + goaldifference * 100) == - 25) return amount * 95 / 100 / 2;
-  //    if ((odds + goaldifference * 100) == 0) return amount - amount * 5 / 100 / 2;
-  //    if ((odds + goaldifference * 100) > 25) return amount + amount * 95 / 100;
-  //
-  //    return 0;
-  //
-  //  }
+
+  function claimStake(bytes32 matchId, uint16[] bettingIdxes) public returns (bool) {
+
+    Match memory _match = matches[matchId];
+    require(_match.status == MatchStatus.Finished);
+    for (uint i = 0; i < bettingIdxes.length; i++) {
+      Betting storage _betting = bets[bettingIdxes[i]];
+      if (_betting.matchId == matchId) {
+        doTransfer(_match, _betting, bettingIdxes[i]);
+      }
+
+    }
+    return true;
+
+  }
+
 
 }

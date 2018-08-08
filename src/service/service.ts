@@ -4,6 +4,7 @@ import { MatchService } from './match.service';
 import { JhelperService } from './jhelper.service';
 import { UserService } from './user.service';
 import { NotifyService } from './notify.service';
+import { BetherService } from './bether.service';
 import { EventEmitterService } from './event-emitter.service';
 
 export {
@@ -13,5 +14,6 @@ export {
   JhelperService,
   UserService,
   NotifyService,
-  EventEmitterService
+  EventEmitterService,
+  BetherService
 };

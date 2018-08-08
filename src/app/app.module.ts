@@ -15,7 +15,7 @@ import { ModalInstallMetamaskModule } from 'app/modal-install-metamask/modal-ins
 import { AppRoutingModule } from 'app/app.router';
 import { AppComponent } from './app.component';
 
-import { EventEmitterService, MatchService, NotifyService, SolobetService, UserService, Web3Service } from 'service/service';
+import { EventEmitterService, MatchService, NotifyService, SolobetService, UserService, Web3Service, BetherService } from 'service/service';
 
 const SERVICES = [
   SolobetService,
@@ -24,7 +24,8 @@ const SERVICES = [
   MatchService,
   UserService,
   NotifyService,
-  EventEmitterService
+  EventEmitterService,
+  BetherService
 ];
 
 @NgModule({

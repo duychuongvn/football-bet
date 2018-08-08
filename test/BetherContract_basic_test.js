@@ -19,7 +19,7 @@ sleep = () => {
 }
 
 toGwei = (wei) => {
-  return parseInt(wei / 1000000000);
+  return parseInt(wei / 100000000000);
 }
 var assertThrow = async (fn, args) => {
   try {
@@ -100,9 +100,12 @@ describe('Test', async () => {
       console.log("after deal")
       console.log(amountOfBookMakerAfterOffer);
       console.log(amountOfPunterAfterDeal);
+      console.log(await contract.getPlayerBalance(bookmaker));
+      console.log(await contract.getPlayerBalance(punter));
       await sleep();
       await contract.updateScore(0x133, 2, 2); // Russia 2:2 USA
-      contract.approveScore(0x133);
+    //  contract.approveScore(0x133);
+      contract.claimStake(0x133, [0])
 
     //  await sleep();
       await contract.updateScore(0x133, 2, 2); // cheat here to wait for network update new balance
@@ -112,7 +115,8 @@ describe('Test', async () => {
       console.log("after approve")
       console.log(amountOfBookMakerAfterApproveMatchScore);
       console.log(amountOfPunterAfterApproveMatchScore);
-
+      console.log(await contract.getPlayerBalance(bookmaker));
+      console.log(await contract.getPlayerBalance(punter));
       //cannot verify exact amount due to lack of gas
       assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker win all when Russia win 2-1")
       assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter lose all amount when Russia win 2-1")
