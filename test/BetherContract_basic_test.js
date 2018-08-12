@@ -89,38 +89,62 @@ describe('Test', async () => {
       console.log("new")
       console.log(amountOfBookMakerBeforeOffer);
       console.log(amountOfPunterBeforeDeal);
-     await contract.offerNewMatch(0x133, homeTeam, awayTeam, 0, matchTime, 75, {from: bookmaker, value: betAmount});
+      await contract.offerNewMatch(0x133, homeTeam, awayTeam, 0, matchTime, 75, {from: bookmaker, value: betAmount});
+      await contract.offerNewMatch(0x133, homeTeam, awayTeam, 0, matchTime, 100, {from: bookmaker, value: betAmount});
+      await contract.offerNewMatch(0x134, homeTeam, awayTeam, 0, matchTime, 75, {from: bookmaker, value: betAmount});
+      await contract.offerNewMatch(0x135, homeTeam, awayTeam, 0, matchTime, 75, {from: bookmaker, value: betAmount});
 
       // punter deals with bookmaker means that
-     await contract.deal(0, {from: punter, value: betAmount/2});
-     await contract.deal(0, {from: accounts[4], value: betAmount/2});
+      await contract.deal(0, {from: punter, value: betAmount/2});
+      await contract.deal(0, {from: accounts[4], value: betAmount/2});
+      await contract.deal(2, {from: accounts[4], value: betAmount});
       const amountOfBookMakerAfterOffer = await web3.eth.getBalance(bookmaker).toNumber();
       const amountOfPunterAfterDeal = await  web3.eth.getBalance(punter).toNumber();
 
-      console.log("after deal")
-      console.log(amountOfBookMakerAfterOffer);
-      console.log(amountOfPunterAfterDeal);
-      console.log(await contract.getPlayerBalance(bookmaker));
-      console.log(await contract.getPlayerBalance(punter));
-      await sleep();
+      //   console.log("after deal")
+      //   console.log(amountOfBookMakerAfterOffer);
+      //   console.log(amountOfPunterAfterDeal);
+      //   console.log(await contract.getPlayerBalance(bookmaker));
+      //   console.log(await contract.getPlayerBalance(punter));
+      //   await sleep();
       await contract.updateScore(0x133, 2, 2); // Russia 2:2 USA
-    //  contract.approveScore(0x133);
-      contract.claimStake(0x133, [0])
+      await contract.updateScore(0x134, 2, 2); // Russia 2:2 USA
+      await contract.updateScore(0x135, 2, 2); // Russia 2:2 USA
+      await contract.approveScore(0x133);
+      const appr = await contract.approveScore(0x134);
+      const appr2 = await contract.approveScore(0x135);
+      //console.log(appr)
+      //   contract.claimStake(0x133, [0])
+      //
+      // //  await sleep();
+      //   await contract.updateScore(0x133, 2, 2); // cheat here to wait for network update new balance
+      //
+      //   const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
+      //   const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
+      //   console.log("after approve")
+      //   console.log(amountOfBookMakerAfterApproveMatchScore);
+      //   console.log(amountOfPunterAfterApproveMatchScore);
+      //   console.log(await contract.getPlayerBalance(bookmaker));
+      //   console.log(await contract.getPlayerBalance(punter));
+      //   //cannot verify exact amount due to lack of gas
+      //   assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker win all when Russia win 2-1")
+      //   assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter lose all amount when Russia win 2-1")
+      //
 
-    //  await sleep();
-      await contract.updateScore(0x133, 2, 2); // cheat here to wait for network update new balance
+      const matchIds = ['0x133', '0x134', '0x135'];
+      const matchStatus = await contract.countBetStatus(matchIds);
 
-      const amountOfBookMakerAfterApproveMatchScore = await web3.eth.getBalance(bookmaker).toNumber();
-      const amountOfPunterAfterApproveMatchScore = await  web3.eth.getBalance(punter).toNumber();
-      console.log("after approve")
-      console.log(amountOfBookMakerAfterApproveMatchScore);
-      console.log(amountOfPunterAfterApproveMatchScore);
-      console.log(await contract.getPlayerBalance(bookmaker));
-      console.log(await contract.getPlayerBalance(punter));
-      //cannot verify exact amount due to lack of gas
-      assert.equal(toGwei(amountOfBookMakerAfterApproveMatchScore), toGwei(amountOfBookMakerAfterOffer + totalAmountReceivedAfterWin), "Bookmaker win all when Russia win 2-1")
-      assert.equal(toGwei(amountOfPunterAfterApproveMatchScore), toGwei(amountOfPunterAfterDeal), "Punter lose all amount when Russia win 2-1")
-
+      console.log(matchStatus)
+      for(let i = 0; i < matchIds.length;i++) {
+        console.log("----------")
+        console.log("MatchId:" + matchIds[i]);
+        console.log("Open:" + matchStatus[0][i].toNumber());
+        console.log("Partical Settle:" + matchStatus[1][i].toNumber());
+        console.log("Settled Or Done:" + matchStatus[2][i].toNumber());
+        console.log("Canceled:" + matchStatus[3][i].toNumber());
+        console.log("Refunded:" + matchStatus[4][i].toNumber());
+        console.log("----------")
+      }
     });
   })
 })

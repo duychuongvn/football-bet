@@ -1,16 +1,20 @@
 pragma solidity ^0.4.21;
 
 import "./Ownable.sol";
-
+import "./SafeMath.sol";
 contract BetherContract is Ownable {
+
+  using SafeMath for uint256;
 
   function BetherContract(){
 
   }
 
+  event LogNewBetting(uint16 bettingIdx);
+
   enum Team {Home, Away}
   enum MatchStatus {NotAvailable, Waiting, Playing, Canceled, Finished}
-  enum BetStatus {Open, Deal, Canceled, Refunded, Done, Settled}
+  enum BetStatus {Open, Deal, Settled, Canceled, Refunded, Done}
   address public feeOwner;
   mapping(address => uint256) balances;
   mapping(uint8 => string) leagues;
@@ -30,7 +34,7 @@ contract BetherContract is Ownable {
   Betting[] bets;
   Settle[] settles;
   bytes32[] betIndexes;
-
+  bytes32[] matchIds;
   struct Betting {
     uint8 bmTeam; //bMaker team
     int8 odds;
@@ -83,7 +87,7 @@ contract BetherContract is Ownable {
     league = leagues[id];
   }
 
-  event LogNewBetting(uint16 bettingIdx);
+
 
   function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint selectedTeam, uint time, int8 odds) public payable returns (bool) {
 
@@ -97,8 +101,9 @@ contract BetherContract is Ownable {
       _match.awayTeam = awayTeam;
       _match.time = uint48(time);
       _match.status = MatchStatus.Waiting;
-      _match.idx = uint32(betIndexes.push(matchId) - 1);
+      _match.idx = uint32(matchIds.push(matchId) - 1);
       matches[matchId] = _match;
+
     }
 
     Betting memory _betting = Betting(uint8(selectedTeam), odds, BetStatus.Open, matchId
@@ -162,10 +167,43 @@ contract BetherContract is Ownable {
     , punters, punterAmounts);
   }
 
+  event LogStatus(BetStatus status);
+  function countBetStatus(bytes32[] matchIds) public view  returns(uint[], uint[], uint[], uint[], uint[]) {
+    uint16[] memory betIdxes;
+    uint[] memory open = new uint[](matchIds.length);
+    uint[] memory settledOrDone = new uint[](matchIds.length);
+    uint[] memory canceled = new uint[](matchIds.length);
+    uint[] memory deal = new uint[](matchIds.length);
+    uint[] memory refunded = new uint[](matchIds.length);
+
+    for(uint i=0;i< matchIds.length;i++) {
+
+      betIdxes = getBettings(matchIds[i]);
+
+      for(uint j = 0;j<betIdxes.length;j++) {
+        Betting memory _betting = bets[betIdxes[j]];
+        if(_betting.status == BetStatus.Open) {
+          open[i]++;
+        } else if(_betting.status == BetStatus.Canceled) {
+          canceled[i]++;
+        } else if(_betting.status == BetStatus.Settled || _betting.status == BetStatus.Done) {
+          settledOrDone[i]++;
+        }  else if(_betting.status == BetStatus.Deal) {
+          deal[i]++;
+        }
+        else if(_betting.status == BetStatus.Refunded) {
+          refunded[i]++;
+        }
+      }
+    }
+    return (open, deal, settledOrDone, canceled, refunded);
+  }
+
   function getBettings(bytes32 matchId) public view returns (uint16[]) {
     return matchBets[matchId];
   }
 
+  event LogCall(bytes32 matchId);
   function getUserBets(address user) public view returns (uint16[]) {
     return userBets[user];
   }
@@ -208,29 +246,42 @@ contract BetherContract is Ownable {
   }
 
 
+  event LOGA(string test);
   function approveScore(bytes32 matchId) public canUpdate returns (bool) {
+
     require(!matches[matchId].isApproved);
     Match storage _match = matches[matchId];
     _match.isApproved = true;
 
-    for (uint256 i = 0; i < matchBets[matchId].length; i++) {
+    uint16[] memory betIdxes = matchBets[matchId];
+    for (uint256 i = 0; i < betIdxes.length; i++) {
 
-      Betting storage _betting = bets[i];
+      Betting storage _betting = bets[betIdxes[i]];
+
       if (_betting.status == BetStatus.Deal || _betting.status == BetStatus.Settled) {
         doTransfer(_match, _betting, 0);
         _betting.status = BetStatus.Done;
       }
       else if (_betting.status == BetStatus.Open) {
+
         refund(_betting);
         _betting.status = BetStatus.Refunded;
       }
 
     }
 
-    //  rmBet(_match);
+    rmBetIdx(_match);
     return true;
   }
+  function rmBetIdx(Match _match) private returns (bool) {
 
+    uint32 toDelete = _match.idx;
+    uint32 lastIdx = uint32(matchIds.length - 1);
+    matchIds[toDelete] = matchIds[lastIdx];
+    matches[matchIds[toDelete]].idx = toDelete;
+    matchIds.length--;
+    return true;
+  }
 
   function cancelOffer(uint256 bettingId) external returns (bool){
     Betting storage _betting = bets[bettingId];
