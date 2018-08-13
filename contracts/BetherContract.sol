@@ -1,40 +1,38 @@
 pragma solidity ^0.4.21;
 
 import "./Ownable.sol";
-import "./SafeMath.sol";
 contract BetherContract is Ownable {
 
-  using SafeMath for uint256;
 
   function BetherContract(){
 
   }
 
-  event LogNewBetting(uint16 bettingIdx);
+  event LogNewBetting(uint32 bettingIdx);
 
   enum Team {Home, Away}
   enum MatchStatus {NotAvailable, Waiting, Playing, Canceled, Finished}
   enum BetStatus {Open, Deal, Settled, Canceled, Refunded, Done}
+  enum BookmakerResult {Win, Draw, WinAHalf, LoseAHalf, Lose}
+
   address public feeOwner;
   mapping(address => uint256) balances;
   mapping(uint8 => string) leagues;
   mapping(bytes32 => address) betContracts;
-  // mapping(bytes32 => uint16) matchBets;
-  mapping(address => uint16[]) userBets;
-  mapping(address => uint16[]) userSettled;
+  mapping(address => uint32[]) userBets;
+  mapping(address => uint32[]) userSettled;
   mapping(bytes32 => Match) matches;
-  mapping(bytes32 => uint16[]) matchBets;
-  mapping(uint16 => uint16[]) betSettled;
+  mapping(bytes32 => uint32[]) matchBets;
+  mapping(uint32 => uint32[]) betSettled;
   mapping(address => bool) admins;
 
 
   address[] players;
-
-
   Betting[] bets;
   Settle[] settles;
   bytes32[] betIndexes;
   bytes32[] matchIds;
+
   struct Betting {
     uint8 bmTeam; //bMaker team
     int8 odds;
@@ -46,7 +44,7 @@ contract BetherContract is Ownable {
   }
 
   struct Settle {
-    uint16 betIndex;
+    uint32 betIndex;
     address punter;
     uint256 amount;
   }
@@ -64,7 +62,7 @@ contract BetherContract is Ownable {
     string awayTeam; // away Team
   }
 
-  enum BookmakerResult {Win, Draw, WinAHalf, LoseAHalf, Lose}
+
   struct Funding {
 
     address receiver;
@@ -80,13 +78,11 @@ contract BetherContract is Ownable {
 
   function updateLeague(uint8 id, string ipfsHash) canUpdate public returns (bool){
     leagues[id] = ipfsHash;
-
   }
 
   function getLeague(uint8 id) public view returns (string league) {
     league = leagues[id];
   }
-
 
 
   function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint selectedTeam, uint time, int8 odds) public payable returns (bool) {
@@ -109,7 +105,7 @@ contract BetherContract is Ownable {
     Betting memory _betting = Betting(uint8(selectedTeam), odds, BetStatus.Open, matchId
     , msg.sender, msg.value, 0);
 
-    uint16 betIdx = uint16(bets.push(_betting) - 1);
+    uint32 betIdx = uint32(bets.push(_betting) - 1);
     userBets[msg.sender].push(betIdx);
     matchBets[matchId].push(betIdx);
 
@@ -122,7 +118,7 @@ contract BetherContract is Ownable {
 
   }
 
-  function deal(uint16 bettingIdx) public payable returns (bool) {
+  function deal(uint32 bettingIdx) public payable returns (bool) {
     Betting storage _betting = bets[bettingIdx];
 
     require(_betting.bMaker != msg.sender);
@@ -140,7 +136,7 @@ contract BetherContract is Ownable {
       _betting.status = BetStatus.Deal;
     }
 
-    uint16 betIdx = uint16(settles.push(Settle(bettingIdx, msg.sender, msg.value)) - 1);
+    uint32 betIdx = uint32(settles.push(Settle(bettingIdx, msg.sender, msg.value)) - 1);
     userSettled[msg.sender].push(betIdx);
     betSettled[bettingIdx].push(betIdx);
     balances[msg.sender] += msg.value;
@@ -151,25 +147,23 @@ contract BetherContract is Ownable {
     return userBets[player].length <= 0 && userSettled[player].length <= 0;
   }
 
-  function getBettingInfo(uint16 bettingIdx) public view returns (address,
-    uint8, int, uint256, uint256, BetStatus,
-    address[], uint256[]) {
+  function getBettingInfo(uint32 bettingIdx) public view returns (address,
+                                                    uint8, int, uint256, uint256, BetStatus,
+                                                    address[], uint256[]) {
     Betting memory _betting = bets[bettingIdx];
 
     address[] memory punters = new address[](betSettled[bettingIdx].length);
     uint256[] memory punterAmounts = new uint256[](punters.length);
-    for (uint16 i = 0; i < punters.length; i++) {
+    for (uint32 i = 0; i < punters.length; i++) {
       punters[i] = settles[betSettled[bettingIdx][i]].punter;
       punterAmounts[i] = settles[betSettled[bettingIdx][i]].amount;
     }
 
-    return (_betting.bMaker, _betting.bmTeam, _betting.odds, _betting.bAmount, _betting.settledAmount, _betting.status
-    , punters, punterAmounts);
+    return (_betting.bMaker, _betting.bmTeam, _betting.odds, _betting.bAmount, _betting.settledAmount, _betting.status, punters, punterAmounts);
   }
 
-  event LogStatus(BetStatus status);
   function countBetStatus(bytes32[] matchIds) public view  returns(uint[], uint[], uint[], uint[], uint[]) {
-    uint16[] memory betIdxes;
+    uint32[] memory betIdxes;
     uint[] memory open = new uint[](matchIds.length);
     uint[] memory settledOrDone = new uint[](matchIds.length);
     uint[] memory canceled = new uint[](matchIds.length);
@@ -199,18 +193,18 @@ contract BetherContract is Ownable {
     return (open, deal, settledOrDone, canceled, refunded);
   }
 
-  function getBettings(bytes32 matchId) public view returns (uint16[]) {
+  function getBettings(bytes32 matchId) public view returns (uint32[]) {
     return matchBets[matchId];
   }
 
-  event LogCall(bytes32 matchId);
-  function getUserBets(address user) public view returns (uint16[]) {
+
+  function getUserBets(address user) public view returns (uint32[]) {
     return userBets[user];
   }
 
-  function getUserSettles(address user) public view returns (uint16[], uint16[]) {
+  function getUserSettles(address user) public view returns (uint32[], uint32[]) {
 
-    uint16[] memory betIdex = new  uint16[](userSettled[user].length);
+    uint32[] memory betIdex = new  uint32[](userSettled[user].length);
     for (uint i = 0; i < userSettled[user].length; i++) {
 
       betIdex[i] = settles[userSettled[user][i]].betIndex;
@@ -219,14 +213,13 @@ contract BetherContract is Ownable {
     return (betIdex, userSettled[user]);
   }
 
-  function getSettleInfo(uint16 bettingIdx, uint16 settleIdx) public view returns (address,
+  function getSettleInfo(uint32 bettingIdx, uint32 settleIdx) public view returns (address,
     uint8, int, uint256, uint256, BetStatus,
     address, uint256) {
     Betting memory _betting = bets[bettingIdx];
     address punter = settles[settleIdx].punter;
     uint256 punterAmount = settles[settleIdx].amount;
-    return (_betting.bMaker, _betting.bmTeam, _betting.odds, _betting.bAmount, _betting.settledAmount, _betting.status
-    , punter, punterAmount);
+    return (_betting.bMaker, _betting.bmTeam, _betting.odds, _betting.bAmount, _betting.settledAmount, _betting.status, punter, punterAmount);
   }
 
   function countPlayers() public view returns (uint) {
@@ -246,14 +239,13 @@ contract BetherContract is Ownable {
   }
 
 
-  event LOGA(string test);
   function approveScore(bytes32 matchId) public canUpdate returns (bool) {
 
     require(!matches[matchId].isApproved);
     Match storage _match = matches[matchId];
     _match.isApproved = true;
 
-    uint16[] memory betIdxes = matchBets[matchId];
+    uint32[] memory betIdxes = matchBets[matchId];
     for (uint256 i = 0; i < betIdxes.length; i++) {
 
       Betting storage _betting = bets[betIdxes[i]];
@@ -299,7 +291,7 @@ contract BetherContract is Ownable {
     return true;
   }
 
-  function doTransfer(Match _match, Betting _betting, uint16 betIndex) internal returns (bool) {
+  function doTransfer(Match _match, Betting _betting, uint32 betIndex) internal returns (bool) {
 
     Funding[] memory fundings = getFunding(_match, _betting, betIndex);
     for (uint i = 0; i < fundings.length; i++) {
@@ -320,7 +312,7 @@ contract BetherContract is Ownable {
     }
   }
 
-  function getFunding(Match _match, Betting _betting, uint16 betIdx) internal returns (Funding[]) {
+  function getFunding(Match _match, Betting _betting, uint32 betIdx) internal returns (Funding[]) {
 
     BookmakerResult bmResult;
 
@@ -375,7 +367,7 @@ contract BetherContract is Ownable {
     return BookmakerResult.Lose;
   }
 
-  function claimStake(bytes32 matchId, uint16[] bettingIdxes) public returns (bool) {
+  function claimStake(bytes32 matchId, uint32[] bettingIdxes) public returns (bool) {
 
     Match memory _match = matches[matchId];
     require(_match.status == MatchStatus.Finished);
