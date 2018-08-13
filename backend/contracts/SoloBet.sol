@@ -55,8 +55,14 @@ contract SoloBet is Ownable {
   mapping(address => uint256) balances;
   address[] players;
   mapping(address => MyBet[]) myBets;
+  uint juice = 5;
 
 
+  function updateJuice(uint newJuice) onlyOwner public returns (bool) {
+    require(newJuice <= 10);
+    juice = newJuice;
+
+  }
 
   function isPlayerNotExist(address player) internal view returns (bool) {
     return myBets[player].length <= 0;

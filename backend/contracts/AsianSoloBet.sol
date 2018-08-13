@@ -164,7 +164,7 @@ contract AsianSoloBet is Ownable, SoloBet {
 
     balances[_betting.bMaker] = balances[_betting.bMaker] - _betting.amount;
     balances[_betting.punter] = balances[_betting.punter] - _betting.amount;
-    balances[feeOwner] = balances[feeOwner] + _betting.amount - _betting.amount * 95 / 100;
+    balances[feeOwner] = balances[feeOwner] + _betting.amount - _betting.amount * (100-juice) / 100;
     _betting.status = BetStatus.Done;
   }
 
@@ -177,7 +177,7 @@ contract AsianSoloBet is Ownable, SoloBet {
       fundings[0] = Funding(_betting.bMaker, calculateAmount(int(_match.aSc) - int(_match.hSc), _betting.odds, _betting.amount), _betting);
     }
 
-    uint punterAmount = _betting.amount + _betting.amount * 95 / 100 - fundings[0].amount;
+    uint punterAmount = _betting.amount + _betting.amount * (100-juice) / 100 - fundings[0].amount;
     if (punterAmount > 0) {
       fundings[1] = Funding(_betting.punter, punterAmount, _betting);
     }
@@ -185,10 +185,10 @@ contract AsianSoloBet is Ownable, SoloBet {
   }
 
   function calculateAmount(int goaldifference, int odds, uint amount) private returns (uint256) {
-    if ((odds + goaldifference * 100) == 25) return amount + amount * 95 / 100 / 2;
-    if ((odds + goaldifference * 100) == - 25) return amount * 95 / 100 / 2;
-    if ((odds + goaldifference * 100) == 0) return amount - amount * 5 / 100 / 2;
-    if ((odds + goaldifference * 100) > 25) return amount + amount * 95 / 100;
+    if ((odds + goaldifference * 100) == 25) return amount + amount * (100-juice) / 100 / 2;
+    if ((odds + goaldifference * 100) == - 25) return amount * (100-juice) / 100 / 2;
+    if ((odds + goaldifference * 100) == 0) return amount - amount * juice / 100 / 2;
+    if ((odds + goaldifference * 100) > 25) return amount + amount * (100-juice) / 100;
 
     return 0;
 
