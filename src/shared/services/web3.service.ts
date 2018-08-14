@@ -16,6 +16,8 @@ const NETWORKS: any = {
 }
 
 export const Web3Vue = {
+
+
   initWeb3: () => Rx.Observable.create((observer: any) => {
     if (typeof web3js !== 'undefined') {
       web3Provider = new Web3(web3js.currentProvider)
@@ -36,6 +38,11 @@ export const Web3Vue = {
       })
     }
   }),
+
+  web3:() => {
+    return web3Provider;
+  },
+
   network: () => Rx.Observable.create((observer: any) => {
     let state = web3Provider.currentProvider.publicConfigStore.getState()
 

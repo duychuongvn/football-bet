@@ -25,5 +25,7 @@ export default {
     WARNING: 2,
     INFO: 3,
     DURATION: 2000
-  }
+  },
+
+  CONTRACT_ADDRESS: '0x345ca3e014aaf5dca488057592ee47305d9b3e10'
 }
