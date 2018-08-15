@@ -14,10 +14,6 @@ export const BetherContractService = {
       const betherContract = window.web3.eth.contract(betherContractABI);
       bether = betherContract.at(ENV.CONTRACT_ADDRESS);
 
-      console.log("=================")
-      console.log(betherContract)
-      console.log(bether)
-
         observer.onNext(betherContract);
         observer.onCompleted();
     }),
@@ -49,11 +45,11 @@ export const BetherContractService = {
 
   oddsDeal:(dealObj: any)  => Rx.Observable.create((observer: any) => {
 
-    BetherContractService.getBettingInfo(dealObj.bettingIdx).subscribe((error:any,result:any)=>{
+    BetherContractService.getBettingInfo(dealObj.bettingId).subscribe((result:any)=>{
 
-      console.log(result)
-      if(result.status == 0) {
-        return bether.deal(dealObj.bettingIdx, {from: dealObj.account, value: dealObj.amount}, (error:any, result:any) => {
+      if(result.status == 0 && (result.bookmakerAmount - result.settledAmount >= dealObj.amount)) {
+        console.log(dealObj.bettingId)
+        bether.deal(dealObj.bettingId, {from: dealObj.account, value: window.web3.toWei(dealObj.amount,  'ether')}, (error:any, result:any) => {
 
           console.log(error);
           console.log(result);
@@ -91,21 +87,19 @@ export const BetherContractService = {
         observer.error(error);
       } else {
         var index = 0;
-        var betting = {'bookmakerAddress': result[index++],
+        var betting = {
+          'bettingId': bettingIdx,
+          'bookmakerAddress': result[index++],
           'bookmakerTeam':result[index++].toNumber(),
           'odds':result[index++].toNumber(),
-          'bookmakerAmount':result[index++].toNumber(),
-          'settledAmount':result[index++].toNumber(),
+          'bookmakerAmount':BetherContractService.toEther(result[index++].toNumber()),
+          'settledAmount': BetherContractService.toEther(result[index++].toNumber()),
           'status':result[index++].toNumber(),
-          'punters':[] as string[],
-          'punterAmounts': [] as number[]
+          'punters':[] as any[]
         } as  any;
 
-
         for(var i = 0; i < result[index].length;i++) {
-          betting.punters[i] = result[index][i];
-          betting.punterAmounts[i] = result[index][i].toNumber();
-
+          betting.punters.push({"no": i+1, 'wallet': result[index][i], 'settledAmount':BetherContractService.toEther(result[index+1][i].toNumber()) })
         }
         observer.onNext(betting);
         observer.onCompleted();
@@ -119,7 +113,6 @@ export const BetherContractService = {
       for(var i =0;i< result.length;i++) {
         ids[i] = result[i].toNumber();
       }
-      console.log(ids)
       observer.onNext(ids);
       observer.onCompleted();
     });
@@ -127,13 +120,11 @@ export const BetherContractService = {
 
   getBettings: (matchId: any)  => Rx.Observable.create((observer: any) => {
 
-    return BetherContractService.getBettingIds(matchId).subscribe((ids: number[]) => {
+    BetherContractService.getBettingIds(matchId).subscribe((ids: number[]) => {
       var bettings = [] as any[];
       for(var i =0;i< ids.length;i++) {
-        console.log(i)
         BetherContractService.getBettingInfo(ids[i]).subscribe((result:any) => {
           bettings.push(result)
-          console.log(result);
         });
       }
       observer.onNext(bettings);
@@ -163,6 +154,8 @@ export const BetherContractService = {
 
     })
   }),
-
+  toEther(wei: number) {
+    return window.web3.fromWei(wei, 'ether')
+  }
 };
 //# sourceMappingURL=bether.service.js.map
