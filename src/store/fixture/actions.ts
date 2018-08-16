@@ -36,6 +36,8 @@ export const actions: ActionTree<any, RootState> = {
                 const _betting = {
                   id: item.id,
                   date: item.utcDate,
+                  dateString: moment(item.utcDate).format('MMM DD, YYYY'),
+                  timeString: moment(item.utcDate).format('ddd - HH:mm a'),
                   status: item.status,
                   homeTeam: item.homeTeam.name,
                   homeTeamFlag: '', //require(`@/assets/flag/Flag_of_${betting.homeTeam}.svg`)
@@ -59,19 +61,21 @@ export const actions: ActionTree<any, RootState> = {
               }
             });
           }
+
           commit(RECEVER_FIXTURES, {
-            today: {
-              name: dataObj.name,
-              bettings: _today
-            },
-            tommorrow: {
-              name: dataObj.name,
-              bettings: _tommorrow
-            },
-            future: {
-              name: dataObj.name,
-              bettings: _future
-            }
+            key: 'TODAY',
+            name: dataObj.name,
+            bettings: _today
+          });
+          commit(RECEVER_FIXTURES, {
+            key: 'TOMORROW',
+            name: dataObj.name,
+            bettings: _tommorrow
+          });
+          commit(RECEVER_FIXTURES, {
+            key: 'FUTURE',
+            name: dataObj.name,
+            bettings: _future
           });
         });
     }

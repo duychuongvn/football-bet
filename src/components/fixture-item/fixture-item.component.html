@@ -14,6 +14,10 @@
             <tr @click="gotoDetails(props.item)">
               <td>
                 <div class="betting-wrap">
+                  <div v-if="isFuture" class="mr-3 mb-0 text-xs-center">
+                    <p class="mb-0">{{ props.item.dateString }}</p>
+                    <p class="mb-0">{{ props.item.timeString }}</p>
+                  </div>
                   <!-- <image-comp imgWidth="30px" imgHeight="20px" :imgPath="props.item.homeTeamFlag" :imgName="props.item.homeTeam"></image-comp> -->
                   <p class="bet-name">{{ props.item.bettingName }}</p>
                   <!-- <image-comp imgWidth="30px" imgHeight="20px" :imgPath="props.item.awayTeamFlag" :imgName="props.item.awayTeam"></image-comp> -->
