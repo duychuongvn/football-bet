@@ -20,7 +20,7 @@ api.interceptors.response.use(response => {
 // Default interceptor private
 export const api_ipfs = axios.create({
   baseURL: ENV.API.PATH_IPFS,
-  timeout: 50000,
+  timeout: 500000,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json'

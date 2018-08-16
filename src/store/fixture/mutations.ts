@@ -1,23 +1,47 @@
 import { MutationTree } from 'vuex';
-import { FixtureState } from './types';
 import { RECEVER_FIXTURES } from '@/store/mutations';
 
 export const mutations: MutationTree<any> = {
-  [RECEVER_FIXTURES](state, fixtures: FixtureState[]) {
+  [RECEVER_FIXTURES](state, fixturesObj: any) {
+    const _fixturesToday = {
+      name: fixturesObj.today.name,
+      bettings: []
+    }
 
-    fixtures.map((item: any) => {
-      item.bettings.map((betting: any) => {
-        betting.homeTeamFlag = require(`@/assets/flag/Flag_of_${betting.homeTeam}.svg`);
-        betting.awayTeamFlag = require(`@/assets/flag/Flag_of_${betting.awayTeam}.svg`);
-        betting.bettingName = `${betting.homeTeam} ~ ${betting.awayTeam}`;
-        betting.key = btoa(JSON.stringify({
-          homeTeam: betting.homeTeam,
-          awayTeam: betting.awayTeam,
-          date: betting.date
-        }));
-      })
-    });
+    const _todayIndex = state.fixturesToday.findIndex((item: any) => item.name === fixturesObj.today.name);
 
-    state.fixtures = fixtures;
+    if (_todayIndex !== -1) {
+      state.fixturesToday[_todayIndex].bettings = fixturesObj.today.bettings
+    } else {
+      state.fixturesToday.push(_fixturesToday);
+    }
+
+    // Get Data Tomorrow
+    const _fixturesTomorrow = {
+      name: fixturesObj.tommorrow.name,
+      bettings: []
+    }
+
+    const _tommorrowIndex = state.fixturesTomorrow.findIndex((item: any) => item.name === fixturesObj.tommorrow.name);
+
+    if (_todayIndex !== -1) {
+      state.fixturesTomorrow[_tommorrowIndex].bettings = fixturesObj.tommorrow.bettings
+    } else {
+      state.fixturesTomorrow.push(_fixturesTomorrow);
+    }
+
+    // Get Data Future
+    const _fixturesFuture = {
+      name: fixturesObj.future.name,
+      bettings: []
+    }
+
+    const _futureIndex = state.fixturesFuture.findIndex((item: any) => item.name === fixturesObj.future.name);
+
+    if (_todayIndex !== -1) {
+      state.fixturesFuture[_futureIndex].bettings = fixturesObj.future.bettings
+    } else {
+      state.fixturesFuture.push(_fixturesFuture);
+    }
   }
 };

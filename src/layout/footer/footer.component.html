@@ -3,7 +3,7 @@
 
     <v-card-text class="text-xs-center">
       <v-tooltip top lazy v-for="icon in socialIcons" :key="icon.name">
-        <v-btn class="mx-3 white--text" icon slot="activator" :color="icon.color">
+        <v-btn class="mx-3 white--text" icon slot="activator" :href="icon.mailto" :color="icon.color">
           <v-icon size="24px">{{ icon.name }}</v-icon>
         </v-btn>
         <span>{{ icon.tooltip }}</span>

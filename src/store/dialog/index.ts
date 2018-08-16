@@ -8,7 +8,6 @@ import { mutations } from '@/store/dialog/mutations';
 
 export const state: DialogState = {
   isStartLoading: true,
-  isHowItWork: false,
   isOddsCancel: false,
   isMetaMask: false,
   isStoreBetting: false,

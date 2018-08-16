@@ -3,8 +3,6 @@
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator';
 
-  import { DIALOG_NAME } from '@/shared/enums/dialog';
-
   import { Action, Getter } from 'vuex-class';
 
   @Component
@@ -14,7 +12,6 @@
     @Action('initContract', { namespace: 'solobet' }) initContract: any;
     @Action('getNetwork', { namespace: 'web3' }) getNetwork: any;
     @Action('getAccount', { namespace: 'web3' }) getAccount: any;
-    @Action('openDialog', { namespace: 'dialog' }) openDialog: any;
     @Getter('web3Init', { namespace: 'web3' }) web3Init: any;
     @Getter('isAccount', { namespace: 'web3' }) isAccount!: boolean;
 
@@ -47,7 +44,7 @@
             this.web3Init.account.address = undefined;
             this.web3Init.account.balance = 0;
 
-            if (this.isAuthRoute.indexOf(`${this.$route.name}`)) {
+            if (this.isAuthRoute.indexOf(`${this.$route.name}`) !== -1) {
               this.$router.push({ name: 'home' });
             }
           }
@@ -74,14 +71,6 @@
 
     handleScroll() {
       this.isFixed = (window.scrollY > 45);
-    }
-
-    openHowItWork() {
-      this.openDialog({
-        key: DIALOG_NAME.HOW_IT_WORKS,
-        isOpen: true,
-        name: 'dialog-how-it-works'
-      });
     }
   }
 </script>

@@ -10,9 +10,6 @@ export const mutations: MutationTree<any> = {
       case DIALOG_NAME.START_LOADING:
         state.isStartLoading = dialogObj.isOpen;
         break;
-      case DIALOG_NAME.HOW_IT_WORKS:
-        state.isHowItWork = dialogObj.isOpen;
-        break;
       case DIALOG_NAME.ODDS_CANCEL:
         state.isOddsCancel = dialogObj.isOpen;
         break;

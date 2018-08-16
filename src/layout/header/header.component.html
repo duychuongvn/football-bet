@@ -12,7 +12,7 @@
       <v-divider vertical></v-divider>
       <v-btn flat v-if="isAccount" :to="{ name: 'profile'}" exact-active-class="teal lighten-1">My Bets</v-btn>
       <v-divider vertical v-if="isAccount"></v-divider>
-      <v-btn flat @click="openHowItWork">How it works</v-btn>
+      <v-btn flat :to="{ name: 'howitwork' }">How it works</v-btn>
       <v-divider vertical></v-divider>
       <v-btn flat :to="{ name: 'faq' }">FAQs</v-btn>
       <v-divider vertical></v-divider>

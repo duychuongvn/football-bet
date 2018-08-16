@@ -1,9 +1,8 @@
 import { GetterTree } from 'vuex';
-import { FixtureState } from './types';
 import { RootState } from '@/store/types';
 
 export const getters: GetterTree<any, RootState> = {
-  allFixtures(state): FixtureState[] {
-    return state.fixtures
-  }
+  fixturesToday: state => state.fixturesToday,
+  fixturesTomorrow: state => state.fixturesTomorrow,
+  fixturesFuture: state => state.fixturesFuture
 };

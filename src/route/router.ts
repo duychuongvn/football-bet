@@ -45,6 +45,11 @@ const AppRouter = [
         component: () => import('@/views/terms-conditions/terms-conditions.component.vue'),
       },
       {
+        path: '/how-it-works',
+        name: 'howitwork',
+        component: () => import('@/views/how-it-works/how-it-works.component.vue'),
+      },
+      {
         path: '/bether-manager',
         name: 'bettherAdmin',
         component: () => import('@/views/admin/admin.component.vue'),

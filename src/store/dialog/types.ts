@@ -1,6 +1,5 @@
 export interface DialogState {
   isStartLoading: boolean,
-  isHowItWork: boolean,
   isOddsCancel: boolean,
   isMetaMask: boolean,
   isStoreBetting: boolean,

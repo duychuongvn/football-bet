@@ -30,7 +30,8 @@
       {
         color: 'teal lighten-1',
         name: 'fas fa-envelope',
-        tooltip: 'Support'
+        tooltip: 'Support',
+        mailto: 'mailto:info@bether.bet'
       }
     ]
 

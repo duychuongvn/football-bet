@@ -8,7 +8,9 @@ import { mutations } from '@/store/fixture/mutations';
 import { FixtureState } from '@/store/fixture/types';
 
 export const state: FixtureState = {
-  fixtures: []
+  fixturesToday: [],
+  fixturesTomorrow: [],
+  fixturesFuture: []
 };
 
 const namespaced: boolean = true;

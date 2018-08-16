@@ -8,8 +8,8 @@
     private socialIcons: Array<Object> = [
       {
         color: 'blue darken-3',
-        name: 'fab fa-facebook-f',
-        tooltip: 'Facebook'
+        name: 'fab fa-telegram-plane',
+        tooltip: 'telegram'
       },
       {
         color: 'light-blue darken-1',
@@ -17,19 +17,15 @@
         tooltip: 'Twitter'
       },
       {
-        color: 'red darken-1',
-        name: 'fab fa-google-plus-g',
-        tooltip: 'Google'
-      },
-      {
-        color: 'light-blue darken-1',
-        name: 'fab fa-telegram-plane',
-        tooltip: 'Telegram'
+        color: 'blue-grey darken-3',
+        name: 'fab fa-github',
+        tooltip: 'Github'
       },
       {
         color: 'teal lighten-1',
         name: 'fas fa-envelope',
-        tooltip: 'Support'
+        tooltip: 'Support',
+        mailto: 'mailto:info@bether.bet'
       }
     ]
   }

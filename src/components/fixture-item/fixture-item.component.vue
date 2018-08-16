@@ -7,13 +7,12 @@ import { FixtureState } from '@/store/fixture/types';
 
 import { DIALOG_NAME } from '@/shared/enums/dialog';
 
-import { api } from '@/shared/services/api.service';
-
 @Component
 export default class FixtureItemComponent extends Vue {
-  @Action('fetchFixtures', { namespace: 'fixture' }) fetchFixtures: any;
   @Action('openDialog', { namespace: 'dialog' }) openDialog: any;
-  @Getter('allFixtures', { namespace: 'fixture' }) allFixtures: any;
+  @Getter('fixturesToday', { namespace: 'fixture' }) fixturesToday: any;
+  @Getter('fixturesTomorrow', { namespace: 'fixture' }) fixturesTomorrow: any;
+  @Getter('fixturesFuture', { namespace: 'fixture' }) fixturesFuture: any;
   @Getter('isAccount', { namespace: 'web3' }) isAccount!: boolean
 
   @Prop() public bettingTime!: string;
@@ -29,8 +28,17 @@ export default class FixtureItemComponent extends Vue {
     { text: 'open', value: 'date', align: 'center', sortable: false }
   ];
 
-  created() {
-    this.fetchFixtures();
+  public rowPerPage: Array<number> = [20,50,100];
+
+  get allFixtures() {
+    switch(this.bettingTime) {
+      case 'TODAY':
+        return this.fixturesToday;
+      case 'TOMORROW':
+        return this.fixturesTomorrow;
+      case 'FUTURE':
+        return this.fixturesFuture;
+    }
   }
 
   gotoDetails(betting: any) {
