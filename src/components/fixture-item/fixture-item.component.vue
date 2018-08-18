@@ -41,6 +41,10 @@ export default class FixtureItemComponent extends Vue {
     }
   }
 
+  get isFuture() {
+    return this.bettingTime === 'FUTURE';
+  }
+
   gotoDetails(betting: any) {
     if (!this.isAccount) {
       const _dialogOpts = {
