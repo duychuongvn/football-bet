@@ -120,7 +120,7 @@ export const BetherContractService = {
 
   getBettings: (matchId: any)  => Rx.Observable.create((observer: any) => {
 
-    BetherContractService.getBettingIds(matchId).subscribe((ids: number[]) => {
+    BetherContractService.getBettingIds.call(matchId).subscribe((ids: number[]) => {
       var bettings = [] as any[];
       for(var i =0;i< ids.length;i++) {
         BetherContractService.getBettingInfo(ids[i]).subscribe((result:any) => {
@@ -135,7 +135,7 @@ export const BetherContractService = {
 
   countBettings: (matchIds: any []) => Rx.Observable.create((observer: any) => {
 
-    bether.countBetStatus(matchIds, (err:any, result:any) => {
+    bether.countBetStatus.call(matchIds, (err:any, result:any) => {
 
           var bettingStatus = [];
           for(var i =0; i< matchIds.length;i++) {
@@ -154,6 +154,36 @@ export const BetherContractService = {
 
     })
   }),
+
+  getUserBets (account : any) {
+
+
+    bether.getUserSettles.call(account, (error:any, result:any)=> {
+      var bettings = [] as any[];
+      if(result) {
+        for(var i =0; i< result[0].length;i++) {
+            bether.getSettleInfo.call(result[0][i], result[1][i], (settleInfoErr: any, settleInfoResult: any) => {
+            var colIdx = 0;
+            var betting = {
+              'bettingId': result[0][i],
+              'bookmakerAddress': settleInfoResult[colIdx++],
+              'bookmakerTeam':settleInfoResult[colIdx++].toNumber(),
+              'odds':settleInfoResult[colIdx++].toNumber(),
+              'bookmakerAmount':BetherContractService.toEther(settleInfoResult[colIdx++].toNumber()),
+              'settledAmount': BetherContractService.toEther(settleInfoResult[colIdx++].toNumber()),
+              'status':settleInfoResult[colIdx++].toNumber(),
+              'punter': null as any
+            } as  any;
+
+            betting.punter={  'wallet': settleInfoResult[colIdx++],
+                              'settledAmount':BetherContractService.toEther(settleInfoResult[colIdx].toNumber()) }
+            bettings.push(betting);
+          })
+        }
+      }
+    })
+  },
+
   toEther(wei: number) {
     return window.web3.fromWei(wei, 'ether')
   }
