@@ -24,3 +24,6 @@ export const CREATE_DEAL = 'CREATE_DEAL'
 
 export const NOTIFY_CLEAR = 'NOTIFY_CLEAR'
 export const NOTIFY_OPEN  = 'NOTIFY_OPEN'
+
+export const INIT_FIREBASE = 'INIT_FIREBASE'
+export const INIT_FIREBASE_ADMIN = 'INIT_FIREBASE_ADMIN'

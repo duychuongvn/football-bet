@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "firebase": "^5.4.0",
+    "firebase-admin": "^6.0.0",
     "gsap": "^2.0.1",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",

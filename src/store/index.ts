@@ -9,6 +9,7 @@ import { betting } from '@/store/betting'
 import { dialog } from '@/store/dialog'
 import { odds } from '@/store/odds'
 import { notify } from '@/store/notify'
+import { firebase } from '@/store/firebase'
 
 Vue.use(Vuex)
 
@@ -24,7 +25,8 @@ const storeOptions: StoreOptions<RootState> = {
     betting,
     dialog,
     odds,
-    notify
+    notify,
+    firebase
   }
 }
 

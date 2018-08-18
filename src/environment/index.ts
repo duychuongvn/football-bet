@@ -11,6 +11,14 @@ export default {
     AUTHORIZATION: 'Authorization',
     BEARER: 'Bearer '
   },
+  FIREBASE: {
+    API_KEY: 'AIzaSyAAv-bcd045ge59uQkuPHINeR3ssOxHWE4',
+    AUTH_DOMAIN: 'vuejs-bether.firebaseapp.com',
+    DATABASE_URL: 'https://vuejs-bether.firebaseio.com',
+    PROJECT_ID: 'vuejs-bether',
+    STORAGE_BUCKET: 'vuejs-bether.appspot.com',
+    MESSAGING_SENDER_ID: '47611469942'
+  },
   LANGUAGE: {
     ENGLISH: 'en',
     VIETNAMESE: 'vi'
@@ -26,6 +34,5 @@ export default {
     INFO: 3,
     DURATION: 2000
   },
-
   CONTRACT_ADDRESS: '0x345ca3e014aaf5dca488057592ee47305d9b3e10'
 }

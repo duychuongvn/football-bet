@@ -2,6 +2,7 @@
 
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator'
+  import { Getter, Action } from 'vuex-class'
 
   @Component({
     components: {
@@ -9,5 +10,14 @@
       'fixture-comp': () => import('@/components/fixture/fixture.component.vue')
     },
   })
-  export default class HomePage extends Vue {}
+  export default class HomePage extends Vue {
+    @Getter('firebase', { namespace: 'firebase' }) firebase: any;
+    // @Getter('firebaseAdmin', { namespace: 'firebase' }) firebaseAdmin: any;
+
+    @Action('sendNotify', { namespace: 'firebase' }) sendNotify: any;
+
+    created() {
+      this.sendNotify();
+    }
+  }
 </script>

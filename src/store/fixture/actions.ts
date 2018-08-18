@@ -40,9 +40,9 @@ export const actions: ActionTree<any, RootState> = {
                   timeString: moment(item.utcDate).format('ddd - HH:mm a'),
                   status: item.status,
                   homeTeam: item.homeTeam.name,
-                  homeTeamFlag: '', //require(`@/assets/flag/Flag_of_${betting.homeTeam}.svg`)
+                  homeTeamFlag: 'https://img.fifa.com/images/flags/3/', //require(`@/assets/flag/Flag_of_${betting.homeTeam}.svg`)
                   awayTeam: item.awayTeam.name,
-                  awayTeamFlag: '', //require(`@/assets/flag/Flag_of_${betting.homeTeam}.svg`)
+                  awayTeamFlag: 'https://img.fifa.com/images/flags/3/', //require(`@/assets/flag/Flag_of_${betting.homeTeam}.svg`)
                   bettingName: `${item.homeTeam.name} ~ ${item.awayTeam.name}`,
                   key: btoa(JSON.stringify({id: item.id, date: item.utcDate}))
                 }

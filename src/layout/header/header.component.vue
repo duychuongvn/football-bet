@@ -8,8 +8,9 @@
   @Component
   export default class HeaderComponent extends Vue {
     // Init Vuex
-    @Action('registerWeb3', { namespace: 'web3' }) registerWeb3: any;
     @Action('initContract', { namespace: 'solobet' }) initContract: any;
+
+    @Action('registerWeb3', { namespace: 'web3' }) registerWeb3: any;
     @Action('getNetwork', { namespace: 'web3' }) getNetwork: any;
     @Action('getAccount', { namespace: 'web3' }) getAccount: any;
     @Getter('web3Init', { namespace: 'web3' }) web3Init: any;

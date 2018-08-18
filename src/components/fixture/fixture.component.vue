@@ -57,9 +57,9 @@
     public betTime: string = 'TODAY';
 
     created() {
-      this.arrFixtures.map((item: Object) => {
-        this.fetchFixtures(item);
-      });
+      // this.arrFixtures.map((item: Object) => {
+      //   this.fetchFixtures(item);
+      // });
     }
 
     changedTimeBet(time: string) {
