@@ -3,10 +3,10 @@ import { RECEVER_BETTING, RECEVER_TOTAL_BETTING, ACCEPT_BETTING } from '@/store/
 
 export const mutations: MutationTree<any> = {
   [RECEVER_TOTAL_BETTING](state, bettingObj: any) {
-    state.totalBettings = bettingObj.totalBettings;
-    if (!bettingObj.isLoad) {
-      state.bettings = [];
-    }
+    state.bettings = bettingObj.bettings;
+    // if (!bettingObj.isLoad) {
+    //   state.bettings = [];
+    // }
   },
   [RECEVER_BETTING](state, bettingObj: any) {
     if (!bettingObj.betting.status) {

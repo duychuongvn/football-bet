@@ -26,13 +26,13 @@
 
     public bettingSelected = 0
     public oddsSelected: any = ODDS_TYPE.UNDER_ONE
-    public stakeSelected = 5.1989
+    public stakeSelected = 0.02
     private _match: any;
 
     get potential() {
-      const stake = !!this.odds ? this.odds.stake : this.stakeSelected
+      const stake = !!this.odds ? this.odds.bookmakerAmount : this.stakeSelected
 
-      return !!stake ? (stake * 0.95) : 0
+      return !!this.stakeSelected ? (this.stakeSelected * 0.95) : 0
     }
 
     get match() {
@@ -43,7 +43,7 @@
 
     get odds() {
       if (this.initData && this.initData.odds) {
-        this.bettingSelected = this.initData.odds.selectedTeam
+        this.bettingSelected = this.initData.odds.bookmakerTeam
         return this.initData.odds
       }
     }
@@ -81,7 +81,7 @@
     }
 
     get oddsWith() {
-      return this.isHomeTeamActive ? this.odds.homeOffer : this.odds.awayOffer
+      return this.isHomeTeamActive ? this.odds.bookmakerAddress : this.odds.awayOffer
     }
 
     get oddsType() {
@@ -143,7 +143,7 @@
         time: new Date(this.match.date).getTime(),
         odds: this.oddsSelected * 100,
         stake: +this.stakeSelected,
-        selectedTeam: this.bettingSelected
+        bookmakerTeam: this.bettingSelected
       }
 
       this.createOffer(_opts)

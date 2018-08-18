@@ -29,7 +29,8 @@
       { text: `${this.match.homeTeam}`, align: 'left', sortable: false, img: true, imgUrl: `${this.match.homeTeamFlag}` },
       { text: 'Odds', align: 'center', sortable: false },
       { text: `${this.match.awayTeam}` , align: 'left', sortable: false, img: true, imgUrl: `${this.match.awayTeamFlag}` },
-      { text: 'Stake', align: 'center', sortable: false },
+      { text: 'Total Stake', align: 'center', sortable: false },
+      { text: 'Available Stake', align: 'center', sortable: false },
       { text: '', sortable: false }
     ]
 
@@ -56,25 +57,8 @@
       this.openDialog(_initOpts)
     }
 
-    @Watch('totalBettings')
-    getTotalBettings(value: any, oldValue: any) {
-      if (value && oldValue && value.c[0] !== oldValue.c[0] && this.isLoadingBetting) {
-        clearInterval(this.isLoadingBetting)
-        this.clearBetting()
-        this.isLoadingBetting = null
-
-        this.notify({
-          mode: 'success',
-          message: 'Create Betting Successfully!'
-        })
-      }
-
-      if (!this.isLoadingBetting) {
-        this.getBetting({
-          matchId: this.match.id,
-          account: this.account.address
-        })
-      }
+    selectedTeamAddr(betting: any, type: number) {
+      return betting.bookmakerTeam === type ? betting.bookmakerAddress : '';
     }
 
     @Watch('initData')

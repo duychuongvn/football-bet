@@ -13,8 +13,8 @@ export const mutations: MutationTree<any> = {
     match.dateString     = moment(match.date, 'YYYY/MM/DD').format('LL [(]dddd[)]');
     match.timeString     = moment(match.date, 'YYYY/MM/DD HH:mm').format('HH:mm a');
     match.dateTimeString = moment(match.date, 'YYYY/MM/DD  HH:mm').format('LL [(]dddd[)] - HH:mm a');
-    match.homeTeamFlag   = require(`@/assets/flag/Flag_of_${match.homeTeam}.svg`);
-    match.awayTeamFlag   = require(`@/assets/flag/Flag_of_${match.awayTeam}.svg`);
+    // match.homeTeamFlag   = require(`@/assets/flag/Flag_of_${match.homeTeam}.svg`);
+    // match.awayTeamFlag   = require(`@/assets/flag/Flag_of_${match.awayTeam}.svg`);
     match.bettingName    = `${match.homeTeam} ~ ${match.awayTeam}`;
     match.id             = Web3Vue.toSHA3(_val)
 

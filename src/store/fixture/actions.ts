@@ -44,7 +44,7 @@ export const actions: ActionTree<any, RootState> = {
                   awayTeam: item.awayTeam.name,
                   awayTeamFlag: '', //require(`@/assets/flag/Flag_of_${betting.homeTeam}.svg`)
                   bettingName: `${item.homeTeam.name} ~ ${item.awayTeam.name}`,
-                  key: btoa(JSON.stringify({id: item.id, date: item.utcDate}))
+                  key: btoa(JSON.stringify({id: item.id, date: item.utcDate, homeTeam: item.homeTeam.name, awayTeam: item.awayTeam.name}))
                 }
 
                 if (moment(item.utcDate, 'YYYY/MM/DD').isSame(_currentDate)) {

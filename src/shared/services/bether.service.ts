@@ -13,32 +13,26 @@ export const BetherContractService = {
 
       const betherContract = window.web3.eth.contract(betherContractABI);
       bether = betherContract.at(ENV.CONTRACT_ADDRESS);
-
-        observer.onNext(betherContract);
+        observer.onNext(bether);
         observer.onCompleted();
     }),
 
   newOffer: (offerObj: any) => Rx.Observable.create((observer: any) => {
-    let id = Web3Vue.toSHA3(offerObj.homeTeam+offerObj.awayTeam+(offerObj.time / 1000))
-    BetherContractService.init().subscribe((result: any)=> {
-      return bether.offerNewMatch(
-
-      id, offerObj.homeTeam, offerObj.awayTeam,
-        offerObj.selectedTeam, (offerObj.time ), offerObj.odds,
-        { from: offerObj.account, value: window.web3.toWei(offerObj.stake, 'ether') },
+    let id = Web3Vue.toSHA3(offerObj.bettingId)
+    bether.offerNewMatch(
+      id,
+      offerObj.homeTeam, offerObj.awayTeam,
+      offerObj.selectedTeam, offerObj.time, offerObj.odds,
+      { from: offerObj.account, value: window.web3.toWei(offerObj.stake, 'ether') },
         (err:any, result:any) => {
           if(err) {
             observer.error(err);
-            console.log(err);
           } else {
-            console.log(result)
             observer.onNext(result);
           }
-
           observer.onCompleted();
         }
       );
-    })
 
   }),
 
@@ -119,8 +113,8 @@ export const BetherContractService = {
   }),
 
   getBettings: (matchId: any)  => Rx.Observable.create((observer: any) => {
-
-    BetherContractService.getBettingIds.call(matchId).subscribe((ids: number[]) => {
+    let id = Web3Vue.toSHA3(matchId)
+    BetherContractService.getBettingIds(id).subscribe((ids: number[]) => {
       var bettings = [] as any[];
       for(var i =0;i< ids.length;i++) {
         BetherContractService.getBettingInfo(ids[i]).subscribe((result:any) => {
@@ -148,7 +142,6 @@ export const BetherContractService = {
                "refuned": result[4][i].toNumber(),
               })
           }
-          console.log(bettingStatus)
           observer.onNext(bettingStatus);
           observer.onCompleted();
 

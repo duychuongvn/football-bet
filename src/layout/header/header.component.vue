@@ -34,7 +34,7 @@
           this.getAccount();
         }
 
-        this.initContract(this.web3Init.web3.currentProvider)
+        this.initContract();
 
         this.web3Init.web3.currentProvider.publicConfigStore.subscribe((item: any) => {
           if (item.selectedAddress) {

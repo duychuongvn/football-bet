@@ -32,7 +32,8 @@
 
             <div v-if="!!odds">
               <p class="headline">Odds: {{ oddsString }}</p>
-              <p class="headline">Stake: {{ odds.stake }} ETH</p>
+              <p class="headline">Max Stake: {{ odds.bookmakerAmount }} ETH</p>
+              <v-text-field v-model="stakeSelected" dark color="white" label="Stake" type="number" suffix="ETH" min="1"></v-text-field>
             </div>
 
           </v-flex>
@@ -54,7 +55,7 @@
 
     <v-card-text class="text-xs-center">
       <p class="mb-0" v-if="!!odds">Bet with:
-        <a class="light-green--text">{{ oddsWith }}</a>
+        <a class="light-green--text">{{ odds.bookmakerAddress }}</a>
       </p>
       <p class="mb-0">Potential Return: {{ potential }} ETH</p>
     </v-card-text>

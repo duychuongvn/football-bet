@@ -476,9 +476,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.4.21;\n\nimport \"./Ownable.sol\";\n\ncontract SoloBet is Ownable {\n  enum Team {Home, Away}\n  enum MatchStatus {NotAvailable, Waiting, Playing, Canceled, Finished}\n  enum BetStatus {Open, Deal, Canceled, Refunded, Done}\n\n  event LogDeal(address bMaker, address punter, bytes32 matchId, uint256 betingId);\n\n  struct Match {\n\n    bytes32 id;\n    uint8 hSc; // home score\n    uint8 aSc;  // away score\n    uint32 idx;\n    uint48 time;\n    MatchStatus status;\n    bool isApproved;\n    string hT; // home Team\n    string aT; // away Team\n\n  }\n\n  bytes32[] betIndexes;\n\n  struct Betting {\n    address bMaker;\n    address punter;\n    uint8 bmTeam; //bMaker team\n    int odds;\n    uint256 amount;\n    BetStatus status;\n  }\n\n\n  struct Funding {\n\n    address receiver;\n    uint256 amount;\n    Betting betting;\n\n  }\n\n  struct MyBet {\n    uint32 betIdx;\n    bytes32 matchId;\n    bool bet4HTeam;\n  }\n\n  address public feeOwner;\n  mapping(bytes32 => Match) matches;\n  mapping(bytes32 => Betting[]) bets;\n  mapping(address => uint256) balances;\n  address[] players;\n  mapping(address => MyBet[]) myBets;\n  uint juice = 5;\n\n\n  function updateJuice(uint newJuice) onlyOwner public returns (bool) {\n    require(newJuice <= 10);\n    juice = newJuice;\n\n  }\n\n  function isPlayerNotExist(address player) internal view returns (bool) {\n    return myBets[player].length <= 0;\n  }\n\n  function countPlayers() public view returns (uint) {\n    return players.length;\n  }\n\n  function getPlayerBalance(address player) public view returns (uint256) {\n    return balances[player];\n  }\n\n  function changeFeeOwner(address _feeOwner) public onlyOwner returns (bool) {\n    feeOwner = _feeOwner;\n  }\n\n  function totalBets(bytes32 matchId) public view returns (uint256);\n\n  function getBettingMatchIds() public view returns (bytes32[]);\n\n  function getTotalBettingMatches() public view returns (uint256);\n\n  function findMatch(bytes32 matchId) public view returns (string hT, string aT, uint hSc, uint aSc, uint time, MatchStatus status, bool isScoreApproved);\n\n  function getBettingInfo(bytes32 matchId, uint256 bettingId) public view returns (address bMaker, address punter, uint8 pair, int odds, uint256 amount, BetStatus status);\n\n  function getBettingMatchesByAddress(address owner) public view returns (bytes32[] matchIds, uint256[] betIdxes, int[] odds, uint256[] amounts, bool[]choosehT, uint[] status);\n\n  function deal(bytes32 matchId, uint256 bettingId) public payable returns (bool);\n\n  function offerNewMatch(bytes32 matchId, string hT, string aT, uint pair, uint time, int rate) public payable returns (bool);\n\n  function cancelOffer(bytes32 matchId, uint256 bettingId) external returns (bool);\n\n  function approveScore(bytes32 matchId) public onlyOwner returns (bool);\n\n  function updateScore(bytes32 matchId, uint hSc, uint aSc) public onlyOwner returns (bool);\n//  function claimStake(bytes32 matchId) public returns (bool);\n\n  function withDrawFee() public onlyOwner {\n    owner.transfer(balances[feeOwner]);\n  }\n}\n",
-  "sourcePath": "/home/chuonghd/Project/smartcontract/football-bet/backend/contracts/SoloBet.sol",
+  "sourcePath": "/Users/kenshin/Desktop/web/football-bet/backend/contracts/SoloBet.sol",
   "ast": {
-    "absolutePath": "/home/chuonghd/Project/smartcontract/football-bet/backend/contracts/SoloBet.sol",
+    "absolutePath": "/Users/kenshin/Desktop/web/football-bet/backend/contracts/SoloBet.sol",
     "exportedSymbols": {
       "SoloBet": [
         3951
@@ -499,7 +499,7 @@
         "src": "0:24:4"
       },
       {
-        "absolutePath": "/home/chuonghd/Project/smartcontract/football-bet/backend/contracts/Ownable.sol",
+        "absolutePath": "/Users/kenshin/Desktop/web/football-bet/backend/contracts/Ownable.sol",
         "file": "./Ownable.sol",
         "id": 3628,
         "nodeType": "ImportDirective",
@@ -512,7 +512,7 @@
       {
         "baseContracts": [
           {
-            "arguments": [],
+            "arguments": null,
             "baseName": {
               "contractScope": null,
               "id": 3629,
@@ -965,7 +965,7 @@
                 "storageLocation": "default",
                 "typeDescriptions": {
                   "typeIdentifier": "t_string_storage_ptr",
-                  "typeString": "string storage pointer"
+                  "typeString": "string"
                 },
                 "typeName": {
                   "id": 3670,
@@ -974,7 +974,7 @@
                   "src": "495:6:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
-                    "typeString": "string storage pointer"
+                    "typeString": "string"
                   }
                 },
                 "value": null,
@@ -991,7 +991,7 @@
                 "storageLocation": "default",
                 "typeDescriptions": {
                   "typeIdentifier": "t_string_storage_ptr",
-                  "typeString": "string storage pointer"
+                  "typeString": "string"
                 },
                 "typeName": {
                   "id": 3672,
@@ -1000,7 +1000,7 @@
                   "src": "523:6:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
-                    "typeString": "string storage pointer"
+                    "typeString": "string"
                   }
                 },
                 "value": null,
@@ -1024,7 +1024,7 @@
             "storageLocation": "default",
             "typeDescriptions": {
               "typeIdentifier": "t_array$_t_bytes32_$dyn_storage",
-              "typeString": "bytes32[] storage ref"
+              "typeString": "bytes32[]"
             },
             "typeName": {
               "baseType": {
@@ -1043,7 +1043,7 @@
               "src": "555:9:4",
               "typeDescriptions": {
                 "typeIdentifier": "t_array$_t_bytes32_$dyn_storage_ptr",
-                "typeString": "bytes32[] storage pointer"
+                "typeString": "bytes32[]"
               }
             },
             "value": null,
@@ -1285,7 +1285,7 @@
                 "storageLocation": "default",
                 "typeDescriptions": {
                   "typeIdentifier": "t_struct$_Betting_$3690_storage_ptr",
-                  "typeString": "struct SoloBet.Betting storage pointer"
+                  "typeString": "struct SoloBet.Betting"
                 },
                 "typeName": {
                   "contractScope": null,
@@ -1296,7 +1296,7 @@
                   "src": "797:7:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_struct$_Betting_$3690_storage_ptr",
-                    "typeString": "struct SoloBet.Betting storage pointer"
+                    "typeString": "struct SoloBet.Betting"
                   }
                 },
                 "value": null,
@@ -1435,7 +1435,7 @@
             "storageLocation": "default",
             "typeDescriptions": {
               "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Match_$3674_storage_$",
-              "typeString": "mapping(bytes32 => struct SoloBet.Match storage ref)"
+              "typeString": "mapping(bytes32 => struct SoloBet.Match)"
             },
             "typeName": {
               "id": 3709,
@@ -1453,7 +1453,7 @@
               "src": "931:25:4",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Match_$3674_storage_$",
-                "typeString": "mapping(bytes32 => struct SoloBet.Match storage ref)"
+                "typeString": "mapping(bytes32 => struct SoloBet.Match)"
               },
               "valueType": {
                 "contractScope": null,
@@ -1464,7 +1464,7 @@
                 "src": "950:5:4",
                 "typeDescriptions": {
                   "typeIdentifier": "t_struct$_Match_$3674_storage_ptr",
-                  "typeString": "struct SoloBet.Match storage pointer"
+                  "typeString": "struct SoloBet.Match"
                 }
               }
             },
@@ -1482,7 +1482,7 @@
             "storageLocation": "default",
             "typeDescriptions": {
               "typeIdentifier": "t_mapping$_t_bytes32_$_t_array$_t_struct$_Betting_$3690_storage_$dyn_storage_$",
-              "typeString": "mapping(bytes32 => struct SoloBet.Betting storage ref[] storage ref)"
+              "typeString": "mapping(bytes32 => struct SoloBet.Betting[])"
             },
             "typeName": {
               "id": 3714,
@@ -1500,7 +1500,7 @@
               "src": "968:29:4",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_bytes32_$_t_array$_t_struct$_Betting_$3690_storage_$dyn_storage_$",
-                "typeString": "mapping(bytes32 => struct SoloBet.Betting storage ref[] storage ref)"
+                "typeString": "mapping(bytes32 => struct SoloBet.Betting[])"
               },
               "valueType": {
                 "baseType": {
@@ -1512,7 +1512,7 @@
                   "src": "987:7:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_struct$_Betting_$3690_storage_ptr",
-                    "typeString": "struct SoloBet.Betting storage pointer"
+                    "typeString": "struct SoloBet.Betting"
                   }
                 },
                 "id": 3713,
@@ -1521,7 +1521,7 @@
                 "src": "987:9:4",
                 "typeDescriptions": {
                   "typeIdentifier": "t_array$_t_struct$_Betting_$3690_storage_$dyn_storage_ptr",
-                  "typeString": "struct SoloBet.Betting storage ref[] storage pointer"
+                  "typeString": "struct SoloBet.Betting[]"
                 }
               }
             },
@@ -1584,7 +1584,7 @@
             "storageLocation": "default",
             "typeDescriptions": {
               "typeIdentifier": "t_array$_t_address_$dyn_storage",
-              "typeString": "address[] storage ref"
+              "typeString": "address[]"
             },
             "typeName": {
               "baseType": {
@@ -1603,7 +1603,7 @@
               "src": "1046:9:4",
               "typeDescriptions": {
                 "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
-                "typeString": "address[] storage pointer"
+                "typeString": "address[]"
               }
             },
             "value": null,
@@ -1620,7 +1620,7 @@
             "storageLocation": "default",
             "typeDescriptions": {
               "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_struct$_MyBet_$3704_storage_$dyn_storage_$",
-              "typeString": "mapping(address => struct SoloBet.MyBet storage ref[] storage ref)"
+              "typeString": "mapping(address => struct SoloBet.MyBet[])"
             },
             "typeName": {
               "id": 3726,
@@ -1638,7 +1638,7 @@
               "src": "1067:27:4",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_struct$_MyBet_$3704_storage_$dyn_storage_$",
-                "typeString": "mapping(address => struct SoloBet.MyBet storage ref[] storage ref)"
+                "typeString": "mapping(address => struct SoloBet.MyBet[])"
               },
               "valueType": {
                 "baseType": {
@@ -1650,7 +1650,7 @@
                   "src": "1086:5:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_struct$_MyBet_$3704_storage_ptr",
-                    "typeString": "struct SoloBet.MyBet storage pointer"
+                    "typeString": "struct SoloBet.MyBet"
                   }
                 },
                 "id": 3725,
@@ -1659,7 +1659,7 @@
                 "src": "1086:7:4",
                 "typeDescriptions": {
                   "typeIdentifier": "t_array$_t_struct$_MyBet_$3704_storage_$dyn_storage_ptr",
-                  "typeString": "struct SoloBet.MyBet storage ref[] storage pointer"
+                  "typeString": "struct SoloBet.MyBet[]"
                 }
               }
             },
@@ -1780,8 +1780,11 @@
                       "id": 3739,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 3967,
+                      "overloadedDeclarations": [
+                        3969,
+                        3970
+                      ],
+                      "referencedDeclaration": 3969,
                       "src": "1199:7:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -1861,7 +1864,7 @@
             "isDeclaredConst": false,
             "modifiers": [
               {
-                "arguments": [],
+                "arguments": null,
                 "id": 3735,
                 "modifierName": {
                   "argumentTypes": null,
@@ -2436,7 +2439,7 @@
             "isDeclaredConst": false,
             "modifiers": [
               {
-                "arguments": [],
+                "arguments": null,
                 "id": 3791,
                 "modifierName": {
                   "argumentTypes": null,
@@ -2645,7 +2648,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_array$_t_bytes32_$dyn_memory_ptr",
-                    "typeString": "bytes32[] memory"
+                    "typeString": "bytes32[]"
                   },
                   "typeName": {
                     "baseType": {
@@ -2664,7 +2667,7 @@
                     "src": "1801:9:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_bytes32_$dyn_storage_ptr",
-                      "typeString": "bytes32[] storage pointer"
+                      "typeString": "bytes32[]"
                     }
                   },
                   "value": null,
@@ -2794,7 +2797,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string memory"
+                    "typeString": "string"
                   },
                   "typeName": {
                     "id": 3822,
@@ -2803,7 +2806,7 @@
                     "src": "1941:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string storage pointer"
+                      "typeString": "string"
                     }
                   },
                   "value": null,
@@ -2820,7 +2823,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string memory"
+                    "typeString": "string"
                   },
                   "typeName": {
                     "id": 3824,
@@ -2829,7 +2832,7 @@
                     "src": "1952:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string storage pointer"
+                      "typeString": "string"
                     }
                   },
                   "value": null,
@@ -3276,7 +3279,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_array$_t_bytes32_$dyn_memory_ptr",
-                    "typeString": "bytes32[] memory"
+                    "typeString": "bytes32[]"
                   },
                   "typeName": {
                     "baseType": {
@@ -3295,7 +3298,7 @@
                     "src": "2285:9:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_bytes32_$dyn_storage_ptr",
-                      "typeString": "bytes32[] storage pointer"
+                      "typeString": "bytes32[]"
                     }
                   },
                   "value": null,
@@ -3312,7 +3315,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                    "typeString": "uint256[] memory"
+                    "typeString": "uint256[]"
                   },
                   "typeName": {
                     "baseType": {
@@ -3331,7 +3334,7 @@
                     "src": "2305:9:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
-                      "typeString": "uint256[] storage pointer"
+                      "typeString": "uint256[]"
                     }
                   },
                   "value": null,
@@ -3348,7 +3351,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_array$_t_int256_$dyn_memory_ptr",
-                    "typeString": "int256[] memory"
+                    "typeString": "int256[]"
                   },
                   "typeName": {
                     "baseType": {
@@ -3367,7 +3370,7 @@
                     "src": "2325:5:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_int256_$dyn_storage_ptr",
-                      "typeString": "int256[] storage pointer"
+                      "typeString": "int256[]"
                     }
                   },
                   "value": null,
@@ -3384,7 +3387,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                    "typeString": "uint256[] memory"
+                    "typeString": "uint256[]"
                   },
                   "typeName": {
                     "baseType": {
@@ -3403,7 +3406,7 @@
                     "src": "2337:9:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
-                      "typeString": "uint256[] storage pointer"
+                      "typeString": "uint256[]"
                     }
                   },
                   "value": null,
@@ -3420,7 +3423,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_array$_t_bool_$dyn_memory_ptr",
-                    "typeString": "bool[] memory"
+                    "typeString": "bool[]"
                   },
                   "typeName": {
                     "baseType": {
@@ -3439,7 +3442,7 @@
                     "src": "2356:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_bool_$dyn_storage_ptr",
-                      "typeString": "bool[] storage pointer"
+                      "typeString": "bool[]"
                     }
                   },
                   "value": null,
@@ -3456,7 +3459,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                    "typeString": "uint256[] memory"
+                    "typeString": "uint256[]"
                   },
                   "typeName": {
                     "baseType": {
@@ -3475,7 +3478,7 @@
                     "src": "2372:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
-                      "typeString": "uint256[] storage pointer"
+                      "typeString": "uint256[]"
                     }
                   },
                   "value": null,
@@ -3650,7 +3653,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string memory"
+                    "typeString": "string"
                   },
                   "typeName": {
                     "id": 3891,
@@ -3659,7 +3662,7 @@
                     "src": "2515:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string storage pointer"
+                      "typeString": "string"
                     }
                   },
                   "value": null,
@@ -3676,7 +3679,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string memory"
+                    "typeString": "string"
                   },
                   "typeName": {
                     "id": 3893,
@@ -3685,7 +3688,7 @@
                     "src": "2526:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string storage pointer"
+                      "typeString": "string"
                     }
                   },
                   "value": null,
@@ -3930,7 +3933,7 @@
             "isDeclaredConst": false,
             "modifiers": [
               {
-                "arguments": [],
+                "arguments": null,
                 "id": 3919,
                 "modifierName": {
                   "argumentTypes": null,
@@ -4033,7 +4036,7 @@
             "isDeclaredConst": false,
             "modifiers": [
               {
-                "arguments": [],
+                "arguments": null,
                 "id": 3932,
                 "modifierName": {
                   "argumentTypes": null,
@@ -4291,7 +4294,7 @@
             "isDeclaredConst": false,
             "modifiers": [
               {
-                "arguments": [],
+                "arguments": null,
                 "id": 3939,
                 "modifierName": {
                   "argumentTypes": null,
@@ -4339,7 +4342,7 @@
     "src": "0:3009:4"
   },
   "legacyAST": {
-    "absolutePath": "/home/chuonghd/Project/smartcontract/football-bet/backend/contracts/SoloBet.sol",
+    "absolutePath": "/Users/kenshin/Desktop/web/football-bet/backend/contracts/SoloBet.sol",
     "exportedSymbols": {
       "SoloBet": [
         3951
@@ -4360,7 +4363,7 @@
         "src": "0:24:4"
       },
       {
-        "absolutePath": "/home/chuonghd/Project/smartcontract/football-bet/backend/contracts/Ownable.sol",
+        "absolutePath": "/Users/kenshin/Desktop/web/football-bet/backend/contracts/Ownable.sol",
         "file": "./Ownable.sol",
         "id": 3628,
         "nodeType": "ImportDirective",
@@ -4373,7 +4376,7 @@
       {
         "baseContracts": [
           {
-            "arguments": [],
+            "arguments": null,
             "baseName": {
               "contractScope": null,
               "id": 3629,
@@ -4826,7 +4829,7 @@
                 "storageLocation": "default",
                 "typeDescriptions": {
                   "typeIdentifier": "t_string_storage_ptr",
-                  "typeString": "string storage pointer"
+                  "typeString": "string"
                 },
                 "typeName": {
                   "id": 3670,
@@ -4835,7 +4838,7 @@
                   "src": "495:6:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
-                    "typeString": "string storage pointer"
+                    "typeString": "string"
                   }
                 },
                 "value": null,
@@ -4852,7 +4855,7 @@
                 "storageLocation": "default",
                 "typeDescriptions": {
                   "typeIdentifier": "t_string_storage_ptr",
-                  "typeString": "string storage pointer"
+                  "typeString": "string"
                 },
                 "typeName": {
                   "id": 3672,
@@ -4861,7 +4864,7 @@
                   "src": "523:6:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_storage_ptr",
-                    "typeString": "string storage pointer"
+                    "typeString": "string"
                   }
                 },
                 "value": null,
@@ -4885,7 +4888,7 @@
             "storageLocation": "default",
             "typeDescriptions": {
               "typeIdentifier": "t_array$_t_bytes32_$dyn_storage",
-              "typeString": "bytes32[] storage ref"
+              "typeString": "bytes32[]"
             },
             "typeName": {
               "baseType": {
@@ -4904,7 +4907,7 @@
               "src": "555:9:4",
               "typeDescriptions": {
                 "typeIdentifier": "t_array$_t_bytes32_$dyn_storage_ptr",
-                "typeString": "bytes32[] storage pointer"
+                "typeString": "bytes32[]"
               }
             },
             "value": null,
@@ -5146,7 +5149,7 @@
                 "storageLocation": "default",
                 "typeDescriptions": {
                   "typeIdentifier": "t_struct$_Betting_$3690_storage_ptr",
-                  "typeString": "struct SoloBet.Betting storage pointer"
+                  "typeString": "struct SoloBet.Betting"
                 },
                 "typeName": {
                   "contractScope": null,
@@ -5157,7 +5160,7 @@
                   "src": "797:7:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_struct$_Betting_$3690_storage_ptr",
-                    "typeString": "struct SoloBet.Betting storage pointer"
+                    "typeString": "struct SoloBet.Betting"
                   }
                 },
                 "value": null,
@@ -5296,7 +5299,7 @@
             "storageLocation": "default",
             "typeDescriptions": {
               "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Match_$3674_storage_$",
-              "typeString": "mapping(bytes32 => struct SoloBet.Match storage ref)"
+              "typeString": "mapping(bytes32 => struct SoloBet.Match)"
             },
             "typeName": {
               "id": 3709,
@@ -5314,7 +5317,7 @@
               "src": "931:25:4",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_bytes32_$_t_struct$_Match_$3674_storage_$",
-                "typeString": "mapping(bytes32 => struct SoloBet.Match storage ref)"
+                "typeString": "mapping(bytes32 => struct SoloBet.Match)"
               },
               "valueType": {
                 "contractScope": null,
@@ -5325,7 +5328,7 @@
                 "src": "950:5:4",
                 "typeDescriptions": {
                   "typeIdentifier": "t_struct$_Match_$3674_storage_ptr",
-                  "typeString": "struct SoloBet.Match storage pointer"
+                  "typeString": "struct SoloBet.Match"
                 }
               }
             },
@@ -5343,7 +5346,7 @@
             "storageLocation": "default",
             "typeDescriptions": {
               "typeIdentifier": "t_mapping$_t_bytes32_$_t_array$_t_struct$_Betting_$3690_storage_$dyn_storage_$",
-              "typeString": "mapping(bytes32 => struct SoloBet.Betting storage ref[] storage ref)"
+              "typeString": "mapping(bytes32 => struct SoloBet.Betting[])"
             },
             "typeName": {
               "id": 3714,
@@ -5361,7 +5364,7 @@
               "src": "968:29:4",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_bytes32_$_t_array$_t_struct$_Betting_$3690_storage_$dyn_storage_$",
-                "typeString": "mapping(bytes32 => struct SoloBet.Betting storage ref[] storage ref)"
+                "typeString": "mapping(bytes32 => struct SoloBet.Betting[])"
               },
               "valueType": {
                 "baseType": {
@@ -5373,7 +5376,7 @@
                   "src": "987:7:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_struct$_Betting_$3690_storage_ptr",
-                    "typeString": "struct SoloBet.Betting storage pointer"
+                    "typeString": "struct SoloBet.Betting"
                   }
                 },
                 "id": 3713,
@@ -5382,7 +5385,7 @@
                 "src": "987:9:4",
                 "typeDescriptions": {
                   "typeIdentifier": "t_array$_t_struct$_Betting_$3690_storage_$dyn_storage_ptr",
-                  "typeString": "struct SoloBet.Betting storage ref[] storage pointer"
+                  "typeString": "struct SoloBet.Betting[]"
                 }
               }
             },
@@ -5445,7 +5448,7 @@
             "storageLocation": "default",
             "typeDescriptions": {
               "typeIdentifier": "t_array$_t_address_$dyn_storage",
-              "typeString": "address[] storage ref"
+              "typeString": "address[]"
             },
             "typeName": {
               "baseType": {
@@ -5464,7 +5467,7 @@
               "src": "1046:9:4",
               "typeDescriptions": {
                 "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
-                "typeString": "address[] storage pointer"
+                "typeString": "address[]"
               }
             },
             "value": null,
@@ -5481,7 +5484,7 @@
             "storageLocation": "default",
             "typeDescriptions": {
               "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_struct$_MyBet_$3704_storage_$dyn_storage_$",
-              "typeString": "mapping(address => struct SoloBet.MyBet storage ref[] storage ref)"
+              "typeString": "mapping(address => struct SoloBet.MyBet[])"
             },
             "typeName": {
               "id": 3726,
@@ -5499,7 +5502,7 @@
               "src": "1067:27:4",
               "typeDescriptions": {
                 "typeIdentifier": "t_mapping$_t_address_$_t_array$_t_struct$_MyBet_$3704_storage_$dyn_storage_$",
-                "typeString": "mapping(address => struct SoloBet.MyBet storage ref[] storage ref)"
+                "typeString": "mapping(address => struct SoloBet.MyBet[])"
               },
               "valueType": {
                 "baseType": {
@@ -5511,7 +5514,7 @@
                   "src": "1086:5:4",
                   "typeDescriptions": {
                     "typeIdentifier": "t_struct$_MyBet_$3704_storage_ptr",
-                    "typeString": "struct SoloBet.MyBet storage pointer"
+                    "typeString": "struct SoloBet.MyBet"
                   }
                 },
                 "id": 3725,
@@ -5520,7 +5523,7 @@
                 "src": "1086:7:4",
                 "typeDescriptions": {
                   "typeIdentifier": "t_array$_t_struct$_MyBet_$3704_storage_$dyn_storage_ptr",
-                  "typeString": "struct SoloBet.MyBet storage ref[] storage pointer"
+                  "typeString": "struct SoloBet.MyBet[]"
                 }
               }
             },
@@ -5641,8 +5644,11 @@
                       "id": 3739,
                       "name": "require",
                       "nodeType": "Identifier",
-                      "overloadedDeclarations": [],
-                      "referencedDeclaration": 3967,
+                      "overloadedDeclarations": [
+                        3969,
+                        3970
+                      ],
+                      "referencedDeclaration": 3969,
                       "src": "1199:7:4",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$returns$__$",
@@ -5722,7 +5728,7 @@
             "isDeclaredConst": false,
             "modifiers": [
               {
-                "arguments": [],
+                "arguments": null,
                 "id": 3735,
                 "modifierName": {
                   "argumentTypes": null,
@@ -6297,7 +6303,7 @@
             "isDeclaredConst": false,
             "modifiers": [
               {
-                "arguments": [],
+                "arguments": null,
                 "id": 3791,
                 "modifierName": {
                   "argumentTypes": null,
@@ -6506,7 +6512,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_array$_t_bytes32_$dyn_memory_ptr",
-                    "typeString": "bytes32[] memory"
+                    "typeString": "bytes32[]"
                   },
                   "typeName": {
                     "baseType": {
@@ -6525,7 +6531,7 @@
                     "src": "1801:9:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_bytes32_$dyn_storage_ptr",
-                      "typeString": "bytes32[] storage pointer"
+                      "typeString": "bytes32[]"
                     }
                   },
                   "value": null,
@@ -6655,7 +6661,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string memory"
+                    "typeString": "string"
                   },
                   "typeName": {
                     "id": 3822,
@@ -6664,7 +6670,7 @@
                     "src": "1941:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string storage pointer"
+                      "typeString": "string"
                     }
                   },
                   "value": null,
@@ -6681,7 +6687,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string memory"
+                    "typeString": "string"
                   },
                   "typeName": {
                     "id": 3824,
@@ -6690,7 +6696,7 @@
                     "src": "1952:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string storage pointer"
+                      "typeString": "string"
                     }
                   },
                   "value": null,
@@ -7137,7 +7143,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_array$_t_bytes32_$dyn_memory_ptr",
-                    "typeString": "bytes32[] memory"
+                    "typeString": "bytes32[]"
                   },
                   "typeName": {
                     "baseType": {
@@ -7156,7 +7162,7 @@
                     "src": "2285:9:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_bytes32_$dyn_storage_ptr",
-                      "typeString": "bytes32[] storage pointer"
+                      "typeString": "bytes32[]"
                     }
                   },
                   "value": null,
@@ -7173,7 +7179,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                    "typeString": "uint256[] memory"
+                    "typeString": "uint256[]"
                   },
                   "typeName": {
                     "baseType": {
@@ -7192,7 +7198,7 @@
                     "src": "2305:9:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
-                      "typeString": "uint256[] storage pointer"
+                      "typeString": "uint256[]"
                     }
                   },
                   "value": null,
@@ -7209,7 +7215,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_array$_t_int256_$dyn_memory_ptr",
-                    "typeString": "int256[] memory"
+                    "typeString": "int256[]"
                   },
                   "typeName": {
                     "baseType": {
@@ -7228,7 +7234,7 @@
                     "src": "2325:5:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_int256_$dyn_storage_ptr",
-                      "typeString": "int256[] storage pointer"
+                      "typeString": "int256[]"
                     }
                   },
                   "value": null,
@@ -7245,7 +7251,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                    "typeString": "uint256[] memory"
+                    "typeString": "uint256[]"
                   },
                   "typeName": {
                     "baseType": {
@@ -7264,7 +7270,7 @@
                     "src": "2337:9:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
-                      "typeString": "uint256[] storage pointer"
+                      "typeString": "uint256[]"
                     }
                   },
                   "value": null,
@@ -7281,7 +7287,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_array$_t_bool_$dyn_memory_ptr",
-                    "typeString": "bool[] memory"
+                    "typeString": "bool[]"
                   },
                   "typeName": {
                     "baseType": {
@@ -7300,7 +7306,7 @@
                     "src": "2356:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_bool_$dyn_storage_ptr",
-                      "typeString": "bool[] storage pointer"
+                      "typeString": "bool[]"
                     }
                   },
                   "value": null,
@@ -7317,7 +7323,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
-                    "typeString": "uint256[] memory"
+                    "typeString": "uint256[]"
                   },
                   "typeName": {
                     "baseType": {
@@ -7336,7 +7342,7 @@
                     "src": "2372:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
-                      "typeString": "uint256[] storage pointer"
+                      "typeString": "uint256[]"
                     }
                   },
                   "value": null,
@@ -7511,7 +7517,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string memory"
+                    "typeString": "string"
                   },
                   "typeName": {
                     "id": 3891,
@@ -7520,7 +7526,7 @@
                     "src": "2515:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string storage pointer"
+                      "typeString": "string"
                     }
                   },
                   "value": null,
@@ -7537,7 +7543,7 @@
                   "storageLocation": "default",
                   "typeDescriptions": {
                     "typeIdentifier": "t_string_memory_ptr",
-                    "typeString": "string memory"
+                    "typeString": "string"
                   },
                   "typeName": {
                     "id": 3893,
@@ -7546,7 +7552,7 @@
                     "src": "2526:6:4",
                     "typeDescriptions": {
                       "typeIdentifier": "t_string_storage_ptr",
-                      "typeString": "string storage pointer"
+                      "typeString": "string"
                     }
                   },
                   "value": null,
@@ -7791,7 +7797,7 @@
             "isDeclaredConst": false,
             "modifiers": [
               {
-                "arguments": [],
+                "arguments": null,
                 "id": 3919,
                 "modifierName": {
                   "argumentTypes": null,
@@ -7894,7 +7900,7 @@
             "isDeclaredConst": false,
             "modifiers": [
               {
-                "arguments": [],
+                "arguments": null,
                 "id": 3932,
                 "modifierName": {
                   "argumentTypes": null,
@@ -8152,7 +8158,7 @@
             "isDeclaredConst": false,
             "modifiers": [
               {
-                "arguments": [],
+                "arguments": null,
                 "id": 3939,
                 "modifierName": {
                   "argumentTypes": null,
@@ -8201,9 +8207,9 @@
   },
   "compiler": {
     "name": "solc",
-    "version": "0.4.21+commit.dfe3193c.Emscripten.clang"
+    "version": "0.4.24+commit.e67f0147.Emscripten.clang"
   },
   "networks": {},
   "schemaVersion": "2.0.0",
-  "updatedAt": "2018-08-14T16:06:41.990Z"
+  "updatedAt": "2018-08-18T07:42:22.416Z"
 }

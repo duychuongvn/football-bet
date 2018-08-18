@@ -4,13 +4,15 @@ import { RootState } from '@/store/types';
 import { RECEVER_BETTING, RECEVER_TOTAL_BETTING, ACCEPT_BETTING } from '@/store/mutations';
 
 import { SoloBetService } from '@/shared/services/asian-solobet.service'
+import { BetherContractService } from '@/shared/services/bether.service'
+import { Web3Vue } from '@/shared/services/web3.service';
 
 export const actions: ActionTree<any, RootState> = {
   loadBettings({ commit }, bettingObj: any): any {
-    SoloBetService.loadBettings(bettingObj.id)
-      .subscribe((totalBettings: any) => {
+    BetherContractService.getBettings(bettingObj.id)
+      .subscribe((bettings: any) => {
         commit(RECEVER_TOTAL_BETTING, {
-          totalBettings: totalBettings,
+          bettings: bettings,
           isLoad: bettingObj.isLoad
         })
       });
