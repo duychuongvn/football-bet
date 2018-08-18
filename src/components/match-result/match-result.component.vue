@@ -8,13 +8,15 @@
 
   const isEqual = require('lodash/isEqual')
 
-  @Component
+  @Component({
+    components: {
+      'match-punters': () => import('@/components/match-result-punters/match-result-punters.component.vue')
+    }
+  })
   export default class MatchResultComponent extends Vue {
     @Prop() match: any
     @Action('loadBettings', { namespace: 'betting' }) loadBettings: any
-    @Action('getBetting', { namespace: 'betting' }) getBetting: any
     @Action('clearBetting', { namespace: 'betting' }) clearBetting: any
-    @Getter('totalBettings', { namespace: 'betting' }) totalBettings!: any
     @Getter('bettings', { namespace: 'betting' }) bettings!: any
 
     @Action('openDialog', { namespace: 'dialog' }) openDialog: any
@@ -26,11 +28,12 @@
 
     public headTb: Array<Object> = [
       { text: '#', align: 'left', sortable: false },
-      { text: `${this.match.homeTeam}`, align: 'left', sortable: false, img: true, imgUrl: `${this.match.homeTeamFlag}` },
-      { text: 'Odds', align: 'center', sortable: false },
-      { text: `${this.match.awayTeam}` , align: 'left', sortable: false, img: true, imgUrl: `${this.match.awayTeamFlag}` },
-      { text: 'Total Stake', align: 'center', sortable: false },
-      { text: 'Available Stake', align: 'center', sortable: false },
+      { text: `Bookmarker Address`, align: 'left', sortable: false },
+      { text: 'Handicap', align: 'center', sortable: false },
+      { text: `Total Stake` , align: 'left', sortable: false },
+      { text: 'Settled', align: 'center', sortable: false },
+      { text: 'Open', align: 'center', sortable: false },
+      { text: 'Settler', align: 'center', sortable: false },
       { text: '', sortable: false }
     ]
 
@@ -41,6 +44,15 @@
         id: this.match.id,
         isLoad: false
       });
+    }
+
+    oddsString (item: any) {
+      let _teamName = item.bookmakerTeam === 0 ? this.match.homeTeam : this.match.awayTeam;
+      let _odds: any = item.odds / 100;
+
+      _odds = _odds > 0 ? `+${_odds}` : _odds;
+
+      return `${_teamName} @${_odds}`;
     }
 
     createOdds(odds: any) {
@@ -57,17 +69,13 @@
       this.openDialog(_initOpts)
     }
 
-    selectedTeamAddr(betting: any, type: number) {
-      return betting.bookmakerTeam === type ? betting.bookmakerAddress : '';
-    }
-
     @Watch('initData')
     getInitDialog(value: any, oldValue: any) {
       if (value && value.key === DIALOG_CLOSE.BETTING_RELOAD) {
         this.isLoadingBetting = setInterval(() => {
           this.loadBettings({
             id: this.match.id,
-            isLoad: true
+            isLoad: false
           });
         }, 5000)
       }
@@ -81,10 +89,6 @@
           isLoad: false
         });
       }
-    }
-
-    isActiveShare(bettingId: number): boolean {
-      return (+this.$route.query['accept'] === bettingId);
     }
 
     openShare(bettingId: number) {

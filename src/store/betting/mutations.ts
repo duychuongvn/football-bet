@@ -1,5 +1,5 @@
 import { MutationTree } from 'vuex';
-import { RECEVER_BETTING, RECEVER_TOTAL_BETTING, ACCEPT_BETTING } from '@/store/mutations';
+import { RECEVER_TOTAL_BETTING, ACCEPT_BETTING } from '@/store/mutations';
 
 export const mutations: MutationTree<any> = {
   [RECEVER_TOTAL_BETTING](state, bettingObj: any) {
@@ -7,12 +7,6 @@ export const mutations: MutationTree<any> = {
     // if (!bettingObj.isLoad) {
     //   state.bettings = [];
     // }
-  },
-  [RECEVER_BETTING](state, bettingObj: any) {
-    if (!bettingObj.betting.status) {
-      bettingObj.betting.isOwner = bettingObj.betting.offer === bettingObj.account
-    }
-    state.bettings.push(bettingObj.betting)
   },
   [ACCEPT_BETTING](state, dealObj: any) {
     state.bettings.map((betting: any) => {

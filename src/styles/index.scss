@@ -57,6 +57,21 @@
         &:hover {
           background-color: $color-blue-gray;
         }
+
+        &.v-datatable__expand-row {
+          &:hover {
+            background-color: transparent;
+          }
+
+          .v-datatable.v-table {
+            tbody > tr {
+              &:hover {
+                background-color: transparent;
+                pointer-events: none;
+              }
+            }
+          }
+        }
       }
     }
 

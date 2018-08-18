@@ -8,7 +8,6 @@ import { actions } from '@/store/betting/actions'
 import { mutations } from '@/store/betting/mutations'
 
 export const state: BettingState = {
-  totalBettings: undefined,
   betting: undefined,
   bettings: [],
   countBetting: 0

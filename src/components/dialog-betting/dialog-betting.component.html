@@ -7,6 +7,9 @@
     <v-card-text>
       <v-container class="pa-0" fluid grid-list-lg>
         <v-layout row wrap>
+          <v-flex xs12>
+            <p class="text-xs-center title">Your selected team: {{ selectedTeam }}</p>
+          </v-flex>
           <v-flex
             :xs4="!odds"
             :xs6="!!odds"
@@ -16,9 +19,12 @@
               :hover="isAwayTeamActive"
               :class="{ 'teal lighten-1': isHomeTeamActive || !!odds, 'grey lighten-2': isAwayTeamActive && !odds }">
               <v-card-media :src="homeTeamFlag" height="120px" @click="changeTeam(0)"></v-card-media>
-              <v-card-title class="headline justify-content-center"
+              <v-card-title class="headline d-block text-xs-center"
                 :class="{ 'teal--text': isAwayTeamActive && !odds }"
-                @click="changeTeam(0)">{{ homeTeam }} {{ oddsSignHome }}</v-card-title>
+                @click="changeTeam(0)">
+                <p class="mb-1 title">{{ homeTeam }}</p>
+                <p class="mb-0 subheading">{{ oddsSignHome }}</p>
+              </v-card-title>
             </v-card>
           </v-flex>
           <v-flex
@@ -31,9 +37,10 @@
             <v-text-field v-model="stakeSelected" dark color="white" label="Stake" type="number" suffix="ETH" min="1" v-if="!odds"></v-text-field>
 
             <div v-if="!!odds">
-              <p class="headline">Odds: {{ oddsString }}</p>
-              <p class="headline">Max Stake: {{ odds.bookmakerAmount }} ETH</p>
-              <v-text-field v-model="stakeSelected" dark color="white" label="Stake" type="number" suffix="ETH" min="1"></v-text-field>
+                <p class="mb-0" v-if="!!odds">Bet with:
+                  <a class="light-green--text">{{ odds.bookmakerAddress }}</a>
+                </p>
+              <v-text-field v-model="stakeSelected" dark color="white" label="Max Stake" type="number" suffix="ETH" min="1"></v-text-field>
             </div>
 
           </v-flex>
@@ -45,8 +52,11 @@
             <v-card class="cursor-pointer" :raised="isAwayTeamActive" :hover="isHomeTeamActive"
             :class="{ 'teal lighten-1': isAwayTeamActive || !!odds, 'grey lighten-2': isHomeTeamActive && !odds }">
               <v-card-media :src="awayTeamFlag" height="120px" @click="changeTeam(1)"></v-card-media>
-              <v-card-title class="headline justify-content-center"
-                :class="{ 'teal--text': isHomeTeamActive && !odds, 'white--text': !!odds && isHomeTeamActive }" @click="changeTeam(1)">{{ awayTeam }} {{ oddsSignAway }}</v-card-title>
+              <v-card-title class="headline d-block text-xs-center"
+                :class="{ 'teal--text': isHomeTeamActive && !odds, 'white--text': !!odds && isHomeTeamActive }" @click="changeTeam(1)">
+                <p class="mb-1 title">{{ awayTeam }}</p>
+                <p class="mb-0 subheading">{{ oddsSignAway }}</p>
+              </v-card-title>
             </v-card>
           </v-flex>
         </v-layout>
@@ -54,15 +64,12 @@
     </v-card-text>
 
     <v-card-text class="text-xs-center">
-      <p class="mb-0" v-if="!!odds">Bet with:
-        <a class="light-green--text">{{ odds.bookmakerAddress }}</a>
-      </p>
       <p class="mb-0">Potential Return: {{ potential }} ETH</p>
     </v-card-text>
 
     <v-card-actions class="justify-content-center">
       <v-btn outline @click="closeDialog(null)">Close</v-btn>
-      <v-btn color="teal lighten-1" @click="saveBet">Save</v-btn>
+      <v-btn color="teal lighten-1" @click="saveBet">{{ dialogButn }}</v-btn>
     </v-card-actions>
   </v-card>
 </v-dialog>

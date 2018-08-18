@@ -77,7 +77,11 @@
     }
 
     get dialogTitle() {
-      return this.odds ? 'Accept Betting' : 'New Betting';
+      return this.odds ? 'Settle Bet' : 'Create Bet';
+    }
+
+    get dialogButn() {
+      return this.odds ? 'Settle' : 'Create';
     }
 
     get oddsWith() {
@@ -103,6 +107,10 @@
 
     get isAwayTeamActive() {
       return this.bettingSelected !== 0;
+    }
+
+    get selectedTeam(): string {
+      return this.isHomeTeamActive ? this.match.homeTeam : this.match.awayTeam;
     }
 
     get homeTeamFlag() {
@@ -151,10 +159,10 @@
 
     _createOdds() {
       const _odds: any = {
-        matchId: this.odds.matchId,
+        matchId: this.match.id,
         bettingId: this.odds.bettingId,
         account: this.account.address,
-        amount: this.odds.amount
+        amount: +this.stakeSelected
       }
 
       this.createDeal(_odds)
@@ -217,7 +225,7 @@
 
         this.notify({
           mode: 'success',
-          message: 'Deal Betting Successfully!'
+          message: 'Your settlement has been confirmed'
         })
 
         this.toogleDialog(DIALOG_NAME.BETTING_SHARING, true, {

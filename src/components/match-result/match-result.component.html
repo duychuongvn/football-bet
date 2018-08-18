@@ -4,38 +4,30 @@
     :headers="headTb"
     :items="bettings" next-icon="fas fa-chevron-right" prev-icon="fas fa-chevron-left"
     :hide-actions="!(bettings.length > 10)" class="bg-transparent table-fixture">
-    <template slot="headers" slot-scope="props">
-      <tr>
-        <th v-for="header in props.headers" :key="header.text" :class="{'text-xs-left': header.align === 'left', 'text-xs-center': header.align === 'center'}">
-          <div :class="{ 'betting-wrap': header.img }">
-            <!-- <image-comp v-if="header.img" imgWidth="40px" imgHeight="20px" class="mr-2" :imgPath="header.imgUrl" :imgName="header.text"></image-comp> -->
-            {{ header.text }}
-          </div>
-        </th>
-      </tr>
-    </template>
     <v-progress-linear slot="progress" color="teal darken-2" indeterminate></v-progress-linear>
     <template slot="items" slot-scope="props">
-      <tr :class="{ 'teal lighten-1': isActiveShare(props.item.bettingId) }">
+      <tr @click="props.expanded = !props.expanded">
         <td>{{ (props.index + 1) }}</td>
-        <td>{{ selectedTeamAddr(props.item, 0) }}</td>
-        <td class="text-xs-center">{{ props.item.odds / 100 }}</td>
-        <td>{{ selectedTeamAddr(props.item, 1) }}</td>
-        <td class="text-xs-center">{{ props.item.bookmakerAmount }}</td>
-        <td class="text-xs-center"></td>
+        <td>{{ props.item.bookmakerAddress }}</td>
+        <td class="text-xs-center">{{ oddsString(props.item) }}</td>
+        <td class="text-xs-center">{{ props.item.bookmakerAmount }} ETH</td>
+        <td class="text-xs-center">{{ props.item.settledAmount }} ETH</td>
+        <td class="text-xs-center">{{ (+props.item.bookmakerAmount) - (+props.item.settledAmount)}} ETH</td>
+        <td class="text-xs-center">{{ props.item.punters.length }}</td>
         <td class="text-xs-center">
-          <v-tooltip bottom lazy :disabled="!!props.item.status || props.item.isOwner">
-            <v-btn class="text-capitalize" color="teal lighten-1" small slot="activator" @click="createOdds(props.item)" :disabled="!!props.item.status || props.item.isOwner">
+          <v-tooltip bottom lazy :disabled="props.item.status === 2 || props.item.isOwner">
+            <v-btn class="text-capitalize" color="teal lighten-1" small slot="activator" @click="createOdds(props.item)"
+            :disabled="props.item.status === 2 || props.item.isOwner">
               <v-icon size="18" left class="mr-2">fas fa-handshake</v-icon>
-              Bet
+              Settle
             </v-btn>
-            <span>Bet</span>
+            <span>Settle</span>
           </v-tooltip>
 
           <v-tooltip bottom lazy :disabled="!!props.item.status">
             <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator"
               @click="openShare(props.item.bettingId)"
-              :disabled="!!props.item.status">
+              :disabled="props.item.status === 2">
               <v-icon size="18" left class="mr-2">fas fa-share-alt-square</v-icon>
               Share
             </v-btn>
@@ -44,5 +36,10 @@
         </td>
       </tr>
     </template>
+
+    <template slot="expand" slot-scope="props" v-if="props.item.punters.length !== 0">
+      <match-punters :punters="props.item.punters" :betting="props.item" :match="match"/>
+    </template>
+
   </v-data-table>
 </v-card>

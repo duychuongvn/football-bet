@@ -41,7 +41,7 @@ export const BetherContractService = {
 
     BetherContractService.getBettingInfo(dealObj.bettingId).subscribe((result:any)=>{
 
-      if(result.status == 0 && (result.bookmakerAmount - result.settledAmount >= dealObj.amount)) {
+      if((result.status === 0 || result.status === 1) && (result.bookmakerAmount - result.settledAmount >= dealObj.amount)) {
         console.log(dealObj.bettingId)
         bether.deal(dealObj.bettingId, {from: dealObj.account, value: window.web3.toWei(dealObj.amount,  'ether')}, (error:any, result:any) => {
 
@@ -82,6 +82,7 @@ export const BetherContractService = {
       } else {
         var index = 0;
         var betting = {
+          'id': bettingIdx,
           'bettingId': bettingIdx,
           'bookmakerAddress': result[index++],
           'bookmakerTeam':result[index++].toNumber(),
@@ -103,9 +104,11 @@ export const BetherContractService = {
 
   getBettingIds: (matchId: any)  => Rx.Observable.create((observer: any) => {
      bether.getBettings.call(matchId, (err: any, result:any)=> {
-      var ids = [];
-      for(var i =0;i< result.length;i++) {
-        ids[i] = result[i].toNumber();
+      let ids = [];
+      if (result && result.length !== 0) {
+        for(let i = 0; i< result.length; i++) {
+          ids[i] = result[i].toNumber();
+        }
       }
       observer.onNext(ids);
       observer.onCompleted();
@@ -115,11 +118,13 @@ export const BetherContractService = {
   getBettings: (matchId: any)  => Rx.Observable.create((observer: any) => {
     let id = Web3Vue.toSHA3(matchId)
     BetherContractService.getBettingIds(id).subscribe((ids: number[]) => {
-      var bettings = [] as any[];
-      for(var i =0;i< ids.length;i++) {
-        BetherContractService.getBettingInfo(ids[i]).subscribe((result:any) => {
-          bettings.push(result)
-        });
+      let bettings: any = [];
+      if (ids && ids.length !== 0) {
+        for(let i =0; i< ids.length; i++) {
+          BetherContractService.getBettingInfo(ids[i]).subscribe((result:any) => {
+            bettings.push(result)
+          });
+        }
       }
       observer.onNext(bettings);
       observer.onCompleted();
