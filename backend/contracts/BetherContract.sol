@@ -25,8 +25,7 @@ contract BetherContract is Ownable {
   mapping(bytes32 => uint32[]) matchBets;
   mapping(uint32 => uint32[]) betSettled;
   mapping(address => bool) admins;
-  mapping(address => Player) reportPlayers;
-  mapping(address => address) userContracts;
+
 
   address[] players;
   Betting[] bets;
@@ -71,6 +70,7 @@ contract BetherContract is Ownable {
 
   }
 
+
   modifier canUpdate() {
     require(msg.sender == owner || admins[msg.sender]);
     _;
@@ -112,7 +112,6 @@ contract BetherContract is Ownable {
     if (isPlayerNotExist(msg.sender)) {
       players.push(msg.sender);
     }
-    reportPlayers[msg.sender].currentBalance += msg.value;
     emit LogNewBetting(betIdx);
     balances[msg.sender] += msg.value;
     return true;
@@ -138,11 +137,6 @@ contract BetherContract is Ownable {
     }
 
     uint32 betIdx = uint32(settles.push(Settle(bettingIdx, msg.sender, msg.value)) - 1);
-
-    reportPlayers[msg.sender].currentBalance += msg.value;
-    reportPlayers[msg.sender].totalSettled += msg.value;
-    reportPlayers[_betting.bMaker].totalSettled += msg.value;
-
     userSettled[msg.sender].push(betIdx);
     betSettled[bettingIdx].push(betIdx);
     balances[msg.sender] += msg.value;
@@ -154,8 +148,8 @@ contract BetherContract is Ownable {
   }
 
   function getBettingInfo(uint32 bettingIdx) public view returns (address,
-                                                    uint8, int, uint256, uint256, BetStatus,
-                                                    address[], uint256[]) {
+    uint8, int, uint256, uint256, BetStatus,
+    address[], uint256[]) {
     Betting memory _betting = bets[bettingIdx];
 
     address[] memory punters = new address[](betSettled[bettingIdx].length);
@@ -232,13 +226,8 @@ contract BetherContract is Ownable {
     return players.length;
   }
 
-  function getPlayerInfo(address player) public view returns (uint256 currentBalance, uint256 totalSettled, uint256 totalWin, uint256 totalLoose) {
-
-    currentBalance = reportPlayers[player].currentBalance;
-    totalSettled = reportPlayers[player].totalSettled;
-    totalWin = reportPlayers[player].totalWin;
-    totalLoose = reportPlayers[player].totalLoose;
-
+  function getPlayerBalance(address player) public view returns (uint256) {
+    return balances[player];
   }
 
   function updateScore(bytes32 matchId, uint homeScore, uint awayScore) public canUpdate returns (bool) {
@@ -313,7 +302,6 @@ contract BetherContract is Ownable {
     }
 
     balances[_betting.bMaker] = balances[_betting.bMaker] - _betting.bAmount;
-    reportPlayers[_betting.bMaker].currentBalance -= _betting.bAmount;
     balances[feeOwner] = balances[feeOwner] + (_betting.settledAmount - _betting.settledAmount * 95 / 100);
     _betting.status = BetStatus.Done;
   }
@@ -337,10 +325,8 @@ contract BetherContract is Ownable {
     Funding[] memory fundings = new Funding[](betSettled[betIdx].length + 1);
     if (bmResult == BookmakerResult.Win) {
       fundings[0] = Funding(_betting.bMaker, _betting.bAmount + _betting.settledAmount * 95 / 100);
-      reportPlayers[_betting.bMaker].totalWin += _betting.settledAmount;
       for (uint i = 0; i < betSettled[betIdx].length; i++) {
         balances[settles[betSettled[betIdx][i]].punter] -= settles[betSettled[betIdx][i]].amount;
-        reportPlayers[settles[betSettled[betIdx][i]].punter].totalLoose -= settles[betSettled[betIdx][i]].amount;
       }
     } else if (bmResult == BookmakerResult.Draw) {
       fundings[0] = Funding(_betting.bMaker, _betting.bAmount + (_betting.settledAmount - _betting.settledAmount * 5 / 100 / 2));
@@ -350,32 +336,23 @@ contract BetherContract is Ownable {
       }
     } else if (bmResult == BookmakerResult.WinAHalf) {
       fundings[0] = Funding(_betting.bMaker, _betting.bAmount + (_betting.settledAmount + _betting.settledAmount * 95 / 100 / 2));
-      reportPlayers[_betting.bMaker].totalWin += _betting.settledAmount / 2;
       for (i = 0; i < betSettled[betIdx].length; i++) {
         fundings[i + 1] = Funding(settles[betSettled[betIdx][i]].punter, settles[betSettled[betIdx][i]].amount - settles[betSettled[betIdx][i]].amount * 95 / 100 / 2);
         balances[settles[betSettled[betIdx][i]].punter] -= settles[betSettled[betIdx][i]].amount;
-        reportPlayers[settles[betSettled[betIdx][i]].punter].totalLoose -= settles[betSettled[betIdx][i]].amount / 2;
       }
     } else if (bmResult == BookmakerResult.LoseAHalf) {
       fundings[0] = Funding(_betting.bMaker, _betting.bAmount + _betting.settledAmount * 95 / 100 / 2);
-      reportPlayers[_betting.bMaker].totalLoose += _betting.settledAmount / 2;
-
-    for (i = 0; i < betSettled[betIdx].length; i++) {
+      for (i = 0; i < betSettled[betIdx].length; i++) {
         fundings[i + 1] = Funding(settles[betSettled[betIdx][i]].punter, settles[betSettled[betIdx][i]].amount + settles[betSettled[betIdx][i]].amount * 95 / 100 / 2);
         balances[settles[betSettled[betIdx][i]].punter] -= settles[betSettled[betIdx][i]].amount;
-        reportPlayers[settles[betSettled[betIdx][i]].punter].totalWin += settles[betSettled[betIdx][i]].amount / 2;
       }
     }
     else {
       fundings[0] = Funding(_betting.bMaker, _betting.bAmount - _betting.settledAmount);
-      reportPlayers[_betting.bMaker].totalLoose += _betting.settledAmount;
-
-    for (i = 0; i < betSettled[betIdx].length; i++) {
+      for (i = 0; i < betSettled[betIdx].length; i++) {
         fundings[i + 1] = Funding(settles[betSettled[betIdx][i]].punter, settles[betSettled[betIdx][i]].amount + settles[betSettled[betIdx][i]].amount * 95 / 100);
         balances[settles[betSettled[betIdx][i]].punter] -= settles[betSettled[betIdx][i]].amount;
-      reportPlayers[settles[betSettled[betIdx][i]].punter].totalWin += settles[betSettled[betIdx][i]].amount;
-
-    }
+      }
 
     }
 
