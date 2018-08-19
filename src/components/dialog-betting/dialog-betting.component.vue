@@ -145,7 +145,7 @@
     _createBet() {
       const _opts = {
         account: this.account.address,
-        bettingId: this.match.id,
+        match: this.match,
         homeTeam: this.match.homeTeam,
         awayTeam: this.match.awayTeam,
         time: new Date(this.match.date).getTime(),

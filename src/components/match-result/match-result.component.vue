@@ -66,6 +66,14 @@
       this.openDialog(_initOpts)
     }
 
+    @Watch('bettings')
+    getBetting(value: any, oldValue: any) {
+      if (this.isLoadingBetting && value.length !== oldValue.length) {
+        clearInterval(this.isLoadingBetting);
+        this.isLoadingBetting = undefined;
+      }
+    }
+
     @Watch('initData')
     getInitDialog(value: any, oldValue: any) {
       if (value && value.key === DIALOG_CLOSE.BETTING_RELOAD) {
