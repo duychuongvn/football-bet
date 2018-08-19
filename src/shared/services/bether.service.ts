@@ -21,7 +21,7 @@ export const BetherContractService = {
     bether.offerNewMatch(
       matchId,
       offerObj.homeTeam, offerObj.awayTeam,
-      offerObj.bookmakerTeam, offerObj.time/1000, offerObj.odds,
+      offerObj.selectedTeam, offerObj.time, offerObj.odds,
       { from: offerObj.account, value: window.web3.toWei(offerObj.stake, 'ether') },
         (err:any, result:any) => {
           if(err) {
