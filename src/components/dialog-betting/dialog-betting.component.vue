@@ -7,6 +7,8 @@
   import { DIALOG_NAME, DIALOG_CLOSE } from '@/shared/enums/dialog'
   import { ODDS_TYPE } from '@/shared/enums/odds'
 
+  import * as moment from 'moment'
+
   const isEqual = require('lodash/isEqual')
 
   @Component
@@ -26,7 +28,7 @@
 
     public bettingSelected = 0
     public oddsSelected: any = ODDS_TYPE.UNDER_ONE
-    public stakeSelected = 0.02
+    public stakeSelected = 0.05
     private _match: any;
 
     get potential() {
@@ -145,13 +147,13 @@
     _createBet() {
       const _opts = {
         account: this.account.address,
-        bettingId: this.match.id,
+        match: this.match,
         homeTeam: this.match.homeTeam,
         awayTeam: this.match.awayTeam,
-        time: new Date(this.match.date).getTime(),
+        time: moment(this.match.date).unix(),
         odds: this.oddsSelected * 100,
         stake: +this.stakeSelected,
-        bookmakerTeam: this.bettingSelected
+        selectedTeam: this.bettingSelected
       }
 
       this.createOffer(_opts)
@@ -159,7 +161,7 @@
 
     _createOdds() {
       const _odds: any = {
-        matchId: this.match.id,
+        matchId: this.match,
         bettingId: this.odds.bettingId,
         account: this.account.address,
         amount: +this.stakeSelected
