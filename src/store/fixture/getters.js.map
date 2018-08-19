@@ -1,1 +1,0 @@
-{"version":3,"file":"getters.js","sourceRoot":"","sources":["getters.ts"],"names":[],"mappings":"AAGA,MAAM,CAAC,MAAM,OAAO,GAA+B;IACjD,aAAa,EAAE,KAAK,CAAC,EAAE,CAAC,KAAK,CAAC,aAAa;IAC3C,gBAAgB,EAAE,KAAK,CAAC,EAAE,CAAC,KAAK,CAAC,gBAAgB;IACjD,cAAc,EAAE,KAAK,CAAC,EAAE,CAAC,KAAK,CAAC,cAAc;CAC9C,CAAC"}

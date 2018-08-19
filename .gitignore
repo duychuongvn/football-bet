@@ -10,6 +10,14 @@
 # dependencies
 /node_modules
 /build
+/src/app
+/src/*.js
+/src/*.js.map
+/src/*/*.js
+/src/*/*.js.map
+/src/*/*/*.js
+/src/*/*/*.js.map
+
 # IDEs and editors
 /.idea
 .project
