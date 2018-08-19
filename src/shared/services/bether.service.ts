@@ -17,10 +17,9 @@ export const BetherContractService = {
         observer.onCompleted();
     }),
 
-  newOffer: (offerObj: any) => Rx.Observable.create((observer: any) => {
-    let id = Web3Vue.toSHA3(offerObj.bettingId)
+  newOffer: (matchId: any, offerObj: any) => Rx.Observable.create((observer: any) => {
     bether.offerNewMatch(
-      id,
+      matchId,
       offerObj.homeTeam, offerObj.awayTeam,
       offerObj.selectedTeam, offerObj.time, offerObj.odds,
       { from: offerObj.account, value: window.web3.toWei(offerObj.stake, 'ether') },
@@ -116,8 +115,7 @@ export const BetherContractService = {
   }),
 
   getBettings: (matchId: any)  => Rx.Observable.create((observer: any) => {
-    let id = Web3Vue.toSHA3(matchId)
-    BetherContractService.getBettingIds(id).subscribe((ids: number[]) => {
+    BetherContractService.getBettingIds(matchId).subscribe((ids: number[]) => {
       let bettings: any = [];
       if (ids && ids.length !== 0) {
         for(let i =0; i< ids.length; i++) {

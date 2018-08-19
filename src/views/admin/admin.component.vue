@@ -35,7 +35,7 @@
       this.allFixtures[0].bettings.map((betting: any) => {
         const _date = moment(betting.date, 'YYYY/MM/DD HH:mm').milliseconds() /1000;
         const _val = `${betting.homeTeam}${betting.awayTeam}${_date}`;
-        betting.matchId = Web3Vue.toSHA3(_val)
+        // betting.matchId = Web3Vue.toSHA3(_val)
 
         _allBetting.push(betting);
       });

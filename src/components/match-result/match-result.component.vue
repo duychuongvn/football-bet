@@ -40,10 +40,7 @@
     public isLoadingBetting: any = null;
 
     created() {
-      this.loadBettings({
-        id: this.match.id,
-        isLoad: false
-      });
+      this.loadBettings(this.match);
     }
 
     oddsString (item: any) {
@@ -73,10 +70,7 @@
     getInitDialog(value: any, oldValue: any) {
       if (value && value.key === DIALOG_CLOSE.BETTING_RELOAD) {
         this.isLoadingBetting = setInterval(() => {
-          this.loadBettings({
-            id: this.match.id,
-            isLoad: false
-          });
+          this.loadBettings(this.match);
         }, 5000)
       }
     }
@@ -84,10 +78,7 @@
     @Watch('isAccount')
     getAccount(value: string, oldValue: string) {
       if (!isEqual(value, oldValue)) {
-        this.loadBettings({
-          id: this.match.id,
-          isLoad: false
-        });
+        this.loadBettings(this.match);
       }
     }
 

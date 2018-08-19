@@ -159,7 +159,7 @@
 
     _createOdds() {
       const _odds: any = {
-        matchId: this.match.id,
+        match: this.match,
         bettingId: this.odds.bettingId,
         account: this.account.address,
         amount: +this.stakeSelected
