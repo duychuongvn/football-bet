@@ -26,7 +26,7 @@
 
     public bettingSelected = 0
     public oddsSelected: any = ODDS_TYPE.UNDER_ONE
-    public stakeSelected = 0.02
+    public stakeSelected = 0.05
     private _match: any;
 
     get potential() {
@@ -151,7 +151,7 @@
         time: new Date(this.match.date).getTime(),
         odds: this.oddsSelected * 100,
         stake: +this.stakeSelected,
-        bookmakerTeam: this.bettingSelected
+        selectedTeam: this.bettingSelected
       }
 
       this.createOffer(_opts)

@@ -34,13 +34,14 @@
             :order-xs2="!!odds && isHomeTeamActive">
             <v-select hide-selected dark v-model="oddsSelected" color="white" class="bet-select-center" content-class="bet-select" append-icon="fas fa-chevron-down font-sm"
               :items="oddsType" label="Odds" v-if="!odds"></v-select>
-            <v-text-field v-model="stakeSelected" dark color="white" label="Stake" type="number" suffix="ETH" min="1" v-if="!odds"></v-text-field>
+            <v-text-field v-model="stakeSelected" dark color="white" label="Stake" type="number" suffix="ETH"
+              min="0.05" step="0.01" v-if="!odds"></v-text-field>
 
             <div v-if="!!odds">
                 <p class="mb-0" v-if="!!odds">Bet with:
                   <a class="light-green--text">{{ odds.bookmakerAddress }}</a>
                 </p>
-              <v-text-field v-model="stakeSelected" dark color="white" label="Max Stake" type="number" suffix="ETH" min="1"></v-text-field>
+              <v-text-field v-model="stakeSelected" dark color="white" label="Max Stake" type="number" suffix="ETH" min="0.05" step="0.01"></v-text-field>
             </div>
 
           </v-flex>
