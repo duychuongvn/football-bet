@@ -18,6 +18,9 @@
 /src/*/*/*.js
 /src/*/*/*.js.map
 
+!/src/plugins/demo.js
+!/src/plugins/vuetify.js
+
 # IDEs and editors
 /.idea
 .project
