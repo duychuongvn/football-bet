@@ -1,0 +1,382 @@
+{
+  "contractName": "UserContract",
+  "abi": [
+    {
+      "inputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    }
+  ],
+  "bytecode": "0x60606040523415600e57600080fd5b603580601b6000396000f3006060604052600080fd00a165627a7a723058201a36598ba6cdd67095bf87188a098f89f6467278b4cf1bc3a697c1e2f7e5a3180029",
+  "deployedBytecode": "0x6060604052600080fd00a165627a7a723058201a36598ba6cdd67095bf87188a098f89f6467278b4cf1bc3a697c1e2f7e5a3180029",
+  "sourceMap": "25:156:5:-;;;53:31;;;;;;;;25:156;;;;;;",
+  "deployedSourceMap": "25:156:5:-;;;;;",
+  "source": "pragma solidity ^0.4.0;\n\ncontract UserContract {\n    function UserContract(){\n\n    }\n\n  uint256 currentBalance;\n  uint256 totalWin;\n  uint256 totalLoose;\n  uint256 totalSettled;\n\n\n}\n",
+  "sourcePath": "/home/chuonghd/Project/smartcontract/football-bet/backend/contracts/UserContract.sol",
+  "ast": {
+    "absolutePath": "/home/chuonghd/Project/smartcontract/football-bet/backend/contracts/UserContract.sol",
+    "exportedSymbols": {
+      "UserContract": [
+        4048
+      ]
+    },
+    "id": 4049,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 4035,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:5"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 4048,
+        "linearizedBaseContracts": [
+          4048
+        ],
+        "name": "UserContract",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 4038,
+              "nodeType": "Block",
+              "src": "76:8:5",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 4039,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "UserContract",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4036,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "74:2:5"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 4037,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "76:0:5"
+            },
+            "scope": 4048,
+            "src": "53:31:5",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 4041,
+            "name": "currentBalance",
+            "nodeType": "VariableDeclaration",
+            "scope": 4048,
+            "src": "88:22:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 4040,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "88:7:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 4043,
+            "name": "totalWin",
+            "nodeType": "VariableDeclaration",
+            "scope": 4048,
+            "src": "114:16:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 4042,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "114:7:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 4045,
+            "name": "totalLoose",
+            "nodeType": "VariableDeclaration",
+            "scope": 4048,
+            "src": "134:18:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 4044,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "134:7:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 4047,
+            "name": "totalSettled",
+            "nodeType": "VariableDeclaration",
+            "scope": 4048,
+            "src": "156:20:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 4046,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "156:7:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 4049,
+        "src": "25:156:5"
+      }
+    ],
+    "src": "0:182:5"
+  },
+  "legacyAST": {
+    "absolutePath": "/home/chuonghd/Project/smartcontract/football-bet/backend/contracts/UserContract.sol",
+    "exportedSymbols": {
+      "UserContract": [
+        4048
+      ]
+    },
+    "id": 4049,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 4035,
+        "literals": [
+          "solidity",
+          "^",
+          "0.4",
+          ".0"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:23:5"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "contract",
+        "documentation": null,
+        "fullyImplemented": true,
+        "id": 4048,
+        "linearizedBaseContracts": [
+          4048
+        ],
+        "name": "UserContract",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": {
+              "id": 4038,
+              "nodeType": "Block",
+              "src": "76:8:5",
+              "statements": []
+            },
+            "documentation": null,
+            "id": 4039,
+            "implemented": true,
+            "isConstructor": true,
+            "isDeclaredConst": false,
+            "modifiers": [],
+            "name": "UserContract",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 4036,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "74:2:5"
+            },
+            "payable": false,
+            "returnParameters": {
+              "id": 4037,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "76:0:5"
+            },
+            "scope": 4048,
+            "src": "53:31:5",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "constant": false,
+            "id": 4041,
+            "name": "currentBalance",
+            "nodeType": "VariableDeclaration",
+            "scope": 4048,
+            "src": "88:22:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 4040,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "88:7:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 4043,
+            "name": "totalWin",
+            "nodeType": "VariableDeclaration",
+            "scope": 4048,
+            "src": "114:16:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 4042,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "114:7:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 4045,
+            "name": "totalLoose",
+            "nodeType": "VariableDeclaration",
+            "scope": 4048,
+            "src": "134:18:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 4044,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "134:7:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          },
+          {
+            "constant": false,
+            "id": 4047,
+            "name": "totalSettled",
+            "nodeType": "VariableDeclaration",
+            "scope": 4048,
+            "src": "156:20:5",
+            "stateVariable": true,
+            "storageLocation": "default",
+            "typeDescriptions": {
+              "typeIdentifier": "t_uint256",
+              "typeString": "uint256"
+            },
+            "typeName": {
+              "id": 4046,
+              "name": "uint256",
+              "nodeType": "ElementaryTypeName",
+              "src": "156:7:5",
+              "typeDescriptions": {
+                "typeIdentifier": "t_uint256",
+                "typeString": "uint256"
+              }
+            },
+            "value": null,
+            "visibility": "internal"
+          }
+        ],
+        "scope": 4049,
+        "src": "25:156:5"
+      }
+    ],
+    "src": "0:182:5"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.4.21+commit.dfe3193c.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "2.0.0",
+  "updatedAt": "2018-08-19T14:19:51.178Z"
+}

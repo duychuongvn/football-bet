@@ -8,8 +8,8 @@ contract BetherContract is Ownable {
 
   }
 
-  event LogNewBetting(uint32 bettingIdx);
-
+  event LogNewBet(uint32 bettingIdx);
+  event LogAcceptBet(uint32 bettingIdx, uint32 settledIdx);
   enum Team {Home, Away}
   enum MatchStatus {NotAvailable, Waiting, Playing, Canceled, Finished}
   enum BetStatus {Open, Deal, Settled, Canceled, Refunded, Done}
@@ -38,6 +38,7 @@ contract BetherContract is Ownable {
     int8 odds;
     BetStatus status;
     bytes32 matchId;
+    uint48 time;
     address bMaker;
     uint256 bAmount;
     uint256 settledAmount;
@@ -102,8 +103,7 @@ contract BetherContract is Ownable {
 
     }
 
-    Betting memory _betting = Betting(uint8(selectedTeam), odds, BetStatus.Open, matchId
-    , msg.sender, msg.value, 0);
+    Betting memory _betting = Betting(uint8(selectedTeam), odds, BetStatus.Open, matchId, uint48(now), msg.sender, msg.value, 0);
 
     uint32 betIdx = uint32(bets.push(_betting) - 1);
     userBets[msg.sender].push(betIdx);
@@ -112,10 +112,9 @@ contract BetherContract is Ownable {
     if (isPlayerNotExist(msg.sender)) {
       players.push(msg.sender);
     }
-    emit LogNewBetting(betIdx);
+    emit LogNewBet(betIdx);
     balances[msg.sender] += msg.value;
     return true;
-
   }
 
   function deal(uint32 bettingIdx) public payable returns (bool) {
@@ -140,6 +139,7 @@ contract BetherContract is Ownable {
     userSettled[msg.sender].push(betIdx);
     betSettled[bettingIdx].push(betIdx);
     balances[msg.sender] += msg.value;
+    emit LogAcceptBet(bettingIdx, betIdx);
     return true;
   }
 
@@ -162,6 +162,9 @@ contract BetherContract is Ownable {
     return (_betting.bMaker, _betting.bmTeam, _betting.odds, _betting.bAmount, _betting.settledAmount, _betting.status, punters, punterAmounts);
   }
 
+  function getMatchId(uint32 bettingIdx) public view returns(bytes32) {
+    return bets[bettingIdx].matchId;
+  }
   function countBetStatus(bytes32[] matchIds) public view  returns(uint[], uint[], uint[], uint[], uint[]) {
     uint32[] memory betIdxes;
     uint[] memory open = new uint[](matchIds.length);
@@ -213,13 +216,13 @@ contract BetherContract is Ownable {
     return (betIdex, userSettled[user]);
   }
 
-  function getSettleInfo(uint32 bettingIdx, uint32 settleIdx) public view returns (address,
+  function getSettleInfo(uint32 bettingIdx, uint32 settleIdx) public view returns (bytes32, uint32, address,
     uint8, int, uint256, uint256, BetStatus,
     address, uint256) {
     Betting memory _betting = bets[bettingIdx];
     address punter = settles[settleIdx].punter;
     uint256 punterAmount = settles[settleIdx].amount;
-    return (_betting.bMaker, _betting.bmTeam, _betting.odds, _betting.bAmount, _betting.settledAmount, _betting.status, punter, punterAmount);
+    return (_betting.matchId, bettingIdx,_betting.bMaker, _betting.bmTeam, _betting.odds, _betting.bAmount, _betting.settledAmount, _betting.status, punter, punterAmount);
   }
 
   function countPlayers() public view returns (uint) {
@@ -382,5 +385,16 @@ contract BetherContract is Ownable {
 
   }
 
+
+  function getVolume(uint48 time) public  view returns (uint256) {
+
+    uint256 vol;
+    for(uint i =0;i< bets.length;i++) {
+      if(bets[i].time >= time) {
+        vol+= bets[i].bAmount + bets[i].settledAmount;
+      }
+    }
+    return vol;
+  }
 
 }

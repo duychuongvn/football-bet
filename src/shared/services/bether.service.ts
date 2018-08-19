@@ -19,10 +19,12 @@ export const BetherContractService = {
 
   newOffer: (offerObj: any) => Rx.Observable.create((observer: any) => {
     let id = Web3Vue.toSHA3(offerObj.bettingId)
+    console.log(id);
+    console.log(offerObj)
     bether.offerNewMatch(
       id,
       offerObj.homeTeam, offerObj.awayTeam,
-      offerObj.selectedTeam, offerObj.time, offerObj.odds,
+      offerObj.bookmakerTeam, offerObj.time/1000, offerObj.odds,
       { from: offerObj.account, value: window.web3.toWei(offerObj.stake, 'ether') },
         (err:any, result:any) => {
           if(err) {
@@ -65,13 +67,19 @@ export const BetherContractService = {
   }),
 
 
-  updateScore:(dealObj:any)  => Rx.Observable.create((observer: any) => {
-
+  updateScore:(scoreObj:any)  => Rx.Observable.create((observer: any) => {
+    let id = Web3Vue.toSHA3(scoreObj.bettingId)
+    bether.approveScore(id,scoreObj.homeScore, scoreObj.awayScore, {from: scoreObj.account}, (err:any, result:any)=> {
+      observer.onCompleted();
+    })
   }),
 
 
   approveScore:(dealObj:any)  => Rx.Observable.create((observer: any) => {
-
+    let id = Web3Vue.toSHA3(dealObj.bettingId)
+    bether.approveScore(id, {from: dealObj.account}, (err:any, result:any)=> {
+      observer.onCompleted();
+    })
   }),
 
   getBettingInfo:(bettingIdx: number) =>  Rx.Observable.create((observer: any) => {
@@ -84,6 +92,7 @@ export const BetherContractService = {
         var betting = {
           'id': bettingIdx,
           'bettingId': bettingIdx,
+          'matchId': null as any,
           'bookmakerAddress': result[index++],
           'bookmakerTeam':result[index++].toNumber(),
           'odds':result[index++].toNumber(),
@@ -96,8 +105,13 @@ export const BetherContractService = {
         for(var i = 0; i < result[index].length;i++) {
           betting.punters.push({"no": i+1, 'wallet': result[index][i], 'settledAmount':BetherContractService.toEther(result[index+1][i].toNumber()) })
         }
-        observer.onNext(betting);
-        observer.onCompleted();
+
+        bether.getMatchId.call(betting.bettingId, (err:any, result:any) => {
+          betting.matchId = result;
+          observer.onNext(betting);
+          observer.onCompleted();
+        })
+
       }
     })
   }),
@@ -153,34 +167,100 @@ export const BetherContractService = {
     })
   }),
 
-  getUserBets (account : any) {
-
-
-    bether.getUserSettles.call(account, (error:any, result:any)=> {
-      var bettings = [] as any[];
-      if(result) {
-        for(var i =0; i< result[0].length;i++) {
-            bether.getSettleInfo.call(result[0][i], result[1][i], (settleInfoErr: any, settleInfoResult: any) => {
-            var colIdx = 0;
-            var betting = {
-              'bettingId': result[0][i],
-              'bookmakerAddress': settleInfoResult[colIdx++],
-              'bookmakerTeam':settleInfoResult[colIdx++].toNumber(),
-              'odds':settleInfoResult[colIdx++].toNumber(),
-              'bookmakerAmount':BetherContractService.toEther(settleInfoResult[colIdx++].toNumber()),
-              'settledAmount': BetherContractService.toEther(settleInfoResult[colIdx++].toNumber()),
-              'status':settleInfoResult[colIdx++].toNumber(),
-              'punter': null as any
-            } as  any;
-
-            betting.punter={  'wallet': settleInfoResult[colIdx++],
-                              'settledAmount':BetherContractService.toEther(settleInfoResult[colIdx].toNumber()) }
-            bettings.push(betting);
-          })
+   cacheBetting(bettings: any[], betting: any) {
+      console.log(bettings)
+      console.log(betting)
+      var match: any;
+      for(var i=0;i<bettings.length;i++) {
+        if(bettings[i].matchId === betting.matchId) {
+          match = bettings[i];
+          break;
         }
       }
-    })
+
+      if(!match) {
+        match= {"matchId": betting.matchId, "bettings": [] as any}
+        bettings.push(match);
+      }
+
+      var bettingItem: any;
+      for(var i=0;i<match.bettings.length;i++) {
+        if(match.bettings[i].bettingId === betting.bettingId) {
+          bettingItem = match.bettings[i];
+          break;
+        }
+      }
+
+      if(!bettingItem) {
+        bettingItem = {"bettingId": betting.bettingId,
+          'bookmakerAddress': betting.bookmakerAddress,
+          'bookmakerTeam': betting.bookmakerTeam,
+          'odds':betting.odds,
+          'bookmakerAmount':betting.bookmakerAmount,
+          'settledAmount': betting.settledAmount,
+          'status':betting.status,
+          'punters': [] as any
+        }
+        match.bettings.push(bettingItem);
+      }
+
+
+        bettingItem.punters.push(...betting.punters)
+
+     return bettings;
+
   },
+  getUserBets : (account : any) => Rx.Observable.create((observe: any) =>{
+
+    bether.getUserBets.call(account, (err:any, bettingIds: any) => {
+      var bettings = [] as any[];
+        for(var i = 0;i<bettingIds.length;i++) {
+          BetherContractService.getBettingInfo(bettingIds[i]).subscribe((res:any) =>{
+            BetherContractService.cacheBetting(bettings, res);
+          })
+        }
+
+        bether.getUserSettles.call(account, (error:any, result:any) => {
+          for(var i = 0; i< result[0].length;i++) {
+            bether.getSettleInfo.call(result[0][i], result[1][i], (settleInfoErr: any, settleInfoResult: any) => {
+              var colIdx = 0;
+              var betting = {
+                'matchId': settleInfoResult[colIdx++],
+                'bettingId': settleInfoResult[colIdx++],
+                'bookmakerAddress': settleInfoResult[colIdx++],
+                'bookmakerTeam':settleInfoResult[colIdx++].toNumber(),
+                'odds':settleInfoResult[colIdx++].toNumber(),
+                'bookmakerAmount':BetherContractService.toEther(settleInfoResult[colIdx++].toNumber()),
+                'settledAmount': BetherContractService.toEther(settleInfoResult[colIdx++].toNumber()),
+                'status':settleInfoResult[colIdx++].toNumber(),
+                'punters': [] as any
+              } as  any;
+
+              betting.punters.push({  'wallet': settleInfoResult[colIdx++],
+                'settledAmount':BetherContractService.toEther(settleInfoResult[colIdx].toNumber()) })
+              BetherContractService.cacheBetting(bettings, betting)
+            })
+          }
+          observe.onNext(bettings)
+          observe.onCompleted();
+        })
+
+
+    })
+  }),
+
+  getVolume: (time: number) => Rx.Observable.create((observe: any)=> {
+      bether.getVolume.call(time, (err:any, result: any) => {
+        if(err) {
+          observe.error(err)
+        } else {
+          observe.onNext(result.toNumber())
+        }
+
+        observe.onCompleted();
+      })
+
+    }),
 
   toEther(wei: number) {
     return window.web3.fromWei(wei, 'ether')

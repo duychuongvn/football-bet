@@ -56,7 +56,24 @@
         "type": "uint32"
       }
     ],
-    "name": "LogNewBetting",
+    "name": "LogNewBet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "bettingIdx",
+        "type": "uint32"
+      },
+      {
+        "indexed": false,
+        "name": "settledIdx",
+        "type": "uint32"
+      }
+    ],
+    "name": "LogAcceptBet",
     "type": "event"
   },
   {
@@ -227,6 +244,25 @@
     "constant": true,
     "inputs": [
       {
+        "name": "bettingIdx",
+        "type": "uint32"
+      }
+    ],
+    "name": "getMatchId",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
         "name": "matchIds",
         "type": "bytes32[]"
       }
@@ -333,6 +369,14 @@
     ],
     "name": "getSettleInfo",
     "outputs": [
+      {
+        "name": "",
+        "type": "bytes32"
+      },
+      {
+        "name": "",
+        "type": "uint32"
+      },
       {
         "name": "",
         "type": "address"
@@ -489,6 +533,25 @@
     ],
     "payable": false,
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "time",
+        "type": "uint48"
+      }
+    ],
+    "name": "getVolume",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
     "type": "function"
   }
 ]
