@@ -56,5 +56,5 @@ $ cd bether
 $ yarn # install node_module
 $ yarn serve # run serve localhost
 ```
-- Open browser with address [localhost:8080](localhost:8080)
+- Open browser with address [localhost:8080](http://localhost:8080)
 - Enjoy
