@@ -3,6 +3,7 @@
 ### Deploy Solidity With Truffle
 <p align="center">
   <img src="https://avatars2.githubusercontent.com/u/22205159?s=200&v=4" width="200">
+
 [![npm](https://img.shields.io/npm/v/truffle.svg)](https://www.npmjs.com/package/truffle)
 [![npm](https://img.shields.io/npm/dm/truffle.svg)](https://www.npmjs.com/package/truffle)
 [![Join the chat at https://gitter.im/consensys/truffle](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/consensys/truffle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -37,7 +38,11 @@ $ vim BetherContract.json
 ### Run project Bether
 
 #### VueJs
-<p align="center"><a href="https://vuejs.org" target="_blank" rel="noopener noreferrer"><img width="100" src="https://vuejs.org/images/logo.png" alt="Vue logo"></a></p>
+<p align="center">
+  <a href="https://vuejs.org" target="_blank" rel="noopener noreferrer">
+    <img width="100" src="https://vuejs.org/images/logo.png" alt="Vue logo">
+  </a>
+</p>
 
 <p align="center">
   <a href="https://circleci.com/gh/vuejs/vue/tree/dev"><img src="https://img.shields.io/circleci/project/vuejs/vue/dev.svg" alt="Build Status"></a>
