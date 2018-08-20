@@ -11,6 +11,7 @@
 /node_modules
 /build
 /src/app
+/src/environment/index.ts
 /src/*.js
 /src/*.js.map
 /src/*/*.js
