@@ -35,10 +35,10 @@ contract BetherContract is Ownable {
 
   struct Betting {
     uint8 bmTeam; //bMaker team
-    int8 odds;
     BetStatus status;
-    bytes32 matchId;
     uint48 time;
+    int odds;
+    bytes32 matchId;
     address bMaker;
     uint256 bAmount;
     uint256 settledAmount;
@@ -86,10 +86,10 @@ contract BetherContract is Ownable {
   }
 
 
-  function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint selectedTeam, uint time, int8 odds) public payable returns (bool) {
+  function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint selectedTeam, uint time, int handicap) public payable returns (bool) {
 
     require(time > now);
-    require((odds % 25 == 0) && (odds / 25 <= 8) && (odds / 25 >= - 8));
+    require((handicap % 25 == 0) && (handicap / 25 <= 8) && (handicap / 25 >= - 8));
 
     Match memory _match = matches[matchId];
 
@@ -103,7 +103,7 @@ contract BetherContract is Ownable {
 
     }
 
-    Betting memory _betting = Betting(uint8(selectedTeam), odds, BetStatus.Open, matchId, uint48(now), msg.sender, msg.value, 0);
+    Betting memory _betting = Betting(uint8(selectedTeam), BetStatus.Open, uint48(now), handicap, matchId, msg.sender, msg.value, 0);
 
     uint32 betIdx = uint32(bets.push(_betting) - 1);
     userBets[msg.sender].push(betIdx);

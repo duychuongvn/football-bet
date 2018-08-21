@@ -159,8 +159,8 @@
         "type": "uint256"
       },
       {
-        "name": "odds",
-        "type": "int8"
+        "name": "handicap",
+        "type": "int256"
       }
     ],
     "name": "offerNewMatch",

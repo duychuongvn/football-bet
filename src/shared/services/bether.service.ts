@@ -18,13 +18,15 @@ export const BetherContractService = {
     }),
 
   newOffer: (matchId: any, offerObj: any) => Rx.Observable.create((observer: any) => {
-    bether.offerNewMatch(
-      matchId,
-      offerObj.homeTeam, offerObj.awayTeam,
-      offerObj.selectedTeam, offerObj.time, offerObj.odds,
-      { from: offerObj.account, value: window.web3.toWei(offerObj.stake, 'ether') },
-        (err:any, result:any) => {
-          if(err) {
+    var handicap = offerObj.odds;
+    if(handicap % 25 == 0 && handicap / 25 <= 8 && handicap / 25 >= - 8) {
+      bether.offerNewMatch(
+        matchId,
+        offerObj.homeTeam, offerObj.awayTeam,
+        offerObj.selectedTeam, offerObj.time, handicap,
+        {from: offerObj.account, value: window.web3.toWei(offerObj.stake, 'ether')},
+        (err: any, result: any) => {
+          if (err) {
             observer.error(err);
           } else {
             observer.onNext(result);
@@ -32,7 +34,9 @@ export const BetherContractService = {
           observer.onCompleted();
         }
       );
-
+    }else {
+      throw 'Invalid Handicap'
+    }
   }),
 
 
@@ -105,6 +109,7 @@ export const BetherContractService = {
 
         bether.getMatchId.call(betting.bettingId, (err:any, result:any) => {
           betting.matchId = result;
+          console.log(betting)
           observer.onNext(betting);
           observer.onCompleted();
         })
