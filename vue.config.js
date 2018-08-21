@@ -1,9 +1,1 @@
-module.exports = {
-  org: {
-    vue: {
-      pwa: {
-        name: 'bether'
-      }
-    }
-  }
-}
+module.exports = { }
