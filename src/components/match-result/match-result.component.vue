@@ -41,6 +41,8 @@
 
     public isLoadingBetting: any = null;
 
+    private _countBeting: number = 0;
+
     created() {
       this.loadBettings(this.match);
     }
@@ -71,24 +73,26 @@
     @Watch('initData')
     getInitDialog(value: any, oldValue: any) {
       if (value && value.key === DIALOG_CLOSE.BETTING_RELOAD) {
+        this._countBeting = this.bettings.length;
+
         this.isLoadingBetting = setInterval(() => {
           this.loadBettings(this.match);
-        }, 2000)
+        }, 5000)
       }
     }
 
     @Watch('bettings')
     getBetting(value: any, oldValue: any) {
-
       if (value.length !== 0) {
         value.map((item: any) => {
           item.account = this.account.address;
         });
       }
 
-      if (this.isLoadingBetting && value.length !== oldValue.length) {
+      if (this.isLoadingBetting && value.length !== this._countBeting) {
         clearInterval(this.isLoadingBetting);
         this.isLoadingBetting = undefined;
+        this._countBeting = 0;
       }
     }
 
