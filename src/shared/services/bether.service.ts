@@ -1,15 +1,18 @@
-import {Web3Vue} from '@/shared/services/web3.service'
+import { Web3Vue } from '@/shared/services/web3.service'
+import { Betting } from '@/shared/model/betting';
+
 import ENV from '@/environment/index'
-import {error} from 'util';
-let contract = require('truffle-contract')
-let betherContractABI = require('@/assets/contracts/BetherContractABI.json')
+
+const betherContractABI = require('@/assets/contracts/BetherContractABI.json')
+
 const Rx = require('rx')
-let betherContract : any;
+
 let bether: any;
 
-declare const window: any
+declare const window: any;
+
 export const BetherContractService = {
-    init: () => Rx.Observable.create((observer : any) => {
+    init: () => Rx.Observable.create((observer: any) => {
 
       const betherContract = window.web3.eth.contract(betherContractABI);
       bether = betherContract.at(ENV.CONTRACT_ADDRESS);
@@ -109,7 +112,6 @@ export const BetherContractService = {
 
         bether.getMatchId.call(betting.bettingId, (err:any, result:any) => {
           betting.matchId = result;
-          console.log(betting)
           observer.onNext(betting);
           observer.onCompleted();
         })
@@ -133,11 +135,11 @@ export const BetherContractService = {
 
   getBettings: (matchId: any)  => Rx.Observable.create((observer: any) => {
     BetherContractService.getBettingIds(matchId).subscribe((ids: number[]) => {
-      let bettings: any = [];
+      let bettings: Betting[] = [];
       if (ids && ids.length !== 0) {
         for(let i =0; i< ids.length; i++) {
           BetherContractService.getBettingInfo(ids[i]).subscribe((result:any) => {
-            bettings.push(result)
+            bettings.push(new Betting(result))
           });
         }
       }

@@ -1,8 +1,10 @@
 import { MutationTree } from 'vuex';
 import { RECEVER_TOTAL_BETTING, ACCEPT_BETTING } from '@/store/mutations';
 
+import { Betting } from '@/shared/model/betting';
+
 export const mutations: MutationTree<any> = {
-  [RECEVER_TOTAL_BETTING](state, bettings: any) {
+  [RECEVER_TOTAL_BETTING](state, bettings: Betting[]) {
     state.bettings = bettings;
   },
   [ACCEPT_BETTING](state, dealObj: any) {

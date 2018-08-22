@@ -1,3 +1,5 @@
+import { IpfsService } from '@/shared/services/ipfs.service';
+
 const AppRouter = [
   {
     path: '',
@@ -7,7 +9,7 @@ const AppRouter = [
       {
         path: '/',
         name: 'home',
-        component: () => import('@/views/home/home.component.vue')
+        component: () => import('@/views/home/home.component.vue'),
       },
       {
         path: '/profile',
@@ -57,7 +59,14 @@ const AppRouter = [
           isMetamask: true
         }
       }
-    ]
+    ],
+    beforeEnter: (to: any, from: any, next: any) => {
+      IpfsService.checkGateWays()
+        .then((res: any) => {
+          IpfsService.initIpfsApi(res.url);
+          next();
+        });
+    }
   },
   {
     path: '/coming-soon',

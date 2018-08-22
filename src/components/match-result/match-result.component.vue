@@ -4,7 +4,9 @@
   import { Component, Vue, Prop, Watch } from 'vue-property-decorator';
   import { Getter, Action } from 'vuex-class';
 
-  import { DIALOG_NAME, DIALOG_CLOSE } from '@/shared/enums/dialog'
+  import { DIALOG_NAME, DIALOG_CLOSE } from '@/shared/enums/dialog';
+
+  import { Betting } from '@/shared/model/betting';
 
   const isEqual = require('lodash/isEqual')
 
@@ -17,7 +19,7 @@
     @Prop() match: any
     @Action('loadBettings', { namespace: 'betting' }) loadBettings: any
     @Action('clearBetting', { namespace: 'betting' }) clearBetting: any
-    @Getter('bettings', { namespace: 'betting' }) bettings!: any
+    @Getter('bettings', { namespace: 'betting' }) bettings!: Betting[];
 
     @Action('openDialog', { namespace: 'dialog' }) openDialog: any
     @Getter('initData', { namespace: 'dialog' }) initData: any
@@ -71,12 +73,19 @@
       if (value && value.key === DIALOG_CLOSE.BETTING_RELOAD) {
         this.isLoadingBetting = setInterval(() => {
           this.loadBettings(this.match);
-        }, 5000)
+        }, 2000)
       }
     }
 
     @Watch('bettings')
     getBetting(value: any, oldValue: any) {
+
+      if (value.length !== 0) {
+        value.map((item: any) => {
+          item.account = this.account.address;
+        });
+      }
+
       if (this.isLoadingBetting && value.length !== oldValue.length) {
         clearInterval(this.isLoadingBetting);
         this.isLoadingBetting = undefined;

@@ -3,7 +3,8 @@ import { RootState } from '@/store/types';
 
 import { RECEVER_FIXTURES } from '@/store/mutations';
 
-import { fixtureService } from '@/shared/services/fixtures.service';
+import { IpfsService } from '@/shared/services/ipfs.service';
+import { Fixture } from '@/shared/model/fixture'
 
 import * as moment from 'moment';
 
@@ -27,25 +28,12 @@ export const actions: ActionTree<any, RootState> = {
     const _futureDate = moment().add(2, 'day');
 
     for( let i in fixtures[dataObj.key]) {
-      fixtureService.fixtures(fixtures[dataObj.key][i])
-        .then((res: any) => {
-          if (res.data.length !== 0) {
-            res.data.map((item: any) => {
+      IpfsService.getFixture(fixtures[dataObj.key][i])
+        .subscribe((res: any) => {
+          if (res.length !== 0) {
+            res.map((item: any) => {
               if (item.status !== 'FINISHED') {
-
-                const _betting = {
-                  id: item.id,
-                  date: item.utcDate,
-                  dateString: moment(item.utcDate).format('MMM DD, YYYY'),
-                  timeString: moment(item.utcDate).format('ddd - HH:mm a'),
-                  status: item.status,
-                  homeTeam: item.homeTeam.name,
-                  homeTeamFlag: '', //require(`@/assets/flag/Flag_of_${betting.homeTeam}.svg`)
-                  awayTeam: item.awayTeam.name,
-                  awayTeamFlag: '', //require(`@/assets/flag/Flag_of_${betting.homeTeam}.svg`)
-                  bettingName: `${item.homeTeam.name} ~ ${item.awayTeam.name}`,
-                  key: btoa(JSON.stringify({id: item.id, date: item.utcDate, homeTeam: item.homeTeam.name, awayTeam: item.awayTeam.name}))
-                }
+                const _betting = new Fixture(item);
 
                 if (moment(item.utcDate, 'YYYY/MM/DD').isSame(_currentDate)) {
                   _today.push(_betting);
