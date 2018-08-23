@@ -9,6 +9,6 @@ export interface BettingInterface {
   matchId: any;
   odds: number;
   settledAmount: number;
-  status: string;
+  status: number;
   punters: PunterInterface[];
 }

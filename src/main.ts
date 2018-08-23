@@ -17,6 +17,8 @@ import '@/registerServiceWorker'
 import '@/assets/fontawesome-free/css/all.css'
 import '@/styles/index.scss'
 
+import '@/shared/extensions/string';
+
 Vue.config.productionTip = false
 Vue.use(VueProgressBar, ProgressOpts)
 Vue.use(SocialSharing)

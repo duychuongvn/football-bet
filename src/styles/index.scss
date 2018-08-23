@@ -1,4 +1,5 @@
 @import './utils/variables';
+@import './flag/index';
 
 .crypto-app {
   background-image: url('../assets/images/bitcoin-node.jpg') !important;
@@ -173,4 +174,10 @@
 
 .line-height-1 {
   line-height: 1 !important;
+}
+
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

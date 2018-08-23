@@ -1,4 +1,4 @@
-<v-dialog v-model="isStoreBetting" persistent width="700" lazy v-if="isStoreBetting">
+<v-dialog v-model="isStoreBetting" persistent width="750" lazy v-if="isStoreBetting">
   <v-card color="blue-grey lighten-6" dark>
     <v-card-title class="title" primary-title>{{ dialogTitle }}</v-card-title>
 
@@ -18,11 +18,11 @@
               :raised="isHomeTeamActive"
               :hover="isAwayTeamActive"
               :class="{ 'teal lighten-1': isHomeTeamActive || !!odds, 'grey lighten-2': isAwayTeamActive && !odds }">
-              <v-card-media :src="homeTeamFlag" height="120px" @click="changeTeam(0)"></v-card-media>
+              <v-card-media :src="homeTeamFlag" contain height="200px" @click="changeTeam(0)"></v-card-media>
               <v-card-title class="headline d-block text-xs-center"
                 :class="{ 'teal--text': isAwayTeamActive && !odds }"
                 @click="changeTeam(0)">
-                <p class="mb-1 title">{{ homeTeam }}</p>
+                <p class="mb-1 title text-ellipsis" :title="homeTeam">{{ homeTeam }}</p>
                 <p class="mb-0 subheading">{{ oddsSignHome }}</p>
               </v-card-title>
             </v-card>
@@ -51,10 +51,10 @@
             :order-xs1="!!odds && isHomeTeamActive">
             <v-card class="cursor-pointer" :raised="isAwayTeamActive" :hover="isHomeTeamActive"
             :class="{ 'teal lighten-1': isAwayTeamActive || !!odds, 'grey lighten-2': isHomeTeamActive && !odds }">
-              <v-card-media :src="awayTeamFlag" height="120px" @click="changeTeam(1)"></v-card-media>
+              <v-card-media :src="awayTeamFlag" contain height="200px" @click="changeTeam(1)"></v-card-media>
               <v-card-title class="headline d-block text-xs-center"
                 :class="{ 'teal--text': isHomeTeamActive && !odds, 'white--text': !!odds && isHomeTeamActive }" @click="changeTeam(1)">
-                <p class="mb-1 title">{{ awayTeam }}</p>
+                <p class="mb-1 title text-ellipsis">{{ awayTeam }}</p>
                 <p class="mb-0 subheading">{{ oddsSignAway }}</p>
               </v-card-title>
             </v-card>

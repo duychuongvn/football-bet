@@ -10,9 +10,9 @@
         <td>{{ (props.index + 1) }}</td>
         <td>{{ props.item.bookmakerAddress }}</td>
         <td class="text-xs-center">{{ oddsString(props.item) }}</td>
-        <td class="text-xs-center">{{ props.item.bookmakerAmount }} ETH</td>
-        <td class="text-xs-center">{{ props.item.settledAmount }} ETH</td>
-        <td class="text-xs-center">{{ (+props.item.bookmakerAmount) - (+props.item.settledAmount)}} ETH</td>
+        <td class="text-xs-center">{{ props.item.bookmakerAmount }}</td>
+        <td class="text-xs-center">{{ props.item.settledAmount }}</td>
+        <td class="text-xs-center">{{ props.item.openAmount }}</td>
         <td class="text-xs-center">{{ props.item.punters.length }}</td>
         <td class="text-xs-center">
           <v-tooltip bottom lazy :disabled="props.item.status === 2 || props.item.isOwner">

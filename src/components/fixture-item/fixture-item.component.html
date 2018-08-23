@@ -18,9 +18,9 @@
                     <p class="mb-0">{{ props.item.dateString }}</p>
                     <p class="mb-0">{{ props.item.timeString }}</p>
                   </div>
-                  <!-- <image-comp imgWidth="30px" imgHeight="20px" :imgPath="props.item.homeTeamFlag" :imgName="props.item.homeTeam"></image-comp> -->
+                  <div :class="props.item.homeTeamFlag25"></div>
                   <p class="bet-name">{{ props.item.fixtureName }}</p>
-                  <!-- <image-comp imgWidth="30px" imgHeight="20px" :imgPath="props.item.awayTeamFlag" :imgName="props.item.awayTeam"></image-comp> -->
+                  <div :class="props.item.awayTeamFlag25"></div>
                 </div>
               </td>
               <td class="text-xs-center">100</td>

@@ -25,6 +25,9 @@ export class Fixture {
   public get timeString(): string {
     return moment(this.date).format('ddd - HH:mm a');
   }
+  public get dateTimeString(): string {
+    return moment(this.date).format('LL [(]dddd[)] - HH:mm a');
+  }
 
   private _status: string = '';
   public get status(): string {
@@ -38,6 +41,15 @@ export class Fixture {
   public get homeTeam(): string {
     return this._homeTeam;
   }
+  public get homeTeamFlag(): string {
+    return require(`@/assets/flag/${this.homeTeam.toSlug()}.png`);
+  }
+  public get homeTeamFlag25(): string {
+    return `flag-25 ${this.homeTeam.toSlug()}`;
+  }
+  public get homeTeamFlag50(): string {
+    return `flag-50 ${this.homeTeam.toSlug()}`;
+  }
   public set homeTeam(v: string) {
     this._homeTeam = v;
   }
@@ -45,6 +57,15 @@ export class Fixture {
   private _awayTeam: string = '';
   public get awayTeam(): string {
     return this._awayTeam;
+  }
+  public get awayTeamFlag(): string {
+    return require(`@/assets/flag/${this.awayTeam.toSlug()}.png`);
+  }
+  public get awayTeamFlag25(): string {
+    return `flag-25 ${this.awayTeam.toSlug()}`;
+  }
+  public get awayTeamFlag50(): string {
+    return `flag-50 ${this.awayTeam.toSlug()}`;
   }
   public set awayTeam(v: string) {
     this._awayTeam = v;

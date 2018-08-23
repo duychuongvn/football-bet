@@ -1,0 +1,89 @@
+.flag {
+  &-50 {
+    background-image: url('../assets/flag/flag-50.png');
+    background-repeat: no-repeat;
+    background-size: 750px 750px;
+    width: 50px;
+    height: 50px;
+
+    &.manchester-city {
+      background-position: -500px -500px;
+    }
+
+    &.liverpool {
+      background-position: -500px -450px;
+    }
+
+    &.chelsea {
+      background-position: -300px -300px;
+    }
+
+    &.watford {
+      background-position: -700px -50px;
+    }
+
+    &.tottenham-hotspur {
+      background-position: -500px -650px;
+    }
+
+    &.bournemouth {
+      background-position: -100px -250px;
+    }
+
+    &.everton {
+      background-position: 0 -400px;
+    }
+
+    &.leicester-city {
+      background-position: -500px -250px;
+    }
+
+    &.manchester-united {
+      background-position: -550px -400px;
+    }
+
+    &.crystal-palace {
+      background-position: -100px -350px;
+    }
+
+    &.brighton-hove-albion {
+      background-position: -200px -200px;
+    }
+
+    &.newcastle-united {
+      background-position: -550px -500px;
+    }
+
+    &.southampton {
+      background-position: -650px -500px;
+    }
+
+    &.wolverhampton-wanderers {
+      background-position: -700px -400px;
+    }
+
+    &.burnley {
+      background-position: -50px -300px;
+    }
+
+    &.cardiff-city {
+      background-position: -150px -300px;
+    }
+
+    &.arsenal {
+      background-position: 0 -100px;
+    }
+
+    &.fulham {
+      background-position: -450px -200px;
+    }
+
+    &.west-ham-united {
+      background-position: -700px -150px;
+    }
+
+    &.huddersfield-town {
+      background-position: -150px -450px;
+    }
+  }
+}

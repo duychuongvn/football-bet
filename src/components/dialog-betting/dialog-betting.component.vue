@@ -39,7 +39,7 @@
 
     get match() {
       if (this.initData && this.initData.match) {
-        return JSON.parse(JSON.stringify(this.initData.match))
+        return this.initData.match
       }
     }
 
@@ -221,20 +221,26 @@
       if (value) {
         this._match = JSON.parse(JSON.stringify(this.match))
 
-        this.closeDialog({
-          key: DIALOG_CLOSE.BETTING_DEAL_RELOAD
-        });
+        const _odds: any = {
+          bettingId: this.odds.bettingId,
+          account: this.account.address,
+          amount: +this.stakeSelected
+        }
+
+        this.closeDialog({ key: DIALOG_CLOSE.BETTING_DEAL_RELOAD, data: _odds });
 
         this.notify({
           mode: 'success',
           message: 'Your settlement has been confirmed'
         })
 
-        this.toogleDialog(DIALOG_NAME.BETTING_SHARING, true, {
-          homeTeam: this._match.homeTeam,
-          awayTeam: this._match.awayTeam,
-          date: this._match.date
-        });
+        setTimeout(() => {
+          this.toogleDialog(DIALOG_NAME.BETTING_SHARING, true, {
+            homeTeam: this._match.homeTeam,
+            awayTeam: this._match.awayTeam,
+            date: this._match.date
+          });
+        }, 50);
       }
     }
   }

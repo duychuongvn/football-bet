@@ -8,16 +8,12 @@
         </div>
 
         <div class="betting-wrap mb-1">
-          <image-comp
-            imgWidth="60px" imgHeight="30px"
-            :imgPath="match.homeTeamFlag" :imgName="match.homeTeam"></image-comp>
-          <p class="bet-name bet-name--lg">{{ match.bettingName }}</p>
-          <image-comp
-            imgWidth="60px" imgHeight="30px"
-            :imgPath="match.awayTeamFlag" :imgName="match.awayTeam"></image-comp>
+          <div class="mr-2" :class="match.homeTeamFlag50"></div>
+          <p class="bet-name bet-name--lg">{{ match.fixtureName }}</p>
+          <div class="ml-2" :class="match.awayTeamFlag50"></div>
         </div>
 
-        <span>World Cup Russia 2018</span>
+        <!-- <span>World Cup Russia 2018</span> -->
       </v-card-text>
     </v-card>
   </v-flex>

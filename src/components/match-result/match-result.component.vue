@@ -7,6 +7,7 @@
   import { DIALOG_NAME, DIALOG_CLOSE } from '@/shared/enums/dialog';
 
   import { Betting } from '@/shared/model/betting';
+  import { Punter } from '@/shared/model/punter';
 
   const isEqual = require('lodash/isEqual')
 
@@ -45,6 +46,8 @@
 
     created() {
       this.loadBettings(this.match);
+
+      console.log(this.bettings, 1)
     }
 
     oddsString (item: any) {
@@ -78,6 +81,23 @@
         this.isLoadingBetting = setInterval(() => {
           this.loadBettings(this.match);
         }, 5000)
+      }
+
+      if (value && value.key === DIALOG_CLOSE.BETTING_DEAL_RELOAD) {
+        this.bettings.filter((betting: Betting) => {
+          if (betting.id === value.data.bettingId) {
+            betting.settledAmount += value.data.amount;
+            betting.punters.push({
+              no: betting.punters.length + 1,
+              settledAmount: value.data.amount,
+              wallet: value.data.account
+            });
+
+            if (betting.settledAmount === betting.bookmakerAmount) {
+              betting.status = 2;
+            }
+          }
+        })
       }
     }
 

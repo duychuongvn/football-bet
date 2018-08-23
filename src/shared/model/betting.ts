@@ -69,11 +69,16 @@ export class Betting {
     this._settledAmount = v;
   }
 
-  private _status: string = '';
-  public get status(): string {
+  public get openAmount(): string {
+    const _openAmount = this.bookmakerAmount - this.settledAmount;
+    return `${_openAmount} ETH`;
+  }
+
+  private _status: number = 0;
+  public get status(): number {
     return this._status;
   }
-  public set status(v: string) {
+  public set status(v: number) {
     this._status = v;
   }
 
@@ -103,12 +108,12 @@ export class Betting {
       this.id               = betting.id;
       this.bettingId        = betting.bettingId;
       this.bookmakerAddress = betting.bookmakerAddress;
-      this.bookmakerAmount  = betting.bookmakerAmount;
+      this.bookmakerAmount  = +betting.bookmakerAmount;
       this.bookmakerTeam    = betting.bookmakerTeam;
       this.matchId          = betting.matchId;
       this.odds             = betting.odds;
-      this.settledAmount    = betting.settledAmount;
-      this.status           = betting.status;
+      this.settledAmount    = +betting.settledAmount;
+      this.status           = +betting.status;
 
       if (betting.punters) {
         this._addPunters(betting.punters);
