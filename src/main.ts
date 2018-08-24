@@ -18,6 +18,7 @@ import '@/assets/fontawesome-free/css/all.css'
 import '@/styles/index.scss'
 
 import '@/shared/extensions/string';
+import '@/shared/extensions/number';
 
 Vue.config.productionTip = false
 Vue.use(VueProgressBar, ProgressOpts)

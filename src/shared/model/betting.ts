@@ -70,7 +70,7 @@ export class Betting {
   }
 
   public get openAmount(): string {
-    const _openAmount = this.bookmakerAmount - this.settledAmount;
+    const _openAmount = this.bookmakerAmount.big().minus(this.settledAmount.big());
     return `${_openAmount} ETH`;
   }
 
