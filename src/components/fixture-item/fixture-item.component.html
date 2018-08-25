@@ -21,6 +21,10 @@
                   <div :class="props.item.homeTeamFlag25"></div>
                   <p class="bet-name">{{ props.item.fixtureName }}</p>
                   <div :class="props.item.awayTeamFlag25"></div>
+                  <v-btn color="yellow" class="btn-live" outline v-if="props.item.isGoLive">
+                    <v-icon dark>fas fa-futbol fa-spin</v-icon>
+                    Live
+                  </v-btn>
                 </div>
               </td>
               <td class="text-xs-center">100</td>

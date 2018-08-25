@@ -112,6 +112,9 @@
     }
 
     get selectedTeam(): string {
+      if (this.odds) {
+        return this.isHomeTeamActive ? this.match.awayTeam : this.match.homeTeam;
+      }
       return this.isHomeTeamActive ? this.match.homeTeam : this.match.awayTeam;
     }
 
@@ -201,7 +204,7 @@
     @Watch('newOffer')
     getNewOffer(value: any, oldValue: any) {
       if (value) {
-        this._match = JSON.parse(JSON.stringify(this.match))
+        this._match = JSON.parse(JSON.stringify(this.match));
         this.closeDialog({
           key: DIALOG_CLOSE.BETTING_RELOAD
         });
@@ -210,37 +213,39 @@
           this.toogleDialog(DIALOG_NAME.BETTING_SHARING, true, {
             homeTeam: this._match.homeTeam,
             awayTeam: this._match.awayTeam,
-            date: this._match.date
+            date: this._match.date,
+            message: 'Your request has been submitted!'
           });
-        }, 50);
+        }, 2000);
       }
     }
 
     @Watch('newDeal')
     getNewDeal(value: any, oldValue: any) {
       if (value) {
-        this._match = JSON.parse(JSON.stringify(this.match))
+        this._match = JSON.parse(JSON.stringify(this.match));
 
         const _odds: any = {
           bettingId: this.odds.bettingId,
           account: this.account.address,
           amount: +this.stakeSelected
-        }
+        };
 
         this.closeDialog({ key: DIALOG_CLOSE.BETTING_DEAL_RELOAD, data: _odds });
 
         this.notify({
           mode: 'success',
-          message: 'Your settlement has been confirmed'
-        })
+          message: 'Your settlement has been submitted!'
+        });
 
         setTimeout(() => {
           this.toogleDialog(DIALOG_NAME.BETTING_SHARING, true, {
             homeTeam: this._match.homeTeam,
             awayTeam: this._match.awayTeam,
-            date: this._match.date
+            date: this._match.date,
+            message: 'Your settlement has been submitted!'
           });
-        }, 50);
+        }, 2000);
       }
     }
   }

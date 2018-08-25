@@ -5,10 +5,9 @@
     <v-divider color="white"></v-divider>
 
     <v-card-text class="text-xs-center">
-      <v-icon size="60">fab fa-ethereum</v-icon>
-      <p class="mb-0 mt-4">Your request has been submitted!</p>
-      <p>Please wait for a few minutes before your transaction is confirmed.</p>
-
+      <p><v-icon size="60">fab fa-ethereum</v-icon></p>
+      <p class="mb-0 mt-4" v-if="!isSocial">{{ message }}</p>
+      <p v-if="!isSocial">Please wait for a few minutes before your transaction is confirmed.</p>
       <v-tooltip bottom lazy>
         <v-btn color="blue accent-2" slot="activator"
           v-clipboard:copy="sharePath"

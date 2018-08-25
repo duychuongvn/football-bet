@@ -10,7 +10,7 @@
     @Action('notify', { namespace: 'notify' }) notify: any
 
     @Getter('isSharingBetting', { namespace: 'dialog' }) isSharingBetting!: boolean;
-    @Getter('initData', { namespace: 'dialog' }) initData: any
+    @Getter('initData', { namespace: 'dialog' }) initData: any;
 
     public sharePath: string = '';
 
@@ -31,6 +31,17 @@
 
     set isDialog(v: any) {
       this.$emit('close-dialog', DIALOG_NAME.BETTING_SHARING)
+    }
+
+    get isSocial() {
+      return this.initData && this.initData.key === DIALOG_NAME.SHARING_SOCIAL;
+    }
+
+    get message() {
+      if (this.initData && this.initData.message) {
+        return this.initData.message;
+      }
+      return '';
     }
 
     onCopy() {

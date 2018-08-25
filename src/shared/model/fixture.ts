@@ -28,6 +28,9 @@ export class Fixture {
   public get dateTimeString(): string {
     return moment(this.date).format('LL [(]dddd[)] - HH:mm a');
   }
+  public get isGoLive(): boolean {
+    return moment(this.date).isSameOrBefore(new Date());
+  }
 
   private _status: string = '';
   public get status(): string {
@@ -39,7 +42,7 @@ export class Fixture {
 
   private _homeTeam: string = '';
   public get homeTeam(): string {
-    return this._homeTeam;
+    return this._homeTeam.toName();
   }
   public get homeTeamFlag(): string {
     return require(`@/assets/flag/${this.homeTeam.toSlug()}.png`);
@@ -56,7 +59,7 @@ export class Fixture {
 
   private _awayTeam: string = '';
   public get awayTeam(): string {
-    return this._awayTeam;
+    return this._awayTeam.toName();
   }
   public get awayTeamFlag(): string {
     return require(`@/assets/flag/${this.awayTeam.toSlug()}.png`);

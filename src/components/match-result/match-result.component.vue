@@ -9,7 +9,7 @@
   import { Betting } from '@/shared/model/betting';
   import { Punter } from '@/shared/model/punter';
 
-  const isEqual = require('lodash/isEqual')
+  const isEqual = require('lodash/isEqual');
 
   @Component({
     components: {
@@ -46,8 +46,6 @@
 
     created() {
       this.loadBettings(this.match);
-
-      console.log(this.bettings, 1)
     }
 
     oddsString (item: any) {
@@ -132,7 +130,8 @@
           bettingId: bettingId,
           homeTeam: this.match.homeTeam,
           awayTeam: this.match.awayTeam,
-          date: this.match.date
+          date: this.match.date,
+          key: DIALOG_NAME.SHARING_SOCIAL
         }
       };
 

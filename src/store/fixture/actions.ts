@@ -50,6 +50,8 @@ export const actions: ActionTree<any, RootState> = {
             });
           }
 
+          console.log(_future)
+
           commit(RECEVER_FIXTURES, {
             key: 'TODAY',
             name: dataObj.name,

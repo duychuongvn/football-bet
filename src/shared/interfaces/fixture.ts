@@ -9,4 +9,7 @@ export interface FixtureInterface {
   status: string;
   homeTeam: Team;
   awayTeam: Team;
+  current_bet: number;
+  settle: number;
+  open: number;
 }

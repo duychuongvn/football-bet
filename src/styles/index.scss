@@ -181,3 +181,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.btn-live {
+  font-size: 0.7rem;
+  height: 22px;
+  min-width: 50px;
+  padding: 0;
+
+  i {
+    font-size: 1rem;
+    margin-right: 5px;
+  }
+}
