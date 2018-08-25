@@ -117,7 +117,7 @@ contract BetherContract is Ownable {
     return true;
   }
 
-  function deal(uint32 bettingIdx) public payable returns (bool) {
+  function bet(uint32 bettingIdx) public payable returns (bool) {
     Betting storage _betting = bets[bettingIdx];
 
     require(_betting.bMaker != msg.sender);
@@ -234,13 +234,9 @@ contract BetherContract is Ownable {
     return (betIdex, userSettled[user]);
   }
 
-  function getSettleInfo(uint32 bettingIdx, uint32 settleIdx) public view returns (bytes32, uint32, address,
-    uint8, int, uint256, uint256, BetStatus,
-    address, uint256) {
+  function getSettleInfo(uint32 bettingIdx, uint32 settleIdx) public view returns (bytes32, uint32, uint32, address, uint256, uint8, int, BetStatus) {
     Betting memory _betting = bets[bettingIdx];
-    address punter = settles[settleIdx].punter;
-    uint256 punterAmount = settles[settleIdx].amount;
-    return (_betting.matchId, bettingIdx,_betting.bMaker, _betting.bmTeam, _betting.odds, _betting.bAmount, _betting.settledAmount, _betting.status, punter, punterAmount);
+    return (_betting.matchId, bettingIdx, settleIdx,  settles[settleIdx].punter, settles[settleIdx].amount, 1 - _betting.bmTeam, _betting.odds * -1, _betting.status);
   }
 
   function countPlayers() public view returns (uint) {

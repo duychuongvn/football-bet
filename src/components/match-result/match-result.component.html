@@ -36,7 +36,6 @@
         </td>
       </tr>
     </template>
-
     <template slot="expand" slot-scope="props" v-if="props.item.punters.length !== 0">
       <match-punters :punters="props.item.punters" :betting="props.item" :match="match"/>
     </template>

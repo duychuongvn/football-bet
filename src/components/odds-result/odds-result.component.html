@@ -20,21 +20,39 @@
   <v-flex xs12 v-if="!!oddsResult.length">
     <v-card raised dark color="blue-grey lighten-6-opacity mt-3">
       <v-expansion-panel class="accor-fixture" :value="0">
-        <v-expansion-panel-content v-for="odds in oddsResult" :key="odds.id" class="bg-transparent" expand-icon="fas fa-chevron-down font-sm">
+        <v-expansion-panel-content v-for="odds in oddsResult" :key="odds.matchId" class="bg-transparent" expand-icon="fas fa-chevron-down font-sm">
           <div class="text-capitalize" slot="header">
-            [{{ odds.date_string }}] {{ odds.homeTeam }} - {{ odds.awayTeam }} ({{ odds.totalStake }} ETH)
+            [{{ odds.date_string }}] {{ odds.match.homeTeam }} - {{ odds.match.awayTeam }} ({{ odds.summary.stake }} ETH)
           </div>
 
           <v-card-text>
-            <v-data-table :headers="resultHead" :items="odds.bettings" hide-actions class="bg-transparent table-fixture">
+            <v-data-table :headers="headTb" :items="odds.bettings" hide-actions class="bg-transparent table-fixture">
               <template slot="items" slot-scope="props">
                 <td>{{ props.index + 1 }}</td>
                 <td class="text-capitalize">
-                  {{ props.item.teamSelected }} {{ props.item.odds }}
+                  {{ props.item.bookmakerAddress}}
                 </td>
-                <td class="text-xs-center">{{ props.item.stake }} ETH</td>
+              <td  class="text-capitalize">
+                  <span v-if="props.item.bookmakerTeam ===0">
+                     {{ odds.match.homeTeam  }}
+                  </span>
+                  <span v-if="props.item.bookmakerTeam ===1">
+                     {{ odds.match.awayTeam  }}
+                  </span>
+
+
+
+
+                  <span v-if="props.item.odds > 0 || props.item.odds === 0">@+{{props.item.odds/100}}</span>
+                  <span v-if="props.item.odds < 0">@{{props.item.odds/100}}</span>
+
+                </td>
+                <td class="text-xs-center">{{ props.item.bookmakerAmount}} ETH</td>
                 <td class="text-xs-center">{{ props.item.receivedAmount }}</td>
-                <td class="text-capitalize">{{ props.item.status_string }}</td>
+                <td class="text-capitalize">{{ props.item.status }}</td>
+
+
+
                 <td class="text-xs-center">
                   <v-tooltip bottom lazy :disabled="props.item.isCanceled">
                     <v-btn class="text-capitalize" color="red lighten-1" small slot="activator"
@@ -54,6 +72,12 @@
                     <span>Share</span>
                   </v-tooltip>
                 </td>
+              </template>
+              <!--<template  slot="items" slot-scope="props" v-if="props.item.punters.length !== 0">-->
+                <!--<match-punters :punters="odds.punters" :betting="props.item" :match="match"/>-->
+              <!--</template>-->
+              <template slot="expand" slot-scope="props" v-if="props.item.punters.length !== 0">
+                <match-punters :punters="props.item.punters" :betting="props.item" :match="match"/>
               </template>
             </v-data-table>
           </v-card-text>

@@ -1,3 +1,5 @@
+import {web3} from '@/store/web3';
+
 const Web3 = require('web3')
 const Rx = require('rx')
 
@@ -79,5 +81,9 @@ export const Web3Vue = {
     const _val = `${match.homeTeam}${match.awayTeam}${_date}`;
 
     return web3Provider.utils.soliditySha3(_val);
+  },
+
+  toEther(wei: number) {
+    return web3Provider.utils.fromWei(wei, 'ether');
   }
 }

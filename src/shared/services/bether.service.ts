@@ -49,7 +49,7 @@ export const BetherContractService = {
 
       if((result.status === 0 || result.status === 1) && (result.bookmakerAmount - result.settledAmount >= dealObj.amount)) {
         console.log(dealObj.bettingId)
-        bether.deal(dealObj.bettingId, {from: dealObj.account, value: window.web3.toWei(dealObj.amount,  'ether')}, (error:any, result:any) => {
+        bether.bet(dealObj.bettingId, {from: dealObj.account, value: window.web3.toWei(dealObj.amount,  'ether')}, (error:any, result:any) => {
 
           console.log(error);
           console.log(result);
@@ -171,9 +171,9 @@ export const BetherContractService = {
   }),
 
    cacheBetting(bettings: any[], betting: any) {
-      console.log(bettings)
-      console.log(betting)
+
       var match: any;
+
       for(var i=0;i<bettings.length;i++) {
         if(bettings[i].matchId === betting.matchId) {
           match = bettings[i];
@@ -182,8 +182,14 @@ export const BetherContractService = {
       }
 
       if(!match) {
-        match= {"matchId": betting.matchId, "bettings": [] as any}
+
+        match= {"match": null,"summary": {"stake": 0 as number}, "matchId":  betting.matchId, "bettings": [] as any}
+
         bettings.push(match);
+
+        BetherContractService.loadMatchesById(match.matchId).subscribe((matchInfo:any)=>{
+          match.match = matchInfo;
+        })
       }
 
       var bettingItem: any;
@@ -194,6 +200,7 @@ export const BetherContractService = {
         }
       }
 
+      console.log("bettingitem: ", bettingItem)
       if(!bettingItem) {
         bettingItem = {"bettingId": betting.bettingId,
           'bookmakerAddress': betting.bookmakerAddress,
@@ -205,9 +212,11 @@ export const BetherContractService = {
           'punters': [] as any
         }
         match.bettings.push(bettingItem);
+        match.summary.stake = (parseFloat(match.summary.stake)+ parseFloat(bettingItem.bookmakerAmount)).toFixed(3);
       }
 
 
+      console.log(match)
         bettingItem.punters.push(...betting.punters)
 
      return bettings;
@@ -229,19 +238,20 @@ export const BetherContractService = {
               var colIdx = 0;
               var betting = {
                 'matchId': settleInfoResult[colIdx++],
-                'bettingId': settleInfoResult[colIdx++],
+                'bettingId': settleInfoResult[colIdx++]+'-'+settleInfoResult[colIdx++],
                 'bookmakerAddress': settleInfoResult[colIdx++],
+                'bookmakerAmount':BetherContractService.toEther(settleInfoResult[colIdx++].toNumber()),
                 'bookmakerTeam':settleInfoResult[colIdx++].toNumber(),
                 'odds':settleInfoResult[colIdx++].toNumber(),
-                'bookmakerAmount':BetherContractService.toEther(settleInfoResult[colIdx++].toNumber()),
-                'settledAmount': BetherContractService.toEther(settleInfoResult[colIdx++].toNumber()),
+
+                'settledAmount': 0,
                 'status':settleInfoResult[colIdx++].toNumber(),
                 'punters': [] as any
               } as  any;
 
-              betting.punters.push({  'wallet': settleInfoResult[colIdx++],
-                'settledAmount':BetherContractService.toEther(settleInfoResult[colIdx].toNumber()) })
-              BetherContractService.cacheBetting(bettings, betting)
+
+              betting.settledAmount = betting.bookmakerAmount;
+                 BetherContractService.cacheBetting(bettings, betting)
             })
           }
           observe.onNext(bettings)
@@ -267,6 +277,7 @@ export const BetherContractService = {
   loadMatchesById: (matchId: string) => Rx.Observable.create((observer: any) => {
     let match: any = [];
     bether.findMatch.call(matchId, (err:any,result: any) => {
+      console.log(result)
       let index = 0;
       match.matchId = matchId;
       match.homeTeam = result[index++];
@@ -288,6 +299,6 @@ export const BetherContractService = {
     })
   }),
   toEther(wei: number) {
-    return window.web3.fromWei(wei, 'ether')
+    return parseFloat(window.web3.fromWei(wei, 'ether')).toFixed(3);
   }
 };

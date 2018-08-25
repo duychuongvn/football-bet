@@ -182,7 +182,7 @@
         "type": "uint32"
       }
     ],
-    "name": "deal",
+    "name": "bet",
     "outputs": [
       {
         "name": "",
@@ -422,7 +422,15 @@
       },
       {
         "name": "",
+        "type": "uint32"
+      },
+      {
+        "name": "",
         "type": "address"
+      },
+      {
+        "name": "",
+        "type": "uint256"
       },
       {
         "name": "",
@@ -434,23 +442,7 @@
       },
       {
         "name": "",
-        "type": "uint256"
-      },
-      {
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "name": "",
         "type": "uint8"
-      },
-      {
-        "name": "",
-        "type": "address"
-      },
-      {
-        "name": "",
-        "type": "uint256"
       }
     ],
     "payable": false,

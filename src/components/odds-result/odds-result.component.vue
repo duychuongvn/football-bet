@@ -6,7 +6,11 @@ import { Action, Getter } from 'vuex-class';
 
 import { DIALOG_NAME } from '@/shared/enums/dialog';
 
-@Component
+@Component({
+  components: {
+    'match-punters': () => import('@/components/match-result-punters/match-result-punters.component.vue')
+  }
+})
 export default class OddsResultComponent extends Vue {
   @Action('openDialog', { namespace: 'dialog' }) openDialog: any;
 
@@ -30,11 +34,21 @@ export default class OddsResultComponent extends Vue {
     { text: '', sortable: false, width: '300px' }
   ]
 
+  public headTb: Array<Object> = [
+    { text: '#', align: 'left', sortable: false },
+    { text: `Address`, align: 'left', sortable: false },
+    { text: 'Handicap', align: 'center', sortable: false },
+    { text: `Stake` , align: 'left', sortable: false },
+    { text: 'Open', align: 'center', sortable: false },
+    { text: 'Settler', align: 'center', sortable: false },
+    { text: '', sortable: false }
+  ]
+
   public selectedParent: string = 'DATE';
   public selectedChild: number = 1;
 
   get oddsResult() {
-    return this.myOdds;
+    return this.totalOdds;
   }
 
   @Watch('totalOdds')

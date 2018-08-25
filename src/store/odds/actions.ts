@@ -14,7 +14,10 @@ export const actions: ActionTree<any, RootState> = {
   totalOdds({ commit }, account: string): any {
     let _myodds: any = [];
 
-    BetherContractService.getUserBets(account).subscribe((res: any) => {
+     BetherContractService.getUserBets(account)
+       .subscribe((res: any) => {
+
+
         // if (!!res.length){
         //   res.map((item: any) => {
         //     let _odds = _myodds.findIndex((odds: any) => odds.matchId === item.matchId);
@@ -45,9 +48,9 @@ export const actions: ActionTree<any, RootState> = {
         //       _myodds[_odds].bettings.push(_betting)
         //     }
         //   });
-        //   commit(RECEVER_TOTAL_ODDS, _myodds);
+          commit(RECEVER_TOTAL_ODDS, res);
         // }
-        console.log(res)
+
       }, (error: any) => {
         console.log(error, 'error');
       });
