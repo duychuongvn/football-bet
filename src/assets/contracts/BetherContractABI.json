@@ -302,6 +302,49 @@
         "type": "bytes32"
       }
     ],
+    "name": "findMatch",
+    "outputs": [
+      {
+        "name": "homeTeam",
+        "type": "string"
+      },
+      {
+        "name": "awayTeam",
+        "type": "string"
+      },
+      {
+        "name": "homeScore",
+        "type": "uint256"
+      },
+      {
+        "name": "awayScore",
+        "type": "uint256"
+      },
+      {
+        "name": "time",
+        "type": "uint256"
+      },
+      {
+        "name": "status",
+        "type": "uint8"
+      },
+      {
+        "name": "isApproved",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "matchId",
+        "type": "bytes32"
+      }
+    ],
     "name": "getBettings",
     "outputs": [
       {
