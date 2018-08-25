@@ -22,7 +22,8 @@
       <v-expansion-panel class="accor-fixture" :value="0">
         <v-expansion-panel-content v-for="odds in oddsResult" :key="odds.matchId" class="bg-transparent" expand-icon="fas fa-chevron-down font-sm">
           <div class="text-capitalize" slot="header">
-            [{{ odds.date_string }}] {{ odds.match.homeTeam }} - {{ odds.match.awayTeam }} ({{ odds.summary.stake }} ETH)
+            [{{ odds.date_string }}]  {{ odds.match.homeTeam }} - {{ odds.match.awayTeam }} ({{ odds.summary.stake }} ETH)
+
           </div>
 
           <v-card-text>

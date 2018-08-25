@@ -10,7 +10,8 @@ import { mutations } from '@/store/solobet/mutations'
 export const state: SolobetState = {
   newOffer: undefined,
   newDeal: undefined,
-  bether: undefined
+  bether: undefined,
+  matches: undefined
 }
 
 const namespaced: boolean = true;

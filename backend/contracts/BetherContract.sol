@@ -292,6 +292,9 @@ contract BetherContract is Ownable {
     return true;
   }
 
+  function getMatchIds() public view returns(bytes32[]) {
+    return matchIds;
+  }
   function cancelOffer(uint256 bettingId) external returns (bool){
     Betting storage _betting = bets[bettingId];
     require(_betting.bMaker == msg.sender);

@@ -1,6 +1,5 @@
 import { Web3Vue } from '@/shared/services/web3.service'
-import { Betting } from '@/shared/model/betting';
-
+import { Betting } from '@/shared/model/betting'
 import ENV from '@/environment/index'
 
 const betherContractABI = require('@/assets/contracts/BetherContractABI.json')
@@ -297,6 +296,21 @@ export const BetherContractService = {
       observer.onNext(match);
       observer.onCompleted();
     })
+  }),
+
+  loadMatches: () => Rx.Observable.create((observer: any) => {
+
+      bether.getMatchIds.call((err:any, matchIds:any)=>{
+        var matches = [] as any;
+        console.log(matchIds)
+        for(var i =0;i< matchIds.length;i++) {
+           BetherContractService.loadMatchesById(matchIds[i]).subscribe((match:any)=> {
+             matches.push(match);
+           })
+        }
+        observer.onNext(matches);
+        observer.onCompleted();
+      })
   }),
   toEther(wei: number) {
     return parseFloat(window.web3.fromWei(wei, 'ether')).toFixed(3);

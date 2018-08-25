@@ -20,6 +20,7 @@ export const FILTER_ODDS = 'FILTER_ODDS'
 export const INIT_CONTRACT = 'INIT_CONTRACT'
 export const CREATE_OFFER = 'CREATE_OFFER'
 export const CREATE_DEAL = 'CREATE_DEAL'
+export const RECEIVE_MATCHES = 'RECEIVE_MATCHES'
 
 export const NOTIFY_CLEAR = 'NOTIFY_CLEAR'
 export const NOTIFY_OPEN  = 'NOTIFY_OPEN'
