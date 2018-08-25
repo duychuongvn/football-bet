@@ -195,7 +195,25 @@ contract BetherContract is Ownable {
     }
     return (open, deal, settledOrDone, canceled, refunded);
   }
+  function findMatch(bytes32 matchId) public view returns (
+    string homeTeam,
+    string awayTeam,
+    uint homeScore,
+    uint awayScore,
+    uint time,
+    MatchStatus status,
+    bool isApproved) {
 
+    Match memory _match = matches[matchId];
+
+    homeTeam = _match.homeTeam;
+    awayTeam = _match.awayTeam;
+    homeScore = _match.homeScore;
+    awayScore = _match.awayScore;
+    status = _match.status;
+    time = _match.time;
+    isApproved = _match.isApproved;
+  }
   function getBettings(bytes32 matchId) public view returns (uint32[]) {
     return matchBets[matchId];
   }

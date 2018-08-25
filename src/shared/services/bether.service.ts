@@ -264,7 +264,29 @@ export const BetherContractService = {
       })
 
     }),
+  loadMatchesById: (matchId: string) => Rx.Observable.create((observer: any) => {
+    let match: any = [];
+    bether.findMatch.call(matchId, (err:any,result: any) => {
+      let index = 0;
+      match.matchId = matchId;
+      match.homeTeam = result[index++];
+      match.awayTeam = result[index++];
+      match.homeGoals = result[index++].toNumber();
+      match.awayGoals = result[index++].toNumber();
+      match.time = result[index++].toNumber();
+      match.status = result[index++].toNumber();
+      match.approved = result[index++];
 
+      if (match.status === 1) {
+        let currentime = new Date().getTime() / 1000;
+        if (currentime > match.time && currentime < match.time + 100 * 60) {
+          match.status = 2;
+        }
+      }
+      observer.onNext(match);
+      observer.onCompleted();
+    })
+  }),
   toEther(wei: number) {
     return window.web3.fromWei(wei, 'ether')
   }
