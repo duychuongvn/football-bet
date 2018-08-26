@@ -4,10 +4,10 @@
       @click="selectOddsType(label.key)">{{ label.name }}</v-btn>
   </v-flex>
 
-  <v-flex md6 text-xs-center :offset-md6="!isOddsOpen" xs12>
-    <v-chip label v-for="filter in listFilter" :key="filter.key" :outline="!isActiveFilter(filter.key)" :class="isActiveFilter(filter.key) ? 'white--text': 'cursor-pointer'"
-      :color="isActiveFilter(filter.key) ? 'teal lighten-1': ''" @click="changedFilter(filter.key)">
-      {{ filter.name }} ({{ filter.number }})
-    </v-chip>
-  </v-flex>
+  <!--<v-flex md6 text-xs-center :offset-md6="!isOddsOpen" xs12>-->
+    <!--<v-chip label v-for="filter in listFilter" :key="filter.key" :outline="!isActiveFilter(filter.key)" :class="isActiveFilter(filter.key) ? 'white&#45;&#45;text': 'cursor-pointer'"-->
+      <!--:color="isActiveFilter(filter.key) ? 'teal lighten-1': ''" @click="changedFilter(filter.key)">-->
+      <!--{{ filter.name }} ({{ filter.number }})-->
+    <!--</v-chip>-->
+  <!--</v-flex>-->
 </v-layout>

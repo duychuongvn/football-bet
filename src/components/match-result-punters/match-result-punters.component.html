@@ -8,9 +8,9 @@
             <template slot="items" slot-scope="props">
               <tr>
                 <td>{{ (props.index + 1) }}</td>
-                <td>{{ props.item.wallet }}</td>
+                <td><account-addr :address="props.item.wallet"/></td>
                 <td>{{ oddsString }}</td>
-                <td>{{ props.item.settledAmount }} ETH</td>
+                <td>{{ props.item.settledAmountString }}</td>
                 <td>Settled</td>
               </tr>
             </template>

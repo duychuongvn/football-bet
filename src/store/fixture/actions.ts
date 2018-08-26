@@ -4,7 +4,10 @@ import { RootState } from '@/store/types';
 import { RECEVER_FIXTURES } from '@/store/mutations';
 
 import { IpfsService } from '@/shared/services/ipfs.service';
-import { Fixture } from '@/shared/model/fixture'
+// import { BetherContractService } from '@/shared/services/bether.service';
+// import { Web3Vue } from '@/shared/services/web3.service';
+
+import { Fixture } from '@/shared/model/fixture';
 
 import * as moment from 'moment';
 
@@ -23,9 +26,9 @@ export const actions: ActionTree<any, RootState> = {
     const _tommorrow: Array<Object> = [];
     const _future: Array<Object> = [];
 
-    const _currentDate = moment();
-    const _tommorrowDate = moment().add(1, 'day');
-    const _futureDate = moment().add(2, 'day');
+    const _currentDate = moment().format('YYYY-MM-DD');
+    const _tommorrowDate = moment().add(1, 'day').format('YYYY-MM-DD');
+    const _futureDate = moment().add(2, 'day').format('YYYY-MM-DD');
 
     for( let i in fixtures[dataObj.key]) {
       IpfsService.getFixture(fixtures[dataObj.key][i])
@@ -34,23 +37,27 @@ export const actions: ActionTree<any, RootState> = {
             res.map((item: any) => {
               if (item.status !== 'FINISHED') {
                 const _betting = new Fixture(item);
+                // const _matchId = Web3Vue.toSHA3(_betting);
+                // console.log(_matchId, [].concat(_matchId));
+                // BetherContractService.countBettings([_matchId])
+                //   .subscribe((res: any) => {
+                //     console.log(res);
+                //   });
 
-                if (moment(item.utcDate, 'YYYY/MM/DD').isSame(_currentDate)) {
+                if (moment(item.utcDate, 'YYYY-MM-DD').isSame(_currentDate)) {
                   _today.push(_betting);
                 }
 
-                if (moment(item.utcDate, 'YYYY/MM/DD').isSame(_tommorrowDate)) {
+                if (moment(item.utcDate, 'YYYY-MM-DD').isSame(_tommorrowDate)) {
                   _tommorrow.push(_betting);
                 }
 
-                if (moment(item.utcDate, 'YYYY/MM/DD').isSameOrAfter(_futureDate)) {
+                if (moment(item.utcDate, 'YYYY-MM-DD').isSameOrAfter(_futureDate)) {
                   _future.push(_betting);
                 }
               }
             });
           }
-
-          console.log(_future)
 
           commit(RECEVER_FIXTURES, {
             key: 'TODAY',
@@ -69,5 +76,8 @@ export const actions: ActionTree<any, RootState> = {
           });
         });
     }
+  },
+  checkInit({ state }, status ) {
+    state.isInit = status;
   }
 };

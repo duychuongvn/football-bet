@@ -10,7 +10,8 @@ import { FixtureState } from '@/store/fixture/types';
 export const state: FixtureState = {
   fixturesToday: [],
   fixturesTomorrow: [],
-  fixturesFuture: []
+  fixturesFuture: [],
+  isInit: false
 };
 
 const namespaced: boolean = true;

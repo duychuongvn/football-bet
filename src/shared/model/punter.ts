@@ -14,6 +14,9 @@ export class Punter {
   public get settledAmount(): number {
     return this._settledAmount;
   }
+  public get settledAmountString(): string {
+    return `${this.settledAmount} ETH`;
+  }
   public set settledAmount(v: number) {
     this._settledAmount = v;
   }

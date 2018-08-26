@@ -1,9 +1,15 @@
 <v-dialog v-model="isDialog" width="500">
-  <v-card color="blue-grey lighten-6 overflow-hidden" dark>
-    <v-card-title class="title" primary-title>Share your bet</v-card-title>
+  <v-toolbar card dark color="blue-grey lighten-6">
+    <v-toolbar-title>Share your bet</v-toolbar-title>
+    <v-spacer></v-spacer>
+    <v-btn icon dark @click="isDialog = !isDialog">
+      <v-icon>fas fa-times</v-icon>
+    </v-btn>
+  </v-toolbar>
 
-    <v-divider color="white"></v-divider>
+  <v-divider color="white"></v-divider>
 
+  <v-card color="blue-grey lighten-6 overflow-hidden modal-card" dark>
     <v-card-text class="text-xs-center">
       <p><v-icon size="60">fab fa-ethereum</v-icon></p>
       <p class="mb-0 mt-4" v-if="!isSocial">{{ message }}</p>
@@ -17,10 +23,7 @@
         </v-btn>
         <span>Copy Link</span>
       </v-tooltip>
-
     </v-card-text>
-
-    <v-divider color="white"></v-divider>
 
     <v-card-text class="text-xs-center">
       <social-sharing url="https://vuejs.org/"

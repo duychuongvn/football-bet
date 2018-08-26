@@ -13,7 +13,7 @@ export default class FixtureItemComponent extends Vue {
   @Getter('fixturesToday', { namespace: 'fixture' }) fixturesToday: any;
   @Getter('fixturesTomorrow', { namespace: 'fixture' }) fixturesTomorrow: any;
   @Getter('fixturesFuture', { namespace: 'fixture' }) fixturesFuture: any;
-  @Getter('isAccount', { namespace: 'web3' }) isAccount!: boolean
+  @Getter('isAccount', { namespace: 'web3' }) isAccount!: boolean;
 
   @Prop() public bettingTime!: string;
 
@@ -39,6 +39,10 @@ export default class FixtureItemComponent extends Vue {
       case 'FUTURE':
         return this.fixturesFuture;
     }
+  }
+
+  get isNotMatches () {
+    return this.allFixtures.filter((fixture: any) => fixture.bettings.length !== 0).length !== 0;
   }
 
   get isFuture() {

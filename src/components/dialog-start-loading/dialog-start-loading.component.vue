@@ -13,7 +13,7 @@
     created() {
       setTimeout(() => {
         this.$emit('close-dialog', DIALOG_NAME.START_LOADING)
-      }, 3000);
+      }, 5000);
     }
   }
 </script>

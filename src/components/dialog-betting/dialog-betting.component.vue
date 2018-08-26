@@ -9,7 +9,8 @@
 
   import * as moment from 'moment'
 
-  const isEqual = require('lodash/isEqual')
+  const isEqual = require('lodash/isEqual');
+  const Big = require('big.js');
 
   @Component
   export default class DialogBettingComponent extends Vue {
@@ -32,7 +33,7 @@
     private _match: any;
 
     get potential() {
-      const stake = !!this.odds ? this.odds.bookmakerAmount : this.stakeSelected
+      const stake = !!this.odds ? this.odds.bookmakerAmount : this.stakeSelected;
 
       return !!this.stakeSelected ? (this.stakeSelected * 0.95) : 0
     }
@@ -45,7 +46,8 @@
 
     get odds() {
       if (this.initData && this.initData.odds) {
-        this.bettingSelected = this.initData.odds.bookmakerTeam
+        this.bettingSelected = this.initData.odds.bookmakerTeam;
+        this.stakeSelected = new Big(this.initData.odds.bookmakerAmount).minus(this.initData.odds.settledAmount);
         return this.initData.odds
       }
     }
@@ -118,6 +120,13 @@
       return this.isHomeTeamActive ? this.match.homeTeam : this.match.awayTeam;
     }
 
+    get notselectedTeam(): string {
+      if (this.odds) {
+        return this.isHomeTeamActive ? this.match.homeTeam : this.match.awayTeam;
+      }
+      return this.isHomeTeamActive ? this.match.awayTeam : this.match.homeTeam;
+    }
+
     get homeTeamFlag() {
       return this.match ? this.match.homeTeamFlag : ''
     }
@@ -132,6 +141,38 @@
 
     get awayTeam() {
       return this.match ? `${this.match.awayTeam}` : ''
+    }
+
+    get handicapInfo () {
+      const _handicap = (this.oddsSelected * 100) / 100;
+      let msg = `You win if `;
+
+      switch (_handicap) {
+        case 0:
+          msg += `${this.selectedTeam} wins.<br/>You draw if ${this.selectedTeam} draws with ${this.notselectedTeam}`;
+          break;
+        case 0.5:
+          msg += `You win if ${this.selectedTeam} draws with ${this.notselectedTeam} or ${this.selectedTeam} wins.`;
+          break;
+        case -0.5:
+          msg += `You win if ${this.selectedTeam} wins.`;
+          break;
+        case 1:
+          msg += `${this.selectedTeam} wins by more than 1 goal.`;
+          msg += `<br/>You draw if ${this.selectedTeam} loses by 1 goal`;
+          break;
+        case -1:
+          msg += `${this.selectedTeam} draws with ${this.notselectedTeam} or ${this.selectedTeam} wins.`;
+          msg += `<br/>You draw if ${this.selectedTeam} wins by 1 goal`;
+          break;
+        case 1.5:
+          msg += `You win if ${this.selectedTeam} loses by 1 goal or ${this.selectedTeam} wins`;
+          break;
+        case -1.5:
+          msg += `You win if A wins by 2 goals or more`;
+          break;
+      }
+      return msg;
     }
 
     changeTeam(team: number) {
@@ -216,7 +257,7 @@
             date: this._match.date,
             message: 'Your request has been submitted!'
           });
-        }, 2000);
+        }, 50);
       }
     }
 
@@ -245,7 +286,7 @@
             date: this._match.date,
             message: 'Your settlement has been submitted!'
           });
-        }, 2000);
+        }, 50);
       }
     }
   }

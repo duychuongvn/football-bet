@@ -2,7 +2,7 @@
 
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator';
-  import { Action } from 'vuex-class';
+  import { Action, Getter } from 'vuex-class';
 
   @Component({
     components: {
@@ -11,6 +11,7 @@
   })
   export default class FixtureComponent extends Vue {
     @Action('fetchFixtures', { namespace: 'fixture' }) fetchFixtures: any;
+    @Getter('isInit', { namespace: 'fixture' }) isInit!: boolean;
 
     public fixtureTitle: Array<Object> = [
       {
@@ -52,14 +53,16 @@
         name: 'Bundesliga',
         key: 'bundesliga'
       }
-    ]
+    ];
 
     public betTime: string = 'TODAY';
 
     created() {
-      this.arrFixtures.map((item: Object) => {
-        this.fetchFixtures(item);
-      });
+      if (!this.isInit) {
+        this.arrFixtures.map((item: Object) => {
+          this.fetchFixtures(item);
+        });
+      }
     }
 
     changedTimeBet(time: string) {

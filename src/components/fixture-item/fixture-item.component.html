@@ -1,6 +1,11 @@
 <v-card raised dark color="blue-grey lighten-6-opacity" v-if="allFixtures.length > 1">
   <v-expansion-panel class="accor-fixture" :value="0">
-    <v-expansion-panel-content v-for="fixture in allFixtures" :key="fixture.id" class="bg-transparent" expand-icon="fas fa-chevron-down font-sm">
+    <v-expansion-panel-content
+        v-for="fixture in allFixtures"
+        :key="fixture.id"
+        class="bg-transparent"
+        expand-icon="fas fa-chevron-down font-sm"
+        v-if="isNotMatches && fixture.bettings.length !== 0">
       <div class="text-uppercase" slot="header">{{ fixture.name }}</div>
 
       <v-card-text>
@@ -37,4 +42,8 @@
 
     </v-expansion-panel-content>
   </v-expansion-panel>
+
+  <v-card-text class="text-xs-center" v-if="!isNotMatches">
+    No matches
+  </v-card-text>
 </v-card>

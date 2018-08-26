@@ -33,6 +33,9 @@ export class Betting {
   public get bookmakerAmount(): number {
     return this._bookmakerAmount;
   }
+  public get bookmakerAmountString(): string {
+    return `${this._bookmakerAmount.toFixed(3)} ETH`;
+  }
   public set bookmakerAmount(v: number) {
     this._bookmakerAmount = v;
   }
@@ -65,13 +68,16 @@ export class Betting {
   public get settledAmount(): number {
     return this._settledAmount;
   }
+  public get settledAmountString(): string {
+    return `${this.settledAmount.toFixed(3)} ETH`;
+  }
   public set settledAmount(v: number) {
     this._settledAmount = v;
   }
 
   public get openAmount(): string {
     const _openAmount = this.bookmakerAmount.big().minus(this.settledAmount.big());
-    return `${_openAmount} ETH`;
+    return `${_openAmount.toFixed(3)} ETH`;
   }
 
   private _status: number = 0;
@@ -124,7 +130,7 @@ export class Betting {
   private _addPunters(punters: PunterInterface[]) {
     const _punters: PunterInterface[] = [];
 
-    punters.map((punter: PunterInterface) => _punters.push(new Punter(punter)))
+    punters.map((punter: PunterInterface) => _punters.push(new Punter(punter)));
 
     this.punters = _punters;
   }

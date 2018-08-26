@@ -39,8 +39,8 @@
       { text: 'Settler', align: 'center', sortable: false },
       { text: '', sortable: false }
     ]
-
     public isLoadingBetting: any = null;
+    public search: string = '';
 
     private _countBeting: number = 0;
 
@@ -78,7 +78,7 @@
 
         this.isLoadingBetting = setInterval(() => {
           this.loadBettings(this.match);
-        }, 5000)
+        }, 2000)
       }
 
       if (value && value.key === DIALOG_CLOSE.BETTING_DEAL_RELOAD) {
@@ -105,6 +105,14 @@
         value.map((item: any) => {
           item.account = this.account.address;
         });
+      }
+
+      if (value.length !== 0 && this.$route.query && this.$route.query.accept) {
+        const _betTmp: Betting = this.bettings[+this.$route.query.accept];
+
+        if (!!_betTmp) {
+          this.createOdds(_betTmp);
+        }
       }
 
       if (this.isLoadingBetting && value.length !== this._countBeting) {
@@ -139,8 +147,8 @@
     }
 
     destroyed() {
-      clearInterval(this.isLoadingBetting)
-      this.clearBetting()
+      clearInterval(this.isLoadingBetting);
+      this.clearBetting();
       this.isLoadingBetting = null
     }
   }

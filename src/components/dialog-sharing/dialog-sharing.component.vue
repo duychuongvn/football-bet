@@ -5,6 +5,8 @@
   import { Getter, Action } from 'vuex-class'
   import { DIALOG_NAME } from '@/shared/enums/dialog';
 
+  import ENV from '@/environment/index'
+
   @Component
   export default class DialogSharingComponent extends Vue {
     @Action('notify', { namespace: 'notify' }) notify: any
@@ -22,9 +24,9 @@
           homeTeam: this.initData.homeTeam,
           awayTeam: this.initData.awayTeam,
           date: this.initData.date
-        }))
+        }));
 
-        this.sharePath = `betther.bet/match-details/${this.matchKey}?accept=${this.initData.bettingId}`;
+        this.sharePath = `${ENV.DOMAIN}/match-details/${this.matchKey}?accept=${this.initData.bettingId}`;
       }
       return this.isSharingBetting;
     }

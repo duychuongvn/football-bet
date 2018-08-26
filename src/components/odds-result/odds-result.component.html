@@ -1,21 +1,21 @@
 <v-layout row wrap>
-  <v-flex xs12>
-    <v-layout row wrap class="white--text">
-      <v-flex xs2 offset-md7 offset-xs5 offset-xs4 class="align-flex-end text-uppercase" text-xs-right>
-        <span>Sort By :</span>
-      </v-flex>
+  <!--<v-flex xs12>-->
+    <!--<v-layout row wrap class="white&#45;&#45;text">-->
+      <!--<v-flex xs2 offset-md7 offset-xs5 offset-xs4 class="align-flex-end text-uppercase" text-xs-right>-->
+        <!--<span>Sort By :</span>-->
+      <!--</v-flex>-->
 
-      <v-flex md1 sm2 xs2>
-        <v-select hide-details hide-selected content-class="bet-select" v-model="selectedParent" :items="sortParent" item-text="name"
-          item-value="key" dark color="white" append-icon="fas fa-chevron-down font-sm"></v-select>
-      </v-flex>
+      <!--<v-flex md1 sm2 xs2>-->
+        <!--<v-select hide-details hide-selected content-class="bet-select" v-model="selectedParent" :items="sortParent" item-text="name"-->
+          <!--item-value="key" dark color="white" append-icon="fas fa-chevron-down font-sm"></v-select>-->
+      <!--</v-flex>-->
 
-      <v-flex md2 sm3 xs4>
-        <v-select hide-details hide-selected content-class="bet-select" v-model="selectedChild" :items="sortChild[selectedParent]"
-          item-text="name" item-value="id" dark color="white" append-icon="fas fa-chevron-down font-sm"></v-select>
-      </v-flex>
-    </v-layout>
-  </v-flex>
+      <!--<v-flex md2 sm3 xs4>-->
+        <!--<v-select hide-details hide-selected content-class="bet-select" v-model="selectedChild" :items="sortChild[selectedParent]"-->
+          <!--item-text="name" item-value="id" dark color="white" append-icon="fas fa-chevron-down font-sm"></v-select>-->
+      <!--</v-flex>-->
+    <!--</v-layout>-->
+  <!--</v-flex>-->
 
   <v-flex xs12 v-if="!!oddsResult.length">
     <v-card raised dark color="blue-grey lighten-6-opacity mt-3">
@@ -23,7 +23,6 @@
         <v-expansion-panel-content v-for="odds in oddsResult" :key="odds.matchId" class="bg-transparent" expand-icon="fas fa-chevron-down font-sm">
           <div class="text-capitalize" slot="header">
             [{{ odds.date_string }}]  {{ odds.match.homeTeam }} - {{ odds.match.awayTeam }} ({{ odds.summary.stake }} ETH)
-
           </div>
 
           <v-card-text>
@@ -40,9 +39,6 @@
                   <span v-if="props.item.bookmakerTeam ===1">
                      {{ odds.match.awayTeam  }}
                   </span>
-
-
-
 
                   <span v-if="props.item.odds > 0 || props.item.odds === 0">@+{{props.item.odds/100}}</span>
                   <span v-if="props.item.odds < 0">@{{props.item.odds/100}}</span>
