@@ -1,5 +1,6 @@
 import axios from 'axios'
 import ENV from '@/environment/index'
+import * as moment from 'moment'
 
 const Rx = require('rx')
 const _gateways: Array<String> = [
@@ -52,10 +53,11 @@ export const IpfsService = {
     })
   },
   getFixture: (hashId: string) => Rx.Observable.create((observer: any) => {
+    const _current_date = moment().add(14, 'd').format('YYYY-MM-DD');
     api_ipfs.get(hashId)
       .then((res: any) => {
         const _value = res.data.filter((item : any) => {
-          return item.status !== 'FINISHED'
+          return item.status !== 'FINISHED' && moment(item.utcDate).isSameOrBefore(_current_date)
         });
 
         observer.onNext(_value);

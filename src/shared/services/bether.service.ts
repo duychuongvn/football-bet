@@ -150,6 +150,7 @@ export const BetherContractService = {
 
   countBettings: (matchIds: any []) => Rx.Observable.create((observer: any) => {
 
+
     bether.countBetStatus.call(matchIds, (err:any, result:any) => {
 
           var bettingStatus = [];

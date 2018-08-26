@@ -48,10 +48,6 @@
       {
         name: 'English Premier League',
         key: 'england'
-      },
-      {
-        name: 'Bundesliga',
-        key: 'bundesliga'
       }
     ];
 

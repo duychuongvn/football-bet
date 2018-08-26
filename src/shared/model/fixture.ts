@@ -3,6 +3,20 @@ import { FixtureInterface } from '@/shared/interfaces/fixture'
 import * as moment from 'moment';
 
 export class Fixture {
+  get matchId(): any {
+    return this._matchId;
+  }
+
+  set matchId(value: any) {
+    this._matchId = value;
+  }
+  get summary(): any {
+    return this._summary;
+  }
+
+  set summary(value: any) {
+    this._summary = value;
+  }
 
   private _id: number = 0;
   public get id(): number {
@@ -78,6 +92,9 @@ export class Fixture {
     return `${this.homeTeam} ~ ${this.awayTeam}`;
   }
 
+  private _summary: any;
+
+  private _matchId: any;
   public get key(): string {
     return btoa(JSON.stringify({
       id: this.id,
@@ -94,6 +111,7 @@ export class Fixture {
       this.status   = fixture.status;
       this.homeTeam = fixture.homeTeam.name;
       this.awayTeam = fixture.awayTeam.name;
+      this.summary = {canceled:0, open:0,portionSettled:0,refuned:0, settledOrDone:0}
     }
   }
 }
