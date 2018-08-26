@@ -1,5 +1,5 @@
 .flip-clock {
-  text-align: right;
+  text-align: center;
   perspective: 600px;
   margin: 0 auto;
 
@@ -8,6 +8,9 @@
   *:after { box-sizing: border-box; }
 }
 
+.countdown-betting.flip-clock {
+  text-align: right;
+}
 
 .flip-clock__piece {
   display: inline-block;

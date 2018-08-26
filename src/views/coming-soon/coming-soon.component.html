@@ -12,13 +12,13 @@
             <span class="d-block text-left title">Betting without borders</span>
           </h1>
         </div>
-        <flip-countdown deadline="2018/08/31 00:00:00" class="countdown-lg" />
+        <flip-countdown :deadline="deadlineTime" class="countdown-lg" />
         <div class="headline white--text mb-5">
           <p class="mb-1">The 1st crypto peer to peer betting system</p>
           <p>will be coming soon</p>
         </div>
         <v-tooltip top lazy v-for="icon in socialIcons" :key="icon.name">
-          <v-btn class="mx-3 white--text" icon slot="activator" :href="icon.mailto" :color="icon.color">
+          <v-btn class="mx-3 white--text" icon slot="activator" :href="icon.link_social" :target="icon.target" :color="icon.color">
             <v-icon size="24px">{{ icon.name }}</v-icon>
           </v-btn>
           <span>{{ icon.tooltip }}</span>
