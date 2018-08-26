@@ -3,6 +3,7 @@
     :loading="!!isLoadingBetting"
     :headers="headTb"
     :search="search"
+    :custom-filter="customFilter"
     :items="bettings" next-icon="fas fa-chevron-right" prev-icon="fas fa-chevron-left"
     :hide-actions="!(bettings.length > 10)" class="bg-transparent table-fixture">
     <v-progress-linear slot="progress" color="teal darken-2" indeterminate></v-progress-linear>

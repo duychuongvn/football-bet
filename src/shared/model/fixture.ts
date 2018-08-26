@@ -6,14 +6,13 @@ export class Fixture {
   get matchId(): any {
     return this._matchId;
   }
-
   set matchId(value: any) {
     this._matchId = value;
   }
+
   get summary(): any {
     return this._summary;
   }
-
   set summary(value: any) {
     this._summary = value;
   }
@@ -32,6 +31,9 @@ export class Fixture {
   }
   public set date(v: string) {
     this._date = v;
+  }
+  public get dateCountDown(): string {
+    return moment(this.date).format('YYYY/MM/DD HH:mm:ss');
   }
   public get dateString(): string {
     return moment(this.date).format('MMM DD, YYYY');

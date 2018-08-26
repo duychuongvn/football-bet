@@ -1,18 +1,24 @@
 <v-layout row wrap>
   <v-flex xs12>
     <v-card dark color="blue-grey lighten-6-opacity">
-      <v-card-text>
-        <div class="mb-2 text-uppercase">
-          <v-icon class="mr-2">fas fa-calendar-alt</v-icon>
-          {{ match.dateTimeString }}
+      <v-card-text class="d-flex">
+        <div class="betting-info">
+          <div class="mb-2 text-uppercase">
+            <v-icon class="mr-2">fas fa-calendar-alt</v-icon>
+            {{ match.dateTimeString }}
+          </div>
+
+          <div class="betting-wrap mb-1">
+            <div class="mr-2" :class="match.homeTeamFlag50"></div>
+            <p class="bet-name bet-name--lg">{{ match.fixtureName }}</p>
+            <div class="ml-2" :class="match.awayTeamFlag50"></div>
+          </div>
         </div>
 
-        <div class="betting-wrap mb-1">
-          <div class="mr-2" :class="match.homeTeamFlag50"></div>
-          <p class="bet-name bet-name--lg">{{ match.fixtureName }}</p>
-          <div class="ml-2" :class="match.awayTeamFlag50"></div>
+        <div class="betting-countdown">
+          <p class="caption mb-2 text-xs-right">The match will start in</p>
+          <flip-countdown :deadline="match.dateCountDown" class="countdown-md countdown-betting pt-0" />
         </div>
-
         <!-- <span>World Cup Russia 2018</span> -->
       </v-card-text>
     </v-card>

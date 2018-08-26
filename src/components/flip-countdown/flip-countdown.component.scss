@@ -1,5 +1,5 @@
 .flip-clock {
-  text-align: center;
+  text-align: right;
   perspective: 600px;
   margin: 0 auto;
 
@@ -24,6 +24,9 @@
   color: #fff;
   text-transform: uppercase;
   font-size: 1.2rem;
+  text-align: center;
+  text-transform: capitalize;
+  font-weight: bold;
 }
 
 $halfHeight: 0.72em;
@@ -36,6 +39,11 @@ $borderRadius: 0.15em;
   font-size: 2.25rem;
   line-height: 0.95;
   font-size: 3rem;
+  text-align: center;
+}
+
+.countdown-md .flip-card {
+  font-size: 2.5rem;
 }
 
 .countdown-lg .flip-card {
@@ -60,6 +68,15 @@ $borderRadius: 0.15em;
   height: $halfHeight;
 }
 
+.countdown-betting .flip-card__top,
+.countdown-betting .flip-card__bottom,
+.countdown-betting .flip-card__back-bottom,
+.countdown-betting .flip-card__back::before,
+.countdown-betting .flip-card__back::after {
+  color: #fff;
+  background: #26A69A;
+}
+
 .flip-card__bottom,
 .flip-card__back-bottom {
   color: #ffdc00;
@@ -72,6 +89,13 @@ $borderRadius: 0.15em;
   pointer-events: none;
   overflow: hidden;
   z-index: 2;
+}
+
+.countdown-betting .flip-card__bottom,
+.countdown-betting  .flip-card__back-bottom {
+  color: #fff;
+  border-top: solid 1px #26A69A;
+  background: #4DB6AC;
 }
 
 .flip-card__back-bottom {

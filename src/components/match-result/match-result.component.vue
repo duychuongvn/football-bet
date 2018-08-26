@@ -71,6 +71,13 @@
       this.openDialog(_initOpts)
     }
 
+    customFilter() {
+      if (this.search) {
+        return this.bettings.filter((betting: Betting) => betting.id === this.search);
+      }
+      return this.bettings;
+    }
+
     @Watch('initData')
     getInitDialog(value: any, oldValue: any) {
       if (value && value.key === DIALOG_CLOSE.BETTING_RELOAD) {
@@ -111,6 +118,7 @@
         const _betTmp: Betting = this.bettings[+this.$route.query.accept];
 
         if (!!_betTmp) {
+          this.search = _betTmp.bettingId;
           this.createOdds(_betTmp);
         }
       }

@@ -36,7 +36,7 @@
             :order-xs2="!!odds && isHomeTeamActive">
             <!--<p class="text-xs-center caption" v-html="handicapInfo"></p>-->
             <v-select hide-selected dark v-model="oddsSelected" color="white" class="bet-select-center" content-class="bet-select" append-icon="fas fa-chevron-down font-sm"
-              :items="oddsType" label="Odds" v-if="!odds"></v-select>
+              :items="oddsType" label="Handicap" v-if="!odds"></v-select>
             <v-text-field v-model="stakeSelected" dark color="white" label="Stake" type="number" suffix="ETH" min="0.05" step="0.01" v-if="!odds"></v-text-field>
 
             <div v-if="!!odds">

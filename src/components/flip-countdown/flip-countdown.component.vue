@@ -12,6 +12,9 @@ export default {
     },
     stop: {
       type: Boolean
+    },
+    islabel: {
+      type: Boolean
     }
   },
   data () {

@@ -12,7 +12,7 @@
         <v-data-table
           :headers="headersTb"
           :items="fixture.bettings"
-          :hide-actions="!fixture.bettings.length"
+          :hide-actions="!(fixture.bettings.length > 20)"
           :rows-per-page-items="rowPerPage"
           class="bg-transparent table-fixture">
           <template slot="items" slot-scope="props">
