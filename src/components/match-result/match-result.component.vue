@@ -40,7 +40,7 @@
       { text: '', sortable: false }
     ]
     public isLoadingBetting: any = null;
-    public search: string = '';
+    public search: any = '';
 
     private _countBeting: number = 0;
 
