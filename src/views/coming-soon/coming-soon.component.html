@@ -1,22 +1,21 @@
 <v-app class="coming-soon">
-  <div id="large-header" class="large-header" style="height: 270px;">
-    <canvas id="demo-canvas"></canvas>
-  </div>
-
   <v-container fluid>
     <v-layout align-center justify-center row fill-height>
       <v-flex text-xs-center>
-        <div>
+        <div class="cs-title">
           <h1 class="bether-logo display-3 line-height-1 font-weight-black mb-3">
             Bether
             <span class="d-block text-left title">Betting without borders</span>
           </h1>
         </div>
+
         <flip-countdown :deadline="deadlineTime" class="countdown-lg" />
+
         <div class="headline white--text mb-5">
           <p class="mb-1">The 1st crypto peer to peer betting system</p>
           <p>will be coming soon</p>
         </div>
+
         <v-tooltip top lazy v-for="icon in socialIcons" :key="icon.name">
           <v-btn class="mx-3 white--text" icon slot="activator" :href="icon.link_social" :target="icon.target" :color="icon.color">
             <v-icon size="24px">{{ icon.name }}</v-icon>

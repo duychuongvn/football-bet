@@ -1,21 +1,34 @@
-.large-header {
-  position: absolute;
-}
-
 .coming-soon {
   background-image: url('../../assets/images/bg-coming-soon.jpg') !important;
   background-size: cover !important;
   background-position: 50% 50% !important;
 
-  .bether-logo {
-    background-image: url('../../assets/logo-5.png');
-    background-size: 70px;
-    background-position: 42% 50%;
-    color: #26A69A;
+  .cs-title {
+    position: relative;
+    width: 270px;
+    margin: 0 auto;
+    text-align: left;
+    padding-left: 45px;
 
-    span {
-      padding-left: 68px;
-      color: #fff;
+    &::before {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      content: '';
+      background-image: url('../../assets/logo-5.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      height: 72px;
+      width: 40px;
+    }
+
+    .bether-logo {
+      color: #26A69A;
+
+      span {
+        color: #fff;
+      }
     }
   }
 }

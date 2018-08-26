@@ -41,9 +41,5 @@
         target: ''
       }
     ];
-
-    mounted() {
-      require('@/plugins/demo.js')
-    }
   }
 </script>
