@@ -24,3 +24,4 @@ export const RECEIVE_MATCHES = 'RECEIVE_MATCHES'
 
 export const NOTIFY_CLEAR = 'NOTIFY_CLEAR'
 export const NOTIFY_OPEN  = 'NOTIFY_OPEN'
+export const USER_SUMMARY = 'USER_SUMMARY';

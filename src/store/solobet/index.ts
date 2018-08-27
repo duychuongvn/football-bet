@@ -11,7 +11,8 @@ export const state: SolobetState = {
   newOffer: undefined,
   newDeal: undefined,
   bether: undefined,
-  matches: undefined
+  matches: undefined,
+  userSummary: undefined
 }
 
 const namespaced: boolean = true;

@@ -1,6 +1,6 @@
 import { ActionTree } from 'vuex';
 import { RootState } from '@/store/types';
-import {CREATE_OFFER, CREATE_DEAL, RECEVER_TOTAL_ODDS, RECEVER_MATCHES} from '@/store/mutations';
+import {CREATE_OFFER, CREATE_DEAL, RECEVER_TOTAL_ODDS, RECEVER_MATCHES, USER_SUMMARY} from '@/store/mutations';
 import { BetherContractService } from '@/shared/services/bether.service'
 import { Web3Vue } from '@/shared/services/web3.service'
 
@@ -48,9 +48,16 @@ export const actions: ActionTree<any, RootState> = {
 
   matches({commit}):any {
     BetherContractService.loadMatches().subscribe((matches: any) => {
-      console.log(matches)
+
       commit(RECEVER_MATCHES, matches);
 
     })
+  },
+  userSummary({commit}, account: any):any {
+    BetherContractService.countUserTotalBet(account).subscribe((summary:any)=> {
+      console.log(summary);
+      commit(USER_SUMMARY, summary);
+    })
   }
+
 };

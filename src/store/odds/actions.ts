@@ -48,6 +48,7 @@ export const actions: ActionTree<any, RootState> = {
         //       _myodds[_odds].bettings.push(_betting)
         //     }
         //   });
+         console.log(res)
           commit(RECEVER_TOTAL_ODDS, res);
         // }
 

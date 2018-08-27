@@ -1,6 +1,7 @@
 import { Web3Vue } from '@/shared/services/web3.service'
 import { Betting } from '@/shared/model/betting'
 import ENV from '@/environment/index'
+import * as moment from 'moment';
 
 const betherContractABI = require('@/assets/contracts/BetherContractABI.json')
 
@@ -47,12 +48,8 @@ export const BetherContractService = {
     BetherContractService.getBettingInfo(dealObj.bettingId).subscribe((result:any)=>{
 
       if((result.status === 0 || result.status === 1) && (result.bookmakerAmount - result.settledAmount >= dealObj.amount)) {
-        console.log(dealObj.bettingId)
+
         bether.bet(dealObj.bettingId, {from: dealObj.account, value: window.web3.toWei(dealObj.amount,  'ether')}, (error:any, result:any) => {
-
-          console.log(error);
-          console.log(result);
-
           if(error) {
             observer.error(error);
           } else {
@@ -277,7 +274,6 @@ export const BetherContractService = {
   loadMatchesById: (matchId: string) => Rx.Observable.create((observer: any) => {
     let match: any = [];
     bether.findMatch.call(matchId, (err:any,result: any) => {
-      console.log(result)
       let index = 0;
       match.matchId = matchId;
       match.homeTeam = result[index++];
@@ -285,6 +281,7 @@ export const BetherContractService = {
       match.homeGoals = result[index++].toNumber();
       match.awayGoals = result[index++].toNumber();
       match.time = result[index++].toNumber();
+      match.timeString = moment(match.time*1000 ).format('MMM DD, YYYY [(]ddd[)] - HH:mm a')
       match.status = result[index++].toNumber();
       match.approved = result[index++];
 
@@ -294,6 +291,7 @@ export const BetherContractService = {
           match.status = 2;
         }
       }
+      console.log(match)
       observer.onNext(match);
       observer.onCompleted();
     })
@@ -312,6 +310,20 @@ export const BetherContractService = {
         observer.onNext(matches);
         observer.onCompleted();
       })
+  }),
+
+  countUserTotalBet: (account: any) => Rx.Observable.create((observe:any)=> {
+    bether.countUserBet.call(account, (err:any, result:any)=> {
+      var summary = {"totalBets": BetherContractService.toEther(result[0].toNumber()),
+        "totalSettled": BetherContractService.toEther(result[1].toNumber()),
+        "currentPlaced": null as any};
+      bether.getPlayerBalance.call(account, (error:any, balance: any)=> {
+        summary.currentPlaced = BetherContractService.toEther(balance.toNumber());
+        observe.onNext(summary);
+        observe.onCompleted();
+      })
+
+    })
   }),
   toEther(wei: number) {
     return parseFloat(window.web3.fromWei(wei, 'ether')).toFixed(3);

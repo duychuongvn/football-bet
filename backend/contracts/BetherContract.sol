@@ -8,8 +8,8 @@ contract BetherContract is Ownable {
 
   }
 
-  event LogNewBet(uint32 bettingIdx);
-  event LogAcceptBet(uint32 bettingIdx, uint32 settledIdx);
+  event LogNewBet(bytes32 matchId, uint32 bettingIdx);
+  event LogAcceptBet(bytes32 matchId, uint32 bettingIdx, uint32 settledIdx);
   enum Team {Home, Away}
   enum MatchStatus {NotAvailable, Waiting, Playing, Canceled, Finished}
   enum BetStatus {Open, Deal, Settled, Canceled, Refunded, Done}
@@ -77,15 +77,6 @@ contract BetherContract is Ownable {
     _;
   }
 
-  function updateLeague(uint8 id, string ipfsHash) canUpdate public returns (bool){
-    leagues[id] = ipfsHash;
-  }
-
-  function getLeague(uint8 id) public view returns (string league) {
-    league = leagues[id];
-  }
-
-
   function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint selectedTeam, uint time, int handicap) public payable returns (bool) {
 
     require(time > now);
@@ -112,7 +103,7 @@ contract BetherContract is Ownable {
     if (isPlayerNotExist(msg.sender)) {
       players.push(msg.sender);
     }
-    emit LogNewBet(betIdx);
+    emit LogNewBet(matchId, betIdx);
     balances[msg.sender] += msg.value;
     return true;
   }
@@ -139,7 +130,7 @@ contract BetherContract is Ownable {
     userSettled[msg.sender].push(betIdx);
     betSettled[bettingIdx].push(betIdx);
     balances[msg.sender] += msg.value;
-    emit LogAcceptBet(bettingIdx, betIdx);
+    emit LogAcceptBet(_betting.matchId, bettingIdx, betIdx);
     return true;
   }
 
@@ -402,9 +393,7 @@ contract BetherContract is Ownable {
 
   }
 
-
   function getVolume(uint48 time) public  view returns (uint256) {
-
     uint256 vol;
     for(uint i =0;i< bets.length;i++) {
       if(bets[i].time >= time) {
@@ -412,6 +401,20 @@ contract BetherContract is Ownable {
       }
     }
     return vol;
+  }
+
+  function countUserBet(address user) public view returns (uint256 totalBets, uint256 totalSettled) {
+
+    uint32[] memory betIdxes = getUserBets(user);
+    uint32[] memory settledIdxes = userSettled[user];
+    for(uint i =0;i<betIdxes.length;i++) {
+      totalBets+=bets[betIdxes[i]].bAmount;
+      totalSettled+=bets[betIdxes[i]].settledAmount;
+    }
+
+    for(i =0;i<settledIdxes.length;i++) {
+      totalSettled+=settles[settledIdxes[i]].amount;
+    }
   }
 
 }

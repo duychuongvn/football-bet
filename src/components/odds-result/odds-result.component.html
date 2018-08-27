@@ -21,8 +21,12 @@
     <v-card raised dark color="blue-grey lighten-6-opacity mt-3">
       <v-expansion-panel class="accor-fixture" :value="0">
         <v-expansion-panel-content v-for="odds in oddsResult" :key="odds.matchId" class="bg-transparent" expand-icon="fas fa-chevron-down font-sm">
-          <div class="text-capitalize" slot="header">
-            [{{ odds.date_string }}]  {{ odds.match.homeTeam }} - {{ odds.match.awayTeam }} ({{ odds.summary.stake }} ETH)
+
+          <div class="text-capitalize" slot="header" >
+            [{{ odds.match.timeString }}]  {{ odds.match.homeTeam }}
+            <span v-if="odds.match.status !==1">{{odds.match.homeGoals}}- {{odds.match.awayGoals}}</span>
+            <span class="text-no-wrap" v-if="odds.match.status ===1"> - </span>
+             {{ odds.match.awayTeam }} ({{ odds.summary.stake }} ETH)
           </div>
 
           <v-card-text>

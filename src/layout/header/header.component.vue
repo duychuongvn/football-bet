@@ -1,7 +1,7 @@
 <template src="./header.component.html"></template>
 
 <script lang="ts">
-  import { Component, Vue } from 'vue-property-decorator';
+  import { Component, Vue , Watch} from 'vue-property-decorator';
 
   import { Action, Getter } from 'vuex-class';
 
@@ -12,6 +12,7 @@
     @Action('initContract', { namespace: 'solobet' }) initContract: any;
     @Action('getNetwork', { namespace: 'web3' }) getNetwork: any;
     @Action('getAccount', { namespace: 'web3' }) getAccount: any;
+    @Action('userSummary', { namespace: 'solobet' }) userSummary: any;
     @Getter('web3Init', { namespace: 'web3' }) web3Init: any;
     @Getter('isAccount', { namespace: 'web3' }) isAccount!: boolean;
 
@@ -22,6 +23,7 @@
       this.initWeb3Metamask();
 
       window.addEventListener('scroll', this.handleScroll);
+      this.userSummary(this.accountAddr);
     }
 
     initWeb3Metamask() {
@@ -51,7 +53,6 @@
         });
       }
     }
-
     // Computed
     get networkName(): string {
       return this.web3Init.account.networkId;
@@ -63,6 +64,9 @@
 
     get accountBalance(): string {
       return `${+this.web3Init.account.balance} ETH`;
+    }
+    get totalBets(): string {
+      return this.userSummary.totalBets;
     }
 
     get avatarMMask(): string {

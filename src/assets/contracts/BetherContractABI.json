@@ -52,6 +52,11 @@
     "inputs": [
       {
         "indexed": false,
+        "name": "matchId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
         "name": "bettingIdx",
         "type": "uint32"
       }
@@ -62,6 +67,11 @@
   {
     "anonymous": false,
     "inputs": [
+      {
+        "indexed": false,
+        "name": "matchId",
+        "type": "bytes32"
+      },
       {
         "indexed": false,
         "name": "bettingIdx",
@@ -92,48 +102,6 @@
     ],
     "name": "OwnershipTransferred",
     "type": "event"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "id",
-        "type": "uint8"
-      },
-      {
-        "name": "ipfsHash",
-        "type": "string"
-      }
-    ],
-    "name": "updateLeague",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": true,
-    "inputs": [
-      {
-        "name": "id",
-        "type": "uint8"
-      }
-    ],
-    "name": "getLeague",
-    "outputs": [
-      {
-        "name": "league",
-        "type": "string"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
   },
   {
     "constant": false,
@@ -596,6 +564,29 @@
     "outputs": [
       {
         "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "countUserBet",
+    "outputs": [
+      {
+        "name": "totalBets",
+        "type": "uint256"
+      },
+      {
+        "name": "totalSettled",
         "type": "uint256"
       }
     ],
