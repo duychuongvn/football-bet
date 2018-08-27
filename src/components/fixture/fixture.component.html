@@ -9,5 +9,9 @@
     </v-card-text>
   </v-card>
 
-  <fixture-item-comp :bettingTime="betTime" class="mt-3"></fixture-item-comp>
+  <div class="text-xs-center mt-4" v-if="isLoading">
+    <v-progress-circular indeterminate color="orange"></v-progress-circular>
+  </div>
+
+  <fixture-item-comp :bettingTime="betTime" class="mt-3" v-if="!isLoading"></fixture-item-comp>
 </section>

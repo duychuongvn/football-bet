@@ -53,12 +53,18 @@
 
     public betTime: string = 'TODAY';
 
+    public isLoading: boolean = true;
+
     created() {
       if (!this.isInit) {
         this.arrFixtures.map((item: Object) => {
           this.fetchFixtures(item);
         });
       }
+
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 5000);
     }
 
     changedTimeBet(time: string) {

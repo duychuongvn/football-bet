@@ -1,11 +1,15 @@
 <template src="./fixture-item.component.html"></template>
 
 <script lang="ts">
-import { Component, Vue, Prop } from "vue-property-decorator";
+import { Component, Vue, Prop, Watch } from "vue-property-decorator";
 import { Action, Getter } from 'vuex-class';
 import { FixtureState } from '@/store/fixture/types';
 
+import { BetherContractService } from '@/shared/services/bether.service';
+
 import { DIALOG_NAME } from '@/shared/enums/dialog';
+import { Fixture } from '@/shared/model/fixture';
+import { Betting } from '@/shared/model/betting';
 
 @Component
 export default class FixtureItemComponent extends Vue {
@@ -29,6 +33,10 @@ export default class FixtureItemComponent extends Vue {
   ];
 
   public rowPerPage: Array<number> = [20,50,100];
+
+  created() {
+    this._summaryBet();
+  }
 
   get allFixtures() {
     switch(this.bettingTime) {
@@ -66,6 +74,29 @@ export default class FixtureItemComponent extends Vue {
         }
       });
     }
+  }
+
+  @Watch('bettingTime')
+  getBettingTime(value: any, oldVal: any) {
+    this._summaryBet();
+  }
+
+  private _summaryBet() {
+    const _listIds = this.allFixtures.map((fixture: any) => fixture.bettings.map((betting: Betting) => betting.matchId));
+
+    _listIds.map((ids: Array<string>, key: number) => {
+      if (ids.length !== 0) {
+        BetherContractService.countBettings(ids).subscribe((matchInfo: any)=>{
+          matchInfo.map((match: any) => {
+            const _idxBet = this.allFixtures[key].bettings.findIndex((betting: Betting) => betting.matchId === match.matchId);
+
+            if (_idxBet >= 0) {
+              this.allFixtures[key].bettings[_idxBet].summary = match;
+            }
+          });
+        });
+      }
+    });
   }
 }
 </script>
