@@ -3,7 +3,15 @@ import { FixtureInterface } from '@/shared/interfaces/fixture'
 import * as moment from 'moment';
 
 export class Fixture {
-  private _matchId: any;
+  protected _approved: boolean = false;
+  public get approved(): boolean {
+    return this._approved;
+  }
+  public set approved(value: boolean) {
+    this._approved = value;
+  }
+
+  protected _matchId: any;
   public get matchId(): any {
     return this._matchId;
   }
@@ -11,7 +19,7 @@ export class Fixture {
     this._matchId = value;
   }
 
-  private _summary: any;
+  protected _summary: any;
   public get summary(): any {
     return this._summary;
   }
@@ -19,7 +27,7 @@ export class Fixture {
     this._summary = value;
   }
 
-  private _id: number = 0;
+  protected _id: number = 0;
   public get id(): number {
     return this._id;
   }
@@ -27,7 +35,7 @@ export class Fixture {
     this._id = v;
   }
 
-  private _date: string = '';
+  protected _date: string = '';
   public get date(): string {
     return this._date;
   }
@@ -56,7 +64,7 @@ export class Fixture {
     return moment(_timeBet).isSameOrBefore(_currentTime);
   }
 
-  private _status: string = '';
+  protected _status: string = '';
   public get status(): string {
     return this._status;
   }
@@ -64,7 +72,7 @@ export class Fixture {
     this._status = v;
   }
 
-  private _homeTeam: string = '';
+  protected _homeTeam: string = '';
   public get homeTeam(): string {
     return this._homeTeam.toName();
   }
@@ -82,7 +90,15 @@ export class Fixture {
     this._homeTeam = v;
   }
 
-  private _awayTeam: string = '';
+  protected _homeGoals: number = 0;
+  public get homeGoals(): number {
+    return this._homeGoals;
+  }
+  public set homeGoals(value: number) {
+    this._homeGoals = value;
+  }
+
+  protected _awayTeam: string = '';
   public get awayTeam(): string {
     return this._awayTeam.toName();
   }
@@ -99,11 +115,20 @@ export class Fixture {
   public set awayTeam(v: string) {
     this._awayTeam = v;
   }
+
+  protected _awayGoals: number = 0;
+  public get awayGoals(): number {
+    return this._awayGoals;
+  }
+  public set awayGoals(value: number) {
+    this._awayGoals = value;
+  }
+
   public get fixtureName(): string {
     return `${this.homeTeam} ~ ${this.awayTeam}`;
   }
 
-  private _isToDay: boolean = false;
+  protected _isToDay: boolean = false;
   public get isToDay(): boolean {
     return this._isToDay;
   }
@@ -111,7 +136,7 @@ export class Fixture {
     this._isToDay = value;
   }
 
-  private _isTomorrow: boolean = false;
+  protected _isTomorrow: boolean = false;
   public get isTomorrow(): boolean {
     return this._isTomorrow;
   }
@@ -119,7 +144,7 @@ export class Fixture {
     this._isTomorrow = value;
   }
 
-  private _isFuture: boolean = false;
+  protected _isFuture: boolean = false;
   public get isFuture(): boolean {
     return this._isFuture;
   }
@@ -138,12 +163,15 @@ export class Fixture {
 
   constructor (fixture: FixtureInterface) {
     if (fixture) {
-      this.id       = fixture.id;
-      this.date     = fixture.utcDate;
-      this.status   = fixture.status;
-      this.homeTeam = fixture.homeTeam.name;
-      this.awayTeam = fixture.awayTeam.name;
-      this.summary = {canceled:0, open:0,portionSettled:0,refuned:0, settledOrDone:0}
+      this.id        = fixture.id;
+      this.date      = fixture.utcDate;
+      this.status    = fixture.status;
+      this.homeTeam  = fixture.homeTeam.name;
+      this.awayTeam  = fixture.awayTeam.name;
+      this.approved  = fixture.approved;
+      this.homeGoals = fixture.homeGoals;
+      this.awayGoals = fixture.awayGoals;
+      this.summary   = { canceled:0, open:0,portionSettled:0,refuned:0, settledOrDone:0 };
     }
   }
 }

@@ -202,10 +202,7 @@ export const BetherContractService = {
         match.bettings.push(bettingItem);
         match.summary.stake = (parseFloat(match.summary.stake)+ parseFloat(bettingItem.bookmakerAmount)).toFixed(3);
       }
-
-
-      console.log(match)
-        bettingItem.punters.push(...betting.punters)
+      bettingItem.punters.push(...betting.punters)
 
      return bettings;
 
@@ -217,7 +214,7 @@ export const BetherContractService = {
         for(var i = 0;i<bettingIds.length;i++) {
           BetherContractService.getBettingInfo(bettingIds[i]).subscribe((res:any) =>{
             BetherContractService.cacheBetting(bettings, res);
-          })
+          });
         }
 
         bether.getUserSettles.call(account, (error:any, result:any) => {
@@ -231,23 +228,19 @@ export const BetherContractService = {
                 'bookmakerAmount':BetherContractService.toEther(settleInfoResult[colIdx++].toNumber()),
                 'bookmakerTeam':settleInfoResult[colIdx++].toNumber(),
                 'odds':settleInfoResult[colIdx++].toNumber(),
-
                 'settledAmount': 0,
                 'status':settleInfoResult[colIdx++].toNumber(),
                 'punters': [] as any
               } as  any;
 
-
               betting.settledAmount = betting.bookmakerAmount;
-                 BetherContractService.cacheBetting(bettings, betting)
-            })
+              BetherContractService.cacheBetting(bettings, betting)
+            });
           }
-          observe.onNext(bettings)
+          observe.onNext(bettings);
           observe.onCompleted();
-        })
-
-
-    })
+        });
+    });
   }),
 
   getVolume: (time: number) => Rx.Observable.create((observe: any)=> {

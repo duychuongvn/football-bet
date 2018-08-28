@@ -10,5 +10,13 @@ import { Component, Vue } from 'vue-property-decorator';
     'odds-result': () => import('@/components/odds-result/odds-result.component.vue')
   }
 })
-export default class ProfilePage extends Vue { }
+export default class ProfilePage extends Vue {
+  public isLoading = true;
+
+  created() {
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 5000);
+  }
+}
 </script>

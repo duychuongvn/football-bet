@@ -1,84 +1,76 @@
 <v-layout row wrap>
   <!--<v-flex xs12>-->
-    <!--<v-layout row wrap class="white&#45;&#45;text">-->
-      <!--<v-flex xs2 offset-md7 offset-xs5 offset-xs4 class="align-flex-end text-uppercase" text-xs-right>-->
-        <!--<span>Sort By :</span>-->
-      <!--</v-flex>-->
+  <!--<v-layout row wrap class="white&#45;&#45;text">-->
+  <!--<v-flex xs2 offset-md7 offset-xs5 offset-xs4 class="align-flex-end text-uppercase" text-xs-right>-->
+  <!--<span>Sort By :</span>-->
+  <!--</v-flex>-->
 
-      <!--<v-flex md1 sm2 xs2>-->
-        <!--<v-select hide-details hide-selected content-class="bet-select" v-model="selectedParent" :items="sortParent" item-text="name"-->
-          <!--item-value="key" dark color="white" append-icon="fas fa-chevron-down font-sm"></v-select>-->
-      <!--</v-flex>-->
+  <!--<v-flex md1 sm2 xs2>-->
+  <!--<v-select hide-details hide-selected content-class="bet-select" v-model="selectedParent" :items="sortParent" item-text="name"-->
+  <!--item-value="key" dark color="white" append-icon="fas fa-chevron-down font-sm"></v-select>-->
+  <!--</v-flex>-->
 
-      <!--<v-flex md2 sm3 xs4>-->
-        <!--<v-select hide-details hide-selected content-class="bet-select" v-model="selectedChild" :items="sortChild[selectedParent]"-->
-          <!--item-text="name" item-value="id" dark color="white" append-icon="fas fa-chevron-down font-sm"></v-select>-->
-      <!--</v-flex>-->
-    <!--</v-layout>-->
+  <!--<v-flex md2 sm3 xs4>-->
+  <!--<v-select hide-details hide-selected content-class="bet-select" v-model="selectedChild" :items="sortChild[selectedParent]"-->
+  <!--item-text="name" item-value="id" dark color="white" append-icon="fas fa-chevron-down font-sm"></v-select>-->
+  <!--</v-flex>-->
+  <!--</v-layout>-->
   <!--</v-flex>-->
 
   <v-flex xs12 v-if="!!oddsResult.length">
     <v-card raised dark color="blue-grey lighten-6-opacity mt-3">
       <v-expansion-panel class="accor-fixture" :value="0">
-        <v-expansion-panel-content v-for="odds in oddsResult" :key="odds.matchId" class="bg-transparent" expand-icon="fas fa-chevron-down font-sm">
+        <v-expansion-panel-content
+            v-for="odds in oddsResult"
+            :key="odds.matchId"
+            class="bg-transparent"
+            expand-icon="fas fa-chevron-down font-sm">
 
-          <div class="text-capitalize" slot="header" >
-            [{{ odds.match.timeString }}]  {{ odds.match.homeTeam }}
+          <div class="text-capitalize" slot="header">
+            [{{ odds.match.timeString }}] {{ odds.match.homeTeam }}
             <span v-if="odds.match.status !==1">{{odds.match.homeGoals}}- {{odds.match.awayGoals}}</span>
             <span class="text-no-wrap" v-if="odds.match.status ===1"> - </span>
-             {{ odds.match.awayTeam }} ({{ odds.summary.stake }} ETH)
+            {{ odds.match.awayTeam }} ({{ odds.summary.stake }} ETH)
           </div>
 
           <v-card-text>
             <v-data-table :headers="headTb" :items="odds.bettings" hide-actions class="bg-transparent table-fixture">
               <template slot="items" slot-scope="props">
-                <td>{{ props.index + 1 }}</td>
-                <td class="text-capitalize">
-                  {{ props.item.bookmakerAddress}}
-                </td>
-              <td  class="text-capitalize">
-                  <span v-if="props.item.bookmakerTeam ===0">
-                     {{ odds.match.homeTeam  }}
-                  </span>
-                  <span v-if="props.item.bookmakerTeam ===1">
-                     {{ odds.match.awayTeam  }}
-                  </span>
-
-                  <span v-if="props.item.odds > 0 || props.item.odds === 0">@+{{props.item.odds/100}}</span>
-                  <span v-if="props.item.odds < 0">@{{props.item.odds/100}}</span>
-
-                </td>
-                <td class="text-xs-center">{{ props.item.bookmakerAmount}} ETH</td>
-                <td class="text-xs-center">{{ props.item.receivedAmount }}</td>
-                <td class="text-capitalize">{{ props.item.status }}</td>
-
-
-
-                <td class="text-xs-center">
-                  <v-tooltip bottom lazy :disabled="props.item.isCanceled">
-                    <v-btn class="text-capitalize" color="red lighten-1" small slot="activator"
-                      @click="dialogCancel(props.item, odds.matchId)" :disabled="props.item.isCanceled">
-                      <v-icon size="18" left class="mr-2">fas fa-times-circle</v-icon>
-                      Cancel
+                <tr>
+                  <td>{{ props.index + 1 }}</td>
+                  <td> <account-addr :address="props.item.bookmakerAddress"/> </td>
+                  <td class="text-xs-center"> {{ oddsString(props.item, odds.match) }}</td>
+                  <td class="text-xs-center">{{ props.item.bookmakerAmountString }}</td>
+                  <td class="text-xs-center">{{ props.item.openAmount }}</td>
+                  <td class="text-xs-center">{{ props.item.status }}</td>
+                  <td class="text-xs-left">
+                    <v-tooltip bottom lazy :disabled="props.item.isCanceled">
+                      <v-btn class="text-capitalize" color="red lighten-1" small slot="activator"
+                             @click="dialogCancel(props.item, odds.matchId)" :disabled="props.item.isCanceled">
+                        <v-icon size="18" left class="mr-2">fas fa-times-circle</v-icon>
+                        Cancel
+                      </v-btn>
+                      <span>Cancel</span>
+                    </v-tooltip>
+                    <v-tooltip bottom lazy>
+                      <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator"
+                             @click="openShare(props.item.id, odds.homeTeam, odds.awayTeam, odds.date)">
+                        <v-icon size="18" left class="mr-2">fas fa-share-alt-square</v-icon>
+                        Share
+                      </v-btn>
+                      <span>Share</span>
+                    </v-tooltip>
+                    <v-btn fab dark class="btn-punter" color="blue lighten-1" :class="{ 'active': props.expanded }"
+                       @click="props.expanded = !props.expanded"
+                       v-if="props.item.punters.length !== 0">
+                      <v-icon dark small class="white--text">fas fa-angle-down</v-icon>
                     </v-btn>
-                    <span>Cancel</span>
-                  </v-tooltip>
-
-                  <v-tooltip bottom lazy>
-                    <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator"
-                      @click="openShare(props.item.id, odds.homeTeam, odds.awayTeam, odds.date)">
-                      <v-icon size="18" left class="mr-2">fas fa-share-alt-square</v-icon>
-                      Share
-                    </v-btn>
-                    <span>Share</span>
-                  </v-tooltip>
-                </td>
+                  </td>
+                </tr>
               </template>
-              <!--<template  slot="items" slot-scope="props" v-if="props.item.punters.length !== 0">-->
-                <!--<match-punters :punters="odds.punters" :betting="props.item" :match="match"/>-->
-              <!--</template>-->
+
               <template slot="expand" slot-scope="props" v-if="props.item.punters.length !== 0">
-                <match-punters :punters="props.item.punters" :betting="props.item" :match="match"/>
+                <match-punters :punters="props.item.punters" :betting="props.item" :match="odds.match"/>
               </template>
             </v-data-table>
           </v-card-text>

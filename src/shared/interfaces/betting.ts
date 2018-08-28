@@ -4,11 +4,11 @@ export interface BettingInterface {
   id: number;
   bettingId: any;
   bookmakerAddress: string;
-  bookmakerAmount: number;
+  bookmakerAmount: number | string;
   bookmakerTeam: number;
   matchId: any;
   odds: number;
-  settledAmount: number;
+  settledAmount: number | string;
   status: number;
   punters: PunterInterface[];
 }

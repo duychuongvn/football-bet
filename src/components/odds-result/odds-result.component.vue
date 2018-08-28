@@ -6,6 +6,8 @@ import { Action, Getter } from 'vuex-class';
 
 import { DIALOG_NAME } from '@/shared/enums/dialog';
 
+import { Profile } from '@/shared/model/profile';
+
 @Component({
   components: {
     'match-punters': () => import('@/components/match-result-punters/match-result-punters.component.vue')
@@ -21,39 +23,45 @@ export default class OddsResultComponent extends Vue {
   @Getter('myOdds', { namespace: 'odds' }) myOdds: any;
   @Getter('totalOdds', { namespace: 'odds' }) totalOdds: any;
 
-  public resultHead: Array<Object> = [
-    {
-      text: '#',
-      sortable: false,
-      value: 'id'
-    },
-    { text: 'odds', value: 'odds', sortable: false },
-    { text: 'stake', value: 'stake', align: 'center', sortable: false },
-    { text: 'return', value: 'return', align: 'center', sortable: false },
-    { text: 'betting status', value: 'status', sortable: false },
-    { text: '', sortable: false, width: '300px' }
-  ]
-
   public headTb: Array<Object> = [
     { text: '#', align: 'left', sortable: false },
     { text: `Address`, align: 'left', sortable: false },
     { text: 'Handicap', align: 'center', sortable: false },
-    { text: `Stake` , align: 'left', sortable: false },
+    { text: `Stake` , align: 'center', sortable: false },
     { text: 'Open', align: 'center', sortable: false },
-    { text: 'Settler', align: 'center', sortable: false },
+    { text: 'Status', align: 'center', sortable: false },
     { text: '', sortable: false }
-  ]
+  ];
 
   public selectedParent: string = 'DATE';
   public selectedChild: number = 1;
 
   get oddsResult() {
-    return this.totalOdds;
+    const _odssRs: Profile[] = [];
+    this.totalOdds.map((odds: any) => {
+      const _odds: Profile = new Profile(odds);
+
+      _odds.match.homeTeam = odds.match.homeTeam;
+      _odds.match.awayTeam = odds.match.awayTeam;
+      _odds.match.date = odds.match.time * 1000;
+
+      _odssRs.push(_odds);
+    });
+    return _odssRs;
+  }
+
+  oddsString (item: any, match: any) {
+    let _teamName = item.bookmakerTeam === 0 ? match.homeTeam : match.awayTeam;
+    let _odds: any = item.odds / 100;
+
+    _odds = _odds > 0 ? `+${_odds}` : _odds;
+
+    return `${_teamName} @${_odds}`;
   }
 
   @Watch('totalOdds')
   getTotalOdds(value: any, oldValue: any) {
-    this.oddsByMatchId();
+    // this.oddsByMatchId();
   }
 
   dialogCancel(odds: any, matchId: string) {

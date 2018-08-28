@@ -2,7 +2,7 @@ import { PunterInterface } from '@/shared/interfaces/punter'
 
 export class Punter {
 
-  private _no: number = 0;
+  protected _no: number = 0;
   public get no(): number {
     return this._no;
   }
@@ -10,7 +10,7 @@ export class Punter {
     this._no = v;
   }
 
-  private _settledAmount: number = 0;
+  protected _settledAmount: number = 0;
   public get settledAmount(): number {
     return this._settledAmount;
   }
@@ -21,7 +21,7 @@ export class Punter {
     this._settledAmount = v;
   }
 
-  private _wallet: string = '';
+  protected _wallet: string = '';
   public get wallet(): string {
     return this._wallet;
   }

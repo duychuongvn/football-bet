@@ -5,68 +5,64 @@ import { RECEVER_TOTAL_ODDS, RECEVER_MY_ODDS, CANCEL_ODDS, FILTER_ODDS } from '@
 import { DIALOG_NAME, DIALOG_CLOSE } from '@/shared/enums/dialog';
 import { ODDS_STATUS } from '@/shared/enums/odds';
 
-// import { SoloBetService } from '@/shared/services/asian-solobet.service'
-import {BetherContractService} from '@/shared/services/bether.service';
-
-import * as moment from 'moment';
+import { BetherContractService } from '@/shared/services/bether.service';
 
 export const actions: ActionTree<any, RootState> = {
   totalOdds({ commit }, account: string): any {
     let _myodds: any = [];
 
-     BetherContractService.getUserBets(account)
-       .subscribe((res: any) => {
-
+    BetherContractService.getUserBets(account)
+      .subscribe((res: any) => {
 
         // if (!!res.length){
-        //   res.map((item: any) => {
-        //     let _odds = _myodds.findIndex((odds: any) => odds.matchId === item.matchId);
-        //     let _betting: any;
+        //   // res.map((item: any) => {
+        //   //   console.log(item, 123);
+        //   //   // let _odds = _myodds.findIndex((odds: any) => odds.matchId === item.matchId);
+        //   //   // let _betting: any;
+        //   //   //
+        //   //   // _betting = {
+        //   //   //   id: item.bettingId,
+        //   //   //   chooseHomeTeam: item.chooseHomeTeam,
+        //   //   //   stake: item.amount,
+        //   //   //   odds: (item.odd / 100),
+        //   //   //   receivedAmount: item.receivedAmount,
+        //   //   //   status: item.status,
+        //   //   //   status_string: item.status_string
+        //   //   // }
+        //   //   //
+        //   //   // if (item.odd > 0) {
+        //   //   //   _betting.odds = `+${_betting.odds}`
+        //   //   // }
+        //   //   //
+        //   //   // if (_odds < 0) {
+        //   //   //   _myodds.push({
+        //   //   //     matchId: item.matchId,
+        //   //   //     totalStake: item.amount,
+        //   //   //     bettings: [_betting]
+        //   //   //   })
+        //   //   // } else {
+        //   //   //   _myodds[_odds].totalStake += item.amount
+        //   //   //   _myodds[_odds].bettings.push(_betting)
+        //   //   // }
+        //   // });
         //
-        //     _betting = {
-        //       id: item.bettingId,
-        //       chooseHomeTeam: item.chooseHomeTeam,
-        //       stake: item.amount,
-        //       odds: (item.odd / 100),
-        //       receivedAmount: item.receivedAmount,
-        //       status: item.status,
-        //       status_string: item.status_string
-        //     }
-        //
-        //     if (item.odd > 0) {
-        //       _betting.odds = `+${_betting.odds}`
-        //     }
-        //
-        //     if (_odds < 0) {
-        //       _myodds.push({
-        //         matchId: item.matchId,
-        //         totalStake: item.amount,
-        //         bettings: [_betting]
-        //       })
-        //     } else {
-        //       _myodds[_odds].totalStake += item.amount
-        //       _myodds[_odds].bettings.push(_betting)
-        //     }
-        //   });
-         console.log(res)
-          commit(RECEVER_TOTAL_ODDS, res);
         // }
-
-      }, (error: any) => {
-        console.log(error, 'error');
-      });
+        commit(RECEVER_TOTAL_ODDS, res);
+    }, (error: any) => {
+      console.log(error, 'error');
+    });
   },
   oddsByMatchId({ commit, state }): any {
-    state.totalOdds.map((odds: any) => {
-      // SoloBetService.loadMatchesById(odds.matchId)
-      //   .subscribe((res: any) => {
-      //     odds.date = moment(res.time * 1000).format('YYYY/MM/DD HH:mm');
-      //     odds.date_string = moment(res.time * 1000).format('DD MMM YYYY / HH:mm');
-      //     odds.awayTeam = res.awayTeam;
-      //     odds.homeTeam = res.homeTeam;
-      //     commit(RECEVER_MY_ODDS, odds);
-      //   })
-    })
+    // state.totalOdds.map((odds: any) => {
+    //   // SoloBetService.loadMatchesById(odds.matchId)
+    //   //   .subscribe((res: any) => {
+    //   //     odds.date = moment(res.time * 1000).format('YYYY/MM/DD HH:mm');
+    //   //     odds.date_string = moment(res.time * 1000).format('DD MMM YYYY / HH:mm');
+    //   //     odds.awayTeam = res.awayTeam;
+    //   //     odds.homeTeam = res.homeTeam;
+    //   //     commit(RECEVER_MY_ODDS, odds);
+    //   //   })
+    // })
   },
   cancelOdds({ commit, dispatch }, oddsObj: any): any {
     // SoloBetService.cancelOdds(oddsObj)

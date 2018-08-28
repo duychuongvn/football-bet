@@ -12,4 +12,7 @@ export interface FixtureInterface {
   current_bet: number;
   settle: number;
   open: number;
+  approved: boolean;
+  awayGoals: number;
+  homeGoals: number;
 }

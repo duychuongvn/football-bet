@@ -46,6 +46,8 @@
 
     created() {
       this.loadBettings(this.match);
+
+      console.log(this.bettings);
     }
 
     oddsString (item: any) {
@@ -85,7 +87,7 @@
 
         this.isLoadingBetting = setInterval(() => {
           this.loadBettings(this.match);
-        }, 2000)
+        }, 2000);
       }
 
       if (value && value.key === DIALOG_CLOSE.BETTING_DEAL_RELOAD) {
@@ -123,7 +125,7 @@
         }
       }
 
-      if (this.isLoadingBetting && value.length !== this._countBeting) {
+      if (this.isLoadingBetting && value.length > this._countBeting) {
         clearInterval(this.isLoadingBetting);
         this.isLoadingBetting = undefined;
         this._countBeting = 0;

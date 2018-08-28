@@ -5,7 +5,7 @@ import { Punter } from './punter';
 
 export class Betting {
 
-  private _id: number = 0;
+  protected _id: number = 0;
   public get id(): number {
     return this._id;
   }
@@ -13,7 +13,7 @@ export class Betting {
     this._id = v;
   }
 
-  private _bettingId: number = 0;
+  protected _bettingId: number = 0;
   public get bettingId(): number {
     return this._bettingId;
   }
@@ -21,7 +21,7 @@ export class Betting {
     this._bettingId = v;
   }
 
-  private _bookmakerAddress: string = '';
+  protected _bookmakerAddress: string = '';
   public get bookmakerAddress(): string {
     return this._bookmakerAddress;
   }
@@ -29,7 +29,7 @@ export class Betting {
     this._bookmakerAddress = v;
   }
 
-  private _bookmakerAmount: number = 0;
+  protected _bookmakerAmount: number = 0;
   public get bookmakerAmount(): number {
     return this._bookmakerAmount;
   }
@@ -40,7 +40,7 @@ export class Betting {
     this._bookmakerAmount = v;
   }
 
-  private _bookmakerTeam: number = 0;
+  protected _bookmakerTeam: number = 0;
   public get bookmakerTeam(): number {
     return this._bookmakerTeam;
   }
@@ -48,7 +48,7 @@ export class Betting {
     this._bookmakerTeam = v;
   }
 
-  private _matchId: any;
+  protected _matchId: any;
   public get matchId(): any {
     return this._matchId;
   }
@@ -56,7 +56,7 @@ export class Betting {
     this._matchId = v;
   }
 
-  private _odds: number = 0;
+  protected _odds: number = 0;
   public get odds(): number {
     return this._odds;
   }
@@ -64,7 +64,7 @@ export class Betting {
     this._odds = v;
   }
 
-  private _settledAmount: number = 0;
+  protected _settledAmount: number = 0;
   public get settledAmount(): number {
     return this._settledAmount;
   }
@@ -80,7 +80,7 @@ export class Betting {
     return `${_openAmount.toFixed(3)} ETH`;
   }
 
-  private _status: number = 0;
+  protected _status: number = 0;
   public get status(): number {
     return this._status;
   }
@@ -88,7 +88,7 @@ export class Betting {
     this._status = v;
   }
 
-  private _punters: PunterInterface[] = [];
+  protected _punters: PunterInterface[] = [];
   public get punters(): PunterInterface[] {
     return this._punters;
   }
@@ -96,7 +96,7 @@ export class Betting {
     this._punters = v;
   }
 
-  private _account: string = '';
+  protected _account: string = '';
   public get account(): string {
     return this._account;
   }
@@ -109,7 +109,6 @@ export class Betting {
   }
 
   constructor(betting: BettingInterface) {
-
     if (betting) {
       this.id               = betting.id;
       this.bettingId        = betting.bettingId;
@@ -127,7 +126,7 @@ export class Betting {
     }
   }
 
-  private _addPunters(punters: PunterInterface[]) {
+  protected _addPunters(punters: PunterInterface[]) {
     const _punters: PunterInterface[] = [];
 
     punters.map((punter: PunterInterface) => _punters.push(new Punter(punter)));
