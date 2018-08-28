@@ -39,10 +39,10 @@
                 <tr>
                   <td>{{ props.index + 1 }}</td>
                   <td> <account-addr :address="props.item.bookmakerAddress"/> </td>
-                  <td class="text-xs-center"> {{ oddsString(props.item, odds.match) }}</td>
+                  <td class="text-xs-center">{{ oddsString(props.item, odds.match) }}</td>
                   <td class="text-xs-center">{{ props.item.bookmakerAmountString }}</td>
                   <td class="text-xs-center">{{ props.item.openAmount }}</td>
-                  <td class="text-xs-center">{{ props.item.status }}</td>
+                  <td class="text-xs-center">{{ props.item.statusString }}</td>
                   <td class="text-xs-left">
                     <v-tooltip bottom lazy :disabled="props.item.isCanceled">
                       <v-btn class="text-capitalize" color="red lighten-1" small slot="activator"

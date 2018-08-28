@@ -87,6 +87,23 @@ export class Betting {
   public set status(v: number) {
     this._status = v;
   }
+  // @ts-ignore
+  public get statusString(): string {
+    switch (+this.status) {
+      case 0:
+        return 'Open';
+      case 1:
+        return 'Deal';
+      case 2:
+        return 'Settled';
+      case 3:
+        return 'Canceled';
+      case 4:
+        return 'Refunded';
+      case 5:
+        return 'Done';
+    }
+  }
 
   protected _punters: PunterInterface[] = [];
   public get punters(): PunterInterface[] {
