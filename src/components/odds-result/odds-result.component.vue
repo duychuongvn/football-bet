@@ -8,6 +8,8 @@ import { DIALOG_NAME } from '@/shared/enums/dialog';
 
 import { Profile } from '@/shared/model/profile';
 
+import * as moment from 'moment';
+
 @Component({
   components: {
     'match-punters': () => import('@/components/match-result-punters/match-result-punters.component.vue')
@@ -43,10 +45,11 @@ export default class OddsResultComponent extends Vue {
 
       _odds.match.homeTeam = odds.match.homeTeam;
       _odds.match.awayTeam = odds.match.awayTeam;
-      _odds.match.date = odds.match.time * 1000;
+      _odds.match.date = moment(odds.match.time * 1000).format('YYYY-MM-DD HH:mm:ss');
 
       _odssRs.push(_odds);
     });
+    console.log(_odssRs)
     return _odssRs;
   }
 

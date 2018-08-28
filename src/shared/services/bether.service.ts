@@ -190,7 +190,9 @@ export const BetherContractService = {
       }
 
       if(!bettingItem) {
-        bettingItem = {"bettingId": betting.bettingId,
+        bettingItem = {
+          "id": +betting.bettingId.valueOf(),
+          "bettingId": +betting.bettingId.valueOf(),
           'bookmakerAddress': betting.bookmakerAddress,
           'bookmakerTeam': betting.bookmakerTeam,
           'odds':betting.odds,
@@ -198,7 +200,8 @@ export const BetherContractService = {
           'settledAmount': betting.settledAmount,
           'status':betting.status,
           'punters': [] as any
-        }
+        };
+
         match.bettings.push(bettingItem);
         match.summary.stake = (parseFloat(match.summary.stake)+ parseFloat(bettingItem.bookmakerAmount)).toFixed(3);
       }

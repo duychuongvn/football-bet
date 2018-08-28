@@ -46,8 +46,6 @@
 
     created() {
       this.loadBettings(this.match);
-
-      console.log(this.bettings);
     }
 
     oddsString (item: any) {
