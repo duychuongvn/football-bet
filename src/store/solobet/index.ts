@@ -13,7 +13,7 @@ export const state: SolobetState = {
   bether: undefined,
   matches: undefined,
   userSummary: undefined
-}
+};
 
 const namespaced: boolean = true;
 

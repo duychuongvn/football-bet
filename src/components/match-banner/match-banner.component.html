@@ -12,12 +12,22 @@
             <div class="mr-2" :class="match.homeTeamFlag50"></div>
             <p class="bet-name bet-name--lg">{{ match.fixtureName }}</p>
             <div class="ml-2" :class="match.awayTeamFlag50"></div>
+
+            <v-btn color="yellow" small outline v-if="match.isGoLive && !match.isFinish">
+              <v-icon left dark small>fas fa-futbol fa-spin</v-icon>
+              Live
+            </v-btn>
+
+            <v-btn color="green accent-2" small outline v-if="match.isFinish">
+              <v-icon left dark small>fas fa-futbol</v-icon>
+              Finish
+            </v-btn>
           </div>
         </div>
 
-        <div class="betting-countdown">
-          <p class="caption mb-2 text-xs-right">The match will start in</p>
-          <flip-countdown :deadline="match.dateCountDown" class="countdown-md countdown-betting pt-0" />
+        <div class="betting-countdown" v-if="!match.isGoLive">
+          <p class="caption mb-2 text-xs-right" :class="{ 'caption-day': match.isToDay }">The match will start in</p>
+          <flip-countdown :deadline="match.dateCountDown" :isDays="match.isToDay" class="countdown-md countdown-betting pt-0" />
         </div>
         <!-- <span>World Cup Russia 2018</span> -->
       </v-card-text>
@@ -25,7 +35,7 @@
   </v-flex>
 
   <v-flex xs12 text-xs-right>
-    <v-btn dark color="teal lighten-1 ma-0" @click="createBet">
+    <v-btn dark color="teal lighten-1 ma-0" @click="createBet" :disabled="match.isGoLive">
       <v-icon left>fas fa-plus-square</v-icon>
       New Bet
     </v-btn>

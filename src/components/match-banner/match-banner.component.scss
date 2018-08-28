@@ -1,5 +1,9 @@
 .betting-countdown {
   p.caption {
     margin-right: 230px;
+
+    &.caption-day {
+      margin-right: 150px;
+    }
   }
 }

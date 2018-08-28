@@ -1,6 +1,6 @@
 <div class="container flip-clock">
   <template v-for="data in timeData">
-    <span v-bind:key="data.label" class="flip-clock__piece" :id="data.elementId">
+    <span v-bind:key="data.label" class="flip-clock__piece" :id="data.elementId" v-show="isShowDay(data.label)">
       <span class="flip-clock__card flip-card">
         <b class="flip-card__top">{{data.current | twoDigits}}</b>
         <b class="flip-card__bottom" v-bind:data-value="data.current | twoDigits"></b>

@@ -1,15 +1,16 @@
 import { ActionTree } from 'vuex';
 import { RootState } from '@/store/types';
-import {CREATE_OFFER, CREATE_DEAL, RECEVER_TOTAL_ODDS, RECEVER_MATCHES, USER_SUMMARY} from '@/store/mutations';
+import { CREATE_OFFER, CREATE_DEAL, INIT_CONTRACT, RECEVER_MATCHES, USER_SUMMARY} from '@/store/mutations';
 import { BetherContractService } from '@/shared/services/bether.service'
 import { Web3Vue } from '@/shared/services/web3.service'
 
-import { HandicapInterface } from '@/shared/interfaces/handicap'
-import {match} from '@/store/matches/types';
+import { HandicapInterface } from '@/shared/interfaces/handicap';
 
 export const actions: ActionTree<any, RootState> = {
   initContract({ commit }): any {
-    BetherContractService.init().subscribe();
+    BetherContractService.init().subscribe((res: any) => {
+      commit(INIT_CONTRACT, res);
+    });
   },
   createOffer({ commit }, offerObj: HandicapInterface): any {
     const _matchId = Web3Vue.toSHA3(offerObj.match)
@@ -45,19 +46,14 @@ export const actions: ActionTree<any, RootState> = {
         console.log(error)
       });
   },
-
   matches({commit}):any {
     BetherContractService.loadMatches().subscribe((matches: any) => {
-
       commit(RECEVER_MATCHES, matches);
-
     })
   },
   userSummary({commit}, account: any):any {
     BetherContractService.countUserTotalBet(account).subscribe((summary:any)=> {
-      console.log(summary);
       commit(USER_SUMMARY, summary);
     })
   }
-
 };

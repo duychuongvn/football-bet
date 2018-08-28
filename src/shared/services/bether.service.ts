@@ -42,7 +42,6 @@ export const BetherContractService = {
     }
   }),
 
-
   oddsDeal:(dealObj: any)  => Rx.Observable.create((observer: any) => {
 
     BetherContractService.getBettingInfo(dealObj.bettingId).subscribe((result:any)=>{
@@ -60,12 +59,8 @@ export const BetherContractService = {
       } else {
         throw "Betting not valid"
       }
-
     })
-
-
   }),
-
 
   updateScore:(scoreObj:any)  => Rx.Observable.create((observer: any) => {
     let id = Web3Vue.toSHA3(scoreObj.bettingId)
@@ -83,7 +78,6 @@ export const BetherContractService = {
   }),
 
   getBettingInfo:(bettingIdx: number) =>  Rx.Observable.create((observer: any) => {
-
     bether.getBettingInfo.call(bettingIdx, (error:any, result:any) => {
       if(error) {
         observer.error(error);
@@ -146,8 +140,6 @@ export const BetherContractService = {
   }),
 
   countBettings: (matchIds: any []) => Rx.Observable.create((observer: any) => {
-
-
     bether.countBetStatus.call(matchIds, (err:any, result:any) => {
 
           var bettingStatus = [];
@@ -197,7 +189,6 @@ export const BetherContractService = {
         }
       }
 
-      console.log("bettingitem: ", bettingItem)
       if(!bettingItem) {
         bettingItem = {"bettingId": betting.bettingId,
           'bookmakerAddress': betting.bookmakerAddress,
@@ -291,14 +282,13 @@ export const BetherContractService = {
           match.status = 2;
         }
       }
-      console.log(match)
+
       observer.onNext(match);
       observer.onCompleted();
     })
   }),
 
   loadMatches: () => Rx.Observable.create((observer: any) => {
-
       bether.getMatchIds.call((err:any, matchIds:any)=>{
         var matches = [] as any;
         console.log(matchIds)
@@ -321,9 +311,8 @@ export const BetherContractService = {
         summary.currentPlaced = BetherContractService.toEther(balance.toNumber());
         observe.onNext(summary);
         observe.onCompleted();
-      })
-
-    })
+      });
+    });
   }),
   toEther(wei: number) {
     return parseFloat(window.web3.fromWei(wei, 'ether')).toFixed(3);

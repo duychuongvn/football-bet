@@ -20,9 +20,13 @@
     @Action('registerWeb3', { namespace: 'web3' }) registerWeb3: any;
     @Getter('isAccount', { namespace: 'web3' }) isAccount!: boolean;
 
+    @Action('initContract', { namespace: 'solobet' }) initContract: any;
+
     // Init App
     created() {
       this.initProgressBar();
+      this.registerWeb3();
+      this.initContract();
     }
 
     get isHeader(): boolean {

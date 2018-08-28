@@ -8,13 +8,14 @@
   @Component
   export default class HeaderComponent extends Vue {
     // Init Vuex
-    @Action('registerWeb3', { namespace: 'web3' }) registerWeb3: any;
-    @Action('initContract', { namespace: 'solobet' }) initContract: any;
     @Action('getNetwork', { namespace: 'web3' }) getNetwork: any;
     @Action('getAccount', { namespace: 'web3' }) getAccount: any;
-    @Action('userSummary', { namespace: 'solobet' }) userSummary: any;
     @Getter('web3Init', { namespace: 'web3' }) web3Init: any;
     @Getter('isAccount', { namespace: 'web3' }) isAccount!: boolean;
+
+    @Action('userSummary', { namespace: 'solobet' }) getUserSummary: any;
+    @Getter('bether', { namespace: 'solobet' }) bether: any;
+    @Getter('userSummary', { namespace: 'solobet' }) userSummary: any;
 
     public isFixed: boolean = false;
     private isAuthRoute: Array<string> = ['profile', 'match-details', 'bether-manager'];
@@ -23,25 +24,22 @@
       this.initWeb3Metamask();
 
       window.addEventListener('scroll', this.handleScroll);
-      this.userSummary(this.accountAddr);
     }
 
     initWeb3Metamask() {
-      this.registerWeb3();
-
       if (this.web3Init.web3) {
         this.getNetwork();
 
         if (this.web3Init.account && !!this.web3Init.account.address) {
           this.getAccount();
+          this.fetchAccountSummary(this.web3Init.account.address);
         }
-
-        this.initContract();
 
         this.web3Init.web3.currentProvider.publicConfigStore.subscribe((item: any) => {
           if (item.selectedAddress) {
             this.web3Init.account.address = item.selectedAddress;
             this.getAccount();
+            this.fetchAccountSummary(item.selectedAddress);
           } else {
             this.web3Init.account.address = undefined;
             this.web3Init.account.balance = 0;
@@ -65,16 +63,23 @@
     get accountBalance(): string {
       return `${+this.web3Init.account.balance} ETH`;
     }
-    get totalBets(): string {
-      return this.userSummary.totalBets;
-    }
 
     get avatarMMask(): string {
       return this.web3Init.account.avatar;
     }
 
+    get userInfo() {
+      return !!this.userSummary ? this.userSummary: '';
+    }
+
     handleScroll() {
       this.isFixed = (window.scrollY > 45);
+    }
+
+    fetchAccountSummary(address: any) {
+      if (this.bether && !!this.bether.address) {
+        this.getUserSummary(address);
+      }
     }
   }
 </script>

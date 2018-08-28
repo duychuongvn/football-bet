@@ -3,7 +3,6 @@ import { FixtureInterface } from '@/shared/interfaces/fixture'
 import * as moment from 'moment';
 
 export class Fixture {
-
   private _matchId: any;
   public get matchId(): any {
     return this._matchId;
@@ -50,6 +49,12 @@ export class Fixture {
   public get isGoLive(): boolean {
     return moment(this.date).isSameOrBefore(new Date());
   }
+  public get isFinish(): boolean {
+    const _timeBet = moment(this.date).add(2, 'hours').format('YYYY-MM-DD HH:mm:ss');
+    const _currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
+
+    return moment(_timeBet).isSameOrBefore(_currentTime);
+  }
 
   private _status: string = '';
   public get status(): string {
@@ -64,7 +69,8 @@ export class Fixture {
     return this._homeTeam.toName();
   }
   public get homeTeamFlag(): string {
-    return require(`@/assets/flag/${this.homeTeam.toSlug()}.png`);
+    return require(`@/assets/images/no-images.png`);
+    // return require(`@/assets/flag/${this.homeTeam.toSlug()}.png`);
   }
   public get homeTeamFlag25(): string {
     return `flag-25 ${this.homeTeam.toSlug()}`;
@@ -81,7 +87,8 @@ export class Fixture {
     return this._awayTeam.toName();
   }
   public get awayTeamFlag(): string {
-    return require(`@/assets/flag/${this.awayTeam.toSlug()}.png`);
+    return require(`@/assets/images/no-images.png`);
+    // return require(`@/assets/flag/${this.awayTeam.toSlug()}.png`);
   }
   public get awayTeamFlag25(): string {
     return `flag-25 ${this.awayTeam.toSlug()}`;
@@ -92,9 +99,32 @@ export class Fixture {
   public set awayTeam(v: string) {
     this._awayTeam = v;
   }
-
   public get fixtureName(): string {
     return `${this.homeTeam} ~ ${this.awayTeam}`;
+  }
+
+  private _isToDay: boolean = false;
+  public get isToDay(): boolean {
+    return this._isToDay;
+  }
+  public set isToDay(value: boolean) {
+    this._isToDay = value;
+  }
+
+  private _isTomorrow: boolean = false;
+  public get isTomorrow(): boolean {
+    return this._isTomorrow;
+  }
+  public set isTomorrow(value: boolean) {
+    this._isTomorrow = value;
+  }
+
+  private _isFuture: boolean = false;
+  public get isFuture(): boolean {
+    return this._isFuture;
+  }
+  public set isFuture(value: boolean) {
+    this._isFuture = value;
   }
 
   public get key(): string {

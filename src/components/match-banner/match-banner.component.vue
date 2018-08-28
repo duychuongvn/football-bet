@@ -3,9 +3,11 @@
 
 <script lang="ts">
   import { Component, Vue, Prop } from 'vue-property-decorator';
-  import { Action } from 'vuex-class'
+  import { Action } from 'vuex-class';
 
-  import { DIALOG_NAME } from '@/shared/enums/dialog'
+  import { DIALOG_NAME } from '@/shared/enums/dialog';
+
+  import * as moment from 'moment';
 
   @Component({
     components: {
@@ -19,6 +21,10 @@
     @Action('setInitData', { namespace: 'dialog' }) setInitData: any;
 
     createBet() {
+      if (this.match.isGoLive) {
+        return;
+      }
+
       const _initOpts = {
         key: DIALOG_NAME.STORE_BETTING,
         isOpen: true,

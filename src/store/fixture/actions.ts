@@ -33,27 +33,25 @@ export const actions: ActionTree<any, RootState> = {
       IpfsService.getFixture(fixtures[dataObj.key][i])
         .subscribe((res: any) => {
           if (res.length !== 0) {
-            // var _todayIds = [] as any[];
-            // var _tomorrowIds =  [] as  any[];
-            // var _futureIds = [] as any[];
 
             res.map((item: any) => {
               const _betting = new Fixture(item);
+              const _betDay = moment(item.utcDate).format('YYYY-MM-DD');
               _betting.matchId = Web3Vue.toSHA3(_betting);
-              if (moment(item.utcDate, 'YYYY-MM-DD').isSame(_currentDate)) {
 
+              if (moment(_betDay).isSameOrAfter(_currentDate) && moment(_betDay).isBefore(_tomorrowDate)) {
+                _betting.isToDay = true;
                 _today.push(_betting);
-                // _todayIds.push(_betting.matchId);
               }
 
-              if (moment(item.utcDate, 'YYYY-MM-DD').isSame(_tomorrowDate)) {
+              if (moment(_betDay).isSameOrBefore(_tomorrowDate) && moment(_betDay).isAfter(_currentDate)) {
+                _betting.isTomorrow = true;
                 _tomorrow.push(_betting);
-                // _tomorrowIds.push(_betting.matchId);
               }
 
-              if (moment(item.utcDate, 'YYYY-MM-DD').isSameOrAfter(_futureDate)) {
+              if (moment(_betDay).isSameOrAfter(_futureDate)) {
+                _betting.isFuture = true;
                 _future.push(_betting);
-                // _futureIds.push(_betting.matchId);
               }
             });
           }

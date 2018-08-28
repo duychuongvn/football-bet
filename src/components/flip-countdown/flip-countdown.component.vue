@@ -15,6 +15,9 @@ export default {
     },
     islabel: {
       type: Boolean
+    },
+    isDays: {
+      type: Boolean
     }
   },
   data () {
@@ -129,6 +132,12 @@ export default {
           el.classList.add('flip')
         }
       }
+    },
+    isShowDay(label) {
+      if (label === 'Days') {
+        return !this.isDays;
+      }
+      return true;
     }
   },
   beforeDestroy () {
