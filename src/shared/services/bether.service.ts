@@ -286,9 +286,8 @@ export const BetherContractService = {
 
   loadMatches: () => Rx.Observable.create((observer: any) => {
       bether.getMatchIds.call((err:any, matchIds:any)=>{
-        var matches = [] as any;
-        console.log(matchIds)
-        for(var i =0;i< matchIds.length;i++) {
+        let matches = [] as any;
+        for(let i = 0; i < matchIds.length; i++) {
            BetherContractService.loadMatchesById(matchIds[i]).subscribe((match:any)=> {
              matches.push(match);
            })
@@ -300,7 +299,7 @@ export const BetherContractService = {
 
   countUserTotalBet: (account: any) => Rx.Observable.create((observe:any)=> {
     bether.countUserBet.call(account, (err:any, result:any)=> {
-      var summary = {"totalBets": BetherContractService.toEther(result[0].toNumber()),
+      let summary = {"totalBets": BetherContractService.toEther(result[0].toNumber()),
         "totalSettled": BetherContractService.toEther(result[1].toNumber()),
         "currentPlaced": null as any};
       bether.getPlayerBalance.call(account, (error:any, balance: any)=> {

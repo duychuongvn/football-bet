@@ -10,7 +10,7 @@ export const mutations: MutationTree<any> = {
     const _fixturesData = {
       name: fixturesObj.name,
       bettings: []
-    }
+    };
 
     switch(fixturesObj.key) {
       case 'TODAY':

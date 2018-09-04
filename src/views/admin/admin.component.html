@@ -10,11 +10,11 @@
 
         <v-card-text>
           <v-layout row wrap>
-            <v-flex xs3>
+            <v-flex xs5>
               <v-select
                 v-model="matchId"
-                :items="matches"
-                item-text="bettingName"
+                :items="allBetting"
+                item-text="matchName"
                 item-value="matchId"
                 content-class="bet-select"
                 dark color="white" label="List Betting"></v-select>
@@ -27,8 +27,7 @@
                 </v-flex>
                 <v-flex xs2>
                   <div class="betting-wrap justify-center">
-                    <image-comp imgWidth="60px" imgHeight="30px" :imgPath="homeTeamFlag" :imgName="homeTeam"></image-comp>
-                    <p class="bet-name bet-name--lg">{{ homeTeam }}</p>
+                    <p class="bet-name">{{ homeTeam }}</p>
                   </div>
                 </v-flex>
                 <v-flex xs2>
@@ -42,8 +41,7 @@
                 </v-flex>
                 <v-flex xs2>
                   <div class="betting-wrap justify-center">
-                    <image-comp imgWidth="60px" imgHeight="30px" :imgPath="awayTeamFlag" :imgName="awayTeam"></image-comp>
-                    <p class="bet-name bet-name--lg">{{ awayTeam }}</p>
+                    <p class="bet-name">{{ awayTeam }}</p>
                   </div>
                 </v-flex>
                 <v-flex xs3 text-xs-center>

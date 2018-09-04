@@ -172,6 +172,7 @@ export class Fixture {
       this.homeGoals = fixture.homeGoals;
       this.awayGoals = fixture.awayGoals;
       this.summary   = { canceled:0, open:0,portionSettled:0,refuned:0, settledOrDone:0 };
+      this.matchId   = fixture.matchId;
     }
   }
 }
