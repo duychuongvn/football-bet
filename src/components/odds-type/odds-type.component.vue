@@ -101,7 +101,7 @@ export default class OddsTypeComponent extends Vue {
     if (key === this.oddsTypeSelected) return;
 
     this.oddsTitle.filter((item: any) => {
-      item.active = false
+      item.active = false;
 
       if (item.key === key) {
         item.active = true
@@ -109,7 +109,9 @@ export default class OddsTypeComponent extends Vue {
     });
 
     this.oddsTypeSelected = key;
-    this.changedFilter(Object.keys(USER_TYPE_OPEN)[0])
+
+    console.log(this.oddsTypeSelected)
+    // this.changedFilter(Object.keys(USER_TYPE_OPEN)[0])
   }
 }
 </script>

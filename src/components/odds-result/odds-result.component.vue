@@ -1,7 +1,7 @@
 <template src="./odds-result.component.html"></template>
 
 <script lang="ts">
-import { Component, Vue, Watch } from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import { Action, Getter } from 'vuex-class';
 
 import { DIALOG_NAME } from '@/shared/enums/dialog';
@@ -35,11 +35,25 @@ export default class OddsResultComponent extends Vue {
     { text: '', sortable: false }
   ];
 
+  public oddsTitle: Array<Object> = [
+    {
+      name: 'Open Matches',
+      key: 'OPEN',
+      active: true
+    },
+    {
+      name: 'Finished Matches',
+      key: 'FINISHED',
+      active: false
+    }
+  ];
+  public oddsTypeSelected: string = 'OPEN';
+
   public selectedParent: string = 'DATE';
   public selectedChild: number = 1;
 
   get oddsResult() {
-    const _odssRs: Profile[] = [];
+    const _oddsRs: Profile[] = [];
     this.totalOdds.map((odds: any) => {
       const _odds: Profile = new Profile(odds);
 
@@ -47,10 +61,14 @@ export default class OddsResultComponent extends Vue {
       _odds.match.awayTeam = odds.match.awayTeam;
       _odds.match.date = moment(odds.match.time * 1000).format('YYYY-MM-DD HH:mm:ss');
 
-      _odssRs.push(_odds);
+      _odds.bettings = _odds.bettings.filter((betting: any) => {
+        return (this.oddsTypeSelected === 'OPEN') ? betting.status < 3 : betting.status > 3;
+      });
+
+      _oddsRs.push(_odds);
     });
-    console.log(_odssRs)
-    return _odssRs;
+
+    return _oddsRs;
   }
 
   oddsString (item: any, match: any) {
@@ -62,9 +80,18 @@ export default class OddsResultComponent extends Vue {
     return `${_teamName} @${_odds}`;
   }
 
-  @Watch('totalOdds')
-  getTotalOdds(value: any, oldValue: any) {
-    // this.oddsByMatchId();
+  selectOddsType(key: string) {
+    if (key === this.oddsTypeSelected) return;
+
+    this.oddsTitle.filter((item: any) => {
+      item.active = false;
+
+      if (item.key === key) {
+        item.active = true
+      }
+    });
+
+    this.oddsTypeSelected = key;
   }
 
   dialogCancel(odds: any, matchId: string) {
