@@ -65,21 +65,21 @@ export const actions: ActionTree<any, RootState> = {
     // })
   },
   cancelOdds({ commit, dispatch }, oddsObj: any): any {
-    // SoloBetService.cancelOdds(oddsObj)
-    //   .subscribe((res: any) => {
-    //     commit(CANCEL_ODDS, res);
-    //     dispatch('dialog/openDialog', {
-    //       status: {
-    //         key: DIALOG_NAME.ODDS_CANCEL,
-    //         isOpen: false
-    //       },
-    //       initData: {
-    //         key: DIALOG_CLOSE.ODDS_RELOAD
-    //       }
-    //     }, {root: true});
-    //   }, (errors: any) => {
-    //     console.log(errors);
-    //   })
+    BetherContractService.cancelOffer(oddsObj)
+      .subscribe((res: any) => {
+        commit(CANCEL_ODDS, res);
+        dispatch('dialog/openDialog', {
+          status: {
+            key: DIALOG_NAME.ODDS_CANCEL,
+            isOpen: false
+          },
+          initData: {
+            key: DIALOG_CLOSE.ODDS_RELOAD
+          }
+        }, {root: true});
+      }, (errors: any) => {
+        console.log(errors);
+      })
   },
   filterOdds({ commit }, filter: any): any {
     commit(FILTER_ODDS, ODDS_STATUS[filter])

@@ -238,6 +238,7 @@ export const BetherContractService = {
               BetherContractService.cacheBetting(bettings, betting)
             });
           }
+          console.log(bettings);
           observe.onNext(bettings);
           observe.onCompleted();
         });
@@ -309,5 +310,25 @@ export const BetherContractService = {
   }),
   toEther(wei: number) {
     return parseFloat(window.web3.fromWei(wei, 'ether')).toFixed(3);
-  }
+  },
+
+  cancelOffer : (oddsObj: any) => Rx.Observable.create((observe: any)=>{
+    console.log(oddsObj)
+    bether.cancelOffer(oddsObj.bettingId, {from: oddsObj.account}, (err:any, success:any)=>{
+      observe.onNext(success);
+      observe.onCompleted();
+    })
+  }),
+
+  claimStake : (claimStakeObj: any) => Rx.Observable.create((observe: any)=>{
+    var bettingIds = [] as any [];
+    for(var i=0; i< claimStakeObj.bettings.length;i++) {
+      bettingIds.push(claimStakeObj.bettings.length[i].bettingId);
+    }
+
+    bether.cancelOffer(claimStakeObj.matchId, bettingIds, {from: claimStakeObj.account}, (err:any, success:any)=>{
+      observe.onNext(success);
+      observe.onCompleted();
+    })
+  }),
 };
