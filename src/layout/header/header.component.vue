@@ -5,6 +5,10 @@
 
   import { Action, Getter } from 'vuex-class';
 
+  import { BetherContractService } from '@/shared/services/bether.service';
+
+  import * as moment from 'moment';
+
   @Component
   export default class HeaderComponent extends Vue {
     // Init Vuex
@@ -20,8 +24,16 @@
     public isFixed: boolean = false;
     private isAuthRoute: Array<string> = ['profile', 'match-details', 'bether-manager'];
 
+    public volumnEth: any = {
+      eth_24h: 0,
+      eth_7d: 0
+    };
+
     created() {
       this.initWeb3Metamask();
+
+      this.fetchVolumn(moment().add(-1, 'd').unix());
+      this.fetchVolumn(moment().add(-7, 'd').unix(), false);
 
       window.addEventListener('scroll', this.handleScroll);
     }
@@ -72,6 +84,14 @@
       return !!this.userSummary ? this.userSummary: '';
     }
 
+    get volumn24hrs () {
+      return `${this.volumnEth.eth_24h} ETH`;
+    }
+
+    get volumn7days () {
+      return `${this.volumnEth.eth_7d} ETH`;
+    }
+
     handleScroll() {
       this.isFixed = (window.scrollY > 45);
     }
@@ -80,6 +100,18 @@
       if (this.bether && !!this.bether.address) {
         this.getUserSummary(address);
       }
+    }
+
+    fetchVolumn(date: number, type: boolean = true) {
+      const _currentTime = moment().add(-1, 'd').unix();
+      BetherContractService.getVolume(date)
+        .subscribe((res: any) => {
+          if (type) {
+            this.volumnEth.eth_24h = res
+          } else {
+            this.volumnEth.eth_7d = res;
+          }
+        })
     }
   }
 </script>

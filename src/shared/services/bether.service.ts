@@ -250,7 +250,7 @@ export const BetherContractService = {
         if(err) {
           observe.error(err)
         } else {
-          observe.onNext(result.toNumber())
+          observe.onNext(BetherContractService.toEther(result.toNumber()))
         }
 
         observe.onCompleted();
