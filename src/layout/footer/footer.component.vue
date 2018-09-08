@@ -9,17 +9,23 @@
       {
         color: 'blue darken-3',
         name: 'fab fa-telegram-plane',
-        tooltip: 'telegram'
+        tooltip: 'Telegram',
+        link_social: 'https://t.me/joinchat/JmFIJw1TjIyq43r_3c-c1Q',
+        target: '_blank'
       },
       {
         color: 'light-blue darken-1',
         name: 'fab fa-twitter',
-        tooltip: 'Twitter'
+        tooltip: 'Twitter',
+        link_social: 'https://twitter.com/betbether',
+        target: '_blank'
       },
       {
         color: 'blue-grey darken-3',
         name: 'fab fa-github',
-        tooltip: 'Github'
+        tooltip: 'Github',
+        link_social: 'https://twitter.com/betbether',
+        target: '_blank'
       },
       {
         color: 'teal lighten-1',

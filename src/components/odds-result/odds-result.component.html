@@ -34,6 +34,7 @@
       <v-expansion-panel class="accor-fixture" :value="0">
         <v-expansion-panel-content
             v-for="odds in oddsResult"
+            v-show="!!odds.bettings.length"
             :key="odds.matchId"
             class="bg-transparent"
             expand-icon="fas fa-chevron-down font-sm">
@@ -64,13 +65,13 @@
                       </v-btn>
                       <span>Cancel</span>
                     </v-tooltip>
-                    <v-tooltip bottom lazy :disabled="props.item.isCanceled">
-                      <v-btn class="text-capitalize" color="red lighten-1" small slot="activator"
+                    <v-tooltip bottom lazy v-if="props.item.status >= 3">
+                      <v-btn class="text-capitalize" color="teal lighten-1" small slot="activator"
                              @click="dialogClaimStake(props, odds.matchId)" :disabled="props.item.isCanceled">
-                        <v-icon size="18" left class="mr-2">fas fa-times-circle</v-icon>
-                        Claim Stake
+                        <v-icon size="18" left class="mr-2">fas fa-hand-holding-usd</v-icon>
+                        Request for Payout
                       </v-btn>
-                      <span>Claim Stake</span>
+                      <span>Request for Payout</span>
                     </v-tooltip>
                     <v-tooltip bottom lazy>
                       <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator"
