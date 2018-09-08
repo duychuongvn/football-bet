@@ -255,24 +255,27 @@ contract BetherContract is Ownable {
 
     uint32[] memory betIdxes = matchBets[matchId];
     for (uint256 i = 0; i < betIdxes.length; i++) {
-
-      Betting storage _betting = bets[betIdxes[i]];
-
-      if (_betting.status == BetStatus.Deal || _betting.status == BetStatus.Settled) {
-        doTransfer(_match, _betting, 0);
-        _betting.status = BetStatus.Done;
-      }
-      else if (_betting.status == BetStatus.Open) {
-
-        refund(_betting);
-        _betting.status = BetStatus.Refunded;
-      }
-
+      doRefundOrTransfer(_match, betIdxes[i]);
     }
 
     rmBetIdx(_match);
     return true;
   }
+
+  function doRefundOrTransfer(Match _match, uint bettingId ) internal returns(bool) {
+    Betting storage _betting = bets[bettingId];
+    require(_match.id == _betting.matchId);
+    if (_betting.status == BetStatus.Deal || _betting.status == BetStatus.Settled) {
+      doTransfer(_match, _betting, 0);
+      _betting.status = BetStatus.Done;
+    }
+    else if (_betting.status == BetStatus.Open) {
+
+      refund(_betting);
+      _betting.status = BetStatus.Refunded;
+    }
+  }
+
   function rmBetIdx(Match _match) private returns (bool) {
 
     uint32 toDelete = _match.idx;
@@ -383,14 +386,9 @@ contract BetherContract is Ownable {
     Match memory _match = matches[matchId];
     require(_match.status == MatchStatus.Finished);
     for (uint i = 0; i < bettingIdxes.length; i++) {
-      Betting storage _betting = bets[bettingIdxes[i]];
-      if (_betting.matchId == matchId) {
-        doTransfer(_match, _betting, bettingIdxes[i]);
-      }
-
+      doRefundOrTransfer(_match, bettingIdxes[i]);
     }
     return true;
-
   }
 
   function getVolume(uint48 time) public  view returns (uint256) {

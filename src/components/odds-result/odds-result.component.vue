@@ -93,7 +93,18 @@ export default class OddsResultComponent extends Vue {
 
     this.oddsTypeSelected = key;
   }
-
+  dialogClaimStake(bettings: any[], matchId: any) {
+    const _initOpts = {
+      key: DIALOG_NAME.CLAIM_STAKE,
+      isOpen: true,
+      name: 'dialog-odds-claim',
+      initData: {
+        odds: bettings,
+        matchId: matchId
+      }
+    };
+    this.openDialog(_initOpts);
+  }
   dialogCancel(odds: any, matchId: string) {
     const _initOpts = {
       key: DIALOG_NAME.ODDS_CANCEL,

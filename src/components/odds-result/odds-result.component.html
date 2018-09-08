@@ -64,6 +64,14 @@
                       </v-btn>
                       <span>Cancel</span>
                     </v-tooltip>
+                    <v-tooltip bottom lazy :disabled="props.item.isCanceled">
+                      <v-btn class="text-capitalize" color="red lighten-1" small slot="activator"
+                             @click="dialogClaimStake(props, odds.matchId)" :disabled="props.item.isCanceled">
+                        <v-icon size="18" left class="mr-2">fas fa-times-circle</v-icon>
+                        Claim Stake
+                      </v-btn>
+                      <span>Claim Stake</span>
+                    </v-tooltip>
                     <v-tooltip bottom lazy>
                       <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator"
                              @click="openShare(props.item.id, odds.homeTeam, odds.awayTeam, odds.date)">
