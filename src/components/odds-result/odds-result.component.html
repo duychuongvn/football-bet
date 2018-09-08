@@ -57,7 +57,7 @@
                   <td class="text-xs-center">{{ props.item.openAmount }}</td>
                   <td class="text-xs-center">{{ props.item.statusString }}</td>
                   <td class="text-xs-left">
-                    <v-tooltip bottom lazy :disabled="props.item.isCanceled">
+                    <v-tooltip bottom lazy :disabled="props.item.status > 0">
                       <v-btn class="text-capitalize" color="red lighten-1" small slot="activator"
                              @click="dialogCancel(props.item, odds.matchId)" :disabled="props.item.isCanceled">
                         <v-icon size="18" left class="mr-2">fas fa-times-circle</v-icon>
@@ -69,9 +69,9 @@
                       <v-btn class="text-capitalize" color="teal lighten-1" small slot="activator"
                              @click="dialogClaimStake(props, odds.matchId)" :disabled="props.item.isCanceled">
                         <v-icon size="18" left class="mr-2">fas fa-hand-holding-usd</v-icon>
-                        Request for Payout
+                        Request Payout
                       </v-btn>
-                      <span>Request for Payout</span>
+                      <span>Request Payout</span>
                     </v-tooltip>
                     <v-tooltip bottom lazy>
                       <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator"
