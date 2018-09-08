@@ -5,19 +5,17 @@
   import { Getter, Action } from 'vuex-class'
 
   import * as moment from 'moment';
+  import { BetherContractService } from "@/shared/services/bether.service";
 
   @Component
   export default class AdminPage extends Vue {
-    @Action('initContract', { namespace: 'solobet' }) initContract: any;
-    @Action('updateScore', { namespace: 'solobet' }) updateScore: any;
-    @Action('approveScore', { namespace: 'solobet' }) approveScore: any;
     @Action('matches', { namespace: 'solobet' }) matches: any;
 
     @Getter('matches', { namespace: 'solobet' }) allMatches: any;
     @Getter('account', { namespace: 'web3' }) account: any;
 
-    public homeGoals: string = '';
-    public awayGoals: string = '';
+    public homeGoals: number = undefined;
+    public awayGoals: number = undefined;
     public matchId: any = null;
 
     created() {
@@ -38,7 +36,10 @@
     }
 
     get match(): any {
-      return this.allMatches.find((betting: any) => betting.matchId === this.matchId)
+      const _match = this.allMatches.find((betting: any) => betting.matchId === this.matchId);
+      this.homeGoals = _match.homeGoals;
+      this.awayGoals = _match.awayGoals;
+      return _match;
     }
 
     get matchDate(): string {
@@ -62,23 +63,29 @@
     }
 
     updateScoreMatch() {
-      const _scoreObj = {
+      BetherContractService.updateScore({
         matchId: this.match.matchId,
-        homeScore: this.homeGoals,
-        awayScore: this.awayGoals,
+        homeScore: +this.homeGoals,
+        awayScore: +this.awayGoals,
         account: this.account.address
-      };
-
-      this.updateScore(_scoreObj);
+      })
+        .subscribe((res: any) => {
+          console.log(res)
+        }, (error: any) => {
+          console.log(error)
+        });
     }
 
     approveScoreMatch() {
-      const _scoreObj = {
+      BetherContractService.approveScore({
         matchId: this.match.matchId,
         account: this.account.address
-      };
-
-      this.approveScore(_scoreObj);
+      })
+        .subscribe((res: any) => {
+          console.log(res)
+        }, (error: any) => {
+          console.log(error)
+        });
     }
   }
 </script>

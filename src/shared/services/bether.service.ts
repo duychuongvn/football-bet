@@ -63,8 +63,7 @@ export const BetherContractService = {
   }),
 
   updateScore:(scoreObj:any)  => Rx.Observable.create((observer: any) => {
-    let id = Web3Vue.toSHA3(scoreObj.bettingId)
-    bether.approveScore(id,scoreObj.homeScore, scoreObj.awayScore, {from: scoreObj.account}, (err:any, result:any)=> {
+    bether.updateScore(scoreObj.matchId, scoreObj.homeScore, scoreObj.awayScore, {from: scoreObj.account}, (err:any, result:any)=> {
       observer.onCompleted();
     })
   }),
