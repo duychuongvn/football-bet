@@ -14,8 +14,8 @@
     @Getter('matches', { namespace: 'solobet' }) allMatches: any;
     @Getter('account', { namespace: 'web3' }) account: any;
 
-    public homeGoals: number = undefined;
-    public awayGoals: number = undefined;
+    public homeGoals: string = '';
+    public awayGoals: string = '';
     public matchId: any = null;
 
     created() {
