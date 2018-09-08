@@ -2,15 +2,12 @@
   <v-toolbar dark :class="isFixed ? 'blue-grey lighten-6' : 'blue-grey lighten-6-opacity' "
     :fixed="isFixed">
     <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
-    <v-toolbar-title>
-      <v-icon left class="mr-2">fab fa-gitlab</v-icon>
-      Crypto P2P Betting
-    </v-toolbar-title>
+    <v-toolbar-title class="bether-logo"></v-toolbar-title>
     <v-divider vertical class="ml-3"></v-divider>
     <v-toolbar-items class="hidden-sm-and-down">
       <v-btn flat :to="{ name: 'home' }" exact exact-active-class="teal lighten-1">Match Odds</v-btn>
       <v-divider vertical></v-divider>
-      <v-btn flat v-if="isAccount" :to="{ name: 'profile'}" exact-active-class="teal lighten-1">My Bets</v-btn>
+      <v-btn flat v-if="isAccount" :to="{ name: 'profile'}" exact-active-class="teal lighten-1">My Profile</v-btn>
       <v-divider vertical v-if="isAccount"></v-divider>
       <v-btn flat :to="{ name: 'howitwork' }">How it works</v-btn>
       <v-divider vertical></v-divider>

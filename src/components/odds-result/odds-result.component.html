@@ -1,7 +1,14 @@
 <v-layout row wrap>
-  <v-flex xs6 v-for="label in oddsTitle" :key="label.key">
-    <v-btn :flat="!label.active" block dark :color="label.active ? 'teal lighten-1' : '' " class="mb-0"
-       @click="selectOddsType(label.key)">{{ label.name }}</v-btn>
+  <v-flex xs12>
+    <v-card flat dark color="transparent">
+      <v-card-text class="pa-0">
+        <v-tabs fixed-tabs color="transparent" class="my-bet-tabs"  slider-color="teal lighten-2">
+          <v-tab v-for="label in oddsTitle" :key="label.key" @click="selectOddsType(label.key)">
+            {{ label.name }}
+          </v-tab>
+        </v-tabs>
+      </v-card-text>
+    </v-card>
   </v-flex>
 
   <!--<v-flex md6 text-xs-center :offset-md6="!isOddsOpen" xs12>-->
@@ -44,6 +51,14 @@
             <span v-if="odds.match.status !==1">{{odds.match.homeGoals}}- {{odds.match.awayGoals}}</span>
             <span class="text-no-wrap" v-if="odds.match.status ===1"> - </span>
             {{ odds.match.awayTeam }} ({{ odds.summary.stake }} ETH)
+
+            <v-tooltip bottom lazy>
+              <v-btn class="text-capitalize" color="teal lighten-1" small slot="activator">
+                <v-icon size="18" left class="mr-2">fas fa-hand-holding-usd</v-icon>
+                Request Payout
+              </v-btn>
+              <span>Request Payout</span>
+            </v-tooltip>
           </div>
 
           <v-card-text>
@@ -64,14 +79,6 @@
                         Cancel
                       </v-btn>
                       <span>Cancel</span>
-                    </v-tooltip>
-                    <v-tooltip bottom lazy v-if="props.item.status >= 3">
-                      <v-btn class="text-capitalize" color="teal lighten-1" small slot="activator"
-                             @click="dialogClaimStake(props, odds.matchId)" :disabled="props.item.isCanceled">
-                        <v-icon size="18" left class="mr-2">fas fa-hand-holding-usd</v-icon>
-                        Request Payout
-                      </v-btn>
-                      <span>Request Payout</span>
                     </v-tooltip>
                     <v-tooltip bottom lazy>
                       <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator"

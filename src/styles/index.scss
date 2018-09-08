@@ -7,6 +7,15 @@
   background-position: 50% 50% !important;
 }
 
+.bether-logo {
+  background-image: url("../assets/logo.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 50% 50%;
+  width: 100px;
+  height: 80%;
+}
+
 .blue-grey {
   &.lighten-6 {
     background-color: $color-blue-gray !important;
@@ -227,5 +236,12 @@
       font-size: 1rem;
       margin-right: 3px;
     }
+  }
+}
+
+.v-tabs.my-bet-tabs {
+  .v-tabs__div {
+    max-width: inherit;
+    flex: 1 1 auto;
   }
 }
