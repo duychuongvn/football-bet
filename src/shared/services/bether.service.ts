@@ -88,9 +88,10 @@ export const BetherContractService = {
           'bookmakerAddress': result[index++],
           'bookmakerTeam':result[index++].toNumber(),
           'odds':result[index++].toNumber(),
-          'bookmakerAmount':BetherContractService.toEther(result[index++].toNumber()),
-          'settledAmount': BetherContractService.toEther(result[index++].toNumber()),
+          'bookmakerAmount':BetherContractService.toEther(result[index][0].toNumber()),
+          'settledAmount': BetherContractService.toEther(result[index++][1].toNumber()),
           'status':result[index++].toNumber(),
+          'bookmakerResult':result[index++].toNumber(),
           'punters':[] as any[]
         } as  any;
 
@@ -231,10 +232,21 @@ export const BetherContractService = {
                 'odds':settleInfoResult[colIdx++].toNumber(),
                 'settledAmount': 0,
                 'status':settleInfoResult[colIdx++].toNumber(),
+                'bookmakerResult':settleInfoResult[colIdx++].toNumber(),
                 'punters': [] as any
               } as  any;
 
               betting.settledAmount = betting.bookmakerAmount;
+              //{None, Win, Draw, WinAHalf, LoseAHalf, Lose}
+              if(betting.bookmakerResult=== 1) {
+                betting.bookmakerResult = 5;
+              } else if(betting.bookmakerResult === 3) {
+                betting.bookmakerResult = 4;
+              } else if (betting.bookmakerResult === 4) {
+                betting.bookmakerResult = 3;
+              } else if(betting.bookmakerResult ===5) {
+                betting.bookmakerResult = 1;
+              }
               BetherContractService.cacheBetting(bettings, betting)
             });
           }

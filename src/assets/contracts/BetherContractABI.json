@@ -1,12 +1,17 @@
 [
   {
     "constant": true,
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
+    "inputs": [
       {
         "name": "",
         "type": "address"
+      }
+    ],
+    "name": "balances",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
       }
     ],
     "payable": false,
@@ -16,7 +21,7 @@
   {
     "constant": true,
     "inputs": [],
-    "name": "feeOwner",
+    "name": "owner",
     "outputs": [
       {
         "name": "",
@@ -84,6 +89,47 @@
       }
     ],
     "name": "LogAcceptBet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "receiver",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "LogTranfer",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "result",
+        "type": "uint8"
+      }
+    ],
+    "name": "LogBStatus",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "result",
+        "type": "int256"
+      }
+    ],
+    "name": "LogBStatusInt",
     "type": "event"
   },
   {
@@ -184,12 +230,12 @@
         "type": "int256"
       },
       {
-        "name": "",
-        "type": "uint256"
+        "name": "amounts",
+        "type": "uint256[2]"
       },
       {
         "name": "",
-        "type": "uint256"
+        "type": "uint8"
       },
       {
         "name": "",
@@ -411,6 +457,10 @@
       {
         "name": "",
         "type": "uint8"
+      },
+      {
+        "name": "",
+        "type": "uint8"
       }
     ],
     "payable": false,
@@ -592,6 +642,24 @@
     ],
     "payable": false,
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "destroyContract",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [],
+    "name": "withdrawFee",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
     "type": "function"
   }
 ]
