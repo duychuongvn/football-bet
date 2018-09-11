@@ -16,7 +16,7 @@
                 :items="allBetting"
                 item-text="matchName"
                 item-value="matchId"
-                content-class="bet-select"
+                :menu-props="{contentClass:'bet-select'}"
                 dark color="white" label="List Betting"></v-select>
             </v-flex>
             <v-flex xs12 v-if="matchId">

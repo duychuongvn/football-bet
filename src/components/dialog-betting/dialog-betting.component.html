@@ -20,7 +20,7 @@
               :raised="isHomeTeamActive"
               :hover="isAwayTeamActive"
               :class="{ 'teal lighten-1': isHomeTeamActive || !!odds, 'grey lighten-2': isAwayTeamActive && !odds }">
-              <v-card-media :src="homeTeamFlag" contain height="150px" @click="changeTeam(0)"></v-card-media>
+              <v-img :src="homeTeamFlag" contain height="150px" @click="changeTeam(0)"></v-img>
               <v-card-title class="headline d-block text-xs-center"
                 :class="{ 'teal--text': isAwayTeamActive && !odds }"
                 @click="changeTeam(0)">
@@ -35,7 +35,7 @@
             :class="{ 'align-self-center': !!odds }"
             :order-xs2="!!odds && isHomeTeamActive">
             <!--<p class="text-xs-center caption" v-html="handicapInfo"></p>-->
-            <v-select hide-selected dark v-model="oddsSelected" color="white" class="bet-select-center" content-class="bet-select" append-icon="fas fa-chevron-down font-sm"
+            <v-select hide-selected dark v-model="oddsSelected" color="white" class="bet-select-center" :menu-props="{contentClass:'bet-select'}" append-icon="fas fa-chevron-down font-sm"
               :items="oddsType" label="Handicap" v-if="!odds"></v-select>
             <v-text-field v-model="stakeSelected" dark color="white" label="Stake" type="number" suffix="ETH" min="0.05" step="0.01" v-if="!odds"></v-text-field>
 
@@ -54,7 +54,7 @@
             :order-xs1="!!odds && isHomeTeamActive">
             <v-card class="cursor-pointer" :raised="isAwayTeamActive" :hover="isHomeTeamActive"
             :class="{ 'teal lighten-1': isAwayTeamActive || !!odds, 'grey lighten-2': isHomeTeamActive && !odds }">
-              <v-card-media :src="awayTeamFlag" contain height="150px" @click="changeTeam(1)"></v-card-media>
+              <v-img :src="awayTeamFlag" contain height="150px" @click="changeTeam(1)"></v-img>
               <v-card-title class="headline d-block text-xs-center"
                 :class="{ 'teal--text': isHomeTeamActive && !odds, 'white--text': !!odds && isHomeTeamActive }" @click="changeTeam(1)">
                 <p class="mb-1 title text-ellipsis">{{ awayTeam }}</p>

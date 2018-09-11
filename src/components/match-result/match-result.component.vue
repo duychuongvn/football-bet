@@ -10,24 +10,24 @@
   import { Punter } from '@/shared/model/punter';
 
   const isEqual = require('lodash/isEqual');
-
+  
   @Component({
     components: {
       'match-punters': () => import('@/components/match-result-punters/match-result-punters.component.vue')
     }
   })
   export default class MatchResultComponent extends Vue {
-    @Prop() match: any
-    @Action('loadBettings', { namespace: 'betting' }) loadBettings: any
-    @Action('clearBetting', { namespace: 'betting' }) clearBetting: any
+    @Prop() match: any;
+    @Action('loadBettings', { namespace: 'betting' }) loadBettings: any;
+    @Action('clearBetting', { namespace: 'betting' }) clearBetting: any;
     @Getter('bettings', { namespace: 'betting' }) bettings!: Betting[];
 
-    @Action('openDialog', { namespace: 'dialog' }) openDialog: any
-    @Getter('initData', { namespace: 'dialog' }) initData: any
-    @Getter('account', { namespace: 'web3' }) account: any
-    @Getter('isAccount', { namespace: 'web3' }) isAccount: any
+    @Action('openDialog', { namespace: 'dialog' }) openDialog: any;
+    @Getter('initData', { namespace: 'dialog' }) initData: any;
+    @Getter('account', { namespace: 'web3' }) account: any;
+    @Getter('isAccount', { namespace: 'web3' }) isAccount: any;
 
-    @Action('notify', { namespace: 'notify' }) notify: any
+    @Action('notify', { namespace: 'notify' }) notify: any;
 
     public headTb: Array<Object> = [
       { text: '#', align: 'left', sortable: false },
@@ -38,7 +38,8 @@
       { text: 'Open', align: 'center', sortable: false },
       { text: 'Settler', align: 'center', sortable: false },
       { text: '', sortable: false }
-    ]
+    ];
+
     public isLoadingBetting: any = null;
     public search: any = '';
 
@@ -79,13 +80,13 @@
     }
 
     @Watch('initData')
-    getInitDialog(value: any, oldValue: any) {
+    getInitDialog(value: any) {
       if (value && value.key === DIALOG_CLOSE.BETTING_RELOAD) {
         this._countBeting = this.bettings.length;
 
         this.isLoadingBetting = setInterval(() => {
           this.loadBettings(this.match);
-        }, 2000);
+        }, 5000);
       }
 
       if (value && value.key === DIALOG_CLOSE.BETTING_DEAL_RELOAD) {
@@ -107,7 +108,7 @@
     }
 
     @Watch('bettings')
-    getBetting(value: any, oldValue: any) {
+    getBetting(value: any) {
       if (value.length !== 0) {
         value.map((item: any) => {
           item.account = this.account.address;

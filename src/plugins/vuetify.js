@@ -24,6 +24,7 @@ import {
   VTextField,
   VSelect,
   VAvatar,
+  VImg,
   VSnackbar,
   VJumbotron,
   transitions
@@ -55,6 +56,7 @@ Vue.use(Vuetify, {
     VTextField,
     VSelect,
     VAvatar,
+    VImg,
     VSnackbar,
     VJumbotron,
     transitions

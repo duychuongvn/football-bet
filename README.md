@@ -51,6 +51,10 @@ $ vim BetherContract.json
   <a href="https://www.npmjs.com/package/vue"><img src="https://img.shields.io/npm/l/vue.svg" alt="License"></a>
 </p>
 
+##### Requirements
+  - Node: v9.5.0 or Higher
+  - NPM: v5.1.0 or Higher | Yarn: v1.6.x or Higher
+  
 ```sh
 $ cd bether
 $ yarn # install node_module
