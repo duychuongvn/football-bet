@@ -73,7 +73,7 @@
     }
 
     get accountBalance(): string {
-      return `${+this.web3Init.account.balance} ETH`;
+      return this.web3Init.account.balance ? `${this.web3Init.web3.utils.fromWei(`${this.web3Init.account.balance}`, 'ether')} ETH` : '0 ETH';
     }
 
     get avatarMMask(): string {
