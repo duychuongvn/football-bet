@@ -49,10 +49,10 @@
           <div class="text-capitalize" slot="header">
             [{{ odds.match.timeString }}] {{ odds.match.homeTeam }}
             <span v-if="odds.match.status !==1">{{odds.match.homeGoals}}- {{odds.match.awayGoals}}</span>
-            <span class="text-no-wrap" v-if="odds.match.status ===1"> - </span>
+            <span class="text-no-wrap" v-if="odds.match.status === 1"> - </span>
             {{ odds.match.awayTeam }} ({{ odds.summary.stake }} ETH)
 
-            <v-tooltip bottom lazy>
+            <v-tooltip bottom lazy v-if="isFinished">
               <v-btn class="text-capitalize" color="teal lighten-1" small slot="activator">
                 <v-icon size="18" left class="mr-2">fas fa-hand-holding-usd</v-icon>
                 Request Payout
@@ -72,17 +72,17 @@
                   <td class="text-xs-center">{{ props.item.openAmount }}</td>
                   <td class="text-xs-center">{{ props.item.statusString }}</td>
                   <td class="text-xs-left">
-                    <v-tooltip bottom lazy :disabled="props.item.status > 0">
+                    <v-tooltip bottom lazy :disabled="props.item.status > 1">
                       <v-btn class="text-capitalize" color="red lighten-1" small slot="activator"
-                             @click="dialogCancel(props.item, odds.matchId)" :disabled="props.item.isCanceled">
+                             @click="dialogCancel(props.item, odds.match)" :disabled="props.item.status > 1">
                         <v-icon size="18" left class="mr-2">fas fa-times-circle</v-icon>
                         Cancel
                       </v-btn>
                       <span>Cancel</span>
                     </v-tooltip>
-                    <v-tooltip bottom lazy>
-                      <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator"
-                             @click="openShare(props.item.id, odds.homeTeam, odds.awayTeam, odds.date)">
+                    <v-tooltip bottom lazy :disabled="props.item.status > 1">
+                      <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator" :disabled="props.item.status > 1"
+                             @click="openShare(props.item.id, odds.match.homeTeam, odds.match.awayTeam, odds.match.date)">
                         <v-icon size="18" left class="mr-2">fas fa-share-alt-square</v-icon>
                         Share
                       </v-btn>

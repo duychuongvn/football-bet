@@ -4,6 +4,8 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
 
+const isEqual = require('lodash/isEqual');
+
 @Component({
   components: {
     'odds-filter': () => import('@/components/odds-filter/odds-filter.component.vue'),
@@ -31,8 +33,14 @@ export default class ProfilePage extends Vue {
 
   @Watch('isAccount')
   getAccount(value: string, oldValue: string) {
-    if (value) {
+    if (!isEqual(value, oldValue)) {
+      this.isLoading = true;
+
       this.totalOdds(this.account.address);
+
+      setTimeout(() => {
+        this.isLoading = false;
+      }, 5000);
     }
   }
 }

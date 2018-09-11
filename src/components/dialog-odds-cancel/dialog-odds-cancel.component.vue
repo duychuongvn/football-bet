@@ -16,8 +16,7 @@
     @Getter('account', { namespace: 'web3' }) account!: any;
 
     get msg() {
-      const _odds = this.dialogData.odds;
-      return `This odds ${this.dialogData.odds.teamSelected} ${_odds.odds} with ${_odds.stake} ETH will be cancelled.`
+      return `This odds ${this.dialogData.oddsString} with ${ this.dialogData.stake } will be cancelled.`
     }
 
     closeDialog() {
@@ -27,9 +26,9 @@
     cancelMyOdds() {
       const _oddsObj = {
         account: this.account.address,
-        matchId: this.dialogData.matchId,
-        bettingId: this.dialogData.odds.id
-      }
+        matchId: this.dialogData.match.matchId,
+        bettingId: this.dialogData.bettingId
+      };
 
       this.cancelOdds(_oddsObj)
     }

@@ -90,9 +90,6 @@
       }
 
       if (value && value.key === DIALOG_CLOSE.BETTING_DEAL_RELOAD) {
-
-        console.log(value.data);
-
         this.bettings.filter((betting: Betting) => {
           if (betting.id === value.data.bettingId) {
             betting.settledAmount += value.data.amount;
@@ -122,10 +119,10 @@
       }
 
       if (value.length !== 0 && this.$route.query && this.$route.query.accept) {
-        const _betTmp: Betting = this.bettings[+this.$route.query.accept];
+        const _betTmp: Betting = this.bettings.find((betting: any) => betting.bettingId === +this.$route.query.accept);
 
         if (!!_betTmp) {
-          this.search = _betTmp.bettingId;
+          this.search = +this.$route.query.accept;
           this.createOdds(_betTmp);
         }
       }
@@ -151,9 +148,6 @@
         name: 'dialog-sharing',
         initData: {
           bettingId: bettingId,
-          homeTeam: this.match.homeTeam,
-          awayTeam: this.match.awayTeam,
-          date: this.match.date,
           key: DIALOG_NAME.SHARING_SOCIAL
         }
       };

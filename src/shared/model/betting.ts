@@ -93,7 +93,7 @@ export class Betting {
       case 0:
         return 'Open';
       case 1:
-        return 'Deal';
+        return 'Partially Settled';
       case 2:
         return 'Settled';
       case 3:
