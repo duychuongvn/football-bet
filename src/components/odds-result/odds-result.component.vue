@@ -47,6 +47,7 @@ export default class OddsResultComponent extends Vue {
       active: false
     }
   ];
+
   public oddsTypeSelected: string = 'OPEN';
 
   public selectedParent: string = 'DATE';
@@ -62,13 +63,17 @@ export default class OddsResultComponent extends Vue {
       _odds.match.date = moment(odds.match.time * 1000).format('YYYY-MM-DD HH:mm:ss');
 
       _odds.bettings = _odds.bettings.filter((betting: any) => {
-        return (this.oddsTypeSelected === 'OPEN') ? betting.status < 3 : betting.status > 3;
+        return this.isFinished ? betting.status > 3 : betting.status < 3;
       });
 
       _oddsRs.push(_odds);
     });
 
     return _oddsRs;
+  }
+
+  get isFinished() {
+    return this.oddsTypeSelected === 'FINISHED';
   }
 
   oddsString (item: any, match: any) {
@@ -93,6 +98,7 @@ export default class OddsResultComponent extends Vue {
 
     this.oddsTypeSelected = key;
   }
+
   dialogClaimStake(bettings: any[], matchId: any) {
     const _initOpts = {
       key: DIALOG_NAME.CLAIM_STAKE,
@@ -105,14 +111,17 @@ export default class OddsResultComponent extends Vue {
     };
     this.openDialog(_initOpts);
   }
-  dialogCancel(odds: any, matchId: string) {
+
+  dialogCancel(betting: any, match: any) {
     const _initOpts = {
       key: DIALOG_NAME.ODDS_CANCEL,
       isOpen: true,
       name: 'dialog-odds-cancel',
       initData: {
-        odds: odds,
-        matchId: matchId
+        oddsString: this.oddsString(betting, match),
+        stake: betting.openAmount,
+        bettingId: betting.bettingId,
+        match: match
       }
     };
 

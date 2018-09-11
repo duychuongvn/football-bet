@@ -18,15 +18,31 @@
 
     public matchKey: string = '';
 
+    public isLoading: boolean = false;
+
+    protected _bettingId: number;
+
     get isDialog() {
       if (this.initData) {
-        this.matchKey = btoa(JSON.stringify({
-          homeTeam: this.initData.homeTeam,
-          awayTeam: this.initData.awayTeam,
-          date: this.initData.date
-        }));
+        if (this.$route.params && this.$route.params.key) {
+          this.matchKey = this.$route.params.key;
+        } else {
+          this.matchKey = btoa(JSON.stringify({
+            homeTeam: this.initData.homeTeam,
+            awayTeam: this.initData.awayTeam,
+            date: this.initData.date
+          }));
+        }
 
-        this.sharePath = `${ENV.DOMAIN}/match-details/${this.matchKey}?accept=${this.initData.bettingId}`;
+        if (this.initData.bettingId) {
+          this._bettingId = this.initData.bettingId;
+        }
+
+        if (this.initData.isLoading) {
+          this.isLoading = this.initData.isLoading;
+        }
+
+        this.sharePath = `${ENV.DOMAIN}/match-details/${this.matchKey}?accept=${this._bettingId}`;
       }
       return this.isSharingBetting;
     }

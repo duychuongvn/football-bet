@@ -116,13 +116,6 @@
       return this.isHomeTeamActive ? this.match.homeTeam : this.match.awayTeam;
     }
 
-    get notselectedTeam(): string {
-      if (this.odds) {
-        return this.isHomeTeamActive ? this.match.homeTeam : this.match.awayTeam;
-      }
-      return this.isHomeTeamActive ? this.match.awayTeam : this.match.homeTeam;
-    }
-
     get homeTeamFlag() {
       return this.match ? this.match.homeTeamFlag : ''
     }
@@ -216,9 +209,7 @@
 
         setTimeout(() => {
           this.toogleDialog(DIALOG_NAME.BETTING_SHARING, true, {
-            homeTeam: this._match.homeTeam,
-            awayTeam: this._match.awayTeam,
-            date: this._match.date,
+            isLoading: true,
             message: 'Your request has been submitted!'
           });
         }, 50);
@@ -245,9 +236,7 @@
 
         setTimeout(() => {
           this.toogleDialog(DIALOG_NAME.BETTING_SHARING, true, {
-            homeTeam: this._match.homeTeam,
-            awayTeam: this._match.awayTeam,
-            date: this._match.date,
+            bettingId: this.odds.bettingId,
             message: 'Your settlement has been submitted!'
           });
         }, 50);

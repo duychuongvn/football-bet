@@ -32,8 +32,10 @@
     created() {
       this.initWeb3Metamask();
 
-      this.fetchVolumn(moment().add(-1, 'd').unix());
-      this.fetchVolumn(moment().add(-7, 'd').unix(), false);
+      setInterval(() => {
+        this.fetchVolumn(moment().add(-1, 'd').unix());
+        this.fetchVolumn(moment().add(-7, 'd').unix(), false);
+      }, 4000);
 
       window.addEventListener('scroll', this.handleScroll);
     }
