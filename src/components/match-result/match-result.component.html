@@ -9,13 +9,13 @@
     <v-progress-linear slot="progress" color="teal darken-2" indeterminate></v-progress-linear>
     <template slot="items" slot-scope="props">
       <tr>
-        <td>{{ (props.index + 1) }}</td>
+        <td @click="props.expanded = !props.expanded">{{ (props.index + 1) }}</td>
         <td><account-addr :address="props.item.bookmakerAddress"/></td>
-        <td class="text-xs-center">{{ oddsString(props.item) }}</td>
-        <td class="text-xs-center">{{ props.item.bookmakerAmountString }}</td>
-        <td class="text-xs-center">{{ props.item.settledAmountString }}</td>
-        <td class="text-xs-center">{{ props.item.openAmount }}</td>
-        <td class="text-xs-center">{{ props.item.punters.length }}</td>
+        <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ oddsString(props.item) }}</td>
+        <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.bookmakerAmountString }}</td>
+        <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.settledAmountString }}</td>
+        <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.openAmount }}</td>
+        <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.punters.length }}</td>
         <td class="text-xs-left">
           <v-tooltip bottom lazy :disabled="props.item.status === 2 || props.item.isOwner">
             <v-btn class="text-capitalize" color="teal lighten-1" small slot="activator" @click="createOdds(props.item)"

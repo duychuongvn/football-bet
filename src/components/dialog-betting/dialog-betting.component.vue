@@ -14,22 +14,22 @@
 
   @Component
   export default class DialogBettingComponent extends Vue {
-    @Action('openDialog', { namespace: 'dialog' }) openDialog: any
-    @Action('setInitData', { namespace: 'dialog' }) setInitData: any
-    @Getter('isStoreBetting', { namespace: 'dialog' }) isStoreBetting!: boolean
-    @Getter('initData', { namespace: 'dialog' }) initData: any
+    @Action('openDialog', { namespace: 'dialog' }) openDialog: any;
+    @Action('setInitData', { namespace: 'dialog' }) setInitData: any;
+    @Getter('isStoreBetting', { namespace: 'dialog' }) isStoreBetting!: boolean;
+    @Getter('initData', { namespace: 'dialog' }) initData: any;
 
-    @Action('createOffer', { namespace: 'solobet' }) createOffer: any
-    @Action('createDeal', { namespace: 'solobet' }) createDeal: any
-    @Getter('newOffer', { namespace: 'solobet' }) newOffer: any
-    @Getter('newDeal', { namespace: 'solobet' }) newDeal: any
-    @Getter('account', { namespace: 'web3' }) account!: any
+    @Action('createOffer', { namespace: 'solobet' }) createOffer: any;
+    @Action('createDeal', { namespace: 'solobet' }) createDeal: any;
+    @Getter('newOffer', { namespace: 'solobet' }) newOffer: any;
+    @Getter('newDeal', { namespace: 'solobet' }) newDeal: any;
+    @Getter('account', { namespace: 'web3' }) account!: any;
 
-    @Action('notify', { namespace: 'notify' }) notify: any
+    @Action('notify', { namespace: 'notify' }) notify: any;
 
-    public bettingSelected = 0
-    public oddsSelected: any = ODDS_TYPE.UNDER_ONE
-    public stakeSelected = 0.05
+    public bettingSelected = 0;
+    public oddsSelected: any = ODDS_TYPE.UNDER_ONE;
+    public stakeSelected = 0.05;
     private _match: any;
 
     get potential() {
@@ -57,7 +57,7 @@
     }
 
     get oddsSignHome() {
-      let _odds: any = this.odds ? (parseFloat(this.odds.odds) / 100) : parseFloat(this.oddsSelected)
+      let _odds: any = this.odds ? (parseFloat(this.odds.odds) / 100) : parseFloat(this.oddsSelected);
 
       if (this.isHomeTeamActive) {
         _odds = _odds > 0 ? `+${_odds}` : _odds;
@@ -69,7 +69,7 @@
     }
 
     get oddsSignAway() {
-      let _odds: any = this.odds ? (parseFloat(this.odds.odds) / 100) : parseFloat(this.oddsSelected)
+      let _odds: any = this.odds ? (parseFloat(this.odds.odds) / 100) : parseFloat(this.oddsSelected);
 
       if (this.isAwayTeamActive) {
         _odds = _odds > 0 ? `+${_odds}` : _odds;
@@ -84,12 +84,8 @@
       return this.odds ? 'Settle Bet' : 'Create Bet';
     }
 
-    get dialogButn() {
+    get dialogBtn() {
       return this.odds ? 'Settle' : 'Create';
-    }
-
-    get oddsWith() {
-      return this.isHomeTeamActive ? this.odds.bookmakerAddress : this.odds.awayOffer
     }
 
     get oddsType() {
@@ -143,40 +139,8 @@
       return this.match ? `${this.match.awayTeam}` : ''
     }
 
-    get handicapInfo () {
-      const _handicap = (this.oddsSelected * 100) / 100;
-      let msg = `You win if `;
-
-      switch (_handicap) {
-        case 0:
-          msg += `${this.selectedTeam} wins.<br/>You draw if ${this.selectedTeam} draws with ${this.notselectedTeam}`;
-          break;
-        case 0.5:
-          msg += `You win if ${this.selectedTeam} draws with ${this.notselectedTeam} or ${this.selectedTeam} wins.`;
-          break;
-        case -0.5:
-          msg += `You win if ${this.selectedTeam} wins.`;
-          break;
-        case 1:
-          msg += `${this.selectedTeam} wins by more than 1 goal.`;
-          msg += `<br/>You draw if ${this.selectedTeam} loses by 1 goal`;
-          break;
-        case -1:
-          msg += `${this.selectedTeam} draws with ${this.notselectedTeam} or ${this.selectedTeam} wins.`;
-          msg += `<br/>You draw if ${this.selectedTeam} wins by 1 goal`;
-          break;
-        case 1.5:
-          msg += `You win if ${this.selectedTeam} loses by 1 goal or ${this.selectedTeam} wins`;
-          break;
-        case -1.5:
-          msg += `You win if A wins by 2 goals or more`;
-          break;
-      }
-      return msg;
-    }
-
     changeTeam(team: number) {
-      if(!!this.odds) return
+      if(!!this.odds) return;
       this.bettingSelected = team
     }
 
@@ -198,7 +162,7 @@
         odds: this.oddsSelected * 100,
         stake: +this.stakeSelected,
         selectedTeam: this.bettingSelected
-      }
+      };
 
       this.createOffer(_opts)
     }
@@ -209,7 +173,7 @@
         bettingId: this.odds.bettingId,
         account: this.account.address,
         amount: +this.stakeSelected
-      }
+      };
 
       this.createDeal(_odds)
     }
@@ -243,7 +207,7 @@
     }
 
     @Watch('newOffer')
-    getNewOffer(value: any, oldValue: any) {
+    getNewOffer(value: any) {
       if (value) {
         this._match = JSON.parse(JSON.stringify(this.match));
         this.closeDialog({
@@ -262,7 +226,7 @@
     }
 
     @Watch('newDeal')
-    getNewDeal(value: any, oldValue: any) {
+    getNewDeal(value: any) {
       if (value) {
         this._match = JSON.parse(JSON.stringify(this.match));
 

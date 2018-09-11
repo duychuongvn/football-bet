@@ -30,6 +30,10 @@
 
     public arrFixtures: Array<Object> = [
       {
+        name: 'Bundesliga',
+        key: 'bundesliga'
+      },
+      {
         name: 'UEFA Champions League',
         key: 'uefac'
       },
