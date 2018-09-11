@@ -69,7 +69,7 @@ export class Betting {
     return this._settledAmount;
   }
   public get settledAmountString(): string {
-    return `${this.settledAmount.toFixed(3)} ETH`;
+    return `${this.settledAmount.toFloatString(3)} ETH`;
   }
   public set settledAmount(v: number) {
     this._settledAmount = v;

@@ -11,13 +11,13 @@ export class Punter {
   }
 
   protected _settledAmount: number = 0;
-  public get settledAmount(): number {
+  public get settledAmount(): number{
     return this._settledAmount;
   }
   public get settledAmountString(): string {
-    return `${this.settledAmount} ETH`;
+    return `${this.settledAmount.toFloatString(3)} ETH`;
   }
-  public set settledAmount(v: number) {
+  public set settledAmount(v: number ) {
     this._settledAmount = v;
   }
 
@@ -32,7 +32,7 @@ export class Punter {
   constructor(punter: PunterInterface) {
     if (punter) {
       this.no            = punter.no;
-      this.settledAmount = punter.settledAmount;
+      this.settledAmount = +punter.settledAmount;
       this.wallet        = punter.wallet;
     }
   }

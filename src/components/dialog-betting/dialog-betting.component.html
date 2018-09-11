@@ -34,7 +34,6 @@
             :xs6="!!odds"
             :class="{ 'align-self-center': !!odds }"
             :order-xs2="!!odds && isHomeTeamActive">
-            <!--<p class="text-xs-center caption" v-html="handicapInfo"></p>-->
             <v-select hide-selected dark v-model="oddsSelected" color="white" class="bet-select-center" :menu-props="{contentClass:'bet-select'}" append-icon="fas fa-chevron-down font-sm"
               :items="oddsType" label="Handicap" v-if="!odds"></v-select>
             <v-text-field v-model="stakeSelected" dark color="white" label="Stake" type="number" suffix="ETH" min="0.05" step="0.01" v-if="!odds"></v-text-field>
@@ -72,7 +71,7 @@
 
     <v-card-actions class="justify-content-center">
       <v-btn outline @click="closeDialog(null)">Close</v-btn>
-      <v-btn color="teal lighten-1" @click="saveBet">{{ dialogButn }}</v-btn>
+      <v-btn color="teal lighten-1" @click="saveBet">{{ dialogBtn }}</v-btn>
     </v-card-actions>
   </v-card>
 </v-dialog>

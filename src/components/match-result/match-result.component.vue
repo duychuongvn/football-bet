@@ -10,7 +10,7 @@
   import { Punter } from '@/shared/model/punter';
 
   const isEqual = require('lodash/isEqual');
-  
+
   @Component({
     components: {
       'match-punters': () => import('@/components/match-result-punters/match-result-punters.component.vue')
@@ -90,14 +90,20 @@
       }
 
       if (value && value.key === DIALOG_CLOSE.BETTING_DEAL_RELOAD) {
+
+        console.log(value.data);
+
         this.bettings.filter((betting: Betting) => {
           if (betting.id === value.data.bettingId) {
             betting.settledAmount += value.data.amount;
-            betting.punters.push({
+
+            const _punters = {
               no: betting.punters.length + 1,
-              settledAmount: value.data.amount,
+              settledAmount: +value.data.amount,
               wallet: value.data.account
-            });
+            };
+
+            betting.punters.push(new Punter(_punters));
 
             if (betting.settledAmount === betting.bookmakerAmount) {
               betting.status = 2;
