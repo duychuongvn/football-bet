@@ -20,7 +20,7 @@
 
     public isLoading: boolean = false;
 
-    protected _bettingId: number;
+    protected _bettingId: number | undefined;
 
     get isDialog() {
       if (this.initData) {
