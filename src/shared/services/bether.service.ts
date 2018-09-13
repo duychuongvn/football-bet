@@ -135,7 +135,10 @@ export const BetherContractService = {
       if (ids && ids.length !== 0) {
         for (let i = 0; i < ids.length; i++) {
           BetherContractService.getBettingInfo(ids[i]).subscribe((result: any) => {
-            bettings.push(new Betting(result))
+            if(result.status !=3) {
+              bettings.push(new Betting(result))
+            }
+
           });
         }
       }
