@@ -27,5 +27,5 @@ export default {
     INFO: 3,
     DURATION: 2000
   },
-  CONTRACT_ADDRESS: '0x0xxxx'
+  CONTRACT_ADDRESS: '0x5f273509cb020fa08b076d83f0472628071d3278'
 }
