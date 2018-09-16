@@ -20,8 +20,41 @@
   },
   {
     "constant": true,
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "admins",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "owner",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
+    "inputs": [],
+    "name": "feeOwner",
     "outputs": [
       {
         "name": "",
@@ -112,30 +145,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "name": "result",
-        "type": "uint8"
-      }
-    ],
-    "name": "LogBStatus",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "result",
-        "type": "int256"
-      }
-    ],
-    "name": "LogBStatusInt",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": true,
         "name": "previousOwner",
         "type": "address"
@@ -148,6 +157,38 @@
     ],
     "name": "OwnershipTransferred",
     "type": "event"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "name": "isAdmin",
+        "type": "bool"
+      }
+    ],
+    "name": "changeAdmin",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "user",
+        "type": "address"
+      }
+    ],
+    "name": "changeFeeOwner",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
   {
     "constant": false,
@@ -648,7 +689,12 @@
     "constant": false,
     "inputs": [],
     "name": "destroyContract",
-    "outputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
@@ -657,7 +703,12 @@
     "constant": false,
     "inputs": [],
     "name": "withdrawFee",
-    "outputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"

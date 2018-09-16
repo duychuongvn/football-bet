@@ -15,6 +15,7 @@ contract BetherContract is Ownable {
   enum BookmakerResult {None, Win, WinAHalf, Draw, LoseAHalf, Lose}
 
   mapping(address => uint256) public balances;
+  mapping(address => bool) public admins;
   mapping(uint8 => string) leagues;
   mapping(bytes32 => address) betContracts;
   mapping(address => uint32[]) userBets;
@@ -22,8 +23,6 @@ contract BetherContract is Ownable {
   mapping(bytes32 => Match) matches;
   mapping(bytes32 => uint32[]) matchBets;
   mapping(uint32 => uint32[]) betSettled;
-  mapping(address => bool) admins;
-
 
   address[] players;
   Betting[] bets;
@@ -76,8 +75,13 @@ contract BetherContract is Ownable {
     _;
   }
 
+  function changeAdmin(address user, bool isAdmin) public  onlyOwner{
+    admins[user] = isAdmin;
+  }
+
   function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint selectedTeam, uint time, int handicap) public payable returns (bool) {
 
+    require(msg.sender != owner);
     require(time > now);
     require((handicap % 25 == 0) && (handicap / 25 <= 8) && (handicap / 25 >= - 8));
 
@@ -109,6 +113,7 @@ contract BetherContract is Ownable {
   }
 
   function bet(uint32 bettingIdx) public payable returns (bool) {
+    require(msg.sender != owner);
     Betting storage _betting = bets[bettingIdx];
 
     require(_betting.bMaker != msg.sender);
@@ -158,6 +163,7 @@ contract BetherContract is Ownable {
   function getMatchId(uint32 bettingIdx) public view returns(bytes32) {
     return bets[bettingIdx].matchId;
   }
+
   function countBetStatus(bytes32[] matchIds) public view  returns(uint[], uint[], uint[], uint[], uint[]) {
     uint32[] memory betIdxes;
     uint[] memory open = new uint[](matchIds.length);
@@ -188,6 +194,7 @@ contract BetherContract is Ownable {
     }
     return (open, deal, settledOrDone, canceled, refunded);
   }
+
   function findMatch(bytes32 matchId) public view returns (
     string homeTeam,
     string awayTeam,
@@ -272,7 +279,6 @@ contract BetherContract is Ownable {
       _betting.status = BetStatus.Done;
     }
     else if (_betting.status == BetStatus.Open) {
-
       refund(_betting);
       _betting.status = BetStatus.Refunded;
     }
@@ -315,13 +321,11 @@ contract BetherContract is Ownable {
       Funding memory funding = fundings[i];
       emit LogTranfer(funding.receiver, funding.amount);
       if (funding.amount > 0 && funding.receiver != 0x0) {
-
         transferFund(funding.receiver, funding.amount);
       }
     }
 
-    balances[_betting.bMaker] = balances[_betting.bMaker] - _betting.bAmount;
-    balances[owner] = balances[owner] + (_betting.settledAmount - _betting.settledAmount * 95 / 100);
+    balances[owner] += (_betting.settledAmount * 5 / 100);
     _betting.status = BetStatus.Done;
   }
 
@@ -332,12 +336,10 @@ contract BetherContract is Ownable {
   }
 
   function createFundingForPunter(address receiver, uint256 settledAmount, BookmakerResult bResult) internal returns (Funding) {
-    LogBStatus(bResult);
       return createFunding(receiver, settledAmount, settledAmount, bResult);
   }
   function createFunding(address receiver, uint256 betAmount, uint256 settledAmount, BookmakerResult bResult) internal returns (Funding) {
     balances[receiver] -= betAmount;
-
     if(bResult == BookmakerResult.Win) {
       return Funding(receiver ,betAmount,  betAmount+ (settledAmount * 95 / 100));
     } else if(bResult == BookmakerResult.WinAHalf) {
@@ -350,37 +352,32 @@ contract BetherContract is Ownable {
     return Funding(0x0, 0, 0);
   }
 
-  event LogBStatus(BookmakerResult result);
-  event LogBStatusInt(int result);
+  event LogAmount(address receiver, uint256 balance, uint currentAmount);
   function getFunding(Match _match, Betting storage  _betting, uint32 betIdx) internal returns (Funding[]) {
-
-    BookmakerResult bmResult;
 
     // calculate for bookmaker
     if (_betting.bmTeam == uint8(Team.Home)) {
-      bmResult = getBookmakerResult(int(_match.homeScore) - int(_match.awayScore), _betting.odds);
+      _betting.bResult = getBookmakerResult(int(_match.homeScore) - int(_match.awayScore), _betting.odds);
     } else {
-      bmResult = getBookmakerResult(int(_match.awayScore) - int(_match.homeScore), _betting.odds);
+      _betting.bResult = getBookmakerResult(int(_match.awayScore) - int(_match.homeScore), _betting.odds);
     }
-    _betting.bResult= bmResult;
     Funding[] memory fundings = new Funding[](betSettled[betIdx].length + 1);
-    fundings[0] = createFunding(_betting.bMaker,_betting.bAmount,  _betting.settledAmount, bmResult );
+    fundings[0] = createFunding(_betting.bMaker,_betting.bAmount,  _betting.settledAmount, _betting.bResult );
 
-    LogBStatus(bmResult);
-    BookmakerResult pResult = BookmakerResult(5-int(bmResult) + 1);
-      for (uint i = 0; i < betSettled[betIdx].length; i++) {
-        fundings[i + 1] = createFundingForPunter(settles[betSettled[betIdx][i]].punter,settles[betSettled[betIdx][i]].amount,pResult);
-      }
-
+    BookmakerResult pResult = BookmakerResult(5-int(_betting.bResult) + 1);
+    for (uint i = 0; i < betSettled[betIdx].length; i++) {
+      fundings[i + 1] = createFundingForPunter(settles[betSettled[betIdx][i]].punter,settles[betSettled[betIdx][i]].amount,pResult);
+    }
 
     return fundings;
   }
 
   function getBookmakerResult(int goaldifference, int odds) private returns (BookmakerResult) {
-    if ((odds + goaldifference * 100) == 25) return BookmakerResult.WinAHalf;
-    if ((odds + goaldifference * 100) == - 25) return BookmakerResult.LoseAHalf;
-    if ((odds + goaldifference * 100) == 0) return BookmakerResult.Draw;
-    if ((odds + goaldifference * 100) > 25) return BookmakerResult.Win;
+    int dif = odds + goaldifference * 100;
+    if (dif == 25) return BookmakerResult.WinAHalf;
+    if (dif == - 25) return BookmakerResult.LoseAHalf;
+    if (dif == 0) return BookmakerResult.Draw;
+    if (dif > 25) return BookmakerResult.Win;
     return BookmakerResult.Lose;
   }
 
@@ -396,9 +393,9 @@ contract BetherContract is Ownable {
 
   function getVolume(uint48 time) public  view returns (uint256) {
     uint256 vol;
-    for(uint i =0;i< bets.length;i++) {
+    for(uint i =0; i< bets.length; i++) {
       if(bets[i].time >= time) {
-        vol+= bets[i].bAmount + bets[i].settledAmount;
+        vol+= bets[i].settledAmount * 2;
       }
     }
     return vol;
@@ -413,21 +410,23 @@ contract BetherContract is Ownable {
       totalSettled+=bets[betIdxes[i]].settledAmount;
     }
 
-    for(i =0;i<settledIdxes.length;i++) {
+    for(i = 0; i<settledIdxes.length; i++) {
       totalSettled+=settles[settledIdxes[i]].amount;
     }
   }
 
-  function destroyContract() public onlyOwner {
+  function destroyContract() public onlyOwner returns (bool) {
     for (uint i = 0; i < players.length; i++) {
       if (balances[players[i]] > 0) {
         players[i].transfer(balances[players[i]]);
       }
     }
     selfdestruct(owner);
+    return true;
   }
 
-  function withdrawFee() public isAdmin {
+  function withdrawFee() public onlyOwner returns (bool){
     owner.transfer(balances[owner]);
+    return true;
   }
 }
