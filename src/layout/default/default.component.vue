@@ -4,5 +4,11 @@
   import { Component, Vue } from 'vue-property-decorator';
 
   @Component
-  export default class Default extends Vue {}
+  export default class Default extends Vue {
+    created () {
+      window.addEventListener('beforeunload', () => {
+        localStorage.removeItem('bether_time');
+      });
+    }
+  }
 </script>

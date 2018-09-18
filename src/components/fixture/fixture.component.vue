@@ -57,6 +57,8 @@
 
     public betTime: string = 'TODAY';
 
+    public tabsSelected: number = 0;
+
     public isLoading: boolean = true;
 
     created() {
@@ -64,15 +66,24 @@
         this.arrFixtures.map((item: Object) => {
           this.fetchFixtures(item);
         });
+
+        setTimeout(() => {
+          this.isLoading = false;
+        }, 5000);
+      } else {
+        this.isLoading = false;
       }
 
-      setTimeout(() => {
-        this.isLoading = false;
-      }, 5000);
+      if (localStorage.getItem('bether_time')) {
+        this.betTime = localStorage.getItem('bether_time');
+      }
+
+      this.tabsSelected = this.fixtureTitle.findIndex((title: any) => title.key === this.betTime);
     }
 
     changedTimeBet(time: string) {
       this.betTime = time;
+      localStorage.setItem('bether_time', time);
     }
   }
 </script>
