@@ -14,11 +14,11 @@
           <img src="@/assets/images/metamask-logo.png" alt="avatar" width="100%">
         </v-flex>
         <v-flex xs8>
-          <p><a class="cyan--text" href="https://metamask.io/" target="_blank">MetaMask</a> is a wallet and Chrome extension that allows you to make Ethereum transaction form regular websites.</p>
+          <p><a class="cyan--text" href="https://metamask.io/" target="_blank">MetaMask</a> is a wallet and Chrome extension that allows you to make Ethereum transaction from regular websites.</p>
           <p class="mb-2" v-if="!web3Init.injectedWeb3">In order to register your asset on the blockchain you need to have it installed</p>
           <div class="text-xs-center">
             <v-btn color="teal lighten-1" v-if="!web3Init.injectedWeb3" target="_blank" href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn">Install metamask</v-btn>
-            <p class="mb-0" v-else>You need login MetaMask</p>
+            <p class="mb-0" v-else>You need to login MetaMask</p>
           </div>
         </v-flex>
       </v-layout>

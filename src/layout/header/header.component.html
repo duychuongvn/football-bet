@@ -2,7 +2,7 @@
   <v-toolbar dark :class="isFixed ? 'blue-grey lighten-6' : 'blue-grey lighten-6-opacity' "
     :fixed="isFixed">
     <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
-    <v-toolbar-title class="bether-logo"></v-toolbar-title>
+    <v-toolbar-title class="bether-logo" @click="goToPages('home')"></v-toolbar-title>
     <v-divider vertical class="ml-3"></v-divider>
     <v-toolbar-items class="hidden-sm-and-down">
       <v-btn flat :to="{ name: 'home' }" exact exact-active-class="teal lighten-1">Match Odds</v-btn>
@@ -88,7 +88,7 @@
       </v-card>
     </v-menu>
   </v-toolbar>
-  <v-card dark flat class="transparent">
+  <v-card dark flat class="transparent" v-if="!!isAccount">
     <v-card-text class="text-xs-right pa-1">
       <p class="mb-0 d-inline-block mr-5 caption"><span class="grey--text mr-2">24HRS</span> {{ volumn24hrs }}</p>
       <p class="mb-0 d-inline-block caption mr-4"><span class="grey--text mr-2">7 DAYS</span> {{ volumn7days }}</p>

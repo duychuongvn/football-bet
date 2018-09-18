@@ -16,7 +16,7 @@
     @Getter('account', { namespace: 'web3' }) account!: any;
 
     get msg() {
-      return `This odds ${this.dialogData.oddsString} with ${ this.dialogData.stake } will be cancelled.`
+      return `<p class="mb-0">${this.dialogData.oddsString}</p><p class="mb-0">Stake: ${ this.dialogData.stake }</p><p class="mb-0">Cancel this handicap?</p>`
     }
 
     closeDialog() {

@@ -32,11 +32,6 @@
     created() {
       this.initWeb3Metamask();
 
-      setInterval(() => {
-        this.fetchVolumn(moment().add(-1, 'd').unix());
-        this.fetchVolumn(moment().add(-7, 'd').unix(), false);
-      }, 4000);
-
       window.addEventListener('scroll', this.handleScroll);
     }
 
@@ -48,6 +43,11 @@
           this.getAccount();
           this.fetchAccountSummary(this.web3Init.account.address);
         }
+
+        setInterval(() => {
+          this.fetchVolumn(moment().add(-1, 'd').unix());
+          this.fetchVolumn(moment().add(-7, 'd').unix(), false);
+        }, 4000);
 
         this.web3Init.web3.currentProvider.publicConfigStore.subscribe((item: any) => {
           if (item.selectedAddress) {
@@ -114,6 +114,10 @@
             this.volumnEth.eth_7d = res;
           }
         })
+    }
+
+    goToPages(pageName: string) {
+      this.$router.push({ name: pageName });
     }
   }
 </script>
