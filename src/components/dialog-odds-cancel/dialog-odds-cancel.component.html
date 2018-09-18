@@ -6,9 +6,7 @@
 
     <v-divider color="white"></v-divider>
 
-    <v-card-text class="text-xs-center my-2">
-      {{ msg }}
-    </v-card-text>
+    <v-card-text class="text-xs-center my-2" v-html="msg"></v-card-text>
 
     <v-card-actions class="justify-content-center">
       <v-btn small outline @click="closeDialog">Close</v-btn>
