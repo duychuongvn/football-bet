@@ -1,7 +1,7 @@
 <section class="fixture">
   <v-card flat dark color="transparent">
     <v-card-text class="pa-0">
-      <v-tabs fixed-tabs color="transparent" class="my-bet-tabs" slider-color="teal lighten-2">
+      <v-tabs fixed-tabs slot="extension" v-model="tabsSelected" color="transparent" class="my-bet-tabs" slider-color="teal lighten-2">
         <v-tab v-for="label in fixtureTitle" :key="label.key" @click="changedTimeBet(label.key)">
           {{ label.name }}
         </v-tab>
