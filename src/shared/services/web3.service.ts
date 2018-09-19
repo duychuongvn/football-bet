@@ -50,7 +50,8 @@ export const Web3Vue = {
     let state = web3Provider.currentProvider.publicConfigStore.getState();
 
     const response: any = {
-      networkId: NETWORKS[+state.networkVersion],
+      networkId: +state.networkVersion,
+      networkName: NETWORKS[+state.networkVersion],
       address: state.selectedAddress
     };
 

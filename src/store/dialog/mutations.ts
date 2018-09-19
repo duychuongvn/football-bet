@@ -22,11 +22,14 @@ export const mutations: MutationTree<any> = {
       case DIALOG_NAME.BETTING_SHARING:
         state.isSharingBetting = dialogObj.isOpen;
         break;
+      case DIALOG_NAME.IS_NETWORK:
+        state.isNetwork = dialogObj.isOpen;
+        break;
     }
 
     if (!dialogObj.isOpen) {
-      state.initData = undefined
-      state.dialogName = ''
+      state.initData = undefined;
+      state.dialogName = '';
     } else {
       state.dialogName = dialogObj.name;
     }

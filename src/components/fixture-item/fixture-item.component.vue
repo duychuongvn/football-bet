@@ -18,6 +18,7 @@ export default class FixtureItemComponent extends Vue {
   @Getter('fixturesTomorrow', { namespace: 'fixture' }) fixturesTomorrow: any;
   @Getter('fixturesFuture', { namespace: 'fixture' }) fixturesFuture: any;
   @Getter('isAccount', { namespace: 'web3' }) isAccount!: boolean;
+  @Getter('isNetwork', { namespace: 'web3' }) isNetwork!: boolean;
 
   @Prop() public bettingTime!: string;
 
@@ -58,6 +59,17 @@ export default class FixtureItemComponent extends Vue {
   }
 
   gotoDetails(betting: any) {
+    if (!this.isNetwork) {
+      const _dialogOpts = {
+        key: DIALOG_NAME.IS_NETWORK,
+        isOpen: true,
+        name: 'dialog-networks'
+      };
+
+      this.openDialog(_dialogOpts);
+      return;
+    }
+
     if (!this.isAccount) {
       const _dialogOpts = {
         key: DIALOG_NAME.INSTALL_METAMASK,

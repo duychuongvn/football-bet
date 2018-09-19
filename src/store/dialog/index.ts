@@ -10,6 +10,7 @@ export const state: DialogState = {
   isStartLoading: true,
   isOddsCancel: false,
   isMetaMask: false,
+  isNetwork: false,
   isStoreBetting: false,
   isSharingBetting: false,
   initData: undefined,

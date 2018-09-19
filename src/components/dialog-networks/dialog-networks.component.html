@@ -1,0 +1,23 @@
+<v-dialog v-model="isNetwork" persistent width="600">
+  <v-card flat color="blue-grey lighten-6" dark>
+    <div class="modal-close" @click="closeDialog">
+      <v-icon>fas fa-times-circle</v-icon>
+    </div>
+
+    <v-card-title primary-title class="headline">
+      Switch to Mainnet
+    </v-card-title>
+
+    <v-card-text class="mt-2">
+      <v-layout row wrap class="align-center">
+        <v-flex xs4>
+          <img src="@/assets/images/metamask-logo.png" alt="avatar" width="100%">
+        </v-flex>
+        <v-flex xs8 class="text-xs-center justify-content-center align-content-center">
+          <p class="mb-0 subheading">Our games are available on mainnet only</p>
+          <p class="mb-0 subheading">please switch via Metamask</p>
+        </v-flex>
+      </v-layout>
+    </v-card-text>
+  </v-card>
+</v-dialog>
