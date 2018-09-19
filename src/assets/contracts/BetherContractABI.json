@@ -667,11 +667,11 @@
     "name": "countUserBet",
     "outputs": [
       {
-        "name": "totalBets",
+        "name": "totalSettled",
         "type": "uint256"
       },
       {
-        "name": "totalSettled",
+        "name": "win",
         "type": "uint256"
       }
     ],

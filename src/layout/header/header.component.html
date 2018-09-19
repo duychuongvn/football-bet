@@ -63,16 +63,6 @@
               <v-list-tile-sub-title>Current Placed</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
-          <v-list-tile>
-            <v-list-tile-avatar>
-              <v-icon color="blue darken-1primary">fas fa-smile</v-icon>
-            </v-list-tile-avatar>
-
-            <v-list-tile-content>
-              <v-list-tile-title>{{ userInfo.totalBets }}</v-list-tile-title>
-              <v-list-tile-sub-title>Total bets</v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
 
           <v-list-tile>
             <v-list-tile-avatar>
@@ -82,6 +72,17 @@
             <v-list-tile-content>
               <v-list-tile-title>{{ userInfo.totalSettled }}</v-list-tile-title>
               <v-list-tile-sub-title>Total Settled</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+
+          <v-list-tile>
+            <v-list-tile-avatar>
+              <v-icon color="blue darken-1primary">fas fa-futbol</v-icon>
+            </v-list-tile-avatar>
+
+            <v-list-tile-content>
+              <v-list-tile-title>{{ userInfo.win }}</v-list-tile-title>
+              <v-list-tile-sub-title>Total Won</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>

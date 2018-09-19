@@ -327,8 +327,8 @@ export const BetherContractService = {
   countUserTotalBet: (account: any) => Rx.Observable.create((observe: any) => {
     bether.countUserBet.call(account, (err: any, result: any) => {
       let summary = {
-        "totalBets": BetherContractService.toEther(result[0].toNumber()),
-        "totalSettled": BetherContractService.toEther(result[1].toNumber()),
+        "totalSettled": BetherContractService.toEther(result[0].toNumber()),
+        "win": BetherContractService.toEther(result[1].toNumber()),
         "currentPlaced": null as any
       };
       bether.getPlayerBalance.call(account, (error: any, balance: any) => {

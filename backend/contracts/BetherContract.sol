@@ -23,6 +23,7 @@ contract BetherContract is Ownable {
   mapping(bytes32 => Match) matches;
   mapping(bytes32 => uint32[]) matchBets;
   mapping(uint32 => uint32[]) betSettled;
+  mapping(address => uint256) report;
 
   address[] players;
   Betting[] bets;
@@ -338,19 +339,23 @@ contract BetherContract is Ownable {
   function createFundingForPunter(address receiver, uint256 settledAmount, BookmakerResult bResult) internal returns (Funding) {
       return createFunding(receiver, settledAmount, settledAmount, bResult);
   }
-  function createFunding(address receiver, uint256 betAmount, uint256 settledAmount, BookmakerResult bResult) internal returns (Funding) {
+  function createFunding(address receiver, uint256 betAmount, uint256 settledAmount, BookmakerResult bResult) internal returns (Funding funding) {
     balances[receiver] -= betAmount;
     if(bResult == BookmakerResult.Win) {
-      return Funding(receiver ,betAmount,  betAmount+ (settledAmount * 95 / 100));
+      funding = Funding(receiver ,betAmount,  betAmount+ (settledAmount * 95 / 100));
+      report[receiver]+= funding.amount - betAmount;
     } else if(bResult == BookmakerResult.WinAHalf) {
-      return Funding(receiver,betAmount, betAmount + ( settledAmount * 95 / 100 / 2));
+      funding = Funding(receiver,betAmount, betAmount + ( settledAmount * 95 / 100 / 2));
+      report[receiver]+= funding.amount - betAmount;
     } else if(bResult == BookmakerResult.Draw) {
-       return Funding(receiver, betAmount, betAmount - ( settledAmount * 5 / 100 / 2));
+      funding = Funding(receiver, betAmount, betAmount - ( settledAmount * 5 / 100 / 2));
     } else if(bResult == BookmakerResult.LoseAHalf) {
-      return Funding(receiver, betAmount, betAmount - (  settledAmount * 105 / 100 / 2));
+      funding = Funding(receiver, betAmount, betAmount - (  settledAmount * 105 / 100 / 2));
+    } else {
+      funding = Funding(0x0, 0, 0);
     }
-    return Funding(0x0, 0, 0);
   }
+
 
   event LogAmount(address receiver, uint256 balance, uint currentAmount);
   function getFunding(Match _match, Betting storage  _betting, uint32 betIdx) internal returns (Funding[]) {
@@ -401,18 +406,18 @@ contract BetherContract is Ownable {
     return vol;
   }
 
-  function countUserBet(address user) public view returns (uint256 totalBets, uint256 totalSettled) {
+  function countUserBet(address user) public view returns (uint256 totalSettled, uint256 win) {
 
     uint32[] memory betIdxes = getUserBets(user);
     uint32[] memory settledIdxes = userSettled[user];
     for(uint i =0;i<betIdxes.length;i++) {
-      totalBets+=bets[betIdxes[i]].bAmount;
       totalSettled+=bets[betIdxes[i]].settledAmount;
     }
 
     for(i = 0; i<settledIdxes.length; i++) {
       totalSettled+=settles[settledIdxes[i]].amount;
     }
+    win = report[user];
   }
 
   function destroyContract() public onlyOwner returns (bool) {
