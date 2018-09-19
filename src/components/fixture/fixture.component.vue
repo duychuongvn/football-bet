@@ -55,7 +55,7 @@
       }
     ];
 
-    public betTime: string = 'TODAY';
+    public betTime: string | null = 'TODAY';
 
     public tabsSelected: number = 0;
 

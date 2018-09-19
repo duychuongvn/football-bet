@@ -3,6 +3,7 @@ export default {
   APP_VERSION: '',
   APP_OLD_VERSION: '',
   APP_KEY: 'xxxxxxxxxxxxxxxxxxxx',
+  WALLET_ADDRESS: 'https://etherscan.io/address/',
   API: {
     PATH: 'http://xxxxxxx',
     PATH_IPFS: 'https://xxxxxxxxx',
