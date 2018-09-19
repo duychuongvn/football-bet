@@ -2,6 +2,7 @@ export interface DialogState {
   isStartLoading: boolean,
   isOddsCancel: boolean,
   isMetaMask: boolean,
+  isNetwork: boolean,
   isStoreBetting: boolean,
   isSharingBetting: boolean,
   initData?: any,

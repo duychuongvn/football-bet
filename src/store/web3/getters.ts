@@ -9,5 +9,6 @@ export const getters: GetterTree<any, RootState> = {
   account: state => state.account,
   isAccount(state): boolean {
     return state.account && state.account.address
-  }
+  },
+  isNetwork: state => state.network && (state.network.networkId === 1 || state.network.networkId === 4447 || state.network.networkId === 4)
 };

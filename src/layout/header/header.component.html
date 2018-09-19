@@ -7,7 +7,7 @@
     <v-toolbar-items class="hidden-sm-and-down">
       <v-btn flat :to="{ name: 'home' }" exact exact-active-class="teal lighten-1">Match Odds</v-btn>
       <v-divider vertical></v-divider>
-      <v-btn flat v-if="isAccount" :to="{ name: 'profile'}" exact-active-class="teal lighten-1">My Profile</v-btn>
+      <v-btn flat v-if="isAccount" @click="goToPages('profile', false)" exact-active-class="teal lighten-1">My Profile</v-btn>
       <v-divider vertical v-if="isAccount"></v-divider>
       <v-btn flat :to="{ name: 'howitwork' }">How it works</v-btn>
       <v-divider vertical></v-divider>

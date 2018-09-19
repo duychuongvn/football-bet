@@ -9,7 +9,8 @@ import { getters } from '@/store/web3/getters';
 export const state: Web3State = {
   web3: undefined,
   injectedWeb3: false,
-  account: undefined
+  account: undefined,
+  network: undefined,
 };
 
 const namespaced: boolean = true;

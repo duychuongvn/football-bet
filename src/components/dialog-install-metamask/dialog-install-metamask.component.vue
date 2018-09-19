@@ -8,8 +8,8 @@
 
   @Component
   export default class DialogMetaMaskComponent extends Vue {
-    @Getter('isMetaMask', { namespace: 'dialog' }) isMetaMask!: boolean
-    @Getter('web3Init', { namespace: 'web3' }) web3Init!: any
+    @Getter('isMetaMask', { namespace: 'dialog' }) isMetaMask!: boolean;
+    @Getter('web3Init', { namespace: 'web3' }) web3Init!: any;
 
     get metamaskeTitle() {
       return this.web3Init.injectedWeb3 ? 'Login to MetaMask!' : 'You need to install MetaMask!';

@@ -12,10 +12,10 @@ import { Action, Getter } from 'vuex-class'
   }
 })
 export default class MatchesDetailsPage extends Vue {
-  @Action('fetchMatch', { namespace: 'matches' }) fetchMatch: any
-  @Getter('match', { namespace: 'matches' }) match!: any
+  @Action('fetchMatch', { namespace: 'matches' }) fetchMatch: any;
+  @Getter('match', { namespace: 'matches' }) match!: any;
 
-  @Getter('account', {namespace: 'web3'}) account: any
+  @Getter('account', {namespace: 'web3'}) account: any;
 
   created() {
     if (this.account && this.account.address) {

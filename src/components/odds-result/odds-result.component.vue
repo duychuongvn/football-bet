@@ -70,7 +70,6 @@ export default class OddsResultComponent extends Vue {
       _oddsRs.push(_odds);
     });
 
-    console.log(this.totalOdds)
     return _oddsRs;
   }
 

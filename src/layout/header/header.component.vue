@@ -5,6 +5,8 @@
 
   import { Action, Getter } from 'vuex-class';
 
+  import { DIALOG_NAME } from '@/shared/enums/dialog';
+
   import { BetherContractService } from '@/shared/services/bether.service';
 
   import * as moment from 'moment';
@@ -16,6 +18,9 @@
     @Action('getAccount', { namespace: 'web3' }) getAccount: any;
     @Getter('web3Init', { namespace: 'web3' }) web3Init: any;
     @Getter('isAccount', { namespace: 'web3' }) isAccount!: boolean;
+    @Getter('isNetwork', { namespace: 'web3' }) isNetwork!: boolean;
+
+    @Action('openDialog', { namespace: 'dialog' }) openDialog: any;
 
     @Action('userSummary', { namespace: 'solobet' }) getUserSummary: any;
     @Getter('bether', { namespace: 'solobet' }) bether: any;
@@ -38,6 +43,10 @@
     initWeb3Metamask() {
       if (this.web3Init.web3) {
         this.getNetwork();
+
+        if (!this.isNetwork) {
+          this.$router.push({ name: 'home' });
+        }
 
         if (this.web3Init.account && !!this.web3Init.account.address) {
           this.getAccount();
@@ -67,7 +76,7 @@
     }
     // Computed
     get networkName(): string {
-      return this.web3Init.account.networkId;
+      return this.web3Init.network.networkName;
     }
 
     get accountAddr(): string {
@@ -79,7 +88,7 @@
     }
 
     get avatarMMask(): string {
-      return this.web3Init.account.avatar;
+      return this.web3Init.network.avatar;
     }
 
     get userInfo() {
@@ -116,7 +125,17 @@
         })
     }
 
-    goToPages(pageName: string) {
+    goToPages(pageName: string, status: boolean = true) {
+      if (!status && !this.isNetwork) {
+        const _dialogOpts = {
+          key: DIALOG_NAME.IS_NETWORK,
+          isOpen: true,
+          name: 'dialog-networks'
+        };
+
+        this.openDialog(_dialogOpts);
+        return;
+      }
       this.$router.push({ name: pageName });
     }
   }
