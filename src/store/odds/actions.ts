@@ -13,40 +13,6 @@ export const actions: ActionTree<any, RootState> = {
 
     BetherContractService.getUserBets(account)
       .subscribe((res: any) => {
-
-        // if (!!res.length){
-        //   // res.map((item: any) => {
-        //   //   console.log(item, 123);
-        //   //   // let _odds = _myodds.findIndex((odds: any) => odds.matchId === item.matchId);
-        //   //   // let _betting: any;
-        //   //   //
-        //   //   // _betting = {
-        //   //   //   id: item.bettingId,
-        //   //   //   chooseHomeTeam: item.chooseHomeTeam,
-        //   //   //   stake: item.amount,
-        //   //   //   odds: (item.odd / 100),
-        //   //   //   receivedAmount: item.receivedAmount,
-        //   //   //   status: item.status,
-        //   //   //   status_string: item.status_string
-        //   //   // }
-        //   //   //
-        //   //   // if (item.odd > 0) {
-        //   //   //   _betting.odds = `+${_betting.odds}`
-        //   //   // }
-        //   //   //
-        //   //   // if (_odds < 0) {
-        //   //   //   _myodds.push({
-        //   //   //     matchId: item.matchId,
-        //   //   //     totalStake: item.amount,
-        //   //   //     bettings: [_betting]
-        //   //   //   })
-        //   //   // } else {
-        //   //   //   _myodds[_odds].totalStake += item.amount
-        //   //   //   _myodds[_odds].bettings.push(_betting)
-        //   //   // }
-        //   // });
-        //
-        // }
         commit(RECEVER_TOTAL_ODDS, res);
     }, (error: any) => {
       console.log(error, 'error');
@@ -74,7 +40,8 @@ export const actions: ActionTree<any, RootState> = {
             isOpen: false
           },
           initData: {
-            key: DIALOG_CLOSE.ODDS_RELOAD
+            key: DIALOG_CLOSE.ODDS_RELOAD,
+            oddsCancel: oddsObj
           }
         }, {root: true});
       }, (errors: any) => {

@@ -1,10 +1,10 @@
 <template src="./odds-result.component.html"></template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { Action, Getter } from 'vuex-class';
 
-import { DIALOG_NAME } from '@/shared/enums/dialog';
+import { DIALOG_NAME, DIALOG_CLOSE } from '@/shared/enums/dialog';
 
 import { Profile } from '@/shared/model/profile';
 
@@ -17,6 +17,7 @@ import * as moment from 'moment';
 })
 export default class OddsResultComponent extends Vue {
   @Action('openDialog', { namespace: 'dialog' }) openDialog: any;
+  @Getter('initData', { namespace: 'dialog' }) initData: any;
 
   @Action('oddsByMatchId', { namespace: 'odds' }) oddsByMatchId: any;
 
@@ -63,12 +64,13 @@ export default class OddsResultComponent extends Vue {
       _odds.match.date = moment(odds.match.time * 1000).format('YYYY-MM-DD HH:mm:ss');
 
       _odds.bettings = _odds.bettings.filter((betting: any) => {
-        return this.isFinished ? betting.status > 3 : betting.status < 3;
+        return this.isFinished ? betting.status > 3 : betting.status <= 3;
       });
 
       _oddsRs.push(_odds);
     });
 
+    console.log(this.totalOdds)
     return _oddsRs;
   }
 
@@ -142,6 +144,21 @@ export default class OddsResultComponent extends Vue {
     };
 
     this.openDialog(_initOpts)
+  }
+
+  @Watch('initData')
+  getCancelDialog(newVal: boolean | any) {
+    if (newVal && newVal.key === DIALOG_CLOSE.ODDS_RELOAD) {
+      this.totalOdds.filter((odds: any) => {
+        if (odds.matchId === newVal.oddsCancel.matchId) {
+          odds.bettings.filter((betting: any) => {
+            if (betting.bettingId === newVal.oddsCancel.bettingId) {
+              betting.status = 3;
+            }
+          });
+        }
+      })
+    }
   }
 }
 </script>

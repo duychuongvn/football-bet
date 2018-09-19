@@ -2,6 +2,7 @@
 
 <script lang="ts">
   import { Component, Vue, Prop } from 'vue-property-decorator';
+  import ENV from '@/environment';
 
   @Component
   export default class AccountAddressComponent extends Vue {
@@ -26,7 +27,7 @@
     }
 
     get linkAccount() {
-      return `https://etherscan.io/tx/${this.address}`;
+      return `${ENV.WALLET_ADDRESS}${this.address}`;
     }
   }
 </script>
