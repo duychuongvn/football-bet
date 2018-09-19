@@ -43,7 +43,7 @@
     }
 
     get matchDate(): string {
-      return moment(this.match.time).format('LL [(]dddd[)] HH:mm a')
+      return moment(this.match.time * 1000).format('LL [(]dddd[)] HH:mm A')
     }
 
     get homeTeamFlag(): string {
