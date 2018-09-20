@@ -2,7 +2,7 @@
   <v-flex xs12>
     <v-card flat dark color="transparent">
       <v-card-text class="pa-0">
-        <v-tabs fixed-tabs color="transparent" class="my-bet-tabs"  slider-color="teal lighten-2">
+        <v-tabs fixed-tabs color="transparent" class="my-bet-tabs" slider-color="teal lighten-2">
           <v-tab v-for="label in oddsTitle" :key="label.key" @click="selectOddsType(label.key)">
             {{ label.name }}
           </v-tab>
@@ -11,12 +11,13 @@
     </v-card>
   </v-flex>
 
-  <!--<v-flex md6 text-xs-center :offset-md6="!isOddsOpen" xs12>-->
-  <!--<v-chip label v-for="filter in listFilter" :key="filter.key" :outline="!isActiveFilter(filter.key)" :class="isActiveFilter(filter.key) ? 'white&#45;&#45;text': 'cursor-pointer'"-->
-  <!--:color="isActiveFilter(filter.key) ? 'teal lighten-1': ''" @click="changedFilter(filter.key)">-->
-  <!--{{ filter.name }} ({{ filter.number }})-->
-  <!--</v-chip>-->
-  <!--</v-flex>-->
+  <v-flex md6 text-xs-center :offset-md6="!isOddsOpen" xs12>
+    <v-chip label v-for="filter in listFilter" :key="filter.key" :outline="!isActiveFilter(filter.key)"
+      :class="isActiveFilter(filter.key) ? 'white--text': 'cursor-pointer'"
+      :color="isActiveFilter(filter.key) ? 'teal lighten-1': ''" @click="changedFilter(filter.key)">
+      {{ filter.name }}
+    </v-chip>
+  </v-flex>
 
   <!--<v-flex xs12>-->
   <!--<v-layout row wrap class="white&#45;&#45;text">-->
@@ -25,26 +26,28 @@
   <!--</v-flex>-->
 
   <!--<v-flex md1 sm2 xs2>-->
-  <!--<v-select hide-details hide-selected :menu-props="{contentClass:'bet-select'}" v-model="selectedParent" :items="sortParent" item-text="name"-->
+  <!--<v-select hide-details hide-selected :menu-props="{contentClass:'bet-select'}" v-model="selectedParent"-->
+  <!--:items="sortParent" item-text="name"-->
   <!--item-value="key" dark color="white" append-icon="fas fa-chevron-down font-sm"></v-select>-->
   <!--</v-flex>-->
 
   <!--<v-flex md2 sm3 xs4>-->
-  <!--<v-select hide-details hide-selected :menu-props="{contentClass:'bet-select'}" v-model="selectedChild" :items="sortChild[selectedParent]"-->
-  <!--item-text="name" item-value="id" dark color="white" append-icon="fas fa-chevron-down font-sm"></v-select>-->
+  <!--<v-select hide-details hide-selected :menu-props="{contentClass:'bet-select'}" v-model="selectedChild"-->
+  <!--:items="sortChild[selectedParent]"-->
+  <!--item-text="name" item-value="id" dark color="white"-->
+  <!--append-icon="fas fa-chevron-down font-sm"></v-select>-->
   <!--</v-flex>-->
   <!--</v-layout>-->
   <!--</v-flex>-->
 
-  <v-flex xs12 v-if="!!oddsResult.length">
+  <v-flex xs12>
     <v-card raised dark color="blue-grey lighten-6-opacity mt-3">
-      <v-expansion-panel class="accor-fixture" :value="0">
+      <v-expansion-panel class="accor-fixture" :value="0" v-if="!!oddsResult.length">
         <v-expansion-panel-content
-            v-for="odds in oddsResult"
-            v-show="!!odds.bettings.length"
-            :key="odds.matchId"
-            class="bg-transparent"
-            expand-icon="fas fa-chevron-down font-sm">
+          v-for="odds in oddsResult"
+          :key="odds.matchId"
+          class="bg-transparent"
+          expand-icon="fas fa-chevron-down font-sm">
 
           <div class="text-capitalize" slot="header">
             [{{ odds.match.dateTimeString }}] {{ odds.match.homeTeam }}
@@ -65,23 +68,26 @@
             <v-data-table :headers="headTb" :items="odds.bettings" hide-actions class="bg-transparent table-fixture">
               <template slot="items" slot-scope="props">
                 <tr>
-                  <td>{{ props.index + 1 }}</td>
-                  <td> <account-addr :address="props.item.bookmakerAddress"/> </td>
-                  <td class="text-xs-center">{{ oddsString(props.item, odds.match) }}</td>
-                  <td class="text-xs-center">{{ props.item.bookmakerAmountString }}</td>
-                  <td class="text-xs-center">{{ props.item.openAmount }}</td>
-                  <td class="text-xs-center">{{ props.item.statusString }}</td>
+                  <td @click="props.expanded = !props.expanded">{{ props.index + 1 }}</td>
+                  <td>
+                    <account-addr :address="props.item.bookmakerAddress"/>
+                  </td>
+                  <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ oddsString(props.item, odds.match) }}</td>
+                  <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.bookmakerAmountString }}</td>
+                  <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.openAmount }}</td>
+                  <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.statusString }}</td>
                   <td class="text-xs-left">
-                    <v-tooltip bottom lazy :disabled="props.item.status > 1">
+                    <v-tooltip bottom lazy :disabled="props.item.isDisabled" v-if="!isFinished">
                       <v-btn class="text-capitalize" color="red lighten-1" small slot="activator"
-                             @click="dialogCancel(props.item, odds.match)" :disabled="props.item.status > 1">
+                             @click="dialogCancel(props.item, odds.match)" :disabled="props.item.isDisabled">
                         <v-icon size="18" left class="mr-2">fas fa-times-circle</v-icon>
                         Cancel
                       </v-btn>
                       <span>Cancel</span>
                     </v-tooltip>
-                    <v-tooltip bottom lazy :disabled="props.item.status > 1">
-                      <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator" :disabled="props.item.status > 1"
+                    <v-tooltip bottom lazy :disabled="props.item.isDisabled" v-if="!isFinished">
+                      <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator"
+                             :disabled="props.item.isDisabled"
                              @click="openShare(props.item.id, odds.match.homeTeam, odds.match.awayTeam, odds.match.date)">
                         <v-icon size="18" left class="mr-2">fas fa-share-alt-square</v-icon>
                         Share
@@ -89,8 +95,8 @@
                       <span>Share</span>
                     </v-tooltip>
                     <v-btn fab dark class="btn-punter" color="blue lighten-1" :class="{ 'active': props.expanded }"
-                       @click="props.expanded = !props.expanded"
-                       v-if="props.item.punters.length !== 0">
+                           @click="props.expanded = !props.expanded"
+                           v-if="props.item.punters.length !== 0">
                       <v-icon dark small class="white--text">fas fa-angle-down</v-icon>
                     </v-btn>
                   </td>
@@ -105,6 +111,10 @@
 
         </v-expansion-panel-content>
       </v-expansion-panel>
+
+      <v-card-text class="text-xs-center" v-if="!oddsResult.length">
+        No Handicap
+      </v-card-text>
     </v-card>
   </v-flex>
 </v-layout>

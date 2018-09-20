@@ -3,6 +3,9 @@ import { PunterInterface } from '@/shared/interfaces/punter';
 
 import { Punter } from './punter';
 
+const isNaN = require('lodash/isNaN');
+const isUndefined = require('lodash/isUndefined');
+
 export class Betting {
 
   protected _id: number = 0;
@@ -93,7 +96,7 @@ export class Betting {
       case 0:
         return 'Open';
       case 1:
-        return 'Partially Settled';
+        return (this.punters.length === 0) ? 'Settled' : 'Partially Settled';
       case 2:
         return 'Settled';
       case 3:
@@ -123,6 +126,10 @@ export class Betting {
 
   public get isOwner(): boolean {
     return this.account === this.bookmakerAddress;
+  }
+
+  public get isDisabled(): boolean {
+    return this.status > 1 || isNaN(this.bettingId) || isUndefined(this.bettingId);
   }
 
   constructor(betting: BettingInterface) {
