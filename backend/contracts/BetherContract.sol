@@ -1,6 +1,40 @@
 pragma solidity ^0.4.21;
 
-import "./Ownable.sol";
+contract Ownable {
+
+  address public owner;
+
+
+  event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+
+
+  /**
+   * @dev The Ownable constructor sets the original `owner` of the contract to the sender
+   * account.
+   */
+  function Ownable() public {
+    owner = msg.sender;
+  }
+
+  /**
+   * @dev Throws if called by any account other than the owner.
+   */
+  modifier onlyOwner() {
+    require(msg.sender == owner);
+    _;
+  }
+
+  /**
+   * @dev Allows the current owner to transfer control of the contract to a newOwner.
+   * @param newOwner The address to transfer ownership to.
+   */
+  function transferOwnership(address newOwner) public onlyOwner {
+    require(newOwner != address(0));
+    emit OwnershipTransferred(owner, newOwner);
+    owner = newOwner;
+  }
+
+}
 contract BetherContract is Ownable {
 
 
@@ -272,11 +306,11 @@ contract BetherContract is Ownable {
     return true;
   }
 
-  function doRefundOrTransfer(Match _match, uint bettingId ) internal returns(bool) {
+  function doRefundOrTransfer(Match _match, uint32 bettingId ) internal returns(bool) {
     Betting storage _betting = bets[bettingId];
     require(_match.id == _betting.matchId);
     if (_betting.status == BetStatus.Deal || _betting.status == BetStatus.Settled) {
-      doTransfer(_match, _betting, 0);
+      doTransfer(_match, _betting, bettingId);
       _betting.status = BetStatus.Done;
     }
     else if (_betting.status == BetStatus.Open) {
