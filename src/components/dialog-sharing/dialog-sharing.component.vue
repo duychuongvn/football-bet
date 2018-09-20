@@ -5,7 +5,7 @@
   import { Getter, Action } from 'vuex-class'
   import { DIALOG_NAME } from '@/shared/enums/dialog';
 
-  import ENV from '@/environment/index'
+  const isUndefined = require('lodash/isUndefined');
 
   @Component
   export default class DialogSharingComponent extends Vue {
@@ -20,7 +20,7 @@
 
     public isLoading: boolean = false;
 
-    protected _bettingId: number | undefined;
+    public bettingId: number | undefined;
 
     get isDialog() {
       if (this.initData) {
@@ -34,15 +34,15 @@
           }));
         }
 
-        if (this.initData.bettingId) {
-          this._bettingId = this.initData.bettingId;
+        if (!isUndefined(this.initData.bettingId)) {
+          this.bettingId = this.initData.bettingId;
         }
 
         if (this.initData.isLoading) {
           this.isLoading = this.initData.isLoading;
         }
 
-        this.sharePath = `${ENV.DOMAIN}/match-details/${this.matchKey}?accept=${this._bettingId}`;
+        this.sharePath = `${window.location.host}/match-details/${this.matchKey}?accept=${this.bettingId}`;
       }
       return this.isSharingBetting;
     }

@@ -5,6 +5,7 @@ import { Component, Vue, Watch } from "vue-property-decorator";
 import { Action, Getter } from 'vuex-class';
 
 import { DIALOG_NAME, DIALOG_CLOSE } from '@/shared/enums/dialog';
+import { USER_TYPE_OPEN, USER_TYPE_FINISHED } from '@/shared/enums/odds';
 
 import { Profile } from '@/shared/model/profile';
 
@@ -26,13 +27,23 @@ export default class OddsResultComponent extends Vue {
   @Getter('myOdds', { namespace: 'odds' }) myOdds: any;
   @Getter('totalOdds', { namespace: 'odds' }) totalOdds: any;
 
-  public headTb: Array<Object> = [
+  public headTbOpen: Array<Object> = [
     { text: '#', align: 'left', sortable: false },
     { text: `Address`, align: 'left', sortable: false },
     { text: 'Handicap', align: 'center', sortable: false },
     { text: `Stake` , align: 'center', sortable: false },
     { text: 'Open', align: 'center', sortable: false },
     { text: 'Status', align: 'center', sortable: false },
+    { text: '', sortable: false }
+  ];
+
+  public headTbFinish: Array<Object> = [
+    { text: '#', align: 'left', sortable: false },
+    { text: `Address`, align: 'left', sortable: false },
+    { text: 'Handicap', align: 'center', sortable: false },
+    { text: `Stake` , align: 'center', sortable: false },
+    { text: 'Return', align: 'center', sortable: false },
+    { text: 'Payment Status', align: 'center', sortable: false },
     { text: '', sortable: false }
   ];
 
@@ -51,8 +62,37 @@ export default class OddsResultComponent extends Vue {
 
   public oddsTypeSelected: string = 'OPEN';
 
+  public selectedFilter: string = Object.keys(USER_TYPE_OPEN)[0];
+
   public selectedParent: string = 'DATE';
   public selectedChild: number = 1;
+
+  get isOddsOpen(): boolean {
+    return this.oddsTypeSelected === "OPEN";
+  }
+
+  get listFilter(): Array<Object> {
+    const resultFilter: Array<Object> = [];
+    let _filterType: any = USER_TYPE_OPEN;
+
+    if (!this.isOddsOpen) {
+      _filterType = USER_TYPE_FINISHED;
+    }
+
+    for(let i in _filterType) {
+      resultFilter.push({
+        key: i,
+        name: this.capitalizeFirstLetter(_filterType[i]),
+        number: 0
+      })
+    }
+
+    return resultFilter;
+  }
+
+  get headTb() {
+    return this.isFinished ? this.headTbFinish : this.headTbOpen;
+  }
 
   get oddsResult() {
     const _oddsRs: Profile[] = [];
@@ -64,10 +104,32 @@ export default class OddsResultComponent extends Vue {
       _odds.match.date = moment(odds.match.time * 1000).format('YYYY-MM-DD HH:mm:ss');
 
       _odds.bettings = _odds.bettings.filter((betting: any) => {
-        return this.isFinished ? betting.status > 3 : betting.status <= 3;
+        if (this.isFinished) {
+          switch (USER_TYPE_FINISHED[+this.selectedFilter]) {
+            case USER_TYPE_FINISHED.ODDS_LOST:
+            case USER_TYPE_FINISHED.ODDS_WON:
+            case USER_TYPE_FINISHED.ODDS_REFUNDED:
+              return betting.status === 4;
+            default:
+              return betting.status > 3;
+          }
+        } else {
+          switch (USER_TYPE_OPEN[+this.selectedFilter]) {
+            case USER_TYPE_OPEN.ODDS_OPEN:
+              return betting.status === 0;
+            case USER_TYPE_OPEN.ODDS_SETTLED:
+              return betting.status === 1;
+            case USER_TYPE_OPEN.ODDS_CANCELLED:
+              return betting.status === 3;
+            default:
+              return betting.status <= 3;
+          }
+        }
       });
 
-      _oddsRs.push(_odds);
+      if (!!_odds.bettings.length) {
+        _oddsRs.push(_odds);
+      }
     });
 
     return _oddsRs;
@@ -75,6 +137,19 @@ export default class OddsResultComponent extends Vue {
 
   get isFinished() {
     return this.oddsTypeSelected === 'FINISHED';
+  }
+
+  capitalizeFirstLetter(string: string): string {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  isActiveFilter(key: any): boolean {
+    return this.selectedFilter === key;
+  }
+
+  changedFilter(key: any): void {
+    if (key === this.selectedFilter) return;
+    this.selectedFilter = key;
   }
 
   oddsString (item: any, match: any) {
@@ -98,6 +173,8 @@ export default class OddsResultComponent extends Vue {
     });
 
     this.oddsTypeSelected = key;
+
+    this.selectedFilter = Object.keys(USER_TYPE_OPEN)[0];
   }
 
   dialogClaimStake(bettings: any[], matchId: any) {
