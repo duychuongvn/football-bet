@@ -7,6 +7,13 @@ const isNaN = require('lodash/isNaN');
 const isUndefined = require('lodash/isUndefined');
 
 export class Betting {
+  public get bookmakerResult(): number {
+    return this._bookmakerResult;
+  }
+
+  public set bookmakerResult(value: number) {
+    this._bookmakerResult = value;
+  }
 
   protected _id: number = 0;
   public get id(): number {
@@ -90,6 +97,8 @@ export class Betting {
   public set status(v: number) {
     this._status = v;
   }
+
+  private _bookmakerResult: number = 0;
   // @ts-ignore
   public get statusString(): string {
     switch (+this.status) {
@@ -143,6 +152,7 @@ export class Betting {
       this.odds             = betting.odds;
       this.settledAmount    = +betting.settledAmount;
       this.status           = +betting.status;
+      this.bookmakerResult           = +betting.bookmakerResult;
 
       if (betting.punters) {
         this._addPunters(betting.punters);

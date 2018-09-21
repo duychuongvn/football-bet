@@ -10,5 +10,6 @@ export interface BettingInterface {
   odds: number;
   settledAmount: number | string;
   status: number;
+  bookmakerResult: number;
   punters: PunterInterface[];
 }

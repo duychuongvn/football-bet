@@ -201,6 +201,7 @@ export const BetherContractService = {
     }
 
     if (!bettingItem) {
+
       bettingItem = {
         "id": +betting.bettingId.valueOf(),
         "bettingId": +betting.bettingId.valueOf(),
@@ -210,14 +211,13 @@ export const BetherContractService = {
         'bookmakerAmount': betting.bookmakerAmount,
         'settledAmount': betting.settledAmount,
         'status': betting.status,
+        'bookmakerResult': betting.bookmakerResult,
         'punters': [] as any
       };
-
       match.bettings.push(bettingItem);
       match.summary.stake = (parseFloat(match.summary.stake) + parseFloat(bettingItem.bookmakerAmount)).toFixed(3);
     }
     bettingItem.punters.push(...betting.punters);
-
     return bettings;
 
   },
@@ -248,18 +248,10 @@ export const BetherContractService = {
               'punters': [] as any
             } as any;
 
-            betting.settledAmount = betting.bookmakerAmount;
-            // {None, Win, Draw, WinAHalf, LoseAHalf, Lose}
-            if (betting.bookmakerResult === 1) {
-              betting.bookmakerResult = 5;
-            } else if (betting.bookmakerResult === 3) {
-              betting.bookmakerResult = 4;
-            } else if (betting.bookmakerResult === 4) {
-              betting.bookmakerResult = 3;
-            } else if (betting.bookmakerResult === 5) {
-              betting.bookmakerResult = 1;
+            if(betting.bookmakerResult !== 0) {
+              betting.bookmakerResult = 5 - betting.bookmakerResult + 1;
             }
-
+            betting.settledAmount = betting.bookmakerAmount;
             BetherContractService.cacheBetting(bettings, betting);
           });
         }

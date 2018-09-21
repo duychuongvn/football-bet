@@ -13,6 +13,7 @@ export const actions: ActionTree<any, RootState> = {
 
     BetherContractService.getUserBets(account)
       .subscribe((res: any) => {
+        console.log(JSON.stringify(res))
         commit(RECEVER_TOTAL_ODDS, res);
     }, (error: any) => {
       console.log(error, 'error');
