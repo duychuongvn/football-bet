@@ -80,7 +80,7 @@ export class Betting {
 
   public get openAmount(): string {
     const _openAmount = this.bookmakerAmount.big().minus(this.settledAmount.big());
-    return this.status === 3 ? '--' : `${_openAmount.toFixed(3)} ETH`;
+    return (this.status === 3 || isNaN(this.bettingId) || isUndefined(this.bettingId)) ? '--' : `${_openAmount.toFixed(3)} ETH`;
   }
 
   protected _status: number = 0;
