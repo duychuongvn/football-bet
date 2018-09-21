@@ -7,10 +7,16 @@
   import { DIALOG_NAME, DIALOG_CLOSE } from '@/shared/enums/dialog'
   import { ODDS_TYPE } from '@/shared/enums/odds'
 
+<<<<<<< Updated upstream
   import * as moment from 'moment'
 
   const isEqual = require('lodash/isEqual');
   const Big = require('big.js');
+=======
+  import {Web3Vue} from "../../shared/services/web3.service";
+
+  const isEqual = require('lodash/isEqual')
+>>>>>>> Stashed changes
 
   @Component
   export default class DialogBettingComponent extends Vue {
@@ -148,7 +154,11 @@
     _createBet() {
       const _opts = {
         account: this.account.address,
+<<<<<<< Updated upstream
         match: this.match,
+=======
+        bettingId: Web3Vue.toSHA3(`${this.match.homeTeam}${this.match.awayTeam}${this.match}`),
+>>>>>>> Stashed changes
         homeTeam: this.match.homeTeam,
         awayTeam: this.match.awayTeam,
         time: moment(this.match.date).unix(),

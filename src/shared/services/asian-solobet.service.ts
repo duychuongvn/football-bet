@@ -1,3 +1,6 @@
+import {web3} from '@/store/web3';
+import { Web3Vue } from '@/shared/services/web3.service';
+
 let contract = require('truffle-contract')
 let AsianSoloBetContract = require('@/assets/contracts/AsianSoloBet.json')
 const Rx = require('rx')
@@ -11,6 +14,8 @@ export const SoloBetService = {
     soloBetContract = contract(AsianSoloBetContract)
     soloBetContract.setProvider(currentProvider)
 
+    console.log(soloBetContract)
+    console.log(currentProvider);
     observer.onNext(soloBetContract)
     observer.onCompleted()
   }),
@@ -48,11 +53,17 @@ export const SoloBetService = {
     });
   }),
   newOffer: (offerObj: any) => Rx.Observable.create((observer: any) => {
+
+    console.log(offerObj);
+    let stake = window.web3.toWei(offerObj.stake, 'ether');
+    console.log(stake);
+    let matchId = Web3Vue.toSHA3(offerObj.homeTeam+offerObj.awayTeam+ (offerObj.time / 1000));
+    console.log(matchId);window.web3.toWei(offerObj.stake, 'ether')
     soloBetContract.deployed().then((instance: any) => {
       return instance.offerNewMatch(
-        offerObj.bettingId, offerObj.homeTeam, offerObj.awayTeam,
+        matchId, offerObj.homeTeam, offerObj.awayTeam,
         offerObj.selectedTeam, (offerObj.time / 1000), offerObj.odds,
-        { from: offerObj.account, value: window.web3.toWei(offerObj.stake, 'ether') }
+        { from: offerObj.account, value:  stake}
       );
     }).then((result: any) => {
       observer.onNext(result);

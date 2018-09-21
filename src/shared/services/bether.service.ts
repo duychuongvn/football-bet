@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import {Betting} from '@/shared/model/betting'
 import ENV from '@/environment/index'
 import * as moment from 'moment';
@@ -361,3 +362,60 @@ export const BetherContractService = {
     })
   }),
 };
+=======
+import {web3} from '@/store/web3';
+import { Web3Vue } from '@/shared/services/web3.service';
+
+let contract = require('truffle-contract')
+let AsianSoloBetContract = require('@/assets/contracts/BetherContract.json')
+const Rx = require('rx')
+
+declare const window: any
+
+let soloBetContract: any;
+
+export const SoloBetService = {
+  init: (currentProvider: any) => Rx.Observable.create((observer: any) => {
+    soloBetContract = contract(AsianSoloBetContract)
+    soloBetContract.setProvider(currentProvider)
+
+    console.log(soloBetContract)
+    console.log(currentProvider);
+    observer.onNext(soloBetContract)
+    observer.onCompleted()
+  }),
+  getBetting: (matchId: string, bettingId: number) => Rx.Observable.create((observer: any) => {
+
+    soloBetContract.deployed()
+      .then((instance: any) => {
+        return instance.getBettingInfo.call(matchId, bettingId);
+      }).then((result: any) => {
+
+      let betting: any = {
+        bettingId: bettingId,
+        matchId: matchId,
+        offer: result[0],
+        dealer: result[1],
+        selectedTeam: result[2].toNumber(),
+        odds: result[3].toNumber(),
+        amount: result[4].toNumber(),
+        stake: SoloBetService.toEther(result[4].toNumber()),
+        status: result[5].toNumber(),
+      }
+
+      if (betting.selectedTeam === 0) {
+        betting.homeOffer = betting.offer;
+        betting.awayOffer = betting.dealer;
+      } else {
+        betting.homeOffer = betting.dealer;
+        betting.awayOffer = betting.offer;
+      }
+
+      observer.onNext(betting);
+      observer.onCompleted();
+    }).catch((err: any) => {
+      observer.error(err);
+    });
+  })
+}
+>>>>>>> Stashed changes
