@@ -62,7 +62,7 @@ export default class OddsResultComponent extends Vue {
 
   public oddsTypeSelected: string = 'OPEN';
 
-  public selectedFilter: string = Object.keys(USER_TYPE_OPEN)[0];
+  public selectedFilter: any = Object.keys(USER_TYPE_OPEN)[0];
 
   public selectedParent: string = 'DATE';
   public selectedChild: number = 1;
@@ -105,7 +105,7 @@ export default class OddsResultComponent extends Vue {
 
       _odds.bettings = _odds.bettings.filter((betting: any) => {
         if (this.isFinished) {
-          switch (USER_TYPE_FINISHED[+this.selectedFilter]) {
+          switch (USER_TYPE_FINISHED[this.selectedFilter]) {
             case USER_TYPE_FINISHED.ODDS_LOST:
             case USER_TYPE_FINISHED.ODDS_WON:
             case USER_TYPE_FINISHED.ODDS_REFUNDED:
@@ -114,7 +114,7 @@ export default class OddsResultComponent extends Vue {
               return betting.status > 3;
           }
         } else {
-          switch (USER_TYPE_OPEN[+this.selectedFilter]) {
+          switch (USER_TYPE_OPEN[this.selectedFilter]) {
             case USER_TYPE_OPEN.ODDS_OPEN:
               return betting.status === 0;
             case USER_TYPE_OPEN.ODDS_SETTLED:
