@@ -102,7 +102,8 @@ export const BetherContractService = {
           betting.punters.push({
             "no": i + 1,
             'wallet': result[index][i],
-            'settledAmount': BetherContractService.toEther(result[index + 1][i].toNumber())
+            'settledAmount': BetherContractService.toEther(result[index + 1][i].toNumber()),
+            'punterResult':betting.bookmakerResult===0?betting.bookmakerResult: (5-betting.bookmakerResult + 1)
           })
         }
 
@@ -347,7 +348,7 @@ export const BetherContractService = {
       bettingIds.push(claimStakeObj.bettings.length[i].bettingId);
     }
 
-    bether.cancelOffer(claimStakeObj.matchId, bettingIds, {from: claimStakeObj.account}, (err: any, success: any) => {
+    bether.claimStake(claimStakeObj.matchId, bettingIds, {from: claimStakeObj.account}, (err: any, success: any) => {
       observe.onNext(success);
       observe.onCompleted();
     })
