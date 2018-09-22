@@ -1,7 +1,80 @@
 .flag {
+
+  // TODO[HBQ, P1] refer to : https://www.bundesliga.com/en/league/ to set position of each club
+  // http://localhost:8081/img/bundesliga_2018-2019.002ba92a.svg
+
+  &-bundesliga {
+    background: url('../assets/flag/bundesliga_2018-2019.svg') no-repeat;
+    background-size: 400px 400px;
+    width: 25px;
+    height: 25px;
+
+    &.vfb-stuttgart {
+      background-size: 500% 400%;
+      background-position: 0% 34.33333%;
+      width: 22px;
+      height: 22px;
+    }
+    &.tsv-fortuna-95-dsseldorf {
+      background-size: 500% 400%;
+      background-position: 50% 94%;
+    }
+    &.-nrnberg {
+      background-size: 500% 400%;
+      background-position: 50% 0%;
+    }
+
+    &.hertha-bsc {
+      background-size: 500% 400%;
+      background-position: 75% 100%;
+    }
+
+    &.hannover-96 {
+      background-size: 500% 400%;
+      background-position: 25% 0%;
+    }
+
+    &.borussia-mnchengladbach {
+      background-size: 500% 400%;
+      background-position: 25% 33.33333%;
+    }
+    &.vfl-wolfsburg {
+      background-size: 500% 400%;
+      background-position: 0% 33.33333%;
+    }
+    &.sc-freiburg {
+      background-size: 500% 400%;
+      background-position: 50% 66.66667%;
+    }
+    &.tsg-1899-hoffenheim {
+      background-size: 500% 400%;
+      background-position: 75% 0%;
+    }
+    &.bv-borussia-09-dortmund {
+      background-size: 500% 400%;
+      background-position: 0% 66.66667%;
+    }
+    &.augsburg {
+      background-size: 500% 400%;
+      background-position: 100% 0%;
+    }
+    &.sv-werder-bremen {
+      background-size: 500% 400%;
+      background-position: 75% 66.66667%;
+    }
+    &.schalke-04 {
+      background-size: 500% 400%;
+      background-position: 25% 66.66667%;
+    }
+    &.bayern-mnchen {
+      background-size: 500% 400%;
+      background-position: 25% 100%;
+    }
+
+  }
+
   &-25 {
-    background-image: url('../assets/flag/flag-25.png');
-    background-repeat: no-repeat;
+    background: url('../assets/flag/flag-25.png') no-repeat;
     background-size: 400px 400px;
     width: 25px;
     height: 25px;
@@ -233,5 +306,8 @@
     &.sport-lisboa-e-benfica {
       background-position: -50px -100px;
     }
+
   }
 }
+
+

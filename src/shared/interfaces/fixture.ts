@@ -16,4 +16,5 @@ export interface FixtureInterface {
   awayGoals: number;
   homeGoals: number;
   matchId?: string | number;
+  leagueName?: string | undefined;
 }
