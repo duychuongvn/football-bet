@@ -172,7 +172,7 @@ export const BetherContractService = {
     })
   }),
 
-  cacheBetting(bettings: any[], betting: any) {
+  async cacheBetting(bettings: any[], betting: any) {
 
     let match: any;
 
@@ -186,11 +186,16 @@ export const BetherContractService = {
     if (!match) {
       match = {"match": null, "summary": {"stake": 0 as number}, "matchId": betting.matchId, "bettings": [] as any};
 
+
+      const  calling = async()  => BetherContractService.loadMatchesById(match.matchId).toPromise().then((result:any)=>result);
+      match.match =  await  calling();
       bettings.push(match);
 
-      BetherContractService.loadMatchesById(match.matchId).subscribe((matchInfo: any) => {
-        match.match = matchInfo;
-      })
+      // BetherContractService.loadMatchesById(match.matchId).subscribe((matchInfo: any) => {
+      //   match.match = matchInfo;
+      // })
+
+
     }
 
     let bettingItem: any;
@@ -202,7 +207,6 @@ export const BetherContractService = {
     }
 
     if (!bettingItem) {
-
       bettingItem = {
         "id": +betting.bettingId.valueOf(),
         "bettingId": +betting.bettingId.valueOf(),
@@ -212,7 +216,7 @@ export const BetherContractService = {
         'bookmakerAmount': betting.bookmakerAmount,
         'settledAmount': betting.settledAmount,
         'status': betting.status,
-        'bookmakerResult': betting.bookmakerResult,
+        'bookmakerResult': match.match.status !== 4? betting.bookmakerResult: match.match.approved?betting.bookmakerResult:BetherContractService.getPaymentStatus(match.match, betting),
         'punters': [] as any
       };
       match.bettings.push(bettingItem);
@@ -222,6 +226,18 @@ export const BetherContractService = {
     return bettings;
 
   },
+
+  getPaymentStatus (match:any, betting:any)  {
+    var goalsDif = match.homeScore - match.awayScore;
+    if(betting.bookmakerTeam === 1) {
+      goalsDif = match.awayScore - match.homeScore;
+    }
+    const dif = betting.odds + goalsDif * 100;
+    if (dif >=0) return 0;
+    return 5;
+
+  },
+
   getUserBets: (account: any) => Rx.Observable.create((observe: any) => {
 
     bether.getUserBets.call(account, (err: any, bettingIds: any) => {
