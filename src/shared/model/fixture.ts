@@ -1,8 +1,9 @@
 import { FixtureInterface } from '@/shared/interfaces/fixture'
 
 import * as moment from 'moment';
+import {ParentLeague} from '@/shared/model/parent-league';
 
-export class Fixture {
+export class Fixture extends ParentLeague{
   protected _approved: boolean = false;
   public get approved(): boolean {
     return this._approved;
@@ -81,7 +82,8 @@ export class Fixture {
     // return require(`@/assets/flag/${this.homeTeam.toSlug()}.png`);
   }
   public get homeTeamFlag25(): string {
-    return `flag-25 ${this.homeTeam.toSlug()}`;
+    let prefixFlag = (this.name === 'bundesliga') ? 'flag-bundesliga' : 'flag-25';
+    return `${prefixFlag} ${this.homeTeam.toSlug()}`;
   }
   public get homeTeamFlag50(): string {
     return `flag-50 ${this.homeTeam.toSlug()}`;
@@ -107,7 +109,8 @@ export class Fixture {
     // return require(`@/assets/flag/${this.awayTeam.toSlug()}.png`);
   }
   public get awayTeamFlag25(): string {
-    return `flag-25 ${this.awayTeam.toSlug()}`;
+    let prefixFlag = (this.name === 'bundesliga') ? 'flag-bundesliga' : 'flag-25';
+    return `${prefixFlag} ${this.awayTeam.toSlug()}`;
   }
   public get awayTeamFlag50(): string {
     return `flag-50 ${this.awayTeam.toSlug()}`;
@@ -161,7 +164,10 @@ export class Fixture {
     }));
   }
 
+
+
   constructor (fixture: FixtureInterface) {
+    super();
     if (fixture) {
       this.id        = fixture.id;
       this.date      = fixture.utcDate;
@@ -173,6 +179,7 @@ export class Fixture {
       this.awayGoals = fixture.awayGoals;
       this.summary   = { canceled:0, open:0,portionSettled:0,refuned:0, settledOrDone:0 };
       this.matchId   = fixture.matchId;
+      this.name      = fixture.leagueName;
     }
   }
 }

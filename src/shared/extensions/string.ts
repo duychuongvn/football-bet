@@ -4,7 +4,7 @@ interface String {
 }
 
 String.prototype.toSlug = function(): string {
-  return this.replace(/(FC|AFC|&)/g, '').toLowerCase().replace(/^\s+|\s+$|\s+(?=\s)/g, '').replace(/ /g,'-').replace(/[^\w-]+/g,'');
+  return this.replace(/(FC|AFC|&|^[0-9])/g, '').toLowerCase().replace(/^\s+|\s+$|\s+(?=\s)/g, '').replace(/ /g,'-').replace(/[^\w-]+/g,'');
 };
 
 String.prototype.toName = function (): string {

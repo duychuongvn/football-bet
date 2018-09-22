@@ -38,7 +38,7 @@ export const actions: ActionTree<any, RootState> = {
               const _betting = new Fixture(item);
               const _betDay = moment(item.utcDate).format('YYYY-MM-DD');
               _betting.matchId = Web3Vue.toSHA3(_betting);
-
+              _betting.name = dataObj.key;
               if (moment(_betDay).isSameOrAfter(_currentDate) && moment(_betDay).isBefore(_tomorrowDate)) {
                 _betting.isToDay = true;
                 _today.push(_betting);
@@ -53,6 +53,8 @@ export const actions: ActionTree<any, RootState> = {
                 _betting.isFuture = true;
                 _future.push(_betting);
               }
+
+
             });
           }
 
