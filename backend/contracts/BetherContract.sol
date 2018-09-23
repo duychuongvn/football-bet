@@ -150,7 +150,7 @@ contract BetherContract is Ownable {
   function bet(uint32 bettingIdx) public payable returns (bool) {
     require(msg.sender != owner);
     Betting storage _betting = bets[bettingIdx];
-
+    require(matches[_betting.matchId].time > now);
     require(_betting.bMaker != msg.sender);
     require(_betting.status != BetStatus.Settled);
     require(_betting.bAmount - _betting.settledAmount >= msg.value);
@@ -281,7 +281,12 @@ contract BetherContract is Ownable {
   function getPlayerBalance(address player) public view returns (uint256) {
     return balances[player];
   }
-
+  function updateScores(bytes32[] matchId, uint[] homeScore, uint[] awayScore) public isAdmin returns (bool) {
+    require(matchId.length == homeScore.length &&  homeScore.length == awayScore.length);
+    for(uint i = 0; i< matchId.length;i++) {
+      updateScore(matchId[i], homeScore[i], awayScore[i]);
+    }
+  }
   function updateScore(bytes32 matchId, uint homeScore, uint awayScore) public isAdmin returns (bool) {
     Match storage _match = matches[matchId];
     _match.homeScore = uint8(homeScore);
