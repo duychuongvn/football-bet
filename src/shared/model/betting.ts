@@ -7,12 +7,17 @@ const isNaN = require('lodash/isNaN');
 const isUndefined = require('lodash/isUndefined');
 
 export class Betting {
+
+  // 0: None, 1: Win, 2: WinAHalf, 3: Draw, 4:LoseAHalf, 5:Lose
+  private _bookmakerResult: number = 0;
   public get bookmakerResult(): number {
     return this._bookmakerResult;
   }
-
   public set bookmakerResult(value: number) {
     this._bookmakerResult = value;
+  }
+  public  get bookmakerResultString(): string {
+    return this.status === 0 ? 'Waiting payment' : 'Paid';
   }
 
   protected _id: number = 0;
@@ -98,7 +103,6 @@ export class Betting {
     this._status = v;
   }
 
-  private _bookmakerResult: number = 0;
   // @ts-ignore
   public get statusString(): string {
     switch (+this.status) {
@@ -113,7 +117,7 @@ export class Betting {
       case 4:
         return 'Refunded';
       case 5:
-        return 'Done';
+        return 'Paid';
     }
   }
 
@@ -138,7 +142,7 @@ export class Betting {
   }
 
   public get isDisabled(): boolean {
-    return this.status > 1 || isNaN(this.bettingId) || isUndefined(this.bettingId);
+    return this.status > 0 || isNaN(this.bettingId) || isUndefined(this.bettingId);
   }
 
   constructor(betting: BettingInterface) {
@@ -152,7 +156,7 @@ export class Betting {
       this.odds             = betting.odds;
       this.settledAmount    = +betting.settledAmount;
       this.status           = +betting.status;
-      this.bookmakerResult           = +betting.bookmakerResult;
+      this.bookmakerResult  = +betting.bookmakerResult;
 
       if (betting.punters) {
         this._addPunters(betting.punters);

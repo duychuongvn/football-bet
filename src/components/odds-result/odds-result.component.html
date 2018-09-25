@@ -50,12 +50,12 @@
           expand-icon="fas fa-chevron-down font-sm">
 
           <div class="text-capitalize" slot="header">
-            [{{ odds.match.dateTimeString }}] {{ odds.match.homeTeam }}
+            {{ odds.match.dateTimeString }} | {{ odds.match.homeTeam }}
             <span v-if="odds.match.status !==1">{{odds.match.homeGoals}}- {{odds.match.awayGoals}}</span>
             <span class="text-no-wrap" v-if="odds.match.status === 1"> - </span>
             {{ odds.match.awayTeam }} ({{ odds.summary.stake }} ETH)
 
-            <v-tooltip bottom lazy v-if="isFinished">
+            <v-tooltip bottom lazy v-if="isFinished && odds.match.isRequestPayout">
               <v-btn class="text-capitalize" color="teal lighten-1" small slot="activator">
                 <v-icon size="18" left class="mr-2">fas fa-hand-holding-usd</v-icon>
                 Request Payout
@@ -75,7 +75,7 @@
                   <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ oddsString(props.item, odds.match) }}</td>
                   <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.bookmakerAmountString }}</td>
                   <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.openAmount }}</td>
-                  <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.statusString }}</td>
+                  <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ oddsStatus(props.item) }}</td>
                   <td class="text-xs-left">
                     <v-tooltip bottom lazy :disabled="props.item.isDisabled" v-if="!isFinished">
                       <v-btn class="text-capitalize" color="red lighten-1" small slot="activator"
@@ -96,14 +96,14 @@
                     </v-tooltip>
                     <v-btn fab dark class="btn-punter" color="blue lighten-1" :class="{ 'active': props.expanded }"
                            @click="props.expanded = !props.expanded"
-                           v-if="props.item.punters.length !== 0">
+                           v-if="props.item.punters.length !== 0 && !isFinished">
                       <v-icon dark small class="white--text">fas fa-angle-down</v-icon>
                     </v-btn>
                   </td>
                 </tr>
               </template>
 
-              <template slot="expand" slot-scope="props" v-if="props.item.punters.length !== 0">
+              <template slot="expand" slot-scope="props" v-if="props.item.punters.length !== 0 && !isFinished">
                 <match-punters :punters="props.item.punters" :betting="props.item" :match="odds.match"/>
               </template>
             </v-data-table>

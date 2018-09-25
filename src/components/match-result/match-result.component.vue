@@ -97,7 +97,8 @@
             const _punters = {
               no: betting.punters.length + 1,
               settledAmount: +value.data.amount,
-              wallet: value.data.account
+              wallet: value.data.account,
+              punterResult: value.punterResult
             };
 
             betting.punters.push(new Punter(_punters));

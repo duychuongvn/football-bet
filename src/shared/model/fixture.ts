@@ -155,6 +155,14 @@ export class Fixture extends ParentLeague{
     this._isFuture = value;
   }
 
+  private _isRequestPayout: boolean = false;
+  public get isRequestPayout(): boolean {
+    return this._isRequestPayout;
+  }
+  public set isRequestPayout(value: boolean) {
+    this._isRequestPayout = value;
+  }
+
   public get key(): string {
     return btoa(JSON.stringify({
       id: this.id,

@@ -11,6 +11,8 @@ import { Profile } from '@/shared/model/profile';
 
 import * as moment from 'moment';
 
+const orderBy = require('lodash/orderBy');
+
 @Component({
   components: {
     'match-punters': () => import('@/components/match-result-punters/match-result-punters.component.vue')
@@ -103,36 +105,54 @@ export default class OddsResultComponent extends Vue {
       _odds.match.awayTeam = odds.match.awayTeam;
       _odds.match.date = moment(odds.match.time * 1000).format('YYYY-MM-DD HH:mm:ss');
 
-      _odds.bettings = _odds.bettings.filter((betting: any) => {
-        if (this.isFinished) {
-          switch (USER_TYPE_FINISHED[this.selectedFilter]) {
-            case USER_TYPE_FINISHED.ODDS_LOST:
-            case USER_TYPE_FINISHED.ODDS_WON:
-            case USER_TYPE_FINISHED.ODDS_REFUNDED:
-              return betting.status === 4;
-            default:
-              return betting.status > 3;
-          }
-        } else {
-          switch (USER_TYPE_OPEN[this.selectedFilter]) {
-            case USER_TYPE_OPEN.ODDS_OPEN:
-              return betting.status === 0;
-            case USER_TYPE_OPEN.ODDS_SETTLED:
-              return betting.status === 1;
-            case USER_TYPE_OPEN.ODDS_CANCELLED:
-              return betting.status === 3;
-            default:
-              return betting.status <= 3;
-          }
+      if (this.isFinished) {
+        if (+_odds.match.status < 4) {
+          _odds.bettings = [];
         }
-      });
+      } else {
+        if (+_odds.match.status >= 4) {
+          _odds.bettings = [];
+        }
+      }
 
-      if (!!_odds.bettings.length) {
-        _oddsRs.push(_odds);
+      if (!!_odds.bettings) {
+        _odds.bettings = _odds.bettings.filter((betting: any) => {
+          if (this.isFinished) {
+            if (betting.status === 0) {
+              _odds.match.isRequestPayout = true;
+            }
+
+            switch (USER_TYPE_FINISHED[this.selectedFilter]) {
+              case USER_TYPE_FINISHED.ODDS_LOST:
+                return betting.bookmakerResult >= 4;
+              case USER_TYPE_FINISHED.ODDS_WON:
+                return betting.bookmakerResult === 1 || betting.bookmakerResult === 2;
+              case USER_TYPE_FINISHED.ODDS_REFUNDED:
+                return betting.status === 4;
+              default:
+                return betting.bookmakerResult !== 0;
+            }
+          } else {
+            switch (USER_TYPE_OPEN[this.selectedFilter]) {
+              case USER_TYPE_OPEN.ODDS_OPEN:
+                return betting.status === 0;
+              case USER_TYPE_OPEN.ODDS_SETTLED:
+                return betting.status === 1 || betting.status === 2;
+              case USER_TYPE_OPEN.ODDS_CANCELLED:
+                return betting.status === 3;
+              default:
+                return betting.status <= 3;
+            }
+          }
+        });
+
+        if (!!_odds.bettings.length) {
+          _oddsRs.push(_odds);
+        }
       }
     });
 
-    return _oddsRs;
+    return orderBy(_oddsRs, ['match.date'], ['desc']);
   }
 
   get isFinished() {
@@ -161,6 +181,14 @@ export default class OddsResultComponent extends Vue {
     return `${_teamName} @${_odds}`;
   }
 
+  oddsStatus(betting: any) {
+    if (this.isFinished) {
+      return betting.bookmakerResultString;
+    } else {
+      return betting.statusString;
+    }
+  }
+
   selectOddsType(key: string) {
     if (key === this.oddsTypeSelected) return;
 
@@ -177,14 +205,13 @@ export default class OddsResultComponent extends Vue {
     this.selectedFilter = Object.keys(USER_TYPE_OPEN)[0];
   }
 
-  dialogClaimStake(bettings: any[], matchId: any) {
+  dialogClaimStake(match: any) {
     const _initOpts = {
       key: DIALOG_NAME.CLAIM_STAKE,
       isOpen: true,
       name: 'dialog-odds-claim',
       initData: {
-        odds: bettings,
-        matchId: matchId
+        matchId: match.matchId
       }
     };
     this.openDialog(_initOpts);

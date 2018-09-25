@@ -540,6 +540,33 @@
     "inputs": [
       {
         "name": "matchId",
+        "type": "bytes32[]"
+      },
+      {
+        "name": "homeScore",
+        "type": "uint256[]"
+      },
+      {
+        "name": "awayScore",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "updateScores",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
+        "name": "matchId",
         "type": "bytes32"
       },
       {
