@@ -59,19 +59,11 @@
 
     public tabsSelected: number = 0;
 
-    public isLoading: boolean = true;
-
     created() {
       if (!this.isInit) {
         this.arrFixtures.map((item: Object) => {
           this.fetchFixtures(item);
         });
-
-        setTimeout(() => {
-          this.isLoading = false;
-        }, 5000);
-      } else {
-        this.isLoading = false;
       }
 
       if (localStorage.getItem("bether_time")) {

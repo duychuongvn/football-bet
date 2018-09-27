@@ -6,6 +6,8 @@
 
   import { DIALOG_NAME } from '@/shared/enums/dialog';
 
+  import { IpfsService } from '@/shared/services/ipfs.service';
+
   @Component({
     components: {
       'footercomp': () => import('@/layout/footer/footer.component.vue'),
@@ -24,6 +26,7 @@
 
     // Init App
     created() {
+      IpfsService.initIpfsApi();
       this.initProgressBar();
       this.registerWeb3();
       this.initContract();

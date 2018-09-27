@@ -59,14 +59,7 @@ const AppRouter = [
           isMetamask: true
         }
       }
-    ],
-    beforeEnter: (to: any, from: any, next: any) => {
-      IpfsService.checkGateWays()
-        .then((res: any) => {
-          IpfsService.initIpfsApi(res.url);
-          next();
-        });
-    }
+    ]
   },
   {
     path: '/coming-soon',

@@ -53,8 +53,6 @@ export const actions: ActionTree<any, RootState> = {
                 _betting.isFuture = true;
                 _future.push(_betting);
               }
-
-
             });
           }
 
