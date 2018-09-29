@@ -184,7 +184,7 @@ export const BetherContractService = {
     }
 
     if (!match) {
-      match = {"match": null, "summary": {"stake": 0 as number}, "matchId": betting.matchId, "bettings": [] as any};
+      match = {"match": null, "summary": {"stake": 0 as number, "payoutAvailable": false as boolean}, "matchId": betting.matchId, "bettings": [] as any};
 
 
       const  calling = async()  => BetherContractService.loadMatchesById(match.matchId).toPromise().then((result:any)=>result);
@@ -216,12 +216,15 @@ export const BetherContractService = {
         'bookmakerAmount': betting.bookmakerAmount,
         'settledAmount': betting.settledAmount,
         'status': betting.status,
-        'returnedAmount': 0,
+        'returnedAmount': 0.000 as any,
         'bookmakerResult': betting.bookmakerResult,
         'punters': [] as any
       };
 
       BetherContractService.calculateBookmarkerResult(match.match, bettingItem);
+      if(bettingItem.bookmakerResult === 0 && !match.summary.payoutAvailable) {
+        match.summary.payoutAvailable = true;
+      }
       match.bettings.push(bettingItem);
       match.summary.stake = (parseFloat(match.summary.stake) + parseFloat(bettingItem.bookmakerAmount)).toFixed(3);
     }
