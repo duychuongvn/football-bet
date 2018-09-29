@@ -191,11 +191,6 @@ export const BetherContractService = {
       match.match =  await  calling();
       bettings.push(match);
 
-      // BetherContractService.loadMatchesById(match.matchId).subscribe((matchInfo: any) => {
-      //   match.match = matchInfo;
-      // })
-
-
     }
 
     let bettingItem: any;
@@ -222,7 +217,7 @@ export const BetherContractService = {
       };
 
       BetherContractService.calculateBookmarkerResult(match.match, bettingItem);
-      if(bettingItem.bookmakerResult === 0 && !match.summary.payoutAvailable) {
+      if(match.status === 4 && bettingItem.bookmakerResult < 5 && !match.summary.payoutAvailable) {
         match.summary.payoutAvailable = true;
       }
       match.bettings.push(bettingItem);
