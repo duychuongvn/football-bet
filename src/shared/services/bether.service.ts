@@ -217,6 +217,7 @@ export const BetherContractService = {
       };
 
       BetherContractService.calculateBookmarkerResult(match.match, bettingItem);
+
       if(match.status === 4 && bettingItem.bookmakerResult < 5 && !match.summary.payoutAvailable) {
         match.summary.payoutAvailable = true;
       }
@@ -240,11 +241,11 @@ export const BetherContractService = {
 
     const diff = betting.odds + goalsDif * 100;
     if (diff === 25) {
-      betting.returnedAmount = BetherContractService.formatNumber(betting.settledAmount * 0.5);
+      betting.returnedAmount = "+" + BetherContractService.formatNumber(betting.settledAmount * 0.5);
       bettingResult = 2;
     }
     else if (diff === - 25) {
-      betting.returnedAmount = BetherContractService.formatNumber(-betting.settledAmount * 0.5);
+      betting.returnedAmount =  BetherContractService.formatNumber(-betting.settledAmount * 0.5);
       bettingResult = 4;
     }
     else if (diff === 0) {
@@ -252,7 +253,7 @@ export const BetherContractService = {
       bettingResult = 3;
     }
     else if (diff > 25) {
-      betting.returnedAmount = betting.settledAmount;
+      betting.returnedAmount = "+" + betting.settledAmount;
       bettingResult = 1;
     }
     else {
