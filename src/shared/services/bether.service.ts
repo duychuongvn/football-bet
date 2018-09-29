@@ -220,6 +220,7 @@ export const BetherContractService = {
       if(match.status === 4 && bettingItem.bookmakerResult < 5 && !match.summary.payoutAvailable) {
         match.summary.payoutAvailable = true;
       }
+
       match.bettings.push(bettingItem);
       match.summary.stake = (parseFloat(match.summary.stake) + parseFloat(bettingItem.bookmakerAmount)).toFixed(3);
     }
@@ -229,22 +230,24 @@ export const BetherContractService = {
   },
 
   calculateBookmarkerResult(match:any, betting:any) {
-    var goalsDif = match.homeScore - match.awayScore;
+    var goalsDif = match.homeGoals - match.awayGoals;
+
     var bettingResult = 0;
     // 0: none, 1 win, 2 win a half, 3 draw, 4 lose a half, 5 lose
     if(betting.bookmakerTeam === 1) {
-      goalsDif = match.awayScore - match.homeScore;
+      goalsDif = match.awayGoals - match.homeGoals;
     }
+
     const diff = betting.odds + goalsDif * 100;
-    if (diff == 25) {
+    if (diff === 25) {
       betting.returnedAmount = BetherContractService.formatNumber(betting.settledAmount * 0.5);
       bettingResult = 2;
     }
-    else if (diff == - 25) {
+    else if (diff === - 25) {
       betting.returnedAmount = BetherContractService.formatNumber(-betting.settledAmount * 0.5);
       bettingResult = 4;
     }
-    else if (diff == 0) {
+    else if (diff === 0) {
       betting.returnedAmount = BetherContractService.formatNumber(0.000);
       bettingResult = 3;
     }
