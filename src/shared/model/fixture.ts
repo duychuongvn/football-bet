@@ -172,8 +172,6 @@ export class Fixture extends ParentLeague{
     }));
   }
 
-
-
   constructor (fixture: FixtureInterface) {
     super();
     if (fixture) {
@@ -185,7 +183,7 @@ export class Fixture extends ParentLeague{
       this.approved  = fixture.approved;
       this.homeGoals = fixture.homeGoals;
       this.awayGoals = fixture.awayGoals;
-      this.summary   = { canceled:0, open:0,portionSettled:0,refuned:0, settledOrDone:0 };
+      this.summary   = { canceled:0, open:0, portionSettled:0, refuned:0, settledOrDone:0 };
       this.matchId   = fixture.matchId;
       this.name      = fixture.leagueName;
     }

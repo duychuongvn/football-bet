@@ -27,11 +27,11 @@
         if (this.$route.params && this.$route.params.key) {
           this.matchKey = this.$route.params.key;
         } else {
-          this.matchKey = btoa(JSON.stringify({
+          this.matchKey = encodeURIComponent(btoa(JSON.stringify({
             homeTeam: this.initData.homeTeam,
             awayTeam: this.initData.awayTeam,
             date: this.initData.date
-          }));
+          })));
         }
 
         if (!isUndefined(this.initData.bettingId)) {

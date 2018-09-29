@@ -1,4 +1,5 @@
 <template src="./dialog-betting.component.html"></template>
+<style lang="scss" scoped src="./dialog-betting.component.scss"></style>
 
 <script lang="ts">
   import { Component, Vue, Watch } from 'vue-property-decorator'
@@ -32,6 +33,12 @@
     public stakeSelected = 0.05;
     private _match: any;
 
+    public formOdds: boolean = false
+
+    public rules = {
+      maxHandicap: []
+    };
+
     get potential() {
       const stake = !!this.odds ? this.odds.bookmakerAmount : this.stakeSelected;
 
@@ -48,6 +55,8 @@
       if (this.initData && this.initData.odds) {
         this.bettingSelected = this.initData.odds.bookmakerTeam;
         this.stakeSelected = new Big(this.initData.odds.bookmakerAmount).minus(this.initData.odds.settledAmount);
+        let _validation = new Big(this.initData.odds.bookmakerAmount).minus(this.initData.odds.settledAmount);
+        this.rules.maxHandicap.push(v => v <= _validation || `Max Stake ${_validation}`);
         return this.initData.odds
       }
     }

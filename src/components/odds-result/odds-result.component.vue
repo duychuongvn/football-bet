@@ -8,6 +8,7 @@ import { DIALOG_NAME, DIALOG_CLOSE } from '@/shared/enums/dialog';
 import { USER_TYPE_OPEN, USER_TYPE_FINISHED } from '@/shared/enums/odds';
 
 import { Profile } from '@/shared/model/profile';
+import { Betting } from '@/shared/model/betting';
 
 import * as moment from 'moment';
 
@@ -118,10 +119,6 @@ export default class OddsResultComponent extends Vue {
       if (!!_odds.bettings) {
         _odds.bettings = _odds.bettings.filter((betting: any) => {
           if (this.isFinished) {
-            if (betting.status === 0) {
-              _odds.match.isRequestPayout = true;
-            }
-
             switch (USER_TYPE_FINISHED[this.selectedFilter]) {
               case USER_TYPE_FINISHED.ODDS_LOST:
                 return betting.bookmakerResult >= 4;
@@ -151,7 +148,6 @@ export default class OddsResultComponent extends Vue {
         }
       }
     });
-
     return orderBy(_oddsRs, ['match.date'], ['desc']);
   }
 
@@ -247,6 +243,36 @@ export default class OddsResultComponent extends Vue {
     };
 
     this.openDialog(_initOpts)
+  }
+
+  stakeAmount(betting: Betting) {
+    if (this.isFinished) {
+      return betting.settledAmountString;
+    } else {
+      return betting.bookmakerAmountString;
+    }
+  }
+
+  openAmount(betting: Betting) {
+    if (this.isFinished) {
+      return `${betting.returnedAmount} ETH`
+    } else {
+      return betting.openAmount;
+    }
+  }
+
+  returnClass(betting: Betting) {
+    if (this.isFinished) {
+      switch (betting.bookmakerResult) {
+        case 1:
+        case 2:
+          return 'light-green--text';
+        case 4:
+        case 5:
+          return 'red--text';
+      }
+    }
+    return 'white--text';
   }
 
   @Watch('initData')

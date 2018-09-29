@@ -55,7 +55,7 @@
             <span class="text-no-wrap" v-if="odds.match.status === 1"> - </span>
             {{ odds.match.awayTeam }} ({{ odds.summary.stake }} ETH)
 
-            <v-tooltip bottom lazy v-if="isFinished && odds.match.isRequestPayout">
+            <v-tooltip bottom lazy v-if="isFinished && odds.summary.payoutAvailable">
               <v-btn class="text-capitalize" color="teal lighten-1" small slot="activator">
                 <v-icon size="18" left class="mr-2">fas fa-hand-holding-usd</v-icon>
                 Request Payout
@@ -73,8 +73,9 @@
                     <account-addr :address="props.item.bookmakerAddress"/>
                   </td>
                   <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ oddsString(props.item, odds.match) }}</td>
-                  <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.bookmakerAmountString }}</td>
-                  <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.openAmount }}</td>
+                  <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ stakeAmount(props.item) }}</td>
+                  <td class="text-xs-center" @click="props.expanded = !props.expanded"
+                    :class="returnClass(props.item)">{{ openAmount(props.item) }}</td>
                   <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ oddsStatus(props.item) }}</td>
                   <td class="text-xs-left">
                     <v-tooltip bottom lazy :disabled="props.item.isDisabled" v-if="!isFinished">
@@ -85,9 +86,9 @@
                       </v-btn>
                       <span>Cancel</span>
                     </v-tooltip>
-                    <v-tooltip bottom lazy :disabled="props.item.isDisabled" v-if="!isFinished">
+                    <v-tooltip bottom lazy :disabled="props.item.isDisabledShare" v-if="!isFinished">
                       <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator"
-                             :disabled="props.item.isDisabled"
+                             :disabled="props.item.isDisabledShare"
                              @click="openShare(props.item.id, odds.match.homeTeam, odds.match.awayTeam, odds.match.date)">
                         <v-icon size="18" left class="mr-2">fas fa-share-alt-square</v-icon>
                         Share

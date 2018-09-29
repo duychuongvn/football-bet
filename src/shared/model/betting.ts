@@ -7,7 +7,6 @@ const isNaN = require('lodash/isNaN');
 const isUndefined = require('lodash/isUndefined');
 
 export class Betting {
-
   // 0: None, 1: Win, 2: WinAHalf, 3: Draw, 4:LoseAHalf, 5:Lose
   private _bookmakerResult: number = 0;
   public get bookmakerResult(): number {
@@ -92,7 +91,7 @@ export class Betting {
 
   public get openAmount(): string {
     const _openAmount = this.bookmakerAmount.big().minus(this.settledAmount.big());
-    return (this.status === 3 || isNaN(this.bettingId) || isUndefined(this.bettingId)) ? '--' : `${_openAmount.toFixed(3)} ETH`;
+    return `${_openAmount.toFixed(3)} ETH`;
   }
 
   protected _status: number = 0;
@@ -145,6 +144,18 @@ export class Betting {
     return this.status > 0 || isNaN(this.bettingId) || isUndefined(this.bettingId);
   }
 
+  public get isDisabledShare(): boolean {
+    return this.status > 1 || isNaN(this.bettingId) || isUndefined(this.bettingId);
+  }
+
+  private _returnedAmount: number | string = 0;
+  public get returnedAmount(): number | string {
+    return this._returnedAmount;
+  }
+  public set returnedAmount(value: number | string) {
+    this._returnedAmount = value;
+  }
+
   constructor(betting: BettingInterface) {
     if (betting) {
       this.id               = betting.id;
@@ -157,6 +168,7 @@ export class Betting {
       this.settledAmount    = +betting.settledAmount;
       this.status           = +betting.status;
       this.bookmakerResult  = +betting.bookmakerResult;
+      this.returnedAmount   = betting.returnedAmount;
 
       if (betting.punters) {
         this._addPunters(betting.punters);
