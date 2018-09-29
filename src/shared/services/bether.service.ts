@@ -237,15 +237,15 @@ export const BetherContractService = {
     }
     const diff = betting.odds + goalsDif * 100;
     if (diff == 25) {
-      betting.returnedAmount = betting.settledAmount * 0.5;
+      betting.returnedAmount = BetherContractService.formatNumber(betting.settledAmount * 0.5);
       bettingResult = 2;
     }
     else if (diff == - 25) {
-      betting.returnedAmount = -betting.settledAmount *0.5;
+      betting.returnedAmount = BetherContractService.formatNumber(-betting.settledAmount * 0.5);
       bettingResult = 4;
     }
     else if (diff == 0) {
-      betting.returnedAmount = 0;
+      betting.returnedAmount = BetherContractService.formatNumber(0.000);
       bettingResult = 3;
     }
     else if (diff > 25) {
@@ -253,7 +253,7 @@ export const BetherContractService = {
       bettingResult = 1;
     }
     else {
-      betting.returnedAmount = -betting.settledAmount
+      betting.returnedAmount = BetherContractService.formatNumber(-betting.settledAmount);
       bettingResult = 5;
     }
 
@@ -262,6 +262,9 @@ export const BetherContractService = {
 
   },
 
+  formatNumber(number: number) {
+    return number.toFixed(3);
+  },
   getUserBets: (account: any) => Rx.Observable.create((observe: any) => {
 
     bether.getUserBets.call(account, (err: any, bettingIds: any) => {
