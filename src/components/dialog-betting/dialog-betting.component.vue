@@ -56,7 +56,7 @@
         this.bettingSelected = this.initData.odds.bookmakerTeam;
         this.stakeSelected = new Big(this.initData.odds.bookmakerAmount).minus(this.initData.odds.settledAmount);
         let _validation = new Big(this.initData.odds.bookmakerAmount).minus(this.initData.odds.settledAmount);
-        this.rules.maxHandicap.push(v => v <= _validation || `Max Stake ${_validation}`);
+        this.rules.maxHandicap.push((v: any) => v <= _validation || `Max Stake ${_validation}`);
         return this.initData.odds
       }
     }
