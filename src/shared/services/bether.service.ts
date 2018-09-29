@@ -216,9 +216,12 @@ export const BetherContractService = {
         'bookmakerAmount': betting.bookmakerAmount,
         'settledAmount': betting.settledAmount,
         'status': betting.status,
-        'bookmakerResult': match.match.status !== 4? betting.bookmakerResult: match.match.approved?betting.bookmakerResult:BetherContractService.getPaymentStatus(match.match, betting),
+        'returnedAmount': 0,
+        'bookmakerResult': betting.bookmakerResult,
         'punters': [] as any
       };
+
+      BetherContractService.calculateBookmarkerResult(match.match, bettingItem);
       match.bettings.push(bettingItem);
       match.summary.stake = (parseFloat(match.summary.stake) + parseFloat(bettingItem.bookmakerAmount)).toFixed(3);
     }
@@ -227,14 +230,37 @@ export const BetherContractService = {
 
   },
 
-  getPaymentStatus (match:any, betting:any)  {
+  calculateBookmarkerResult(match:any, betting:any) {
     var goalsDif = match.homeScore - match.awayScore;
+    var bettingResult = 0;
+    // 0: none, 1 win, 2 win a half, 3 draw, 4 lose a half, 5 lose
     if(betting.bookmakerTeam === 1) {
       goalsDif = match.awayScore - match.homeScore;
     }
-    const dif = betting.odds + goalsDif * 100;
-    if (dif >=0) return 0;
-    return 5;
+    const diff = betting.odds + goalsDif * 100;
+    if (diff == 25) {
+      betting.returnedAmount = betting.settledAmount * 1.5;
+      bettingResult = 2;
+    }
+    else if (diff == - 25) {
+      betting.returnedAmount = betting.settledAmount *0.5;
+      bettingResult = 4;
+    }
+    else if (diff == 0) {
+      betting.returnedAmount = betting.settledAmount;
+      bettingResult = 3;
+    }
+    else if (diff > 25) {
+      betting.returnedAmount = betting.settledAmount * 2;
+      bettingResult = 1;
+    }
+    else {
+      betting.returnedAmount = -betting.settledAmount
+      bettingResult = 5;
+    }
+
+    betting.bookmakerResult = match.status !== 4 ? betting.bookmakerResult
+                            : match.approved?betting.bookmakerResult:bettingResult;
 
   },
 
