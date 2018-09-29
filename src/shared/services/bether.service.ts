@@ -15,6 +15,13 @@ export const BetherContractService = {
     if (window.web3) {
       const betherContract = window.web3.eth.contract(betherContractABI);
       bether = betherContract.at(ENV.CONTRACT_ADDRESS);
+      bether.LogNewBet().watch((err:any, result:any)=> {
+        console.log(err);
+        console.log(result)
+      });
+      bether.LogAcceptBet().watch((err:any, result:any)=>{
+
+      }),
       observer.onNext(bether);
       observer.onCompleted();
     }
