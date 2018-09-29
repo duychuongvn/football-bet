@@ -239,19 +239,19 @@ export const BetherContractService = {
     }
     const diff = betting.odds + goalsDif * 100;
     if (diff == 25) {
-      betting.returnedAmount = betting.settledAmount * 1.5;
+      betting.returnedAmount = betting.settledAmount * 0.5;
       bettingResult = 2;
     }
     else if (diff == - 25) {
-      betting.returnedAmount = betting.settledAmount *0.5;
+      betting.returnedAmount = -betting.settledAmount *0.5;
       bettingResult = 4;
     }
     else if (diff == 0) {
-      betting.returnedAmount = betting.settledAmount;
+      betting.returnedAmount = 0;
       bettingResult = 3;
     }
     else if (diff > 25) {
-      betting.returnedAmount = betting.settledAmount * 2;
+      betting.returnedAmount = betting.settledAmount;
       bettingResult = 1;
     }
     else {
