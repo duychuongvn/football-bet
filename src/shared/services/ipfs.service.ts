@@ -10,7 +10,7 @@ let api_ipfs: any;
 export const IpfsService = {
   initIpfsApi: () => {
     api_ipfs = axios.create({
-      baseURL: (process.env.NODE_ENV === 'development') ? ENV.API.PATH_IPFS : '',
+      baseURL: ENV.API.PATH_IPFS,
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
