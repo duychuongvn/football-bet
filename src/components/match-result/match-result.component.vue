@@ -20,7 +20,12 @@
     @Prop() match: any;
     @Action('loadBettings', { namespace: 'betting' }) loadBettings: any;
     @Action('clearBetting', { namespace: 'betting' }) clearBetting: any;
+    @Action('getBettingById', { namespace: 'betting' }) getBettingById: any;
     @Getter('bettings', { namespace: 'betting' }) bettings!: Betting[];
+
+    @Getter('bether', { namespace: 'solobet' }) bether: any;
+    @Getter('loadingBetting', { namespace: 'betting' }) loadingBetting!: boolean
+    @Action('setLoadingBetting', { namespace: 'betting' }) setLoadingBetting: any
 
     @Action('openDialog', { namespace: 'dialog' }) openDialog: any;
     @Getter('initData', { namespace: 'dialog' }) initData: any;
@@ -28,6 +33,8 @@
     @Getter('isAccount', { namespace: 'web3' }) isAccount: any;
 
     @Action('notify', { namespace: 'notify' }) notify: any;
+
+    @Getter('newOffer', { namespace: 'solobet' }) newOffer: any
 
     public headTb: Array<Object> = [
       { text: '#', align: 'left', sortable: false },
@@ -40,13 +47,30 @@
       { text: '', sortable: false }
     ];
 
-    public isLoadingBetting: any = null;
     public search: any = '';
 
-    private _countBeting: number = 0;
+    public rowPerPage: Array<number> = [20,50,100];
 
     created() {
       this.loadBettings(this.match);
+      this.bether.LogNewBet().watch((error: any, result: any) => {
+        if (!error && isEqual(this.match.matchId, result.args.matchId)) {
+          this.watchBettings(result.args.bettingIdx.valueOf())
+        }
+      });
+
+      this.bether.LogAcceptBet().watch((error: any, result: any) => {
+        if (!error && isEqual(this.match.matchId, result.args.matchId)) {
+          this.watchBettings(result.args.bettingIdx.valueOf())
+        }
+      })
+    }
+
+    watchBettings(bettingId: number) {
+      this.getBettingById({
+        bettingId: bettingId,
+        account: this.account.address
+      });
     }
 
     oddsString (item: any) {
@@ -81,33 +105,8 @@
 
     @Watch('initData')
     getInitDialog(value: any) {
-      if (value && value.key === DIALOG_CLOSE.BETTING_RELOAD) {
-        this._countBeting = this.bettings.length;
-
-        this.isLoadingBetting = setInterval(() => {
-          this.loadBettings(this.match);
-        }, 5000);
-      }
-
-      if (value && value.key === DIALOG_CLOSE.BETTING_DEAL_RELOAD) {
-        this.bettings.filter((betting: Betting) => {
-          if (betting.id === value.data.bettingId) {
-            betting.settledAmount += value.data.amount;
-
-            const _punters = {
-              no: betting.punters.length + 1,
-              settledAmount: +value.data.amount,
-              wallet: value.data.account,
-              punterResult: value.punterResult
-            };
-
-            betting.punters.push(new Punter(_punters));
-
-            if (betting.settledAmount === betting.bookmakerAmount) {
-              betting.status = 2;
-            }
-          }
-        })
+      if (value && (value.key === DIALOG_CLOSE.BETTING_DEAL_RELOAD || value.key === DIALOG_CLOSE.BETTING_RELOAD)) {
+        this.setLoadingBetting(true);
       }
     }
 
@@ -126,12 +125,6 @@
           this.search = +this.$route.query.accept;
           this.createOdds(_betTmp);
         }
-      }
-
-      if (this.isLoadingBetting && value.length > this._countBeting) {
-        clearInterval(this.isLoadingBetting);
-        this.isLoadingBetting = undefined;
-        this._countBeting = 0;
       }
     }
 
@@ -157,9 +150,7 @@
     }
 
     destroyed() {
-      clearInterval(this.isLoadingBetting);
       this.clearBetting();
-      this.isLoadingBetting = null
     }
   }
 </script>

@@ -1,9 +1,10 @@
 <v-card raised dark color="blue-grey lighten-6-opacity">
   <v-data-table
-    :loading="!!isLoadingBetting"
+    :loading="!!loadingBetting"
     :headers="headTb"
     :search="search"
     :custom-filter="customFilter"
+    :rows-per-page-items="rowPerPage"
     :items="bettings" next-icon="fas fa-chevron-right" prev-icon="fas fa-chevron-left"
     :hide-actions="!(bettings.length > 10)" class="bg-transparent table-fixture">
     <v-progress-linear slot="progress" color="teal darken-2" indeterminate></v-progress-linear>
@@ -17,9 +18,10 @@
         <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.openAmount }}</td>
         <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.punters.length }}</td>
         <td class="text-xs-left">
-          <v-tooltip bottom lazy :disabled="props.item.status === 2 || props.item.isOwner">
+          <v-tooltip bottom lazy :disabled="props.item.status === 2 || props.item.isOwner || loadingBetting">
             <v-btn class="text-capitalize" color="teal lighten-1" small slot="activator" @click="createOdds(props.item)"
-            :disabled="props.item.status >= 2 || props.item.isOwner">
+            :disabled="props.item.status >= 2 || props.item.isOwner || loadingBetting"
+            :loading="!props.item.isOwner && props.item.status < 2 && loadingBetting">
               <v-icon size="18" left class="mr-2">fas fa-handshake</v-icon>
               Settle
             </v-btn>
@@ -44,8 +46,8 @@
         </td>
       </tr>
     </template>
-    <template slot="expand" slot-scope="props" v-if="props.item.punters.length !== 0">
-      <match-punters :punters="props.item.punters" :betting="props.item" :match="match"/>
+    <template slot="expand" slot-scope="props" >
+      <match-punters :punters="props.item.punters" :betting="props.item" :match="match" v-if="props.item.punters.length !== 0"/>
     </template>
 
   </v-data-table>

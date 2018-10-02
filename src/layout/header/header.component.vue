@@ -24,6 +24,7 @@
 
     @Action('userSummary', { namespace: 'solobet' }) getUserSummary: any;
     @Getter('bether', { namespace: 'solobet' }) bether: any;
+    @Action('setLoadingBetting', { namespace: 'betting' }) setLoadingBetting: any;
     @Getter('userSummary', { namespace: 'solobet' }) userSummary: any;
 
     public isFixed: boolean = false;
@@ -53,10 +54,10 @@
           this.fetchAccountSummary(this.web3Init.account.address);
         }
 
-        setInterval(() => {
-          this.fetchVolumn(moment().add(-1, 'd').unix());
-          this.fetchVolumn(moment().add(-7, 'd').unix(), false);
-        }, 4000);
+        this.fetchVolumn(moment().add(-1, 'd').unix());
+        this.fetchVolumn(moment().add(-7, 'd').unix(), false);
+
+        this.watchVolumns()
 
         this.web3Init.web3.currentProvider.publicConfigStore.subscribe((item: any) => {
           if (item.selectedAddress) {
@@ -74,6 +75,23 @@
         });
       }
     }
+
+    watchVolumns () {
+      this.bether.LogNewBet().watch((err:any, result:any)=> {
+        if (!err) {
+          this.fetchVolumn(moment().add(-1, 'd').unix());
+          this.fetchVolumn(moment().add(-7, 'd').unix(), false);
+        }
+      })
+
+      this.bether.LogAcceptBet().watch((err:any, result:any)=>{
+        if (!err) {
+          this.fetchVolumn(moment().add(-1, 'd').unix());
+          this.fetchVolumn(moment().add(-7, 'd').unix(), false);
+        }
+      })
+    }
+
     // Computed
     get networkName(): string {
       return this.web3Init.network.networkName;

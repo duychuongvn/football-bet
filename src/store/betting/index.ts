@@ -10,7 +10,8 @@ import { mutations } from '@/store/betting/mutations'
 export const state: BettingState = {
   betting: undefined,
   bettings: [],
-  countBetting: 0
+  countBetting: 0,
+  loadingBetting: false
 }
 
 const namespaced: boolean = true;

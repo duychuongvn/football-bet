@@ -17,18 +17,14 @@ export const actions: ActionTree<any, RootState> = {
     BetherContractService.newOffer(_matchId, offerObj)
       .subscribe((res: any) => {
         commit(CREATE_OFFER, res)
-      }, (error: any) => {
-        console.log(error)
-      })
+      }, (error: any) => { })
   },
   createDeal({ commit, dispatch }, dealObj: any): any {
     BetherContractService.oddsDeal(dealObj)
     .subscribe((res: any) => {
       commit(CREATE_DEAL, res)
       dispatch('betting/acceptBet', dealObj, { root: true })
-    }, (error: any) => {
-      console.log(error)
-    })
+    }, (error: any) => { })
   },
   updateScore({commit}, scoreObj: any): any {
     BetherContractService.updateScore(scoreObj)

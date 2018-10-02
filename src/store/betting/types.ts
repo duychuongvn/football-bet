@@ -14,5 +14,6 @@ export interface Betting {
 export interface BettingState {
   betting?: Betting,
   bettings?: Betting[],
-  countBetting?: number
+  countBetting?: number,
+  loadingBetting: boolean
 }

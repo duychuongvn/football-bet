@@ -35,7 +35,7 @@
   </v-flex>
 
   <v-flex xs12 text-xs-right>
-    <v-btn dark color="teal lighten-1 ma-0" @click="createBet" :disabled="match.isGoLive">
+    <v-btn dark color="teal lighten-1 ma-0" @click="createBet" :disabled="match.isGoLive || loadingBetting" :loading="loadingBetting">
       <v-icon left>fas fa-plus-square</v-icon>
       New Bet
     </v-btn>

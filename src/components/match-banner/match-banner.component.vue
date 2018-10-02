@@ -3,7 +3,7 @@
 
 <script lang="ts">
   import { Component, Vue, Prop } from 'vue-property-decorator';
-  import { Action } from 'vuex-class';
+  import { Action, Getter } from 'vuex-class';
 
   import { DIALOG_NAME } from '@/shared/enums/dialog';
 
@@ -19,6 +19,8 @@
 
     @Action('openDialog', { namespace: 'dialog' }) openDialog: any;
     @Action('setInitData', { namespace: 'dialog' }) setInitData: any;
+
+    @Getter('loadingBetting', { namespace: 'betting' }) loadingBetting!: boolean
 
     createBet() {
       if (this.match.isGoLive) {

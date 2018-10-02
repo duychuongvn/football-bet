@@ -166,6 +166,7 @@ export class Fixture extends ParentLeague{
   public get key(): string {
     return btoa(JSON.stringify({
       id: this.id,
+      matchId: this.matchId,
       date: this.date,
       homeTeam: this.homeTeam,
       awayTeam: this.awayTeam

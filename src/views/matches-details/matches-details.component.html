@@ -1,5 +1,5 @@
 <v-container fluid grid-list-md class="pt-0">
-  <match-banner :match="match" />
+  <match-banner :match="match" v-if="!!match && match.id"/>
    <!--<match-filter />-->
-  <match-result :match="match" class="mt-2"/>
+  <match-result :match="match" class="mt-2" v-if="!!match && match.id"/>
 </v-container>

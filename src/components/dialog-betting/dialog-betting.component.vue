@@ -30,7 +30,7 @@
 
     public bettingSelected = 0;
     public oddsSelected: any = ODDS_TYPE.UNDER_ONE;
-    public stakeSelected = 0.05;
+    public stakeSelected = 0.5;
     private _match: any;
 
     public formOdds: boolean = false
@@ -211,6 +211,7 @@
     @Watch('newOffer')
     getNewOffer(value: any) {
       if (value) {
+        console.log(value, 'new Offer')
         this._match = JSON.parse(JSON.stringify(this.match));
         this.closeDialog({
           key: DIALOG_CLOSE.BETTING_RELOAD
