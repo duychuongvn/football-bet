@@ -12,5 +12,6 @@ export interface BettingInterface {
   status: number;
   bookmakerResult: number;
   returnedAmount: number | string;
+  isSelected?: boolean;
   punters: PunterInterface[];
 }

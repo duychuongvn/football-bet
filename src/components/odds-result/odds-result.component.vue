@@ -10,6 +10,8 @@ import { USER_TYPE_OPEN, USER_TYPE_FINISHED } from '@/shared/enums/odds';
 import { Profile } from '@/shared/model/profile';
 import { Betting } from '@/shared/model/betting';
 
+import { BetherContractService } from "@/shared/services/bether.service";
+
 import * as moment from 'moment';
 
 const orderBy = require('lodash/orderBy');
@@ -29,6 +31,10 @@ export default class OddsResultComponent extends Vue {
   @Getter('sortChild', { namespace: 'odds' }) sortChild: any;
   @Getter('myOdds', { namespace: 'odds' }) myOdds: any;
   @Getter('totalOdds', { namespace: 'odds' }) totalOdds: any;
+
+  @Getter('account', { namespace: 'web3' }) account: any;
+
+  @Action('notify', { namespace: 'notify' }) notify: any;
 
   public headTbOpen: Array<Object> = [
     { text: '#', align: 'left', sortable: false },
@@ -201,16 +207,22 @@ export default class OddsResultComponent extends Vue {
     this.selectedFilter = Object.keys(USER_TYPE_OPEN)[0];
   }
 
-  dialogClaimStake(match: any) {
-    const _initOpts = {
-      key: DIALOG_NAME.CLAIM_STAKE,
-      isOpen: true,
-      name: 'dialog-odds-claim',
-      initData: {
-        matchId: match.matchId
-      }
-    };
-    this.openDialog(_initOpts);
+  dialogClaimStake(odds: Profile) {
+    BetherContractService.claimStake({
+      matchId: odds.match.matchId,
+      bettings: odds.bettings,
+      account: this.account.address
+    }).subscribe((response: any) => {
+      this.notify({
+        mode: 'success',
+        message: 'Your has request payout success !'
+      });
+      }, (error: any) => {
+      this.notify({
+        mode: 'error',
+        message: error.message
+      });
+    })
   }
 
   dialogCancel(betting: any, match: any) {

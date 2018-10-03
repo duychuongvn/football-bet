@@ -390,13 +390,15 @@ export const BetherContractService = {
   }),
 
   claimStake: (claimStakeObj: any) => Rx.Observable.create((observe: any) => {
-    let bettingIds = [] as any [];
-    for (let i = 0; i < claimStakeObj.bettings.length; i++) {
-      bettingIds.push(claimStakeObj.bettings.length[i].bettingId);
-    }
+    const bettingIds: Array<string | number> = claimStakeObj.bettings.map((betting: any) => betting.bettingId);
 
     bether.claimStake(claimStakeObj.matchId, bettingIds, {from: claimStakeObj.account}, (err: any, success: any) => {
-      observe.onNext(success);
+      if (!!success) {
+        observe.onNext(success);
+      } else {
+        observe.error(err);
+      }
+
       observe.onCompleted();
     })
   })

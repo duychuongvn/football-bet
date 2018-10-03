@@ -77,13 +77,6 @@
     }
 
     watchVolumns () {
-      this.bether.LogNewBet().watch((err:any, result:any)=> {
-        if (!err) {
-          this.fetchVolumn(moment().add(-1, 'd').unix());
-          this.fetchVolumn(moment().add(-7, 'd').unix(), false);
-        }
-      })
-
       this.bether.LogAcceptBet().watch((err:any, result:any)=>{
         if (!err) {
           this.fetchVolumn(moment().add(-1, 'd').unix());
