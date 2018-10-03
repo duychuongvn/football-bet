@@ -46,7 +46,7 @@ export const BetherContractService = {
 
     BetherContractService.getBettingInfo(dealObj.bettingId).subscribe((result: any) => {
 
-      if ((result.status === 0 || result.status === 1) && (result.bookmakerAmount - result.settledAmount >= dealObj.amount)) {
+      if ((result.status === 0 || result.status === 1) && ( ( result.bookmakerAmount - result.settledAmount).toFixed(3) >= dealObj.amount.toFixed(3))) {
 
         bether.bet(dealObj.bettingId, {
           from: dealObj.account,
