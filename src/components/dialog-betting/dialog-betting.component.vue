@@ -211,7 +211,6 @@
     @Watch('newOffer')
     getNewOffer(value: any) {
       if (value) {
-        console.log(value, 'new Offer')
         this._match = JSON.parse(JSON.stringify(this.match));
         this.closeDialog({
           key: DIALOG_CLOSE.BETTING_RELOAD
@@ -246,7 +245,7 @@
 
         setTimeout(() => {
           this.toogleDialog(DIALOG_NAME.BETTING_SHARING, true, {
-            bettingId: this.odds.bettingId,
+            bettingId: _odds.bettingId,
             message: 'Your settlement has been submitted!'
           });
         }, 50);

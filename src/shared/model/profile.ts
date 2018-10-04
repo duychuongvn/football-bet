@@ -2,7 +2,6 @@ import { Fixture } from '@/shared/model/fixture';
 import { Betting } from '@/shared/model/betting';
 
 export class Profile {
-
   protected _bettings: Betting[] = [];
   public get bettings(): Betting[] {
     return this._bettings;
@@ -27,6 +26,14 @@ export class Profile {
   }
   public set summary(value: Object) {
     this._summary = value;
+  }
+
+  private _isRequestPayout: boolean = false;
+  public get isRequestPayout(): boolean {
+    return this._isRequestPayout;
+  }
+  public set isRequestPayout(value: boolean) {
+    this._isRequestPayout = value;
   }
 
   constructor(profile?: any) {

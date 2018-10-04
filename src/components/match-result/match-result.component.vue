@@ -57,12 +57,14 @@
         if (!error && isEqual(this.match.matchId, result.args.matchId)) {
           this.watchBettings(result.args.bettingIdx.valueOf())
         }
+        this.setLoadingBetting(false);
       });
 
       this.bether.LogAcceptBet().watch((error: any, result: any) => {
         if (!error && isEqual(this.match.matchId, result.args.matchId)) {
           this.watchBettings(result.args.bettingIdx.valueOf())
         }
+        this.setLoadingBetting(false);
       })
     }
 
@@ -101,6 +103,11 @@
         return this.bettings.filter((betting: Betting) => betting.id === this.search);
       }
       return this.bettings;
+    }
+
+    activeBetting(betting: Betting) {
+      this.bettings.filter((item: Betting) => item.isSelected = false)
+      betting.isSelected = true
     }
 
     @Watch('initData')

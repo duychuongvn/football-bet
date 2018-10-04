@@ -156,6 +156,14 @@ export class Betting {
     this._returnedAmount = value;
   }
 
+  private _isSelected: boolean = false;
+  public get isSelected(): boolean {
+    return this._isSelected;
+  }
+  public set isSelected(value: boolean) {
+    this._isSelected = value;
+  }
+
   constructor(betting: BettingInterface) {
     if (betting) {
       this.id               = betting.id;

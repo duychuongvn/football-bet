@@ -1,10 +1,9 @@
 <v-container fluid class="py-0">
   <v-layout>
     <v-flex xs10 offset-xs1>
-      <v-card flat dark raised class="bg-transparent punter-card">
+      <v-card flat class="bg-transparent punter-card">
         <v-card-text class="pa-0">
-          <v-data-table hide-headers :items="punters" class="bg-transparent table-fixture" hide-actions>
-            <v-progress-linear slot="progress" color="teal darken-2" indeterminate></v-progress-linear>
+          <v-data-table hide-headers :items="punters" hide-actions>
             <template slot="items" slot-scope="props">
               <tr>
                 <td>{{ (props.index + 1) }}</td>

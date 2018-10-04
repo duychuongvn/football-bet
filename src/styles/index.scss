@@ -79,10 +79,13 @@
             tbody > tr {
               &:hover {
                 background-color: transparent;
-                pointer-events: none;
               }
             }
           }
+        }
+
+        &.active {
+          background-color: #00838F;
         }
       }
     }

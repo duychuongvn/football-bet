@@ -9,7 +9,7 @@
     :hide-actions="!(bettings.length > 10)" class="bg-transparent table-fixture">
     <v-progress-linear slot="progress" color="teal darken-2" indeterminate></v-progress-linear>
     <template slot="items" slot-scope="props">
-      <tr>
+      <tr @click="activeBetting(props.item)" :class="{ 'active': props.item.isSelected }">
         <td @click="props.expanded = !props.expanded">{{ (props.index + 1) }}</td>
         <td><account-addr :address="props.item.bookmakerAddress"/></td>
         <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ oddsString(props.item) }}</td>
@@ -46,8 +46,8 @@
         </td>
       </tr>
     </template>
-    <template slot="expand" slot-scope="props" >
-      <match-punters :punters="props.item.punters" :betting="props.item" :match="match" v-if="props.item.punters.length !== 0"/>
+    <template slot="expand" slot-scope="props" v-if="props.item.punters.length !== 0">
+      <match-punters :punters="props.item.punters" :betting="props.item" :match="match" />
     </template>
 
   </v-data-table>
