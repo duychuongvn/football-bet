@@ -27,5 +27,5 @@ export default {
     INFO: 3,
     DURATION: 2000
   },
-  CONTRACT_ADDRESS: '0x8a937639bba259745fbc676a8326427304d24107'
+  CONTRACT_ADDRESS: '0x15d2d95efb9afa9f2c4e7efaf41c2e625d41cee0'
 }
