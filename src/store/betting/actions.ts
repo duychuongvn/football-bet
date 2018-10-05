@@ -29,7 +29,10 @@ export const actions: ActionTree<any, RootState> = {
         res.account = data.account;
 
         if (betIdx !== -1) {
-          Object.assign(state.bettings[betIdx], res)
+          state.bettings[betIdx].settledAmount = res.settledAmount
+          state.bettings[betIdx].bookmakerResult = res.bookmakerResult
+          state.bettings[betIdx].returnedAmount = res.returnedAmount
+          state.bettings[betIdx].punters = res.punters
         } else {
           state.bettings.push(res)
         }
