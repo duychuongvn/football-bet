@@ -1,7 +1,7 @@
 import { PunterInterface } from './punter';
 
 export interface BettingInterface {
-  id: number;
+  id: any;
   bettingId: any;
   bookmakerAddress: string;
   bookmakerAmount: number | string;

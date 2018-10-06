@@ -16,7 +16,7 @@
           :rows-per-page-items="rowPerPage"
           class="bg-transparent table-fixture">
           <template slot="items" slot-scope="props">
-            <tr @click="gotoDetails(props.item)">
+            <tr @click="gotoDetails(props.item)" v-if="!props.item.isFinish">
               <td>
                 <div class="betting-wrap">
                   <div class="mr-3 mb-0 text-xs-center">
@@ -29,11 +29,6 @@
                   <v-btn color="yellow" class="btn-live" outline v-if="props.item.isGoLive && !props.item.isFinish">
                     <v-icon dark>fas fa-futbol fa-spin</v-icon>
                     Live
-                  </v-btn>
-
-                  <v-btn color="green accent-2" class="btn-finish" small outline v-if="props.item.isFinish">
-                    <v-icon dark>fas fa-futbol</v-icon>
-                    Finish
                   </v-btn>
                 </div>
               </td>

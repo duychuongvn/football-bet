@@ -5,6 +5,7 @@ import * as moment from 'moment';
 const betherContractABI = require('@/assets/contracts/BetherContractABI.json');
 
 const Rx = require('rx');
+const _uniq = require('lodash/uniq');
 
 let bether: any;
 
@@ -203,8 +204,8 @@ export const BetherContractService = {
 
     if (!bettingItem) {
       bettingItem = {
-        "id": +betting.bettingId.valueOf(),
-        "bettingId": +betting.bettingId.valueOf(),
+        "id": betting.bettingId,
+        "bettingId": betting.bettingId,
         'bookmakerAddress': betting.bookmakerAddress,
         'bookmakerTeam': betting.bookmakerTeam,
         'odds': betting.odds,
@@ -285,7 +286,7 @@ export const BetherContractService = {
             let colIdx = 0;
             let betting = {
               'matchId': settleInfoResult[colIdx++],
-              'bettingId': settleInfoResult[colIdx++] + '-' + settleInfoResult[colIdx++],
+              'bettingId': `${settleInfoResult[colIdx++]}-${settleInfoResult[colIdx++]}`,
               'bookmakerAddress': settleInfoResult[colIdx++],
               'bookmakerAmount': BetherContractService.toEther(settleInfoResult[colIdx++].toNumber()),
               'bookmakerTeam': settleInfoResult[colIdx++].toNumber(),
@@ -300,6 +301,7 @@ export const BetherContractService = {
               betting.bookmakerResult = 5 - betting.bookmakerResult + 1;
             }
             betting.settledAmount = betting.bookmakerAmount;
+
             BetherContractService.cacheBetting(bettings, betting);
           });
         }
@@ -392,7 +394,13 @@ export const BetherContractService = {
   }),
 
   claimStake: (claimStakeObj: any) => Rx.Observable.create((observe: any) => {
-    const bettingIds: Array<string | number> = claimStakeObj.bettings.map((betting: any) => betting.bettingId);
+    const bettingIds: Array<number> = _uniq(claimStakeObj.bettings.map((betting: any) => {
+      if (typeof betting.bettingId === 'string') {
+        return +betting.bettingId.split('-')[0]
+      } else {
+        return +betting.bettingId
+      }
+    }));
 
     bether.claimStake(claimStakeObj.matchId, bettingIds, {from: claimStakeObj.account}, (err: any, success: any) => {
       if (!!success) {

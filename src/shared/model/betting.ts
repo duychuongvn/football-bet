@@ -15,23 +15,38 @@ export class Betting {
   public set bookmakerResult(value: number) {
     this._bookmakerResult = value;
   }
-  public  get bookmakerResultString(): string {
-    return this.status === 0 ? 'Waiting payment' : 'Paid';
+  public get bookmakerResultString(): string {
+
+      if (this.status <= 2) { // not approve
+
+        if (this.settledAmount === 0) { // no-settle
+          return 'Waiting for Refund'
+        }
+
+        if (this.bookmakerResult === 1 || this.bookmakerResult === 2) { // Win - win a half
+          return 'Waiting for Payment'
+        }
+
+        if (this.bookmakerResult === 3 || this.bookmakerResult === 4 ) { // draw - lose a half
+          return 'Waiting for Refund'
+        }
+      }
+      return 'Paid'
   }
 
-  protected _id: number = 0;
-  public get id(): number {
+  protected _id: any;
+  public get id(): any {
     return this._id;
   }
-  public set id(v: number) {
+  public set id(v: any) {
     this._id = v;
   }
 
-  protected _bettingId: number = 0;
-  public get bettingId(): number {
+  protected _bettingId: any;
+  public get bettingId(): any {
     return this._bettingId;
   }
-  public set bettingId(v: number) {
+  public set bettingId(v: any) {
     this._bettingId = v;
   }
 

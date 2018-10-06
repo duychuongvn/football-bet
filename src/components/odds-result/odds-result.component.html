@@ -73,9 +73,11 @@
                     <account-addr :address="props.item.bookmakerAddress"/>
                   </td>
                   <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ oddsString(props.item, odds.match) }}</td>
-                  <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ stakeAmount(props.item) }}</td>
+                  <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.bookmakerAmountString }}</td>
+                  <td class="text-xs-center" @click="props.expanded = !props.expanded" v-if="isFinished">{{ props.item.settledAmountString }}</td>
                   <td class="text-xs-center" @click="props.expanded = !props.expanded"
                     :class="returnClass(props.item)">{{ openAmount(props.item) }}</td>
+
                   <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ oddsStatus(props.item) }}</td>
                   <td class="text-xs-left">
                     <v-tooltip bottom lazy :disabled="props.item.isDisabled" v-if="!isFinished">

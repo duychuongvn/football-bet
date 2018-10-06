@@ -15,6 +15,9 @@ import { BetherContractService } from "@/shared/services/bether.service";
 import * as moment from 'moment';
 
 const orderBy = require('lodash/orderBy');
+const isEqual = require('lodash/isEqual');
+const _concat = require('lodash/concat');
+const _uniq = require('lodash/uniq');
 
 @Component({
   components: {
@@ -51,6 +54,7 @@ export default class OddsResultComponent extends Vue {
     { text: `Address`, align: 'left', sortable: false },
     { text: 'Handicap', align: 'center', sortable: false },
     { text: `Stake` , align: 'center', sortable: false },
+    { text: `Settled` , align: 'center', sortable: false },
     { text: 'Return', align: 'center', sortable: false },
     { text: 'Payment Status', align: 'center', sortable: false },
     { text: '', sortable: false }
@@ -105,7 +109,21 @@ export default class OddsResultComponent extends Vue {
 
   get oddsResult() {
     const _oddsRs: Profile[] = [];
-    this.totalOdds.map((odds: any) => {
+
+    let _groupBy: any = [];
+
+    this.totalOdds.filter((odds: any) => {
+      let _oddsIdx = _groupBy.findIndex((item: any) => isEqual(item.matchId, odds.matchId))
+      // console.log(_oddsIdx !== -1)
+      if (_oddsIdx !== -1) {
+        _groupBy[_oddsIdx].bettings = _uniq(_concat(_groupBy[_oddsIdx].bettings, odds.bettings))
+        // _groupBy[_oddsIdx].bettings = Object.assign(_groupBy[_oddsIdx].bettings, odds.bettings)
+      } else {
+        _groupBy.push(odds)
+      }
+    })
+
+    _groupBy.map((odds: any) => {
       const _odds: Profile = new Profile(odds);
 
       _odds.match.homeTeam = odds.match.homeTeam;
@@ -124,6 +142,9 @@ export default class OddsResultComponent extends Vue {
 
       if (!!_odds.bettings) {
         _odds.bettings = _odds.bettings.filter((betting: any) => {
+
+          odds.summary.payoutAvailable = (odds.match.status === 4 && betting.status <= 2 && betting.bookmakerResult < 5);
+
           if (this.isFinished) {
             switch (USER_TYPE_FINISHED[this.selectedFilter]) {
               case USER_TYPE_FINISHED.ODDS_LOST:
@@ -154,6 +175,7 @@ export default class OddsResultComponent extends Vue {
         }
       }
     });
+
     return orderBy(_oddsRs, ['match.date'], ['desc']);
   }
 
@@ -255,14 +277,6 @@ export default class OddsResultComponent extends Vue {
     };
 
     this.openDialog(_initOpts)
-  }
-
-  stakeAmount(betting: Betting) {
-    if (this.isFinished) {
-      return betting.settledAmountString;
-    } else {
-      return betting.bookmakerAmountString;
-    }
   }
 
   openAmount(betting: Betting) {
