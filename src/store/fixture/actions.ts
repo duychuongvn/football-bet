@@ -39,9 +39,15 @@ export const actions: ActionTree<any, RootState> = {
               const _betDay = moment(item.utcDate).format('YYYY-MM-DD');
               _betting.matchId = Web3Vue.toSHA3(_betting);
               _betting.name = dataObj.key;
+
               if (moment(_betDay).isSameOrAfter(_currentDate) && moment(_betDay).isBefore(_tomorrowDate)) {
+                const _timeBet = moment(item.utcDate).add(2, 'hours').format('YYYY-MM-DD HH:mm:ss');
+                const _currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
+
                 _betting.isToDay = true;
-                _today.push(_betting);
+                if (!moment(_timeBet).isSameOrBefore(_currentTime)) {
+                  _today.push(_betting);
+                }
               }
 
               if (moment(_betDay).isSameOrBefore(_tomorrowDate) && moment(_betDay).isAfter(_currentDate)) {

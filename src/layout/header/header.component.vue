@@ -1,4 +1,5 @@
 <template src="./header.component.html"></template>
+<style lang="scss" scoped src="./header.component.scss"></style>
 
 <script lang="ts">
   import { Component, Vue , Watch} from 'vue-property-decorator';
@@ -27,7 +28,6 @@
     @Action('setLoadingBetting', { namespace: 'betting' }) setLoadingBetting: any;
     @Getter('userSummary', { namespace: 'solobet' }) userSummary: any;
 
-    public isFixed: boolean = false;
     private isAuthRoute: Array<string> = ['profile', 'match-details', 'bether-manager'];
 
     public volumnEth: any = {
@@ -37,8 +37,6 @@
 
     created() {
       this.initWeb3Metamask();
-
-      window.addEventListener('scroll', this.handleScroll);
     }
 
     initWeb3Metamask() {
@@ -112,10 +110,6 @@
 
     get volumn7days () {
       return `${this.volumnEth.eth_7d} ETH`;
-    }
-
-    handleScroll() {
-      this.isFixed = (window.scrollY > 45);
     }
 
     fetchAccountSummary(address: any) {

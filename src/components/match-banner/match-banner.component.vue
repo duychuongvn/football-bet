@@ -36,6 +36,10 @@
         }
       };
 
+      let query = Object.assign({}, this.$route.query);
+      delete query.accept;
+      this.$router.replace({ query });
+
       this.openDialog(_initOpts);
     }
   }

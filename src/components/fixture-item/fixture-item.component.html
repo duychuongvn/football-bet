@@ -16,7 +16,7 @@
           :rows-per-page-items="rowPerPage"
           class="bg-transparent table-fixture">
           <template slot="items" slot-scope="props">
-            <tr @click="gotoDetails(props.item)" v-if="!props.item.isFinish">
+            <tr @click="gotoDetails(props.item)">
               <td>
                 <div class="betting-wrap">
                   <div class="mr-3 mb-0 text-xs-center">

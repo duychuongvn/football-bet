@@ -1,6 +1,5 @@
-<section>
-  <v-toolbar dark :class="isFixed ? 'blue-grey lighten-6' : 'blue-grey lighten-6-opacity' "
-    :fixed="isFixed">
+<section class="header-app">
+  <v-toolbar dark class="blue-grey lighten-6" fixed app>
     <!-- <v-toolbar-side-icon></v-toolbar-side-icon> -->
     <v-toolbar-title class="bether-logo" @click="goToPages('home')"></v-toolbar-title>
     <v-divider vertical class="ml-3"></v-divider>
@@ -90,9 +89,7 @@
     </v-menu>
   </v-toolbar>
 
-  <p class="pa-1" v-if="!isAccount"></p>
-
-  <v-card dark flat class="transparent" v-if="!!isAccount">
+  <v-card dark flat class="transparent card-volumn" v-if="!!isAccount">
     <v-card-text class="text-xs-right pa-1">
       <p class="mb-0 d-inline-block mr-5 caption"><span class="grey--text mr-2">24HRS</span> {{ volumn24hrs }}</p>
       <p class="mb-0 d-inline-block caption mr-4"><span class="grey--text mr-2">7 DAYS</span> {{ volumn7days }}</p>

@@ -142,6 +142,13 @@
       }
     }
 
+    @Watch('$route.query')
+    getRouterQuery(newVal: any, oldVal: any) {
+      if (Object.keys(newVal).length === 0 && Object.keys(oldVal).length !== 0) {
+        this.search = '';
+      }
+    }
+
     openShare(bettingId: number) {
       const _initOpts = {
         key: DIALOG_NAME.BETTING_SHARING,

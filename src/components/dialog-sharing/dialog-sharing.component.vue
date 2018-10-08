@@ -1,7 +1,7 @@
 <template src="./dialog-sharing.component.html"></template>
 
 <script lang="ts">
-  import { Component, Vue, Watch } from 'vue-property-decorator';
+  import { Component, Vue } from 'vue-property-decorator';
   import { Getter, Action } from 'vuex-class'
   import { DIALOG_NAME } from '@/shared/enums/dialog';
 
@@ -27,11 +27,11 @@
         if (this.$route.params && this.$route.params.key) {
           this.matchKey = this.$route.params.key;
         } else {
-          this.matchKey = encodeURIComponent(btoa(JSON.stringify({
+          this.matchKey = btoa(JSON.stringify({
             homeTeam: this.initData.homeTeam,
             awayTeam: this.initData.awayTeam,
             date: this.initData.date
-          })));
+          }));
         }
 
         if (!isUndefined(this.initData.bettingId)) {
@@ -42,7 +42,7 @@
           this.isLoading = this.initData.isLoading;
         }
 
-        this.sharePath = `${window.location.host}/match-details/${this.matchKey}?accept=${this.bettingId}`;
+        this.sharePath = `${window.location.host}/match-details/${encodeURIComponent(this.matchKey)}?accept=${this.bettingId}`;
       }
       return this.isSharingBetting;
     }
