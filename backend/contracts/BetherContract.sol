@@ -110,10 +110,6 @@ contract BetherContract is Ownable {
     _;
   }
 
-  function changeOwner(address newOwner) public onlyOwner {
-      owner = newOwner;
-  }
-
   function changeAdmin(address user, bool isAdmin) public  onlyOwner{
     admins[user] = isAdmin;
   }
