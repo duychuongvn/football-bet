@@ -263,12 +263,13 @@ export default class OddsResultComponent extends Vue {
     this.openDialog(_initOpts);
   }
 
-  openShare(bettingId: number, homeTeam: string, awayTeam: string, date: string) {
+  openShare(matchId: any, bettingId: number, homeTeam: string, awayTeam: string, date: string) {
     const _initOpts = {
       key: DIALOG_NAME.BETTING_SHARING,
       isOpen: true,
       name: 'dialog-sharing',
       initData: {
+        matchId: matchId,
         bettingId: bettingId,
         homeTeam: homeTeam,
         awayTeam: awayTeam,

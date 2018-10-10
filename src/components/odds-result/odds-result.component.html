@@ -91,7 +91,7 @@
                     <v-tooltip bottom lazy :disabled="props.item.isDisabledShare" v-if="!isFinished">
                       <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator"
                              :disabled="props.item.isDisabledShare"
-                             @click="openShare(props.item.id, odds.match.homeTeam, odds.match.awayTeam, odds.match.date)">
+                             @click="openShare(odds.match.matchId, props.item.id, odds.match.homeTeam, odds.match.awayTeam, odds.match.date)">
                         <v-icon size="18" left class="mr-2">fas fa-share-alt-square</v-icon>
                         Share
                       </v-btn>

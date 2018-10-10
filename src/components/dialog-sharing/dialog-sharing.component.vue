@@ -28,6 +28,8 @@
           this.matchKey = this.$route.params.key;
         } else {
           this.matchKey = btoa(JSON.stringify({
+            id: this.initData.bettingId,
+            matchId: this.initData.matchId,
             homeTeam: this.initData.homeTeam,
             awayTeam: this.initData.awayTeam,
             date: this.initData.date
