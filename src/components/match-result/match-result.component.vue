@@ -130,7 +130,7 @@
         const _betTmp: Betting | undefined = this.bettings.find((betting: any) => betting.bettingId === _bettingId);
 
         if (!!_betTmp) {
-          this.search = _bettingId;
+          _betTmp.isSelected = true;
           this.createOdds(_betTmp);
         }
       }
