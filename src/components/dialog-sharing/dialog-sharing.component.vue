@@ -44,9 +44,24 @@
           this.isLoading = this.initData.isLoading;
         }
 
-        this.sharePath = `${window.location.host}/match-details/${encodeURIComponent(this.matchKey)}?accept=${this.bettingId}`;
+        this.sharePath = `${window.location.origin}/match-details/${encodeURIComponent(this.matchKey)}?accept=${this.bettingId}`;
       }
       return this.isSharingBetting;
+    }
+
+    get shareText(): string {
+      let _match: any;
+      if (this.$route.params && this.$route.params.key) {
+        _match = JSON.parse(atob(this.matchKey));
+      } else {
+        _match = {
+          homeTeam: this.initData.homeTeam,
+          awayTeam: this.initData.awayTeam,
+          date: this.initData.date
+        }
+      }
+
+      return `Join My Bet on Bether for the match ${_match.homeTeam} - ${_match.awayTeam} at ${_match.date}`
     }
 
     set isDialog(v: any) {

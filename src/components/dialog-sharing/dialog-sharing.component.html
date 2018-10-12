@@ -27,12 +27,12 @@
 
     <v-card-text class="text-xs-center">
       <social-sharing
-        url="https://bether.bet/"
+        :url="sharePath"
         title="Bether"
         description="Betting without borders"
-        quote="Bether is one of the first peer-to-peer systems developed on the Ethereum blockchain"
+        :quote="shareText"
         hashtags="betting,football,ethereum,blockchain"
-        twitter-user="Bether - Crypto peer-to-peer betting"
+        :twitter-user="`Bether - ${shareText}`"
         inline-template>
         <section>
           <network network="telegram">
