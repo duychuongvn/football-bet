@@ -20,6 +20,8 @@ export default class FixtureItemComponent extends Vue {
   @Getter('isAccount', { namespace: 'web3' }) isAccount!: boolean;
   @Getter('isNetwork', { namespace: 'web3' }) isNetwork!: boolean;
 
+  @Getter('bether', { namespace: 'solobet' }) bether: any;
+
   @Prop() public bettingTime!: string;
 
   public headersTb: Array<Object> = [
@@ -37,6 +39,18 @@ export default class FixtureItemComponent extends Vue {
 
   created() {
     this._summaryBet();
+
+    this.bether.LogNewBet().watch((error: any, result: any) => {
+      if (!error) {
+        this._summaryBet();
+      }
+    });
+
+    this.bether.LogAcceptBet().watch((error: any, result: any) => {
+      if (!error) {
+        this._summaryBet();
+      }
+    })
   }
 
   get allFixtures() {

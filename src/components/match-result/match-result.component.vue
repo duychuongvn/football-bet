@@ -126,10 +126,11 @@
       }
 
       if (value.length !== 0 && this.$route.query && this.$route.query.accept) {
-        const _betTmp: Betting | undefined = this.bettings.find((betting: any) => betting.bettingId === +this.$route.query.accept);
+        const _bettingId: number = +this.$route.query.accept.split('-')[0];
+        const _betTmp: Betting | undefined = this.bettings.find((betting: any) => betting.bettingId === _bettingId);
 
         if (!!_betTmp) {
-          this.search = +this.$route.query.accept;
+          this.search = _bettingId;
           this.createOdds(_betTmp);
         }
       }

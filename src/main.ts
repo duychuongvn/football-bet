@@ -1,6 +1,5 @@
 import '@babel/polyfill';
 import Vue from 'vue';
-import './plugins/vuetify'
 
 import { VueProgressBar, ProgressOpts } from '@/plugins/progress-bar';
 
