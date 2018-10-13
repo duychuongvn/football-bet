@@ -20,18 +20,18 @@
         link_social: 'https://twitter.com/betbether',
         target: '_blank'
       },
-      {
-        color: 'blue-grey darken-3',
-        name: 'fab fa-github',
-        tooltip: 'Github',
-        link_social: 'https://twitter.com/betbether',
-        target: '_blank'
-      },
+      // {
+      //   color: 'blue-grey darken-3',
+      //   name: 'fab fa-github',
+      //   tooltip: 'Github',
+      //   link_social: 'https://twitter.com/betbether',
+      //   target: '_blank'
+      // },
       {
         color: 'teal lighten-1',
         name: 'fas fa-envelope',
         tooltip: 'Support',
-        mailto: 'mailto:info@bether.bet'
+        link_social: 'mailto:info@bether.bet'
       }
     ]
   }

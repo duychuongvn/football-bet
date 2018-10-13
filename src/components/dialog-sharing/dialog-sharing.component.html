@@ -19,7 +19,7 @@
           v-clipboard:copy="sharePath"
           v-clipboard:success="onCopy">
           <v-icon left>fas fa-copy</v-icon>
-          Copy Link betting
+          Copy the betting link
         </v-btn>
         <span>Copy Link</span>
       </v-tooltip>
@@ -28,11 +28,11 @@
     <v-card-text class="text-xs-center">
       <social-sharing
         :url="sharePath"
-        title="Bether"
+        title=""
         description="Betting without borders"
         :quote="shareText"
-        hashtags="betting,football,ethereum,blockchain"
-        :twitter-user="`Bether - ${shareText}`"
+        hashtags="betting,football,ethereum"
+        :twitter-user="`betbether - ${shareText}`"
         inline-template>
         <section>
           <network network="telegram">

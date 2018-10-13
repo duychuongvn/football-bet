@@ -33,7 +33,9 @@
 
             <v-list-tile-content>
               <v-list-tile-title>{{ networkName }}</v-list-tile-title>
-              <v-list-tile-sub-title>{{ accountAddr }}</v-list-tile-sub-title>
+              <v-list-tile-sub-title>
+                <account-addr :address="accountAddr"/>
+              </v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
@@ -43,7 +45,7 @@
         <v-list two-line>
           <v-list-tile>
             <v-list-tile-avatar>
-              <v-icon color="blue darken-1primary">fas fa-wallet</v-icon>
+              <v-img :src="require('@/assets/images/wagered.png')" aspect-ratio="2" contain></v-img>
             </v-list-tile-avatar>
 
             <v-list-tile-content>
@@ -54,7 +56,7 @@
 
           <v-list-tile>
             <v-list-tile-avatar>
-              <v-icon color="blue darken-1primary">fas fa-smile</v-icon>
+              <v-img :src="require('@/assets/images/current_placed.png')" aspect-ratio="2" contain></v-img>
             </v-list-tile-avatar>
 
             <v-list-tile-content>
@@ -65,7 +67,7 @@
 
           <v-list-tile>
             <v-list-tile-avatar>
-              <v-icon color="blue darken-1primary">fas fa-futbol</v-icon>
+              <v-img :src="require('@/assets/images/total_settled.png')" aspect-ratio="1" contain></v-img>
             </v-list-tile-avatar>
 
             <v-list-tile-content>
@@ -76,7 +78,7 @@
 
           <v-list-tile>
             <v-list-tile-avatar>
-              <v-icon color="blue darken-1primary">fas fa-futbol</v-icon>
+              <v-img :src="require('@/assets/images/won.png')" aspect-ratio="1" contain></v-img>
             </v-list-tile-avatar>
 
             <v-list-tile-content>

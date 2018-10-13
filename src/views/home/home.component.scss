@@ -1,0 +1,17 @@
+.fixed-card {
+  position: fixed;
+}
+
+.content-card {
+  padding-left: 20px !important;
+}
+
+@media screen and (max-width: 812px) {
+  .fixed-card {
+    position: inherit;
+  }
+
+  .content-card {
+    padding-left: 0 !important;
+  }
+}

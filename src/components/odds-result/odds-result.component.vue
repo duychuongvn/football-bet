@@ -294,6 +294,8 @@ export default class OddsResultComponent extends Vue {
         case 1:
         case 2:
           return 'light-green--text';
+        case 3:
+          return 'white--text';
         case 4:
         case 5:
           return 'red--text';

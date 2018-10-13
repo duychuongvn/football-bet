@@ -93,7 +93,11 @@
     }
 
     get accountBalance(): string {
-      return this.web3Init.account.balance ? `${this.web3Init.web3.utils.fromWei(`${this.web3Init.account.balance}`, 'ether')} ETH` : '0 ETH';
+      if (this.web3Init.account.balance) {
+        let _balance: number = +this.web3Init.web3.utils.fromWei(`${this.web3Init.account.balance}`, 'ether')
+        return `${_balance.toFixed(3)} ETH`;
+      }
+      return '0 ETH';
     }
 
     get avatarMMask(): string {

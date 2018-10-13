@@ -51,7 +51,7 @@
 
           <div class="text-capitalize" slot="header">
             {{ odds.match.dateTimeString }} | {{ odds.match.homeTeam }}
-            <span v-if="odds.match.status !==1">{{odds.match.homeGoals}}- {{odds.match.awayGoals}}</span>
+            <span v-if="odds.match.status !==1" class="font-weight-bold orange--text">{{odds.match.homeGoals}}- {{odds.match.awayGoals}}</span>
             <span class="text-no-wrap" v-if="odds.match.status === 1"> - </span>
             {{ odds.match.awayTeam }} ({{ odds.summary.stake }} ETH)
 

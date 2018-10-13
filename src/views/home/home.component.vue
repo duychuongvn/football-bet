@@ -1,4 +1,5 @@
 <template src="./home.component.html"></template>
+<style lang="scss" scoped src="./home.component.scss"></style>
 
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator';

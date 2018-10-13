@@ -4,6 +4,8 @@
   import { Component, Vue } from 'vue-property-decorator';
   import { Getter, Action } from 'vuex-class'
   import { DIALOG_NAME } from '@/shared/enums/dialog';
+  import axios from 'axios'
+  import * as moment from 'moment'
 
   const isUndefined = require('lodash/isUndefined');
 
@@ -44,7 +46,8 @@
           this.isLoading = this.initData.isLoading;
         }
 
-        this.sharePath = `${window.location.origin}/match-details/${encodeURIComponent(this.matchKey)}?accept=${this.bettingId}`;
+        const _url = `http://chuonghd.vantechdns.net/match-details/${encodeURIComponent(this.matchKey)}?accept=${this.bettingId}`
+        this.shortLink(_url)
       }
       return this.isSharingBetting;
     }
@@ -61,7 +64,9 @@
         }
       }
 
-      return `Join My Bet on Bether for the match ${_match.homeTeam} - ${_match.awayTeam} at ${_match.date}`
+      const _dateTime = moment(_match.date).local().format('MMM DD, YYYY - HH:mm A')
+
+      return `Join my bet on Bether for the match ${_match.homeTeam} - ${_match.awayTeam} at ${_dateTime}`
     }
 
     set isDialog(v: any) {
@@ -84,6 +89,31 @@
         mode: 'success',
         message: 'Copied your bet link'
       });
+    }
+
+    shortLink (url: string) {
+      const BITLY_URL = 'https://api-ssl.bitly.com/v3/shorten?';
+      const BITLY_LOGIN = "o_4nm0b7lfsb";
+      const BITLY_KEY = "R_3acba2a6f39844c2adb685084688f6bd";
+
+      axios.get(BITLY_URL, {
+        params : {
+          "format": "json",
+          "apiKey": BITLY_KEY,
+          "login": BITLY_LOGIN,
+          "longUrl": url
+        }
+      })
+        .then((response) => {
+          if(response.status == 200) {
+            this.sharePath = response.data.data.url;
+          } else {
+            console.log('Opps dude, status code != 200 :( ')
+          }
+        })
+        .catch((error) => {
+          console.log('Error! ' + error);
+        });
     }
   }
 </script>
