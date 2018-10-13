@@ -11,17 +11,17 @@
 
     &.vfb-stuttgart {
       background-size: 500% 400%;
-      background-position: 0% 34.33333%;
+      background-position: 0 35%;
       width: 22px;
       height: 22px;
     }
     &.tsv-fortuna-95-dsseldorf {
       background-size: 500% 400%;
-      background-position: 50% 94%;
+      background-position: 50% 100%;
     }
     &.-nrnberg {
       background-size: 500% 400%;
-      background-position: 50% 0%;
+      background-position: 50% 0;
     }
 
     &.hertha-bsc {
@@ -31,46 +31,62 @@
 
     &.hannover-96 {
       background-size: 500% 400%;
-      background-position: 25% 0%;
+      background-position: 25% 0;
     }
 
     &.borussia-mnchengladbach {
       background-size: 500% 400%;
-      background-position: 25% 33.33333%;
+      background-position: 24% 33%;
     }
     &.vfl-wolfsburg {
       background-size: 500% 400%;
-      background-position: 0% 33.33333%;
+      background-position: 0 33%;
     }
     &.sc-freiburg {
       background-size: 500% 400%;
-      background-position: 50% 66.66667%;
+      background-position: 50% 65%;
     }
     &.tsg-1899-hoffenheim {
       background-size: 500% 400%;
-      background-position: 75% 0%;
+      background-position: 75% 0;
     }
     &.bv-borussia-09-dortmund {
       background-size: 500% 400%;
-      background-position: 0% 66.66667%;
+      background-position: 0 65%;
     }
     &.augsburg {
       background-size: 500% 400%;
-      background-position: 100% 0%;
+      background-position: 100% 0;
     }
     &.sv-werder-bremen {
       background-size: 500% 400%;
-      background-position: 75% 66.66667%;
+      background-position: 75% 65%;
     }
     &.schalke-04 {
       background-size: 500% 400%;
-      background-position: 25% 66.66667%;
+      background-position: 25% 66%;
     }
     &.bayern-mnchen {
       background-size: 500% 400%;
       background-position: 25% 100%;
     }
+    &.bayer-04-leverkusen {
+      background-size: 500% 400%;
+      background-position: 0 0;
+    }
+    &.eintracht-frankfurt{
+      background-size: 500% 400%;
+      background-position: 0 100%;
+    }
+    &.rb-leipzig{
+      background-size: 500% 400%;
+      background-position: 100% 35%;
+    }
 
+    &.-fsv-mainz-05{
+      background-size: 500% 400%;
+      background-position: 50% 35%;
+    }
   }
 
   &-25 {
