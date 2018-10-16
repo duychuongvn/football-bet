@@ -160,6 +160,7 @@ contract BetherContract is Ownable {
     }
 
     _betting.settledAmount += msg.value;
+    _betting.time = uint48(now);
     if (_betting.settledAmount == _betting.bAmount) {
       _betting.status = BetStatus.Settled;
     } else {
@@ -353,13 +354,12 @@ contract BetherContract is Ownable {
     return true;
   }
 
-  event LogTranfer(address receiver, uint256 amount);
+
   function doTransfer(Match _match, Betting storage  _betting, uint32 betIndex) internal returns (bool) {
 
     Funding[] memory fundings = getFunding(_match, _betting, betIndex);
     for (uint i = 0; i < fundings.length; i++) {
       Funding memory funding = fundings[i];
-      emit LogTranfer(funding.receiver, funding.amount);
       if (funding.amount > 0 && funding.receiver != 0x0) {
         transferFund(funding.receiver, funding.amount);
       }
@@ -395,8 +395,6 @@ contract BetherContract is Ownable {
     }
   }
 
-
-  event LogAmount(address receiver, uint256 balance, uint currentAmount);
   function getFunding(Match _match, Betting storage  _betting, uint32 betIdx) internal returns (Funding[]) {
 
     // calculate for bookmaker
@@ -437,7 +435,7 @@ contract BetherContract is Ownable {
 
   function getVolume(uint48 time) public  view returns (uint256) {
     uint256 vol;
-    for(uint i =0; i< bets.length; i++) {
+    for(uint i = 0; i < bets.length; i++) {
       if(bets[i].time >= time) {
         vol+= bets[i].settledAmount * 2;
       }
