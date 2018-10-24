@@ -61,9 +61,7 @@
 
     created() {
       if (!this.isInit) {
-        this.arrFixtures.map((item: Object) => {
-          this.fetchFixtures(item);
-        });
+        this.fetchFixtures();
       }
 
       if (localStorage.getItem("bether_time")) {

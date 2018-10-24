@@ -9,9 +9,9 @@
           </div>
 
           <div class="betting-wrap mb-1">
-            <div class="mr-2" :class="match.homeTeamFlag50"></div>
+            <image-comp :imgPath="match.homeTeamFlag" imgWidth="50px" imgHeight="50px"></image-comp>
             <p class="bet-name bet-name--lg">{{ match.fixtureName }}</p>
-            <div class="ml-2" :class="match.awayTeamFlag50"></div>
+            <image-comp :imgPath="match.awayTeamFlag" imgWidth="50px" imgHeight="50px"></image-comp>
 
             <v-btn color="yellow" small outline v-if="match.isGoLive && !match.isFinish">
               <v-icon left dark small>fas fa-futbol fa-spin</v-icon>

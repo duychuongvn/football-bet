@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --open",
-    "build": "vue-cli-service build",
+    "sync:data": "node football-data.org/file-system.ts && node football-data.org/football-ipfs.ts",
+    "sync:matches": "node football-data.org/football-ipfs.ts",
+    "build": "yarn sync:data && vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e"
   },
@@ -13,6 +15,7 @@
     "axios": "^0.18.0",
     "big.js": "^5.1.2",
     "gsap": "^2.0.1",
+    "ipfs": "^0.32.3",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "register-service-worker": "^1.0.0",

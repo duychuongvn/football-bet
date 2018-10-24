@@ -77,19 +77,16 @@ export class Fixture extends ParentLeague{
   public get homeTeam(): string {
     return this._homeTeam.toName();
   }
-  public get homeTeamFlag(): string {
-    return require(`@/assets/images/no-images.png`);
-    // return require(`@/assets/flag/${this.homeTeam.toSlug()}.png`);
-  }
-  public get homeTeamFlag25(): string {
-    let prefixFlag = (this.name === 'bundesliga') ? 'flag-bundesliga' : 'flag-25';
-    return `${prefixFlag} ${this.homeTeam.toSlug()}`;
-  }
-  public get homeTeamFlag50(): string {
-    return `flag-50 ${this.homeTeam.toSlug()}`;
-  }
   public set homeTeam(v: string) {
     this._homeTeam = v;
+  }
+
+  private _homeTeamFlag: string = '';
+  public get homeTeamFlag(): string {
+    return this._homeTeamFlag || require(`@/assets/images/no-images.png`);
+  }
+  public set homeTeamFlag(v: string) {
+    this._homeTeamFlag = v;
   }
 
   protected _homeGoals: number = 0;
@@ -104,19 +101,16 @@ export class Fixture extends ParentLeague{
   public get awayTeam(): string {
     return this._awayTeam.toName();
   }
-  public get awayTeamFlag(): string {
-    return require(`@/assets/images/no-images.png`);
-    // return require(`@/assets/flag/${this.awayTeam.toSlug()}.png`);
-  }
-  public get awayTeamFlag25(): string {
-    let prefixFlag = (this.name === 'bundesliga') ? 'flag-bundesliga' : 'flag-25';
-    return `${prefixFlag} ${this.awayTeam.toSlug()}`;
-  }
-  public get awayTeamFlag50(): string {
-    return `flag-50 ${this.awayTeam.toSlug()}`;
-  }
   public set awayTeam(v: string) {
     this._awayTeam = v;
+  }
+
+  private _awayTeamFlag: string = '';
+  public get awayTeamFlag(): string {
+    return this._awayTeamFlag || require(`@/assets/images/no-images.png`);
+  }
+  public set awayTeamFlag(v: string) {
+    this._awayTeamFlag = v;
   }
 
   protected _awayGoals: number = 0;
@@ -169,7 +163,9 @@ export class Fixture extends ParentLeague{
       matchId: this.matchId,
       date: this.date,
       homeTeam: this.homeTeam,
-      awayTeam: this.awayTeam
+      homeTeamFlag: this.homeTeamFlag,
+      awayTeam: this.awayTeam,
+      awayTeamFlag: this.awayTeamFlag
     }));
   }
 
@@ -177,10 +173,12 @@ export class Fixture extends ParentLeague{
     super();
     if (fixture) {
       this.id        = fixture.id;
-      this.date      = fixture.utcDate;
+      this.date      = fixture.date;
       this.status    = fixture.status;
       this.homeTeam  = fixture.homeTeam.name;
       this.awayTeam  = fixture.awayTeam.name;
+      this.homeTeamFlag = fixture.homeTeam.flag;
+      this.awayTeamFlag = fixture.awayTeam.flag;
       this.approved  = fixture.approved;
       this.homeGoals = fixture.homeGoals;
       this.awayGoals = fixture.awayGoals;

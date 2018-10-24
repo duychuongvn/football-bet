@@ -6,6 +6,8 @@
 /out-tsc
 /backend/build
 /backend/node_modules
+/football-data.org/matches
+/football-data.org/competitions
 
 # dependencies
 /node_modules

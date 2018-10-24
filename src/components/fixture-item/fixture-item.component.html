@@ -23,9 +23,9 @@
                     <p class="mb-0">{{ props.item.dateString }}</p>
                     <p class="mb-0">{{ props.item.timeString }}</p>
                   </div>
-                  <div :class="props.item.homeTeamFlag25"></div>
+                  <image-comp :imgPath="props.item.homeTeamFlag" imgWidth="25px" imgHeight="25px"></image-comp>
                   <p class="bet-name">{{ props.item.fixtureName }}</p>
-                  <div :class="props.item.awayTeamFlag25"></div>
+                  <image-comp :imgPath="props.item.awayTeamFlag" imgWidth="25px" imgHeight="25px"></image-comp>
                   <v-btn color="yellow" class="btn-live" outline v-if="props.item.isGoLive && !props.item.isFinish">
                     <v-icon dark>fas fa-futbol fa-spin</v-icon>
                     Live

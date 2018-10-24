@@ -1,11 +1,12 @@
 export interface Team {
   id: number;
   name: string;
+  flag: string;
 }
 
 export interface FixtureInterface {
   id: number;
-  utcDate: string;
+  date: string;
   status: string;
   homeTeam: Team;
   awayTeam: Team;

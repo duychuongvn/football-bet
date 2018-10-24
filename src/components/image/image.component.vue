@@ -7,15 +7,18 @@
 
   @Component
   export default class ImageComponent extends Vue {
-    @Prop({ default: '100px' }) private imgWidth!: string
-    @Prop({ default: '100px' }) private imgHeight!: string
-    @Prop({ default: 'image' }) private imgName!: string
-    @Prop() private imgPath!: string
+    @Prop({ default: '100px' }) public imgWidth!: string
+    @Prop({ default: '100px' }) public imgHeight!: string
+    @Prop({ default: 'image' }) public imgName!: string
+    @Prop() public imgPath!: string
 
     private isLoading: boolean = true
+    public isError: boolean = false
+
+    private no_img = require('@/assets/images/no-images.png');
 
     get imagePath() {
-      return `url('${this.imgPath}')`
+      return `url('${this.isError ? this.no_img : this.imgPath}')`
     }
 
     imageLoading() {
@@ -23,7 +26,7 @@
     }
 
     imageError() {
-      this.imgPath = uiAvatars(this.imgName);
+      this.isError = true;
     }
   }
 </script>

@@ -11,5 +11,7 @@ export const mutations: MutationTree<any> = {
     state.match.date = match.date;
     state.match.homeTeam = match.homeTeam;
     state.match.awayTeam = match.awayTeam;
+    state.match.homeTeamFlag = match.homeTeamFlag;
+    state.match.awayTeamFlag = match.awayTeamFlag;
   }
 };
