@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve --open",
     "sync:data": "node football-data.org/file-system.ts && node football-data.org/football-ipfs.ts",
     "sync:matches": "node football-data.org/football-ipfs.ts",
-    "build": "yarn sync:data && vue-cli-service build",
+    "build": "yarn sync:matches && vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e"
   },
