@@ -10,6 +10,7 @@ import { BetherContractService } from '@/shared/services/bether.service';
 import { DIALOG_NAME } from '@/shared/enums/dialog';
 import { Fixture } from '@/shared/model/fixture';
 import { Betting } from '@/shared/model/betting';
+import { Sumary } from '@/shared/model/sumary';
 
 @Component
 export default class FixtureItemComponent extends Vue {
@@ -68,10 +69,6 @@ export default class FixtureItemComponent extends Vue {
     return this.allFixtures.filter((fixture: any) => fixture.bettings.length !== 0).length !== 0;
   }
 
-  get isFuture() {
-    return this.bettingTime === 'FUTURE';
-  }
-
   gotoDetails(betting: any) {
     if (!this.isNetwork) {
       const _dialogOpts = {
@@ -102,11 +99,6 @@ export default class FixtureItemComponent extends Vue {
     }
   }
 
-  @Watch('bettingTime')
-  getBettingTime(value: any, oldVal: any) {
-    this._summaryBet();
-  }
-
   private _summaryBet() {
     const _listIds = this.allFixtures.map((fixture: any) => fixture.bettings.map((betting: Betting) => betting.matchId));
 
@@ -117,7 +109,7 @@ export default class FixtureItemComponent extends Vue {
             const _idxBet = this.allFixtures[key].bettings.findIndex((betting: Betting) => betting.matchId === match.matchId);
 
             if (_idxBet >= 0) {
-              this.allFixtures[key].bettings[_idxBet].summary = match;
+              this.allFixtures[key].bettings[_idxBet].summary = new Sumary(match);
             }
           });
         });

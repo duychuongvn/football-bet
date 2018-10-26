@@ -9,5 +9,6 @@ export interface FixtureState {
   fixturesToday: Fixture[],
   fixturesTomorrow: Fixture[],
   fixturesFuture: Fixture[],
-  isInit: boolean
+  isInit: boolean,
+  competitions?: []
 }

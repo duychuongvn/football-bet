@@ -11,7 +11,8 @@ export const state: FixtureState = {
   fixturesToday: [],
   fixturesTomorrow: [],
   fixturesFuture: [],
-  isInit: false
+  isInit: false,
+  competitions: []
 };
 
 const namespaced: boolean = true;

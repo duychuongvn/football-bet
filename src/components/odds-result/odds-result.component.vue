@@ -12,12 +12,13 @@ import { Betting } from '@/shared/model/betting';
 
 import { BetherContractService } from "@/shared/services/bether.service";
 
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
+import { Team } from '@/shared/model/team';
 
+const _isEqual = require('lodash/isEqual');
 const orderBy = require('lodash/orderBy');
-const isEqual = require('lodash/isEqual');
-const _concat = require('lodash/concat');
 const _uniq = require('lodash/uniq');
+const _groupByLodash = require('lodash/groupBy');
 
 @Component({
   components: {
@@ -38,6 +39,8 @@ export default class OddsResultComponent extends Vue {
   @Getter('account', { namespace: 'web3' }) account: any;
 
   @Action('notify', { namespace: 'notify' }) notify: any;
+
+  @Getter('competitions', { namespace: 'fixture' }) competitions: any;
 
   public headTbOpen: Array<Object> = [
     { text: '#', align: 'left', sortable: false },
@@ -107,28 +110,46 @@ export default class OddsResultComponent extends Vue {
     return this.isFinished ? this.headTbFinish : this.headTbOpen;
   }
 
+  get resultData() {
+    let _tmpData = [];
+    const _oddsGroup = _groupByLodash(this.totalOdds, 'matchId');
+
+    for (let i in _oddsGroup) {
+      let _tmpBettings = _oddsGroup[i][0].bettings;
+      _oddsGroup[i].filter((item: any) => {
+        _tmpBettings = _tmpBettings.concat(item.bettings);
+      });
+
+      _tmpData.push({
+        bettings: _uniq(_tmpBettings),
+        match: _oddsGroup[i][0].match,
+        matchId: _oddsGroup[i][0].matchId,
+        summary: _oddsGroup[i][0].summary,
+      })
+    }
+
+    _tmpData.filter((item: any, key: any) => {
+      const _idxHomeTeam = this.competitions.findIndex((compe: any) => _isEqual(compe.name, item.match.homeTeam));
+      const _idxAwayTeam = this.competitions.findIndex((compe: any) => _isEqual(compe.name, item.match.awayTeam));
+
+      item.match.homeTeam = this.competitions[_idxHomeTeam];
+      item.match.awayTeam = this.competitions[_idxAwayTeam];
+
+      item.match.id = key;
+    });
+
+    return _tmpData;
+  }
+
   get oddsResult() {
     const _oddsRs: Profile[] = [];
 
-    let _groupBy: any = [];
-
-    this.totalOdds.filter((odds: any) => {
-      let _oddsIdx = _groupBy.findIndex((item: any) => isEqual(item.matchId, odds.matchId))
-      // console.log(_oddsIdx !== -1)
-      if (_oddsIdx !== -1) {
-        _groupBy[_oddsIdx].bettings = _uniq(_concat(_groupBy[_oddsIdx].bettings, odds.bettings))
-        // _groupBy[_oddsIdx].bettings = Object.assign(_groupBy[_oddsIdx].bettings, odds.bettings)
-      } else {
-        _groupBy.push(odds)
-      }
-    })
-
-    _groupBy.map((odds: any) => {
+    this.resultData.map((odds: any) => {
       const _odds: Profile = new Profile(odds);
 
-      _odds.match.homeTeam = odds.match.homeTeam;
-      _odds.match.awayTeam = odds.match.awayTeam;
-      _odds.match.date = moment(odds.match.time * 1000).format('YYYY-MM-DD HH:mm:ss');
+      _odds.match.homeTeam = new Team(odds.match.homeTeam);
+      _odds.match.awayTeam = new Team(odds.match.awayTeam);
+      _odds.match.date = DateTime.fromMillis(odds.match.time * 1000).toISO();
 
       if (this.isFinished) {
         if (+_odds.match.status < 4) {
@@ -197,7 +218,7 @@ export default class OddsResultComponent extends Vue {
   }
 
   oddsString (item: any, match: any) {
-    let _teamName = item.bookmakerTeam === 0 ? match.homeTeam : match.awayTeam;
+    let _teamName = item.bookmakerTeam === 0 ? match.homeTeam.name : match.awayTeam.name;
     let _odds: any = item.odds / 100;
 
     _odds = _odds > 0 ? `+${_odds}` : _odds;
@@ -231,7 +252,7 @@ export default class OddsResultComponent extends Vue {
 
   dialogClaimStake(odds: Profile) {
     BetherContractService.claimStake({
-      matchId: odds.match.matchId,
+      matchId: odds.matchId,
       bettings: odds.bettings,
       account: this.account.address
     }).subscribe((response: any) => {
@@ -247,7 +268,7 @@ export default class OddsResultComponent extends Vue {
     })
   }
 
-  dialogCancel(betting: any, match: any) {
+  dialogCancel(betting: any, match: any, matchId: any) {
     const _initOpts = {
       key: DIALOG_NAME.ODDS_CANCEL,
       isOpen: true,
@@ -256,24 +277,25 @@ export default class OddsResultComponent extends Vue {
         oddsString: this.oddsString(betting, match),
         stake: betting.openAmount,
         bettingId: betting.bettingId,
-        match: match
+        match: match,
+        matchId: matchId
       }
     };
 
     this.openDialog(_initOpts);
   }
 
-  openShare(matchId: any, bettingId: number, homeTeam: string, awayTeam: string, date: string) {
+  openShare(betting: any, match: any) {
     const _initOpts = {
       key: DIALOG_NAME.BETTING_SHARING,
       isOpen: true,
       name: 'dialog-sharing',
       initData: {
-        matchId: matchId,
-        bettingId: bettingId,
-        homeTeam: homeTeam,
-        awayTeam: awayTeam,
-        date: date
+        bettingId: betting.bettingId.valueOf(),
+        matchKey: match.key,
+        homeTeam: match.homeTeam,
+        awayTeam: match.awayTeam,
+        date: match.date
       }
     };
 
@@ -307,15 +329,13 @@ export default class OddsResultComponent extends Vue {
   @Watch('initData')
   getCancelDialog(newVal: boolean | any) {
     if (newVal && newVal.key === DIALOG_CLOSE.ODDS_RELOAD) {
-      this.totalOdds.filter((odds: any) => {
-        if (odds.matchId === newVal.oddsCancel.matchId) {
-          odds.bettings.filter((betting: any) => {
-            if (betting.bettingId === newVal.oddsCancel.bettingId) {
-              betting.status = 3;
-            }
-          });
+      let _idxOdds = this.resultData.findIndex((odds: any) => odds.matchId === newVal.oddsCancel.matchId);
+      if (_idxOdds !== -1) {
+        let _idxBetting = this.resultData[_idxOdds].bettings.findIndex((betting: any) => +betting.bettingId === +newVal.oddsCancel.bettingId.valueOf());
+        if (_idxBetting !== -1) {
+          this.resultData[_idxOdds].bettings[_idxBetting].status = 3;
         }
-      })
+      }
     }
   }
 }

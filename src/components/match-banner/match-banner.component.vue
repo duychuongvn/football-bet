@@ -7,8 +7,6 @@
 
   import { DIALOG_NAME } from '@/shared/enums/dialog';
 
-  import * as moment from 'moment';
-
   @Component({
     components: {
       'flip-countdown': () => import('@/components/flip-countdown/flip-countdown.component.vue')
@@ -19,8 +17,6 @@
 
     @Action('openDialog', { namespace: 'dialog' }) openDialog: any;
     @Action('setInitData', { namespace: 'dialog' }) setInitData: any;
-
-    @Getter('loadingBetting', { namespace: 'betting' }) loadingBetting!: boolean
 
     createBet() {
       if (this.match.isGoLive) {

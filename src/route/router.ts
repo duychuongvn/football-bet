@@ -1,5 +1,3 @@
-import { IpfsService } from '@/shared/services/ipfs.service';
-
 const AppRouter = [
   {
     path: '',

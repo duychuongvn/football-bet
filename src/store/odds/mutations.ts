@@ -1,7 +1,5 @@
 import { MutationTree } from 'vuex';
-
 import { ODDS_STATUS } from '@/shared/enums/odds';
-
 import { RECEVER_TOTAL_ODDS, RECEVER_MY_ODDS, CANCEL_ODDS, FILTER_ODDS } from '@/store/mutations';
 
 export const mutations: MutationTree<any> = {

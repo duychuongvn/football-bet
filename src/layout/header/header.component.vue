@@ -10,7 +10,7 @@
 
   import { BetherContractService } from '@/shared/services/bether.service';
 
-  import * as moment from 'moment';
+  import { DateTime } from 'luxon';
 
   @Component
   export default class HeaderComponent extends Vue {
@@ -52,10 +52,10 @@
           this.fetchAccountSummary(this.web3Init.account.address);
         }
 
-        this.fetchVolumn(moment().add(-1, 'd').unix());
-        this.fetchVolumn(moment().add(-7, 'd').unix(), false);
+        this.fetchVolumn(-1);
+        this.fetchVolumn(-7, false);
 
-        this.watchVolumns()
+        this.watchVolumns();
 
         this.web3Init.web3.currentProvider.publicConfigStore.subscribe((item: any) => {
           if (item.selectedAddress) {
@@ -77,8 +77,8 @@
     watchVolumns () {
       this.bether.LogAcceptBet().watch((err:any, result:any)=>{
         if (!err) {
-          this.fetchVolumn(moment().add(-1, 'd').unix());
-          this.fetchVolumn(moment().add(-7, 'd').unix(), false);
+          this.fetchVolumn(-1);
+          this.fetchVolumn(-7, false);
         }
       })
     }
@@ -123,8 +123,8 @@
     }
 
     fetchVolumn(date: number, type: boolean = true) {
-      const _currentTime = moment().add(-1, 'd').unix();
-      BetherContractService.getVolume(date)
+      const _currentTime =  DateTime.local().plus({ 'days': date }).toMillis() / 1000;
+      BetherContractService.getVolume(_currentTime)
         .subscribe((res: any) => {
           if (type) {
             this.volumnEth.eth_24h = res

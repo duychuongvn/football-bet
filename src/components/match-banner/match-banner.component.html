@@ -9,9 +9,9 @@
           </div>
 
           <div class="betting-wrap mb-1">
-            <image-comp :imgPath="match.homeTeamFlag" imgWidth="50px" imgHeight="50px"></image-comp>
+            <image-comp :imgPath="match.homeTeam.flag" imgWidth="50px" imgHeight="50px"></image-comp>
             <p class="bet-name bet-name--lg">{{ match.fixtureName }}</p>
-            <image-comp :imgPath="match.awayTeamFlag" imgWidth="50px" imgHeight="50px"></image-comp>
+            <image-comp :imgPath="match.awayTeam.flag" imgWidth="50px" imgHeight="50px"></image-comp>
 
             <v-btn color="yellow" small outline v-if="match.isGoLive && !match.isFinish">
               <v-icon left dark small>fas fa-futbol fa-spin</v-icon>
@@ -35,7 +35,7 @@
   </v-flex>
 
   <v-flex xs12 text-xs-right>
-    <v-btn dark color="teal lighten-1 ma-0" @click="createBet" :disabled="match.isGoLive || loadingBetting" :loading="loadingBetting">
+    <v-btn dark color="teal lighten-1 ma-0" @click="createBet" :disabled="match.isGoLive">
       <v-icon left>fas fa-plus-square</v-icon>
       New Bet
     </v-btn>

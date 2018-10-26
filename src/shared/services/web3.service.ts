@@ -1,5 +1,5 @@
 import {MatchInterface} from '@/shared/interfaces/match'
-import * as moment from 'moment'
+import { DateTime } from 'luxon';
 
 const Web3 = require('web3');
 const Rx = require('rx');
@@ -77,7 +77,7 @@ export const Web3Vue = {
   }),
   toSHA3(match: MatchInterface) {
     if (!web3Provider) return;
-    const _date = moment(match.date).unix();
+    const _date = DateTime.fromISO(match.date).toMillis() / 1000;
     const _val = `${match.homeTeam}${match.awayTeam}${_date}`;
 
     return web3Provider.utils.soliditySha3(_val);

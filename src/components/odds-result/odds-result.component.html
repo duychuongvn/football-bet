@@ -43,17 +43,13 @@
   <v-flex xs12>
     <v-card raised dark color="blue-grey lighten-6-opacity mt-3">
       <v-expansion-panel class="accor-fixture" :value="0" v-if="!!oddsResult.length">
-        <v-expansion-panel-content
-          v-for="odds in oddsResult"
-          :key="odds.matchId"
-          class="bg-transparent"
-          expand-icon="fas fa-chevron-down font-sm">
+        <v-expansion-panel-content v-for="(odds, idx) in oddsResult" :key="idx" class="bg-transparent" expand-icon="fas fa-chevron-down font-sm">
 
           <div class="text-capitalize" slot="header">
-            {{ odds.match.dateTimeString }} | {{ odds.match.homeTeam }}
+            {{ odds.match.dateTimeString }} | {{ odds.match.homeTeam.name }}
             <span v-if="odds.match.status !==1" class="font-weight-bold orange--text">{{odds.match.homeGoals}}- {{odds.match.awayGoals}}</span>
             <span class="text-no-wrap" v-if="odds.match.status === 1"> - </span>
-            {{ odds.match.awayTeam }} ({{ odds.summary.stake }} ETH)
+            {{ odds.match.awayTeam.name }} ({{ odds.summary.stake }} ETH)
 
             <v-tooltip bottom lazy v-if="isFinished && odds.summary.payoutAvailable">
               <v-btn class="text-capitalize" color="teal lighten-1" small slot="activator" @click="dialogClaimStake(odds)">
@@ -65,45 +61,43 @@
           </div>
 
           <v-card-text>
-            <v-data-table :headers="headTb" :items="odds.bettings" hide-actions class="bg-transparent table-fixture">
+            <v-data-table :headers="headTb" :items="odds.bettings" :item-key="odds.matchId" expand hide-actions class="bg-transparent table-fixture">
               <template slot="items" slot-scope="props">
-                <tr>
-                  <td @click="props.expanded = !props.expanded">{{ props.index + 1 }}</td>
-                  <td>
-                    <account-addr :address="props.item.bookmakerAddress"/>
-                  </td>
-                  <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ oddsString(props.item, odds.match) }}</td>
-                  <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.bookmakerAmountString }}</td>
-                  <td class="text-xs-center" @click="props.expanded = !props.expanded" v-if="isFinished">{{ props.item.settledAmountString }}</td>
-                  <td class="text-xs-center" @click="props.expanded = !props.expanded"
+                <td @click="props.expanded = !props.expanded">{{ props.index + 1 }}</td>
+                <td>
+                  <account-addr :address="props.item.bookmakerAddress"/>
+                </td>
+                <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ oddsString(props.item, odds.match) }}</td>
+                <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ props.item.bookmakerAmountString }}</td>
+                <td class="text-xs-center" @click="props.expanded = !props.expanded" v-if="isFinished">{{ props.item.settledAmountString }}</td>
+                <td class="text-xs-center" @click="props.expanded = !props.expanded"
                     :class="returnClass(props.item)">{{ openAmount(props.item) }}</td>
 
-                  <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ oddsStatus(props.item) }}</td>
-                  <td class="text-xs-left">
-                    <v-tooltip bottom lazy :disabled="props.item.isDisabled" v-if="!isFinished">
-                      <v-btn class="text-capitalize" color="red lighten-1" small slot="activator"
-                             @click="dialogCancel(props.item, odds.match)" :disabled="props.item.isDisabled">
-                        <v-icon size="18" left class="mr-2">fas fa-times-circle</v-icon>
-                        Cancel
-                      </v-btn>
-                      <span>Cancel</span>
-                    </v-tooltip>
-                    <v-tooltip bottom lazy :disabled="props.item.isDisabledShare" v-if="!isFinished">
-                      <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator"
-                             :disabled="props.item.isDisabledShare"
-                             @click="openShare(odds.match.matchId, props.item.id, odds.match.homeTeam, odds.match.awayTeam, odds.match.date)">
-                        <v-icon size="18" left class="mr-2">fas fa-share-alt-square</v-icon>
-                        Share
-                      </v-btn>
-                      <span>Share</span>
-                    </v-tooltip>
-                    <v-btn fab dark class="btn-punter" color="blue lighten-1" :class="{ 'active': props.expanded }"
-                           @click="props.expanded = !props.expanded"
-                           v-if="props.item.punters.length !== 0 && !isFinished">
-                      <v-icon dark small class="white--text">fas fa-angle-down</v-icon>
+                <td class="text-xs-center" @click="props.expanded = !props.expanded">{{ oddsStatus(props.item) }}</td>
+                <td class="text-xs-left">
+                  <v-tooltip bottom lazy :disabled="props.item.isDisabled" v-if="!isFinished">
+                    <v-btn class="text-capitalize" color="red lighten-1" small slot="activator"
+                           @click="dialogCancel(props.item, odds.match, odds.matchId)" :disabled="props.item.isDisabled">
+                      <v-icon size="18" left class="mr-2">fas fa-times-circle</v-icon>
+                      Cancel
                     </v-btn>
-                  </td>
-                </tr>
+                    <span>Cancel</span>
+                  </v-tooltip>
+                  <v-tooltip bottom lazy :disabled="props.item.isDisabledShare" v-if="!isFinished">
+                    <v-btn class="text-capitalize" color="blue lighten-1" small slot="activator"
+                           :disabled="props.item.isDisabledShare"
+                           @click="openShare(props.item, odds.match)">
+                      <v-icon size="18" left class="mr-2">fas fa-share-alt-square</v-icon>
+                      Share
+                    </v-btn>
+                    <span>Share</span>
+                  </v-tooltip>
+                  <v-btn fab dark class="btn-punter" color="blue lighten-1" :class="{ 'active': props.expanded }"
+                         @click="props.expanded = !props.expanded"
+                         v-if="props.item.punters.length !== 0 && !isFinished">
+                    <v-icon dark small class="white--text">fas fa-angle-down</v-icon>
+                  </v-btn>
+                </td>
               </template>
 
               <template slot="expand" slot-scope="props" v-if="props.item.punters.length !== 0 && !isFinished">

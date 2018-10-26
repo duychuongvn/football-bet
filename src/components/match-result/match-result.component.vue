@@ -53,6 +53,7 @@
 
     created() {
       this.loadBettings(this.match);
+
       this.bether.LogNewBet().watch((error: any, result: any) => {
         if (!error && isEqual(this.match.matchId, result.args.matchId)) {
           this.watchBettings(result.args.bettingIdx.valueOf())
@@ -76,7 +77,7 @@
     }
 
     oddsString (item: any) {
-      let _teamName = item.bookmakerTeam === 0 ? this.match.homeTeam : this.match.awayTeam;
+      let _teamName = item.bookmakerTeam === 0 ? this.match.homeTeam.name : this.match.awayTeam.name;
       let _odds: any = item.odds / 100;
 
       _odds = _odds > 0 ? `+${_odds}` : _odds;

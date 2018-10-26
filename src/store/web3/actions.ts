@@ -10,7 +10,7 @@ export const actions: ActionTree<any, RootState> = {
     Web3Vue.initWeb3().subscribe((res: Web3State) => {
       commit(INIT_WEB3, res)
     }, (error: any) => {
-      console.log(error)
+      // TODO: handle error
     })
   },
   getNetwork({ commit }): any {
@@ -18,14 +18,14 @@ export const actions: ActionTree<any, RootState> = {
       commit(RECEVER_WEB3_NETWORK, res)
 
     }, (error: any) => {
-      console.log(error)
+      // TODO: handle error
     })
   },
   getAccount({ commit, state }): any {
     Web3Vue.account(state.account.address).subscribe((res: any) => {
       commit(RECEVER_WEB3_ACCOUNT, res)
     }, (error: any) => {
-      console.log(error)
+      // TODO: handle error
     })
   }
 };

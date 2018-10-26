@@ -12,8 +12,9 @@ export const actions: ActionTree<any, RootState> = {
       commit(INIT_CONTRACT, res);
     });
   },
-  createOffer({ commit }, offerObj: HandicapInterface): any {
-    const _matchId = Web3Vue.toSHA3(offerObj.match)
+  createOffer({ commit }, offerObj: any): any {
+    const _matchId = Web3Vue.toSHA3(offerObj.match.toJson);
+
     BetherContractService.newOffer(_matchId, offerObj)
       .subscribe((res: any) => {
         commit(CREATE_OFFER, res)
@@ -31,7 +32,7 @@ export const actions: ActionTree<any, RootState> = {
       .subscribe((res: any) => {
         console.log(res)
       }, (error: any) => {
-        console.log(error)
+        // TODO: handle error
       });
   },
   approveScore({commit}, scoreObj: any): any {
@@ -39,7 +40,7 @@ export const actions: ActionTree<any, RootState> = {
       .subscribe((res: any) => {
         console.log(res)
       }, (error: any) => {
-        console.log(error)
+        // TODO: handle error
       });
   },
   matches({commit}):any {

@@ -20,21 +20,20 @@
               <td>
                 <div class="betting-wrap">
                   <div class="mr-3 mb-0 text-xs-center">
-                    <p class="mb-0">{{ props.item.dateString }}</p>
-                    <p class="mb-0">{{ props.item.timeString }}</p>
+                    <p class="mb-0">{{ props.item.dateTimeString }}</p>
                   </div>
-                  <image-comp :imgPath="props.item.homeTeamFlag" imgWidth="25px" imgHeight="25px"></image-comp>
+                  <image-comp :imgPath="props.item.homeTeam.flag" imgWidth="25px" imgHeight="25px"></image-comp>
                   <p class="bet-name">{{ props.item.fixtureName }}</p>
-                  <image-comp :imgPath="props.item.awayTeamFlag" imgWidth="25px" imgHeight="25px"></image-comp>
+                  <image-comp :imgPath="props.item.awayTeam.flag" imgWidth="25px" imgHeight="25px"></image-comp>
                   <v-btn color="yellow" class="btn-live" outline v-if="props.item.isGoLive && !props.item.isFinish">
                     <v-icon dark>fas fa-futbol fa-spin</v-icon>
                     Live
                   </v-btn>
                 </div>
               </td>
-              <td class="text-xs-center">{{ props.item.summary.open + props.item.summary.portionSettled  + props.item.summary.settledOrDone}}</td>
-              <td class="text-xs-center">{{props.item.summary.settledOrDone}}</td>
-              <td class="text-xs-center">{{ props.item.summary.open + props.item.summary.portionSettled }}</td>
+              <td class="text-xs-center">{{ props.item.summary.totalCurrentBets}}</td>
+              <td class="text-xs-center">{{ props.item.summary.settledOrDone }}</td>
+              <td class="text-xs-center">{{ props.item.summary.totalOpen }}</td>
             </tr>
           </template>
         </v-data-table>

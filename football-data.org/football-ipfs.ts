@@ -52,7 +52,11 @@ class FetchData {
     const _date = new Date();
     _date.setDate(_date.getDate() + number);
 
-    return `${_date.getFullYear()}-${_date.getMonth()+1}-${_date.getDate()}`;
+    const day = _date.getDate() < 10 ? `0${_date.getDate()}` : _date.getDate();
+    const month = _date.getMonth() + 1;
+    const monthString = month < 10 ? `0${month}` : month;
+
+    return `${_date.getFullYear()}-${monthString}-${day}`;
   }
 
   addParams(obj) {
@@ -116,7 +120,7 @@ class FetchData {
             break;
         }
         this.filterMatches(res, fileName, originData)
-      })
+      });
   }
 
   filterMatches(result, fileName, originData) {

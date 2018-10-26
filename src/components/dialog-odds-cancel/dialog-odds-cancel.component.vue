@@ -26,7 +26,7 @@
     cancelMyOdds() {
       const _oddsObj = {
         account: this.account.address,
-        matchId: this.dialogData.match.matchId,
+        matchId: this.dialogData.matchId,
         bettingId: this.dialogData.bettingId
       };
 

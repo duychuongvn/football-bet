@@ -1,6 +1,6 @@
 import {Betting} from '@/shared/model/betting'
 import ENV from '@/environment/index'
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
 
 const betherContractABI = require('@/assets/contracts/BetherContractABI.json');
 
@@ -337,7 +337,7 @@ export const BetherContractService = {
       match.homeGoals = result[index++].toNumber();
       match.awayGoals = result[index++].toNumber();
       match.time = result[index++].toNumber();
-      match.timeString = moment(match.time * 1000).format('MMM DD, YYYY [(]ddd[)] - HH:mm a');
+      match.timeString = DateTime.fromMillis(match.time * 1000).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
       match.status = result[index++].toNumber();
       match.approved = result[index++];
 
@@ -376,7 +376,6 @@ export const BetherContractService = {
       };
       bether.getPlayerBalance.call(account, (error: any, balance: any) => {
         summary.currentPlaced = BetherContractService.toEther(balance.toNumber());
-        console.log(summary)
         observe.onNext(summary);
         observe.onCompleted();
       });

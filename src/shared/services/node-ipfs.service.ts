@@ -20,7 +20,22 @@ class NodeIPFSService {
   node: any;
 
   initIPFS() {
-    this.node = new ipfs();
+    const repoPath = 'ipfs-' + Math.random();
+
+    this.node = new ipfs({
+      repo: repoPath,
+      config: {
+        Addresses: {
+          Swarm: [
+            '/ip4/127.0.0.1/tcp/4001/ws/p2p-websocket-star/',
+            '/ip4/127.0.0.1/tcp/4001/ws/ipfs/QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM',
+            '/ip4/192.168.0.2/tcp/4001/ws/ipfs/QmSoLPppuBtQSGwKDZT2M73ULpjvfd3aZ6ha4oFGL1KrGM'
+          ]
+        }
+      }
+    });
+
+    this.node.on('ready', () => console.log('Online status: ', this.node.isOnline() ? 'online' : 'offline'));
   }
 
   // Get version of IPFS

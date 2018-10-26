@@ -3,8 +3,7 @@
 <script lang="ts">
   import { Component, Vue } from "vue-property-decorator";
   import { Getter, Action } from 'vuex-class'
-
-  import * as moment from 'moment';
+  import { DateTime } from 'luxon';
   import { BetherContractService } from "@/shared/services/bether.service";
 
   @Component
@@ -43,7 +42,7 @@
     }
 
     get matchDate(): string {
-      return moment(this.match.time * 1000).format('LL [(]dddd[)] HH:mm A')
+      return DateTime.fromMillis(this.match.time * 1000).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
     }
 
     get homeTeamFlag(): string {
@@ -70,9 +69,9 @@
         account: this.account.address
       })
         .subscribe((res: any) => {
-          console.log(res)
+          // TODO: handle success
         }, (error: any) => {
-          console.log(error)
+          // TODO: handle error
         });
     }
 
@@ -82,9 +81,9 @@
         account: this.account.address
       })
         .subscribe((res: any) => {
-          console.log(res)
+          // TODO: handle success
         }, (error: any) => {
-          console.log(error)
+          // TODO: handle error
         });
     }
   }

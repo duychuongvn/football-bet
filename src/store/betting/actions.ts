@@ -3,14 +3,14 @@ import { RootState } from '@/store/types';
 
 import { RECEVER_TOTAL_BETTING, ACCEPT_BETTING } from '@/store/mutations';
 
-import { BetherContractService } from '@/shared/services/bether.service'
-import { Web3Vue } from '@/shared/services/web3.service'
-import { MatchInterface } from '@/shared/interfaces/match'
-import { Betting } from "@/shared/model/betting";
+import { BetherContractService } from '@/shared/services/bether.service';
+import { Web3Vue } from '@/shared/services/web3.service';
+import { Betting } from '@/shared/model/betting';
+import { Fixture } from '@/shared/model/fixture';
 
 export const actions: ActionTree<any, RootState> = {
-  loadBettings({ commit }, match: MatchInterface): any {
-    const _matchId = Web3Vue.toSHA3(match)
+  loadBettings({ commit }, match: Fixture): any {
+    const _matchId = Web3Vue.toSHA3(match.toJson);
     BetherContractService.getBettings(_matchId)
       .subscribe((bettings: any) => {
         commit(RECEVER_TOTAL_BETTING, bettings)

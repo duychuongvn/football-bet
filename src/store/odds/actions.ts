@@ -1,7 +1,7 @@
 import { ActionTree } from 'vuex';
 import { RootState } from '@/store/types';
 
-import { RECEVER_TOTAL_ODDS, RECEVER_MY_ODDS, CANCEL_ODDS, FILTER_ODDS } from '@/store/mutations';
+import { RECEVER_TOTAL_ODDS, CANCEL_ODDS, FILTER_ODDS } from '@/store/mutations';
 import { DIALOG_NAME, DIALOG_CLOSE } from '@/shared/enums/dialog';
 import { ODDS_STATUS } from '@/shared/enums/odds';
 
@@ -9,13 +9,11 @@ import { BetherContractService } from '@/shared/services/bether.service';
 
 export const actions: ActionTree<any, RootState> = {
   totalOdds({ commit }, account: string): any {
-    let _myodds: any = [];
-
     BetherContractService.getUserBets(account)
       .subscribe((res: any) => {
         commit(RECEVER_TOTAL_ODDS, res);
     }, (error: any) => {
-      console.log(error, 'error');
+        // TODO: handle error
     });
   },
   oddsByMatchId({ commit, state }): any {

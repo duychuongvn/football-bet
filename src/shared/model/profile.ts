@@ -2,55 +2,52 @@ import { Fixture } from '@/shared/model/fixture';
 import { Betting } from '@/shared/model/betting';
 
 export class Profile {
-  protected _bettings: Betting[] = [];
-  public get bettings(): Betting[] {
+  private _bettings!: Betting[];
+  get bettings(): Betting[] {
     return this._bettings;
   }
-  public set bettings(value: Betting[]) {
-    this._bettings = value;
+  set bettings(v: Betting[]) {
+    this._bettings = v;
   }
 
-  // @ts-ignore
-  protected _match: Fixture = undefined;
-  public get match(): Fixture {
+  private _match!: Fixture;
+  get match(): Fixture {
     return this._match;
   }
-  public set match(value: Fixture) {
-    this._match = value;
+  set match(v: Fixture) {
+    this._match = v;
   }
 
-  // @ts-ignore
-  protected _summary: Object = undefined;
-  public get summary(): Object {
+  private _summary!: Object;
+  get summary(): Object {
     return this._summary;
   }
-  public set summary(value: Object) {
-    this._summary = value;
+  set summary(v: Object) {
+    this._summary = v;
   }
 
-  private _isRequestPayout: boolean = false;
-  public get isRequestPayout(): boolean {
+  private _isRequestPayout!: boolean;
+  get isRequestPayout(): boolean {
     return this._isRequestPayout;
   }
-  public set isRequestPayout(value: boolean) {
-    this._isRequestPayout = value;
+  set isRequestPayout(v: boolean) {
+    this._isRequestPayout = v;
+  }
+
+  private _matchId!: string;
+  get matchId(): string {
+    return this._matchId;
+  }
+  set matchId(v: string) {
+    this._matchId = v;
   }
 
   constructor(profile?: any) {
     if (profile) {
       this.match = new Fixture(profile.match);
       this.summary = profile.summary;
-
-      if (profile.bettings) {
-        this._addBettings(profile.bettings);
-      }
+      this.matchId = profile.matchId;
+      this.bettings = profile.bettings.map((betting: any) => new Betting(betting));
     }
-  }
-
-  protected _addBettings(bettings: any) {
-    const _bettings: any = [];
-    bettings.map((betting: any) => _bettings.push(new Betting(betting)));
-
-    this.bettings = _bettings;
   }
 }

@@ -5,7 +5,7 @@
   import { Getter, Action } from 'vuex-class'
   import { DIALOG_NAME } from '@/shared/enums/dialog';
   import axios from 'axios'
-  import * as moment from 'moment'
+  import { DateTime } from 'luxon';
 
   const isUndefined = require('lodash/isUndefined');
 
@@ -29,13 +29,7 @@
         if (this.$route.params && this.$route.params.key) {
           this.matchKey = this.$route.params.key;
         } else {
-          this.matchKey = btoa(JSON.stringify({
-            id: this.initData.bettingId,
-            matchId: this.initData.matchId,
-            homeTeam: this.initData.homeTeam,
-            awayTeam: this.initData.awayTeam,
-            date: this.initData.date
-          }));
+          this.matchKey = this.initData.matchKey;
         }
 
         if (!isUndefined(this.initData.bettingId)) {
@@ -64,9 +58,9 @@
         }
       }
 
-      const _dateTime = moment(_match.date).local().format('MMM DD, YYYY - HH:mm A')
+      const _dateTime = DateTime.fromISO(_match.date).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
 
-      return `Join my bet on Bether for the match ${_match.homeTeam} - ${_match.awayTeam} at ${_dateTime}`
+      return `Join my bet on Bether for the match ${_match.homeTeam.name} - ${_match.awayTeam.name} at ${_dateTime}`
     }
 
     set isDialog(v: any) {

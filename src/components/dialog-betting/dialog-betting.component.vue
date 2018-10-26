@@ -2,13 +2,13 @@
 <style lang="scss" scoped src="./dialog-betting.component.scss"></style>
 
 <script lang="ts">
-  import { Component, Vue, Watch } from 'vue-property-decorator'
-  import { Getter, Action } from 'vuex-class'
+  import { Component, Vue, Watch } from 'vue-property-decorator';
+  import { Getter, Action } from 'vuex-class';
 
-  import { DIALOG_NAME, DIALOG_CLOSE } from '@/shared/enums/dialog'
-  import { ODDS_TYPE } from '@/shared/enums/odds'
+  import { DIALOG_NAME, DIALOG_CLOSE } from '@/shared/enums/dialog';
+  import { ODDS_TYPE } from '@/shared/enums/odds';
 
-  import * as moment from 'moment'
+  import { DateTime } from 'luxon';
 
   const isEqual = require('lodash/isEqual');
   const Big = require('big.js');
@@ -120,25 +120,25 @@
 
     get selectedTeam(): string {
       if (this.odds) {
-        return this.isHomeTeamActive ? this.match.awayTeam : this.match.homeTeam;
+        return this.isHomeTeamActive ? this.match.awayTeam.name : this.match.homeTeam.name;
       }
-      return this.isHomeTeamActive ? this.match.homeTeam : this.match.awayTeam;
+      return this.isHomeTeamActive ? this.match.homeTeam.name : this.match.awayTeam.name;
     }
 
     get homeTeamFlag() {
-      return this.match ? this.match.homeTeamFlag : ''
+      return this.match ? this.match.homeTeam.flag : ''
     }
 
     get homeTeam() {
-      return this.match ? `${this.match.homeTeam}` : ''
+      return this.match ? `${this.match.homeTeam.name}` : ''
     }
 
     get awayTeamFlag() {
-      return this.match ? this.match.awayTeamFlag : ''
+      return this.match ? this.match.awayTeam.flag : ''
     }
 
     get awayTeam() {
-      return this.match ? `${this.match.awayTeam}` : ''
+      return this.match ? `${this.match.awayTeam.name}` : ''
     }
 
     changeTeam(team: number) {
@@ -158,9 +158,9 @@
       const _opts = {
         account: this.account.address,
         match: this.match,
-        homeTeam: this.match.homeTeam,
-        awayTeam: this.match.awayTeam,
-        time: moment(this.match.date).unix(),
+        homeTeam: this.match.homeTeam.name,
+        awayTeam: this.match.awayTeam.name,
+        time: (DateTime.fromISO(this.match.date).toMillis() / 1000),
         odds: this.oddsSelected * 100,
         stake: +this.stakeSelected,
         selectedTeam: this.bettingSelected

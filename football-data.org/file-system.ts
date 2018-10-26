@@ -71,8 +71,7 @@ class FetchData {
         return {
           id: team.id,
           name: team.name,
-          flag: team.crestUrl,
-          shortName: team.shortName
+          flag: team.crestUrl
         }
       });
     }

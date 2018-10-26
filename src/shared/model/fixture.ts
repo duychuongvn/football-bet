@@ -1,190 +1,161 @@
-import { FixtureInterface } from '@/shared/interfaces/fixture'
+import { FixtureInterface, TeamInterface, DiffCurrentDate } from '@/shared/interfaces/fixture'
+import { BaseModel } from '@/shared/model/base-model';
+import { Team } from '@/shared/model/team';
+import { Sumary } from '@/shared/model/sumary';
+import { Web3Vue } from '@/shared/services/web3.service';
 
-import * as moment from 'moment';
-import {ParentLeague} from '@/shared/model/parent-league';
+import { DateTime, Interval } from 'luxon';
 
-export class Fixture extends ParentLeague{
-  protected _approved: boolean = false;
-  public get approved(): boolean {
-    return this._approved;
-  }
-  public set approved(value: boolean) {
-    this._approved = value;
-  }
-
-  protected _matchId: any;
-  public get matchId(): any {
-    return this._matchId;
-  }
-  public set matchId(value: any) {
-    this._matchId = value;
-  }
-
-  protected _summary: any;
-  public get summary(): any {
-    return this._summary;
-  }
-  public set summary(value: any) {
-    this._summary = value;
-  }
-
-  protected _id: number = 0;
-  public get id(): number {
-    return this._id;
-  }
-  public set id(v: number) {
-    this._id = v;
-  }
-
-  protected _date: string = '';
-  public get date(): string {
+export class Fixture extends BaseModel{
+  private _date!: string;
+  get date(): string {
     return this._date;
   }
-  public set date(v: string) {
+  set date(v: string) {
     this._date = v;
   }
-  public get dateCountDown(): string {
-    return moment(this.date).format('YYYY/MM/DD HH:mm:ss');
-  }
-  public get dateString(): string {
-    return moment(this.date).format('MMM DD, YYYY');
-  }
-  public get timeString(): string {
-    return moment(this.date).format('ddd - HH:mm a');
-  }
-  public get dateTimeString(): string {
-    return moment(this.date).format('LL [(]dddd[)] - HH:mm a');
-  }
-  public get isGoLive(): boolean {
-    return moment(this.date).isSameOrBefore(new Date());
-  }
-  public get isFinish(): boolean {
-    const _timeBet = moment(this.date).add(2, 'hours').format('YYYY-MM-DD HH:mm:ss');
-    const _currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
 
-    return moment(_timeBet).isSameOrBefore(_currentTime);
+  get dateCountDown(): string {
+    return DateTime.fromISO(this._date).toFormat('yyyy/MM/dd HH:mm:ss');
+  }
+  get dateString(): string {
+    return DateTime.fromISO(this._date).toLocaleString(DateTime.DATE_MED);
+  }
+  get timeString(): string {
+    return DateTime.fromISO(this._date).toLocaleString({weekday: 'long', hour: '2-digit', minute: '2-digit'});
+  }
+  get dateTimeString(): string {
+    return DateTime.fromISO(this.date).toLocaleString(DateTime.DATETIME_MED);
+  }
+  get isGoLive(): boolean {
+    return Interval.fromISO(this.date).isBefore(DateTime.local());
   }
 
-  protected _status: string = '';
-  public get status(): string {
+  private _status!: string;
+  get status(): string {
     return this._status;
   }
-  public set status(v: string) {
+  set status(v: string) {
     this._status = v;
   }
 
-  protected _homeTeam: string = '';
-  public get homeTeam(): string {
-    return this._homeTeam.toName();
+  private _homeTeam!: Team;
+  get homeTeam(): Team {
+    return this._homeTeam;
   }
-  public set homeTeam(v: string) {
+  set homeTeam(v: Team) {
     this._homeTeam = v;
   }
 
-  private _homeTeamFlag: string = '';
-  public get homeTeamFlag(): string {
-    return this._homeTeamFlag || require(`@/assets/images/no-images.png`);
+  private _awayTeam!: Team;
+  get awayTeam(): Team {
+    return this._awayTeam;
   }
-  public set homeTeamFlag(v: string) {
-    this._homeTeamFlag = v;
-  }
-
-  protected _homeGoals: number = 0;
-  public get homeGoals(): number {
-    return this._homeGoals;
-  }
-  public set homeGoals(value: number) {
-    this._homeGoals = value;
-  }
-
-  protected _awayTeam: string = '';
-  public get awayTeam(): string {
-    return this._awayTeam.toName();
-  }
-  public set awayTeam(v: string) {
+  set awayTeam(v: Team) {
     this._awayTeam = v;
   }
 
-  private _awayTeamFlag: string = '';
-  public get awayTeamFlag(): string {
-    return this._awayTeamFlag || require(`@/assets/images/no-images.png`);
+  get fixtureName(): string {
+    return `${this.homeTeam.name} ~ ${this.awayTeam.name}`;
   }
-  public set awayTeamFlag(v: string) {
-    this._awayTeamFlag = v;
+  get matchId(): string {
+    return Web3Vue.toSHA3({
+      id: this.id,
+      date: this.date,
+      homeTeam: this.homeTeam.name,
+      awayTeam: this.awayTeam.name
+    })
   }
 
-  protected _awayGoals: number = 0;
-  public get awayGoals(): number {
+  get diffCurrentDate(): DiffCurrentDate {
+    return DateTime.fromISO(this.date).diffNow(['days']).toObject();
+  }
+
+  get isToDay(): boolean {
+    return DateTime.fromISO(this.date).hasSame(DateTime.utc(), 'days');
+  }
+  get isTomorrow(): boolean {
+    return DateTime.fromISO(this.date).hasSame(DateTime.utc().plus({ 'days': 1 }), 'days');
+  }
+  get isFuture(): boolean {
+    return !!this.diffCurrentDate.days && this.diffCurrentDate.days >= 2;
+  }
+
+  private _summary!: Sumary;
+  public get summary(): Sumary {
+    return this._summary;
+  }
+  public set summary(v: Sumary) {
+    this._summary = v;
+  }
+
+  private _approved!: boolean;
+  get approved(): boolean {
+    return this._approved;
+  }
+  set approved(v: boolean) {
+    this._approved = v;
+  }
+
+  private _homeGoals!: number;
+  get homeGoals(): number {
+    return this._homeGoals;
+  }
+  set homeGoals(v: number) {
+    this._homeGoals = v;
+  }
+
+  private _awayGoals!: number;
+  get awayGoals(): number {
     return this._awayGoals;
   }
-  public set awayGoals(value: number) {
-    this._awayGoals = value;
+  set awayGoals(v: number) {
+    this._awayGoals = v;
   }
 
-  public get fixtureName(): string {
-    return `${this.homeTeam} ~ ${this.awayTeam}`;
-  }
-
-  protected _isToDay: boolean = false;
-  public get isToDay(): boolean {
-    return this._isToDay;
-  }
-  public set isToDay(value: boolean) {
-    this._isToDay = value;
-  }
-
-  protected _isTomorrow: boolean = false;
-  public get isTomorrow(): boolean {
-    return this._isTomorrow;
-  }
-  public set isTomorrow(value: boolean) {
-    this._isTomorrow = value;
-  }
-
-  protected _isFuture: boolean = false;
-  public get isFuture(): boolean {
-    return this._isFuture;
-  }
-  public set isFuture(value: boolean) {
-    this._isFuture = value;
-  }
-
-  private _isRequestPayout: boolean = false;
-  public get isRequestPayout(): boolean {
+  private _isRequestPayout!: boolean;
+  get isRequestPayout(): boolean {
     return this._isRequestPayout;
   }
-  public set isRequestPayout(value: boolean) {
-    this._isRequestPayout = value;
+  set isRequestPayout(v: boolean) {
+    this._isRequestPayout = v;
   }
 
-  public get key(): string {
+  get key(): string {
     return btoa(JSON.stringify({
       id: this.id,
       matchId: this.matchId,
       date: this.date,
-      homeTeam: this.homeTeam,
-      homeTeamFlag: this.homeTeamFlag,
-      awayTeam: this.awayTeam,
-      awayTeamFlag: this.awayTeamFlag
+      homeTeam: this.homeTeam.toJson,
+      awayTeam: this.awayTeam.toJson
     }));
   }
 
+  get toJson() {
+    return {
+      id: this.id,
+      date: this.date,
+      homeTeam: this.homeTeam.name,
+      awayTeam: this.awayTeam.name
+    }
+  }
+
   constructor (fixture: FixtureInterface) {
-    super();
+    super(fixture);
+
+    this.summary = new Sumary();
+
     if (fixture) {
-      this.id        = fixture.id;
       this.date      = fixture.date;
       this.status    = fixture.status;
-      this.homeTeam  = fixture.homeTeam.name;
-      this.awayTeam  = fixture.awayTeam.name;
-      this.homeTeamFlag = fixture.homeTeam.flag;
-      this.awayTeamFlag = fixture.awayTeam.flag;
-      this.approved  = fixture.approved;
-      this.homeGoals = fixture.homeGoals;
-      this.awayGoals = fixture.awayGoals;
-      this.summary   = { canceled:0, open:0, portionSettled:0, refuned:0, settledOrDone:0 };
-      this.matchId   = fixture.matchId;
-      this.name      = fixture.leagueName;
+      this.homeTeam  = new Team(fixture.homeTeam);
+      this.awayTeam  = new Team(fixture.awayTeam);
+      // this.approved  = fixture.approved;
+      // this.homeGoals = fixture.homeGoals;
+      // this.awayGoals = fixture.awayGoals;
+      // this.summary   = { canceled:0, open:0, portionSettled:0, refuned:0, settledOrDone:0 };
+      // this.matchId   = fixture.matchId;
+      // this.name      = fixture.leagueName;
     }
   }
 }
