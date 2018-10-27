@@ -7,7 +7,9 @@ export class BaseModel {
     this._id = v;
   }
 
-  constructor(data: any) {
-    this.id = data.id;
+  constructor(d?: any) {
+    if (d) {
+      this.id = d.id;
+    }
   }
 }

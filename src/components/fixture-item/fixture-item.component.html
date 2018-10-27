@@ -6,7 +6,12 @@
         class="bg-transparent"
         expand-icon="fas fa-chevron-down font-sm"
         v-if="isNotMatches && fixture.bettings.length !== 0">
-      <div class="text-uppercase" slot="header">{{ fixture.name }}</div>
+      <div class="text-uppercase" slot="header">
+        <div class="d-inline-flex">
+          <image-comp :imgPath="fixture.flag" imgWidth="25px" imgHeight="25px"></image-comp>
+          <span class="ml-2">{{ fixture.name }}</span>
+        </div>
+      </div>
 
       <v-card-text>
         <v-data-table
