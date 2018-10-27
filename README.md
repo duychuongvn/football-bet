@@ -55,10 +55,23 @@ $ vim BetherContract.json
   - Node: v9.5.0 or Higher
   - NPM: v5.1.0 or Higher | Yarn: v1.6.x or Higher
   
+#### to synchronize list matches at the first time
+```sh 
+$ yarn sync:data
+```
+#### to synchronize list matches at the second time
+```sh 
+$ yarn sync:matches
+```  
+#### build and start  
 ```sh
 $ cd bether
 $ yarn # install node_module
 $ yarn serve # run serve localhost
 ```
+
+
+
+
 - Open browser with address [localhost:8080](http://localhost:8080)
 - Enjoy
