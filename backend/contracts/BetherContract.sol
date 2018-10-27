@@ -43,6 +43,11 @@ contract BetherContract is Ownable {
 
   event LogNewBet(bytes32 matchId, uint32 bettingIdx);
   event LogAcceptBet(bytes32 matchId, uint32 bettingIdx, uint32 settledIdx);
+  event CancelBet(bytes32 matchId, uint32 bettingIdx);
+  event ApproveScoreEvent(bytes32 matchId);
+  event ClaimStakeEvent(bytes32 matchId, uint32[] bettingIdxes);
+  event FinishedMatchEvent(bytes32 matchId);
+
   enum Team {Home, Away}
   enum MatchStatus {NotAvailable, Waiting, Playing, Canceled, Finished}
   enum BetStatus {Open, Deal, Settled, Canceled, Refunded, Done}
@@ -293,6 +298,7 @@ contract BetherContract is Ownable {
     _match.homeScore = uint8(homeScore);
     _match.awayScore = uint8(awayScore);
     _match.status = MatchStatus.Finished;
+    emit FinishedMatchEvent(matchId);
     return true;
   }
 
@@ -309,6 +315,7 @@ contract BetherContract is Ownable {
     }
 
     rmBetIdx(_match);
+    emit ApproveScoreEvent(matchId);
     return true;
   }
 
@@ -430,6 +437,7 @@ contract BetherContract is Ownable {
     for (uint i = 0; i < bettingIdxes.length; i++) {
       doRefundOrTransfer(_match, bettingIdxes[i]);
     }
+    emit ClaimStakeEvent(matchId, bettingIdxes);
     return true;
   }
 

@@ -114,6 +114,64 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "name": "matchId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "bettingIdx",
+        "type": "uint32"
+      }
+    ],
+    "name": "CancelBet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "matchId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "ApproveScoreEvent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "matchId",
+        "type": "bytes32"
+      },
+      {
+        "indexed": false,
+        "name": "bettingIdxes",
+        "type": "uint32[]"
+      }
+    ],
+    "name": "ClaimStakeEvent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "matchId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "FinishedMatchEvent",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "name": "previousOwner",
         "type": "address"
