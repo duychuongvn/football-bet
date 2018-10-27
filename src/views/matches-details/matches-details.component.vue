@@ -18,7 +18,6 @@ export default class MatchesDetailsPage extends Vue {
   @Getter('account', {namespace: 'web3'}) account: any;
 
   created() {
-    console.log(JSON.parse(atob(this.$route.params.key)));
     if (this.account && this.account.address) {
       this.fetchMatch(JSON.parse(atob(this.$route.params.key)))
     }

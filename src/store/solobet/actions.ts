@@ -30,7 +30,7 @@ export const actions: ActionTree<any, RootState> = {
   updateScore({commit}, scoreObj: any): any {
     BetherContractService.updateScore(scoreObj)
       .subscribe((res: any) => {
-        console.log(res)
+        // TODO: handle success
       }, (error: any) => {
         // TODO: handle error
       });
@@ -38,7 +38,7 @@ export const actions: ActionTree<any, RootState> = {
   approveScore({commit}, scoreObj: any): any {
     BetherContractService.approveScore(scoreObj)
       .subscribe((res: any) => {
-        console.log(res)
+        // TODO: handle success
       }, (error: any) => {
         // TODO: handle error
       });

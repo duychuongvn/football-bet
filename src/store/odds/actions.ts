@@ -43,7 +43,7 @@ export const actions: ActionTree<any, RootState> = {
           }
         }, {root: true});
       }, (errors: any) => {
-        console.log(errors);
+        // TODO: handle errors
       })
   },
   filterOdds({ commit }, filter: any): any {

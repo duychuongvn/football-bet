@@ -387,7 +387,11 @@ export const BetherContractService = {
 
   cancelOffer: (oddsObj: any) => Rx.Observable.create((observe: any) => {
     bether.cancelOffer(oddsObj.bettingId, {from: oddsObj.account}, (err: any, success: any) => {
-      observe.onNext(success);
+      if (!!success) {
+        observe.onNext(success);
+      } else {
+        observe.error(err);
+      }
       observe.onCompleted();
     });
   }),

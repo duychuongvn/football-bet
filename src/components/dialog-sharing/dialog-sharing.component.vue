@@ -101,12 +101,10 @@
         .then((response) => {
           if(response.status == 200) {
             this.sharePath = response.data.data.url;
-          } else {
-            console.log('Opps dude, status code != 200 :( ')
           }
         })
         .catch((error) => {
-          console.log('Error! ' + error);
+          // TODO: handle error
         });
     }
   }

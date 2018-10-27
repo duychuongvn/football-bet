@@ -150,12 +150,9 @@ export class Fixture extends BaseModel{
       this.status    = fixture.status;
       this.homeTeam  = new Team(fixture.homeTeam);
       this.awayTeam  = new Team(fixture.awayTeam);
-      // this.approved  = fixture.approved;
-      // this.homeGoals = fixture.homeGoals;
-      // this.awayGoals = fixture.awayGoals;
-      // this.summary   = { canceled:0, open:0, portionSettled:0, refuned:0, settledOrDone:0 };
-      // this.matchId   = fixture.matchId;
-      // this.name      = fixture.leagueName;
+      this.approved  = fixture.approved;
+      this.homeGoals = fixture.homeGoals;
+      this.awayGoals = fixture.awayGoals;
     }
   }
 }

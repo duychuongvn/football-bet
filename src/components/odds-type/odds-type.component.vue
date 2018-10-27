@@ -110,8 +110,7 @@ export default class OddsTypeComponent extends Vue {
 
     this.oddsTypeSelected = key;
 
-    console.log(this.oddsTypeSelected)
-    // this.changedFilter(Object.keys(USER_TYPE_OPEN)[0])
+    this.changedFilter(Object.keys(USER_TYPE_OPEN)[0])
   }
 }
 </script>
