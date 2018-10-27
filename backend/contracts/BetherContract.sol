@@ -118,7 +118,7 @@ contract BetherContract is Ownable {
 
     require(msg.sender != owner);
     require(time > now);
-    require((handicap % 25 == 0) && (handicap / 25 <= 8) && (handicap / 25 >= - 8));
+    require(handicap % 25 == 0);
 
     Match memory _match = matches[matchId];
 

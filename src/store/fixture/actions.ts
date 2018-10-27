@@ -8,8 +8,8 @@ import { BetherContractService } from '@/shared/services/bether.service';
 import { Sumary } from '@/shared/model/sumary';
 
 const fixtures: any = {
-  bundesliga: require('@/../football-data.org/matches/bundesliga.json'),
   england: require('@/../football-data.org/matches/premier_league.json'),
+  bundesliga: require('@/../football-data.org/matches/bundesliga.json'),
   division: require('@/../football-data.org/matches/primera_division.json'),
   lique: require('@/../football-data.org/matches/ligue_1.json'),
   serie: require('@/../football-data.org/matches/serie_a.json'),

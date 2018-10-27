@@ -23,7 +23,7 @@ export const BetherContractService = {
 
   newOffer: (matchId: any, offerObj: any) => Rx.Observable.create((observer: any) => {
     let handicap = offerObj.odds;
-    if (handicap % 25 == 0 && handicap / 25 <= 8 && handicap / 25 >= -8) {
+    if (handicap % 25 == 0 && handicap) {
       bether.offerNewMatch(
         matchId,
         offerObj.homeTeam, offerObj.awayTeam,
