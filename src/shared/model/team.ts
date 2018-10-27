@@ -28,8 +28,9 @@ export class Team extends BaseModel{
 
   constructor(team: TeamInterface) {
     super(team);
-
-    this.name = team.name;
-    this.flag = team.flag;
+    if (team) {
+      this.name = team.name;
+      this.flag = team.flag;
+    }
   }
 }
