@@ -242,7 +242,7 @@ export const BetherContractService = {
 
     const diff = betting.odds + goalsDif * 100;
     if (diff === 25) {
-      betting.returnedAmount = "+" + BetherContractService.formatNumber(betting.bookmakerAmount +  betting.settledAmount * 0.5);
+      betting.returnedAmount = BetherContractService.formatNumber(betting.bookmakerAmount +  betting.settledAmount * 0.5);
       bettingResult = 2;
     }
     else if (diff === - 25) {
@@ -254,7 +254,7 @@ export const BetherContractService = {
       bettingResult = 3;
     }
     else if (diff > 25) {
-      betting.returnedAmount = "+" + (betting.bookmakerAmount + betting.settledAmount);
+      betting.returnedAmount = BetherContractService.formatNumber(betting.bookmakerAmount + betting.settledAmount);
       bettingResult = 1;
     }
     else {
