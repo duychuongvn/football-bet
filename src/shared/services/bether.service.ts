@@ -232,39 +232,41 @@ export const BetherContractService = {
   },
 
   calculateBookmarkerResult(match:any, betting:any) {
-    var goalsDif = match.homeGoals - match.awayGoals;
+    let goalsDif = match.homeGoals - match.awayGoals;
 
-    var bettingResult = 0;
+    let bettingResult = 0;
     // 0: none, 1 win, 2 win a half, 3 draw, 4 lose a half, 5 lose
-    if(betting.bookmakerTeam === 1) {
+    if (betting.bookmakerTeam === 1) {
       goalsDif = match.awayGoals - match.homeGoals;
     }
 
     const diff = betting.odds + goalsDif * 100;
-    if (diff === 25) {
-      betting.returnedAmount = BetherContractService.formatNumber(betting.bookmakerAmount +  betting.settledAmount * 0.5);
-      bettingResult = 2;
-    }
-    else if (diff === - 25) {
-      betting.returnedAmount =  BetherContractService.formatNumber(betting.bookmakerAmount  - betting.settledAmount * 0.5);
-      bettingResult = 4;
-    }
-    else if (diff === 0) {
-      betting.returnedAmount = BetherContractService.formatNumber(betting.bookmakerAmount);
-      bettingResult = 3;
-    }
-    else if (diff > 25) {
-      betting.returnedAmount = BetherContractService.formatNumber(betting.bookmakerAmount + betting.settledAmount);
-      bettingResult = 1;
-    }
-    else {
-      betting.returnedAmount = BetherContractService.formatNumber(-betting.settledAmount);
-      bettingResult = 5;
+
+    switch (diff) {
+      case 25:
+        betting.returnedAmount = BetherContractService.formatNumber(+betting.bookmakerAmount + (+betting.settledAmount * 0.5));
+        bettingResult = 2;
+        break;
+      case -25:
+        betting.returnedAmount =  BetherContractService.formatNumber(+betting.bookmakerAmount  - (+betting.settledAmount * 0.5));
+        bettingResult = 4;
+        break;
+      case 0:
+        betting.returnedAmount = BetherContractService.formatNumber(+betting.bookmakerAmount);
+        bettingResult = 3;
+        break;
+      default:
+        if (diff > 25) {
+          betting.returnedAmount = BetherContractService.formatNumber(+betting.bookmakerAmount + +betting.settledAmount);
+          bettingResult = 1;
+        } else {
+          betting.returnedAmount = BetherContractService.formatNumber(-betting.settledAmount);
+          bettingResult = 5;
+        }
+        break;
     }
 
-    betting.bookmakerResult = match.status !== 4 ? betting.bookmakerResult
-                            : match.approved?betting.bookmakerResult:bettingResult;
-
+    betting.bookmakerResult = match.status !== 4 ? betting.bookmakerResult : match.approved?betting.bookmakerResult:bettingResult;
   },
 
   formatNumber(number: number) {

@@ -116,16 +116,24 @@ export default class OddsResultComponent extends Vue {
 
     for (let i in _oddsGroup) {
       let _tmpBettings = _oddsGroup[i][0].bettings;
-      _oddsGroup[i].filter((item: any) => {
-        _tmpBettings = _tmpBettings.concat(item.bettings);
+      let _tmpStake: any = +_oddsGroup[i][0].summary.stake;
+
+      _oddsGroup[i].filter((item: any, key: number) => {
+        if (key !== 0) {
+          _tmpBettings = _tmpBettings.concat(item.bettings);
+          _tmpStake = _tmpStake + (+item.summary.stake);
+        }
       });
 
-      _tmpData.push({
+      _tmpData.push( {
         bettings: _uniq(_tmpBettings),
         match: _oddsGroup[i][0].match,
         matchId: _oddsGroup[i][0].matchId,
-        summary: _oddsGroup[i][0].summary,
-      })
+        summary: {
+          payoutAvailable: _oddsGroup[i][0].summary.payoutAvailable,
+          stake: parseFloat(_tmpStake).toFixed(3)
+        },
+      });
     }
 
     _tmpData.filter((item: any, key: any) => {
