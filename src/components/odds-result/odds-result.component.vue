@@ -83,6 +83,9 @@ export default class OddsResultComponent extends Vue {
   public selectedParent: string = 'DATE';
   public selectedChild: number = 1;
 
+  public matchIdClaim: Array<string> = [];
+  public oddsClaim: Array<string> = [];
+
   get isOddsOpen(): boolean {
     return this.oddsTypeSelected === "OPEN";
   }
@@ -125,7 +128,7 @@ export default class OddsResultComponent extends Vue {
         }
       });
 
-      _tmpData.push( {
+      _tmpData.push({
         bettings: _uniq(_tmpBettings),
         match: _oddsGroup[i][0].match,
         matchId: _oddsGroup[i][0].matchId,
@@ -172,9 +175,8 @@ export default class OddsResultComponent extends Vue {
       if (!!_odds.bettings) {
         _odds.bettings = _odds.bettings.filter((betting: any) => {
 
-          odds.summary.payoutAvailable = (odds.match.status === 4 && betting.status <= 2 && betting.bookmakerResult < 5);
-
           if (this.isFinished) {
+            odds.summary.payoutAvailable = (odds.match.status === 4 && betting.status <= 2 && betting.bookmakerResult < 5);
             switch (USER_TYPE_FINISHED[this.selectedFilter]) {
               case USER_TYPE_FINISHED.ODDS_LOST:
                 return betting.bookmakerResult >= 4;
@@ -204,6 +206,12 @@ export default class OddsResultComponent extends Vue {
         }
       }
     });
+
+    this.oddsClaim = _oddsRs.map((item: any) => {
+      if (item.summary.payoutAvailable) {
+        return item.matchId;
+      }
+    }).filter(Boolean);
 
     return orderBy(_oddsRs, ['match.date'], ['desc']);
   }
@@ -259,21 +267,40 @@ export default class OddsResultComponent extends Vue {
   }
 
   dialogClaimStake(odds: Profile) {
+    this.matchIdClaim.push(odds.matchId);
+
     BetherContractService.claimStake({
       matchId: odds.matchId,
       bettings: odds.bettings,
       account: this.account.address
     }).subscribe((response: any) => {
-      this.notify({
-        mode: 'success',
-        message: 'Your has request payout success !'
-      });
-      }, (error: any) => {
-      this.notify({
-        mode: 'error',
-        message: error.message
-      });
+        this.removeMatchClaim(odds, true);
+        this.notify({
+          mode: 'success',
+          message: 'Your has request payout success !'
+        });
+      }, () => {
+      this.removeMatchClaim(odds);
     })
+  }
+
+  waitingClaim(odds: Profile) {
+    return this.matchIdClaim.findIndex((item: any) => item === odds.matchId) !== -1;
+  }
+
+  oddsClaimActive(odds: Profile) {
+    return this.oddsClaim.findIndex((item: any) => item === odds.matchId) !== -1;
+  }
+
+  removeMatchClaim(odds: Profile, type = false) {
+    let _idx = this.matchIdClaim.findIndex((item: any) => item === odds.matchId);
+    let _oddsIdx = this.oddsClaim.findIndex((item: any) => item === odds.matchId);
+    if (_idx !== -1) {
+      this.matchIdClaim.splice(_idx, 1);
+    }
+    if (_oddsIdx !== -1 && type) {
+      this.oddsClaim.splice(_idx, 1);
+    }
   }
 
   dialogCancel(betting: any, match: any, matchId: any) {

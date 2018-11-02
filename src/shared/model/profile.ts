@@ -18,20 +18,12 @@ export class Profile {
     this._match = v;
   }
 
-  private _summary!: Object;
-  get summary(): Object {
+  private _summary: object = {};
+  get summary(): object {
     return this._summary;
   }
-  set summary(v: Object) {
+  set summary(v: object) {
     this._summary = v;
-  }
-
-  private _isRequestPayout!: boolean;
-  get isRequestPayout(): boolean {
-    return this._isRequestPayout;
-  }
-  set isRequestPayout(v: boolean) {
-    this._isRequestPayout = v;
   }
 
   private _matchId!: string;
@@ -42,12 +34,12 @@ export class Profile {
     this._matchId = v;
   }
 
-  constructor(profile?: any) {
-    if (profile) {
-      this.match = new Fixture(profile.match);
-      this.summary = profile.summary;
-      this.matchId = profile.matchId;
-      this.bettings = profile.bettings.map((betting: any) => new Betting(betting));
+  constructor(d?: any) {
+    if (d) {
+      this.match = new Fixture(d.match);
+      this.summary = d.summary;
+      this.matchId = d.matchId;
+      this.bettings = d.bettings.map((betting: any) => new Betting(betting));
     }
   }
 }

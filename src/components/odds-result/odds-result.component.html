@@ -51,8 +51,9 @@
             <span class="text-no-wrap" v-if="odds.match.status === 1"> - </span>
             {{ odds.match.awayTeam.name }} ({{ odds.summary.stake }} ETH)
 
-            <v-tooltip bottom lazy v-if="isFinished && odds.summary.payoutAvailable">
-              <v-btn class="text-capitalize" color="teal lighten-1" small slot="activator" @click="dialogClaimStake(odds)">
+            <v-tooltip bottom lazy v-if="isFinished && oddsClaimActive(odds)" :disabled="waitingClaim(odds)">
+              <v-btn class="text-capitalize" color="teal lighten-1" small slot="activator" @click="dialogClaimStake(odds)"
+                 :loading="waitingClaim(odds)" :disabled="waitingClaim(odds)">
                 <v-icon size="18" left class="mr-2">fas fa-hand-holding-usd</v-icon>
                 Request Payout
               </v-btn>
