@@ -6,7 +6,7 @@
   <v-divider color="white"></v-divider>
 
   <v-card color="blue-grey lighten-6 modal-card" dark>
-    <v-card-text>
+    <v-card-text v-show="!isMerge">
       <v-container class="pa-0" fluid grid-list-lg>
         <v-layout row wrap>
           <v-flex xs12>
@@ -70,13 +70,26 @@
       </v-container>
     </v-card-text>
 
-    <v-card-text class="text-xs-center">
+    <v-card-text class="text-xs-center" v-show="!isMerge">
       <p class="mb-0">Potential Return: {{ potential }} ETH</p>
     </v-card-text>
 
-    <v-card-actions class="justify-content-center">
+    <v-card-actions class="justify-content-center" v-show="!isMerge">
       <v-btn outline @click="closeDialog(null)">Close</v-btn>
       <v-btn color="teal lighten-1" @click="saveBet" :disabled="!formOdds || !!odds && odds.isOwner">{{ dialogBtn }}</v-btn>
+    </v-card-actions>
+
+    <v-card-text class="text-xs-center" v-show="isMerge">
+      <p class="mb-0">{{ mergeText }}</p>
+      <v-select hide-selected dark color="white" class="bet-select-center" append-icon="fas fa-chevron-down font-sm"
+          v-model="mergeBetSelected" v-if="checkBettings.length > 1"
+          :items="checkBettings" item-text="bookmakerAddress" return-object :menu-props="{contentClass:'bet-select'}"></v-select>
+      <p class="mb-0">Do you want to merge with it?</p>
+    </v-card-text>
+
+    <v-card-actions class="justify-content-center" v-show="isMerge">
+      <v-btn outline @click="createBet">{{ dialogBtn }}</v-btn>
+      <v-btn color="teal lighten-1" @click="mergeBet" :disabled="!formOdds || !!odds && odds.isOwner">Merge</v-btn>
     </v-card-actions>
   </v-card>
 </v-dialog>

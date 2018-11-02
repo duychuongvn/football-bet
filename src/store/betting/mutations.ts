@@ -11,7 +11,7 @@ export const mutations: MutationTree<any> = {
     state.bettings.map((betting: any) => {
       if ( betting.bettingId === dealObj.bettingId ) {
         betting.dealer = dealObj.account
-        betting.status = 1
+        betting.status = dealObj.amount === (betting.bookmakerAmount - betting.settledAmount) ? 2 : 1
         if (betting.selectedTeam === 0) {
           betting.awayOffer = dealObj.account
         } else {

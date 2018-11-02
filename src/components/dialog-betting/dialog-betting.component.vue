@@ -8,6 +8,8 @@
   import { DIALOG_NAME, DIALOG_CLOSE } from '@/shared/enums/dialog';
   import { ODDS_TYPE } from '@/shared/enums/odds';
 
+  import { Betting } from '@/shared/model/betting';
+
   import { DateTime } from 'luxon';
 
   const isEqual = require('lodash/isEqual');
@@ -28,16 +30,24 @@
 
     @Action('notify', { namespace: 'notify' }) notify: any;
 
+    @Getter('bettings', { namespace: 'betting' }) bettings!: Betting[];
+
     public bettingSelected = 0;
     public oddsSelected: any = ODDS_TYPE.UNDER_ONE;
     public stakeSelected = 0.5;
     private _match: any;
 
-    public formOdds: boolean = false
+    public formOdds: boolean = false;
 
     public rules: any = {
       maxHandicap: []
     };
+
+    isMerge: boolean = false;
+    checkBettings: Betting[] | any = [];
+    mergeBetSelected: any = null;
+
+    checkOwnerBettings: any = null;
 
     get potential() {
       const stake = !!this.odds ? this.odds.bookmakerAmount : this.stakeSelected;
@@ -90,6 +100,9 @@
     }
 
     get dialogTitle() {
+      if (this.isMerge) {
+        return 'Merge Bet';
+      }
       return this.odds ? 'Settle Bet' : 'Create Bet';
     }
 
@@ -141,6 +154,11 @@
       return this.match ? `${this.match.awayTeam.name}` : ''
     }
 
+    get mergeText() {
+      const _number = this.checkBettings.length;
+      return `System have found ${ _number } accordant betting${ _number > 1 ? 's' : '' } with a requirement of you.`;
+    }
+
     changeTeam(team: number) {
       if(!!this.odds) return;
       this.bettingSelected = team
@@ -150,11 +168,52 @@
       if (!!this.odds) {
         this._createOdds()
       } else {
-        this._createBet()
+        this.checkMergeBet()
       }
     }
 
-    _createBet() {
+    checkMergeBet() {
+      this.checkBettings = this.bettings.map((betting: Betting) => {
+        const _address: boolean = !isEqual(betting.bookmakerAddress, this.account.address);
+        const _teamSelected: boolean = !isEqual(this.bettingSelected, betting.bookmakerTeam);
+        const _stake: boolean = isEqual(+this.stakeSelected, betting.bookmakerAmount);
+        const _settledAmount: boolean = betting.settledAmount === 0;
+        const _handicap: boolean = isEqual(this.oddsSelected * 100, betting.odds);
+
+        if (_address && _teamSelected && _stake && _settledAmount && _handicap) {
+          return betting;
+        }
+      }).filter(Boolean);
+
+      this.checkOwnerBettings = this.bettings.map((betting: Betting) => {
+        const _address: boolean = isEqual(betting.bookmakerAddress, this.account.address);
+        const _teamSelected: boolean = isEqual(this.bettingSelected, betting.bookmakerTeam);
+        const _stake: boolean = isEqual(+this.stakeSelected, betting.bookmakerAmount);
+        const _settledAmount: boolean = betting.settledAmount === 0;
+        const _handicap: boolean = isEqual(this.oddsSelected * 100, betting.odds);
+
+        if (_address && _teamSelected && _stake && _settledAmount && _handicap) {
+          return betting;
+        }
+      }).filter(Boolean);
+
+      if (this.checkOwnerBettings.length !== 0) {
+        this.notify({
+          mode: 'info',
+          message: 'You had created bet with same requirement!'
+        });
+        return;
+      }
+
+      if (this.checkBettings.length !== 0) {
+        this.mergeBetSelected = this.checkBettings[0];
+        this.isMerge = true;
+      } else {
+        this.createBet();
+      }
+    }
+
+    createBet() {
       const _opts = {
         account: this.account.address,
         match: this.match,
@@ -177,7 +236,18 @@
         amount: +this.stakeSelected
       };
 
-      this.createDeal(_odds)
+      this.createDeal(_odds);
+    }
+
+    mergeBet() {
+      const _odds: any = {
+        matchId: this.mergeBetSelected.matchId,
+        bettingId: this.mergeBetSelected.bettingId,
+        account: this.account.address,
+        amount: this.mergeBetSelected.bookmakerAmount
+      };
+
+      this.createDeal(_odds);
     }
 
     closeDialog(dataDialog?: any) {
@@ -229,11 +299,13 @@
     getNewDeal(value: any) {
       if (value) {
         this._match = JSON.parse(JSON.stringify(this.match));
+        const _bettingId = (this.isMerge ? this.mergeBetSelected.bettingId : this.odds.bettingId);
+        const _amount = (this.isMerge ? this.mergeBetSelected.bookmakerAmount : +this.stakeSelected);
 
         const _odds: any = {
-          bettingId: this.odds.bettingId,
+          bettingId: _bettingId,
           account: this.account.address,
-          amount: +this.stakeSelected
+          amount: _amount
         };
 
         this.closeDialog({ key: DIALOG_CLOSE.BETTING_DEAL_RELOAD, data: _odds });
