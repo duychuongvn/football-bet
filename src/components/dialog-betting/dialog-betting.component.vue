@@ -156,7 +156,7 @@
 
     get mergeText() {
       const _number = this.checkBettings.length;
-      return `System have found ${ _number } accordant betting${ _number > 1 ? 's' : '' } with a requirement of you.`;
+      return `We have found ${ _number } accordant betting${ _number > 1 ? 's' : '' } with a requirement of you.`;
     }
 
     changeTeam(team: number) {
@@ -189,7 +189,7 @@
         const _address: boolean = isEqual(betting.bookmakerAddress, this.account.address);
         const _teamSelected: boolean = isEqual(this.bettingSelected, betting.bookmakerTeam);
         const _stake: boolean = isEqual(+this.stakeSelected, betting.bookmakerAmount);
-        const _settledAmount: boolean = betting.settledAmount === 0;
+        const _settledAmount: boolean = betting.settledAmount === 0 || betting.bookmakerAmount > betting.settledAmount;
         const _handicap: boolean = isEqual(this.oddsSelected * 100, betting.odds);
 
         if (_address && _teamSelected && _stake && _settledAmount && _handicap) {
