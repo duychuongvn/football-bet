@@ -43,10 +43,10 @@ contract BetherContract is Ownable {
 
   event LogNewBet(bytes32 matchId, uint32 bettingIdx);
   event LogAcceptBet(bytes32 matchId, uint32 bettingIdx, uint32 settledIdx);
-  event CancelBet(bytes32 matchId, uint32 bettingIdx);
-  event ApproveScoreEvent(bytes32 matchId);
-  event ClaimStakeEvent(bytes32 matchId, uint32[] bettingIdxes);
-  event FinishedMatchEvent(bytes32 matchId);
+  event LogUpdateScore(bytes32 matchId);
+  event LogApproveScore(bytes32 matchId);
+  event LogClaimStake(bytes32 matchId);
+  event CancelBet(uint256 bettingIdx);
 
   enum Team {Home, Away}
   enum MatchStatus {NotAvailable, Waiting, Playing, Canceled, Finished}
@@ -298,7 +298,7 @@ contract BetherContract is Ownable {
     _match.homeScore = uint8(homeScore);
     _match.awayScore = uint8(awayScore);
     _match.status = MatchStatus.Finished;
-    emit FinishedMatchEvent(matchId);
+    emit LogUpdateScore(matchId);
     return true;
   }
 
@@ -315,7 +315,7 @@ contract BetherContract is Ownable {
     }
 
     rmBetIdx(_match);
-    emit ApproveScoreEvent(matchId);
+    emit LogApproveScore(matchId);
     return true;
   }
 
@@ -351,6 +351,7 @@ contract BetherContract is Ownable {
     require(_betting.status == BetStatus.Open);
     refund(_betting);
     _betting.status = BetStatus.Canceled;
+    emit CancelBet(bettingId);
     return true;
   }
 
@@ -437,7 +438,7 @@ contract BetherContract is Ownable {
     for (uint i = 0; i < bettingIdxes.length; i++) {
       doRefundOrTransfer(_match, bettingIdxes[i]);
     }
-    emit ClaimStakeEvent(matchId, bettingIdxes);
+    emit LogClaimStake(matchId);
     return true;
   }
 
