@@ -260,7 +260,7 @@ export const BetherContractService = {
           betting.returnedAmount = BetherContractService.formatNumber(+betting.bookmakerAmount + +betting.settledAmount);
           bettingResult = 1;
         } else {
-          betting.returnedAmount = BetherContractService.formatNumber(-betting.settledAmount);
+          betting.returnedAmount = BetherContractService.formatNumber(+betting.bookmakerAmount -betting.settledAmount);
           bettingResult = 5;
         }
         break;
