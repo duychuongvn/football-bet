@@ -117,55 +117,45 @@
         "indexed": false,
         "name": "matchId",
         "type": "bytes32"
-      },
+      }
+    ],
+    "name": "LogUpdateScore",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "matchId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "LogApproveScore",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "matchId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "LogClaimStake",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
       {
         "indexed": false,
         "name": "bettingIdx",
-        "type": "uint32"
+        "type": "uint256"
       }
     ],
     "name": "CancelBet",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "matchId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "ApproveScoreEvent",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "matchId",
-        "type": "bytes32"
-      },
-      {
-        "indexed": false,
-        "name": "bettingIdxes",
-        "type": "uint32[]"
-      }
-    ],
-    "name": "ClaimStakeEvent",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "matchId",
-        "type": "bytes32"
-      }
-    ],
-    "name": "FinishedMatchEvent",
     "type": "event"
   },
   {
