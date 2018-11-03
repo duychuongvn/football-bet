@@ -156,7 +156,7 @@
 
     get mergeText() {
       const _number = this.checkBettings.length;
-      return `We have found ${ _number } accordant betting${ _number > 1 ? 's' : '' } with a requirement of you.`;
+      return `We have found ${ _number } open handicap matching with your bet.`;
     }
 
     changeTeam(team: number) {

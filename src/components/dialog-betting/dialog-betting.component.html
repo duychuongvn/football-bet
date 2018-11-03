@@ -84,12 +84,11 @@
       <v-select hide-selected dark color="white" class="bet-select-center" append-icon="fas fa-chevron-down font-sm"
           v-model="mergeBetSelected" v-if="checkBettings.length > 1"
           :items="checkBettings" item-text="bookmakerAddress" return-object :menu-props="{contentClass:'bet-select'}"></v-select>
-      <p class="mb-0">Do you want to merge with it?</p>
     </v-card-text>
 
     <v-card-actions class="justify-content-center" v-show="isMerge">
-      <v-btn outline @click="createBet">{{ dialogBtn }}</v-btn>
-      <v-btn color="teal lighten-1" @click="mergeBet" :disabled="!formOdds || !!odds && odds.isOwner">Merge</v-btn>
+      <v-btn outline @click="createBet">Create New Bet</v-btn>
+      <v-btn color="teal lighten-1" @click="mergeBet" :disabled="!formOdds || !!odds && odds.isOwner">Settle Now</v-btn>
     </v-card-actions>
   </v-card>
 </v-dialog>
