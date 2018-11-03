@@ -18,6 +18,7 @@ export default class ProfilePage extends Vue {
 
   @Getter('account', { namespace: 'web3' }) account: any;
   @Getter('isAccount', { namespace: 'web3' }) isAccount: any;
+  @Getter('bether', { namespace: 'solobet' }) bether: any;
 
   public isLoading = true;
 
@@ -29,6 +30,18 @@ export default class ProfilePage extends Vue {
     setTimeout(() => {
       this.isLoading = false;
     }, 5000);
+
+    this.bether.LogUpdateScore().watch((error: any, result: any) => {
+      if (!!result) {
+        this.totalOdds(this.account.address);
+      }
+    });
+
+    this.bether.LogApproveScore().watch((error: any, result: any) => {
+      if (!!result) {
+        this.totalOdds(this.account.address);
+      }
+    });
   }
 
   @Watch('isAccount')

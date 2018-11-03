@@ -185,25 +185,25 @@
         }
       }).filter(Boolean);
 
-      this.checkOwnerBettings = this.bettings.map((betting: Betting) => {
-        const _address: boolean = isEqual(betting.bookmakerAddress, this.account.address);
-        const _teamSelected: boolean = isEqual(this.bettingSelected, betting.bookmakerTeam);
-        const _stake: boolean = isEqual(+this.stakeSelected, betting.bookmakerAmount);
-        const _settledAmount: boolean = betting.settledAmount === 0 || betting.bookmakerAmount > betting.settledAmount;
-        const _handicap: boolean = isEqual(this.oddsSelected * 100, betting.odds);
-
-        if (_address && _teamSelected && _stake && _settledAmount && _handicap) {
-          return betting;
-        }
-      }).filter(Boolean);
-
-      if (this.checkOwnerBettings.length !== 0) {
-        this.notify({
-          mode: 'info',
-          message: 'You had created bet with same requirement!'
-        });
-        return;
-      }
+      // this.checkOwnerBettings = this.bettings.map((betting: Betting) => {
+      //   const _address: boolean = isEqual(betting.bookmakerAddress, this.account.address);
+      //   const _teamSelected: boolean = isEqual(this.bettingSelected, betting.bookmakerTeam);
+      //   const _stake: boolean = isEqual(+this.stakeSelected, betting.bookmakerAmount);
+      //   const _settledAmount: boolean = betting.settledAmount === 0 || betting.bookmakerAmount > betting.settledAmount;
+      //   const _handicap: boolean = isEqual(this.oddsSelected * 100, betting.odds);
+      //
+      //   if (_address && _teamSelected && _stake && _settledAmount && _handicap) {
+      //     return betting;
+      //   }
+      // }).filter(Boolean);
+      //
+      // if (this.checkOwnerBettings.length !== 0) {
+      //   this.notify({
+      //     mode: 'info',
+      //     message: 'You had created bet with same requirement!'
+      //   });
+      //   return;
+      // }
 
       if (this.checkBettings.length !== 0) {
         this.mergeBetSelected = this.checkBettings[0];
