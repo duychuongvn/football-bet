@@ -45,7 +45,7 @@
       <v-expansion-panel class="accor-fixture" :value="0" v-if="!!oddsResult.length">
         <v-expansion-panel-content v-for="(odds, idx) in oddsResult" :key="idx" class="bg-transparent" expand-icon="fas fa-chevron-down font-sm">
 
-          <div class="text-capitalize" slot="header">
+          <section class="text-capitalize" slot="header">
             {{ odds.match.dateTimeString }} | {{ odds.match.homeTeam.name }}
             <span v-if="odds.match.status !==1" class="font-weight-bold orange--text">{{odds.match.homeGoals}}- {{odds.match.awayGoals}}</span>
             <span class="text-no-wrap" v-if="odds.match.status === 1"> - </span>
@@ -59,10 +59,10 @@
               </v-btn>
               <span>Request Payout</span>
             </v-tooltip>
-          </div>
+          </section>
 
           <v-card-text>
-            <v-data-table :headers="headTb" :items="odds.bettings" :item-key="odds.matchId" expand hide-actions class="bg-transparent table-fixture">
+            <v-data-table :headers="headTb" :items="odds.bettings" expand hide-actions class="bg-transparent table-fixture">
               <template slot="items" slot-scope="props">
                 <td @click="props.expanded = !props.expanded">{{ props.index + 1 }}</td>
                 <td>

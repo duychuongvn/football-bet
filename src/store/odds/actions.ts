@@ -7,11 +7,52 @@ import { ODDS_STATUS } from '@/shared/enums/odds';
 
 import { BetherContractService } from '@/shared/services/bether.service';
 
+const _groupByLodash = require('lodash/groupBy');
+const _uniq = require('lodash/uniq');
+const _isEqual = require('lodash/isEqual');
+
 export const actions: ActionTree<any, RootState> = {
-  totalOdds({ commit }, account: string): any {
+  totalOdds({ commit, rootGetters }, account: string): any {
     BetherContractService.getUserBets(account)
+      .delay(3000)
       .subscribe((res: any) => {
-        commit(RECEVER_TOTAL_ODDS, res);
+        let _tmpData = [];
+        const _oddsGroup = _groupByLodash(res, 'matchId');
+
+        for (let i in _oddsGroup) {
+          let _tmpBettings = _oddsGroup[i][0].bettings;
+          let _tmpStake: any = +_oddsGroup[i][0].summary.stake;
+
+          _oddsGroup[i].filter((item: any, key: number) => {
+            if (key !== 0) {
+              _tmpBettings = _tmpBettings.concat(item.bettings);
+              _tmpStake = _tmpStake + (+item.summary.stake);
+            }
+          });
+
+          _tmpData.push({
+            bettings: _uniq(_tmpBettings),
+            match: _oddsGroup[i][0].match,
+            matchId: _oddsGroup[i][0].matchId,
+            summary: {
+              payoutAvailable: _oddsGroup[i][0].summary.payoutAvailable,
+              stake: parseFloat(_tmpStake).toFixed(3)
+            },
+          });
+        }
+
+        _tmpData.filter((item: any, key: any) => {
+          const _idxHomeTeam = rootGetters['fixture/competitions'].findIndex((compe: any) => _isEqual(compe.name, item.match.homeTeam));
+          const _idxAwayTeam = rootGetters['fixture/competitions'].findIndex((compe: any) => _isEqual(compe.name, item.match.awayTeam));
+
+          item.match.homeTeam = rootGetters['fixture/competitions'][_idxHomeTeam];
+          item.match.awayTeam = rootGetters['fixture/competitions'][_idxAwayTeam];
+
+          item.match.id = key;
+          item.id = key + 1;
+        });
+
+        commit(RECEVER_TOTAL_ODDS, _tmpData);
     }, (error: any) => {
         // TODO: handle error
     });

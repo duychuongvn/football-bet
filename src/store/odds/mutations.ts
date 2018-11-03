@@ -17,7 +17,7 @@ export const mutations: MutationTree<any> = {
       betting.isCanceled   = betting.status === ODDS_STATUS.ODDS_CANCELLED
       betting.isRefunded   = betting.status === ODDS_STATUS.ODDS_REFUNDED
       betting.isDone       = betting.status === ODDS_STATUS.ODDS_DONE
-    })
+    });
 
     state.myOdds.push(myOdds);
   },

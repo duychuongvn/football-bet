@@ -1,7 +1,9 @@
 import { Fixture } from '@/shared/model/fixture';
 import { Betting } from '@/shared/model/betting';
 
-export class Profile {
+import { BaseModel } from '@/shared/model/base-model';
+
+export class Profile extends BaseModel{
   private _bettings!: Betting[];
   get bettings(): Betting[] {
     return this._bettings;
@@ -35,6 +37,8 @@ export class Profile {
   }
 
   constructor(d?: any) {
+    super(d);
+
     if (d) {
       this.match = new Fixture(d.match);
       this.summary = d.summary;
