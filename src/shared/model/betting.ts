@@ -3,8 +3,8 @@ import { PunterInterface } from '@/shared/interfaces/punter';
 
 import { Punter } from './punter';
 
-const isNaN = require('lodash/isNaN');
-const isUndefined = require('lodash/isUndefined');
+const isNaN = require('lodash.isnan');
+const isUndefined = require('lodash.isundefined');
 
 export class Betting {
   // 0: None, 1: Win, 2: WinAHalf, 3: Draw, 4:LoseAHalf, 5:Lose

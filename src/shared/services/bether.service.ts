@@ -5,7 +5,7 @@ import { DateTime } from 'luxon';
 const betherContractABI = require('@/assets/contracts/BetherContractABI.json');
 
 const Rx = require('rx');
-const _uniq = require('lodash/uniq');
+const _uniq = require('lodash.uniq');
 
 let bether: any;
 

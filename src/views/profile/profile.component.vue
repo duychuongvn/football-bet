@@ -4,7 +4,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Action, Getter } from 'vuex-class';
 
-const isEqual = require('lodash/isEqual');
+const isEqual = require('lodash.isequal');
 
 @Component({
   components: {

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
-const ipfs = require('ipfs');
+// const ipfs = require('ipfs');
 // const buffer = require('buffer').Buffer;
 // const node = new ipfs();
 
@@ -30,7 +30,7 @@ const COMPETITIONS_KEY = {
   PRIMERA_DIVISION: 'PD'
 }
 
-let ipfsData = [];
+// let ipfsData = [];
 
 const DELAY_TIME = 6000;
 

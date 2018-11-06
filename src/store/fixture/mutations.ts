@@ -2,7 +2,7 @@ import { MutationTree } from 'vuex';
 import { RECEVER_FIXTURES } from '@/store/mutations';
 import { Fixture } from '@/shared/model/fixture';
 
-const orderBy = require('lodash/orderBy');
+const orderBy = require('lodash.orderby');
 
 const NAME_LEAGUE: any = {
   bundesliga: 'Bundesliga',

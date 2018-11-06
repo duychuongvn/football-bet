@@ -7,15 +7,16 @@ import { ODDS_STATUS } from '@/shared/enums/odds';
 
 import { BetherContractService } from '@/shared/services/bether.service';
 
-const _groupByLodash = require('lodash/groupBy');
-const _uniq = require('lodash/uniq');
-const _isEqual = require('lodash/isEqual');
+const _groupByLodash = require('lodash.groupby');
+const _uniq = require('lodash.uniq');
+const _isEqual = require('lodash.isequal');
 
 export const actions: ActionTree<any, RootState> = {
   totalOdds({ commit, rootGetters }, account: string): any {
     BetherContractService.getUserBets(account)
       .delay(3000)
       .subscribe((res: any) => {
+        console.log(res);
         let _tmpData = [];
         const _oddsGroup = _groupByLodash(res, 'matchId');
 

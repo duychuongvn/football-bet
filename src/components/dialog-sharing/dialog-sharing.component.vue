@@ -7,11 +7,11 @@
   import axios from 'axios'
   import { DateTime } from 'luxon';
 
-  const isUndefined = require('lodash/isUndefined');
+  const isUndefined = require('lodash.isundefined');
 
   @Component
   export default class DialogSharingComponent extends Vue {
-    @Action('notify', { namespace: 'notify' }) notify: any
+    @Action('notify', { namespace: 'notify' }) notify: any;
 
     @Getter('isSharingBetting', { namespace: 'dialog' }) isSharingBetting!: boolean;
     @Getter('initData', { namespace: 'dialog' }) initData: any;
@@ -60,7 +60,7 @@
 
       const _dateTime = DateTime.fromISO(_match.date).toLocaleString(DateTime.DATETIME_MED_WITH_SECONDS);
 
-      return `Join my bet on Bether for the match ${_match.homeTeam.name} - ${_match.awayTeam.name} at ${_dateTime}`
+      return `Join my bet on Bether for the match ${_match.homeTeam.name} - ${_match.awayTeam.name} on ${_dateTime}`
     }
 
     set isDialog(v: any) {

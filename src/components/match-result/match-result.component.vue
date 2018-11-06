@@ -9,7 +9,7 @@
   import { Betting } from '@/shared/model/betting';
   import { Punter } from '@/shared/model/punter';
 
-  const isEqual = require('lodash/isEqual');
+  const isEqual = require('lodash.isequal');
 
   @Component({
     components: {

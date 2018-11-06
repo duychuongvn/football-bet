@@ -12,7 +12,7 @@
 
   import { DateTime } from 'luxon';
 
-  const isEqual = require('lodash/isEqual');
+  const isEqual = require('lodash.isequal');
   const Big = require('big.js');
 
   @Component

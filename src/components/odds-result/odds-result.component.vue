@@ -15,7 +15,7 @@ import { BetherContractService } from "@/shared/services/bether.service";
 import { DateTime } from 'luxon';
 import { Team } from '@/shared/model/team';
 
-const orderBy = require('lodash/orderBy');
+const orderBy = require('lodash.orderby');
 
 @Component({
   components: {
@@ -134,8 +134,9 @@ export default class OddsResultComponent extends Vue {
         _odds.bettings = _odds.bettings.filter((bet: any) => {
           bet.id = bet.bettingId.valueOf();
 
+          odds.summary.payoutAvailable = (odds.match.status === 4 && bet.status <= 2 && bet.bookmakerResult < 5);
+
           if (this.isFinished) {
-            odds.summary.payoutAvailable = (odds.match.status === 4 && bet.status <= 2 && bet.bookmakerResult < 5);
             switch (USER_TYPE_FINISHED[this.selectedFilter]) {
               case USER_TYPE_FINISHED.ODDS_LOST:
                 return bet.bookmakerResult >= 4;
