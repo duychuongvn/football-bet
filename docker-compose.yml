@@ -1,0 +1,11 @@
+version: '3'
+services:
+  vue:
+    build:
+      context: .
+      dockerfile: "${FBB_DOCKERFILE}"
+    container_name: "${FBB_CONTAINER_NAME}"
+    volumes:
+    - "${FBB_NGINX_LOG}:/var/log/nginx"
+    ports:
+      - "${FBB_SRC_PORT}:80"

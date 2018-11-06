@@ -8,6 +8,7 @@
 /backend/node_modules
 /football-data.org/matches
 /football-data.org/competitions
+/nginx/fbb
 
 # dependencies
 /node_modules

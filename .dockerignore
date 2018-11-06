@@ -1,1 +1,13 @@
-node_modules
+node_modules/
+backend/
+nginx/fbb
+
+yarn.lock
+.git
+.idea
+.DS_Store
+.gitignore
+.env
+.dockerignore
+fbb.dockerfile
+docker-compose.yml
