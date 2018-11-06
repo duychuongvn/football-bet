@@ -70,8 +70,22 @@ $ yarn # install node_module
 $ yarn serve # run serve localhost
 ```
 
-
-
-
 - Open browser with address [localhost:8080](http://localhost:8080)
+- Enjoy
+
+## Run with Docker
+- You need to install [docker & docker-compose](https://docs.docker.com/)
+- Config docker-file at this file ``.env``
+
+```sh
+$ cd football-bet
+$ docker-compose up -d
+```
+
+- If you fetch new data
+```sh
+$ docker exec -it fbb_frontend /bin/bash -c "rm -rf ../dist && yarn sync:matches && yarn build && cp -r ./dist/ ../ && rm -rf ./dist"
+```
+
+- Open browser with address [localhost](http://localhost)
 - Enjoy

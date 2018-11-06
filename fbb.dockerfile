@@ -16,16 +16,10 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 RUN apt-get update -y && apt-get install curl vim nginx git python build-essential -y && apt-get -y autoclean
 
 RUN mkdir $NVM_DIR
-RUN mkdir $DIR_NAME
+RUN mkdir $SOURCE_PATH/fbb_frontend
 
 # Install nvm with node and npm
 RUN curl -o- $NVM_PATH | bash
-
-# install node and npm
-# RUN source $NVM_DIR/nvm.sh \
-#    && nvm install $NODE_VERSION \
-#    && nvm alias default $NODE_VERSION \
-#    && nvm use default
 
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
@@ -36,17 +30,13 @@ RUN npm install -g yarn@1.7.0
 ADD nginx/default ${NGINX_SITES_AVAILABLE}
 RUN service nginx restart
 
-WORKDIR $DIR_NAME
+WORKDIR $SOURCE_PATH/fbb_frontend
 COPY . .
 
-RUN pwd && ls -l
+RUN yarn install && yarn sync:data
+RUN yarn build
 
-RUN yarn install && yarn sync:data && yarn build
-
-RUN cp -r /tmp/fbb_frontend/dist /var/www/html/
-RUN rm -rf /tmp/*
-
-WORKDIR $SOURCE_PATH
+RUN cp -r ./dist $SOURCE_PATH
 
 # Define default command.
 CMD nginx -g "daemon off;"
