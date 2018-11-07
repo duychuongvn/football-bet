@@ -16,7 +16,6 @@ export const actions: ActionTree<any, RootState> = {
     BetherContractService.getUserBets(account)
       .delay(3000)
       .subscribe((res: any) => {
-        console.log(res);
         let _tmpData = [];
         const _oddsGroup = _groupByLodash(res, 'matchId');
 

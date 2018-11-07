@@ -81,7 +81,6 @@ export default class OddsResultComponent extends Vue {
   public selectedChild: number = 1;
 
   public matchIdClaim: Array<string> = [];
-  public oddsClaim: Array<string> = [];
 
   get isOddsOpen(): boolean {
     return this.oddsTypeSelected === "OPEN";
@@ -134,9 +133,11 @@ export default class OddsResultComponent extends Vue {
         _odds.bettings = _odds.bettings.filter((bet: any) => {
           bet.id = bet.bettingId.valueOf();
 
-          odds.summary.payoutAvailable = (odds.match.status === 4 && bet.status <= 2 && bet.bookmakerResult < 5);
-
           if (this.isFinished) {
+            if (!odds.summary.payoutAvailable) {
+              odds.summary.payoutAvailable = (odds.match.status === 4 && bet.status <= 2 && bet.bookmakerResult < 5);
+            }
+
             switch (USER_TYPE_FINISHED[this.selectedFilter]) {
               case USER_TYPE_FINISHED.ODDS_LOST:
                 return bet.bookmakerResult >= 4;
@@ -166,12 +167,6 @@ export default class OddsResultComponent extends Vue {
         }
       }
     });
-
-    this.oddsClaim = _oddsRs.map((item: any) => {
-      if (item.summary.payoutAvailable) {
-        return item.matchId;
-      }
-    }).filter(Boolean);
 
     return orderBy(_oddsRs, ['match.date'], ['desc']);
   }
@@ -214,11 +209,7 @@ export default class OddsResultComponent extends Vue {
     if (key === this.oddsTypeSelected) return;
 
     this.oddsTitle.filter((item: any) => {
-      item.active = false;
-
-      if (item.key === key) {
-        item.active = true
-      }
+      item.active = item.key === key;
     });
 
     this.oddsTypeSelected = key;
@@ -233,8 +224,7 @@ export default class OddsResultComponent extends Vue {
       matchId: odds.matchId,
       bettings: odds.bettings,
       account: this.account.address
-    }).subscribe((response: any) => {
-        this.removeMatchClaim(odds, true);
+    }).subscribe(() => {
         this.notify({
           mode: 'success',
           message: 'Your has request payout success !'
@@ -248,18 +238,10 @@ export default class OddsResultComponent extends Vue {
     return this.matchIdClaim.findIndex((item: any) => item === odds.matchId) !== -1;
   }
 
-  oddsClaimActive(odds: Profile) {
-    return this.oddsClaim.findIndex((item: any) => item === odds.matchId) !== -1;
-  }
-
-  removeMatchClaim(odds: Profile, type = false) {
+  removeMatchClaim(odds: Profile) {
     let _idx = this.matchIdClaim.findIndex((item: any) => item === odds.matchId);
-    let _oddsIdx = this.oddsClaim.findIndex((item: any) => item === odds.matchId);
     if (_idx !== -1) {
       this.matchIdClaim.splice(_idx, 1);
-    }
-    if (_oddsIdx !== -1 && type) {
-      this.oddsClaim.splice(_idx, 1);
     }
   }
 
