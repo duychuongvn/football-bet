@@ -16,22 +16,16 @@ export class Betting {
     this._bookmakerResult = value;
   }
   public get bookmakerResultString(): string {
-
-      if (this.status <= 2) { // not approve
-
-        if (this.settledAmount === 0) { // no-settle
-          return 'Waiting for Refund'
+      if (+this.status <= 2) { // not approve
+        if (+this.settledAmount === 0 || +this.bookmakerResult >= 3) { // no-settle - draw - lose a half - lose full
+          return 'Waiting for Refund';
         }
 
-        if (this.bookmakerResult === 1 || this.bookmakerResult === 2) { // Win - win a half
-          return 'Waiting for Payment'
-        }
-
-        if (this.bookmakerResult === 3 || this.bookmakerResult === 4 ) { // draw - lose a half
-          return 'Waiting for Refund'
+        if (+this.bookmakerResult === 1 || +this.bookmakerResult === 2) { // Win - win a half
+          return 'Waiting for Payment';
         }
       }
-      return 'Paid'
+      return 'Paid';
   }
 
   protected _id: any;

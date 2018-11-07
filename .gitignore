@@ -49,7 +49,10 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+dist.zip
 
 # System Files
 .DS_Store
 Thumbs.db
+.pnp
+.pnp.js
