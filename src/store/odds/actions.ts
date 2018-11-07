@@ -57,18 +57,6 @@ export const actions: ActionTree<any, RootState> = {
         // TODO: handle error
     });
   },
-  oddsByMatchId({ commit, state }): any {
-    // state.totalOdds.map((odds: any) => {
-    //   // SoloBetService.loadMatchesById(odds.matchId)
-    //   //   .subscribe((res: any) => {
-    //   //     odds.date = moment(res.time * 1000).format('YYYY/MM/DD HH:mm');
-    //   //     odds.date_string = moment(res.time * 1000).format('DD MMM YYYY / HH:mm');
-    //   //     odds.awayTeam = res.awayTeam;
-    //   //     odds.homeTeam = res.homeTeam;
-    //   //     commit(RECEVER_MY_ODDS, odds);
-    //   //   })
-    // })
-  },
   cancelOdds({ commit, dispatch }, oddsObj: any): any {
     BetherContractService.cancelOffer(oddsObj)
       .subscribe((res: any) => {

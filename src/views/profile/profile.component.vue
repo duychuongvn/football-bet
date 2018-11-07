@@ -42,6 +42,18 @@ export default class ProfilePage extends Vue {
         this.totalOdds(this.account.address);
       }
     });
+
+    this.bether.LogClaimStake().watch((error: any, result: any) => {
+      if (!!result) {
+        this.totalOdds(this.account.address);
+      }
+    });
+
+    this.bether.CancelBet().watch((error: any, result: any) => {
+      if (!!result) {
+        this.totalOdds(this.account.address);
+      }
+    });
   }
 
   @Watch('isAccount')

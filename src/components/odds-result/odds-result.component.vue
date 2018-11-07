@@ -130,7 +130,7 @@ export default class OddsResultComponent extends Vue {
       }
 
       if (!!_odds.bettings) {
-        _odds.bettings = _odds.bettings.filter((bet: any) => {
+        _odds.bettings = _odds.bettings.filter((bet: Betting) => {
           bet.id = bet.bettingId.valueOf();
 
           if (this.isFinished) {
@@ -245,7 +245,7 @@ export default class OddsResultComponent extends Vue {
     }
   }
 
-  dialogCancel(betting: any, match: any, matchId: any) {
+  dialogCancel(betting: Betting, match: any, matchId: any) {
     const _initOpts = {
       key: DIALOG_NAME.ODDS_CANCEL,
       isOpen: true,
