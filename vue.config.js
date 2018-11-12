@@ -7,9 +7,14 @@ module.exports = {
       mergeDuplicateChunks: true,
       minimize: true,
       removeAvailableModules: true,
-      removeEmptyChunks: true,
-      runtimeChunk: true,
-      noEmitOnErrors: true
+      removeEmptyChunks: true
     }
+  },
+  chainWebpack: config => {
+    config.module
+      .rule('images')
+      .use('url-loader')
+      .loader('url-loader')
+      .tap(options => Object.assign(options, { limit: 10240 }))
   }
 }
