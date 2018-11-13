@@ -61,7 +61,7 @@ class FetchData {
             filename = 'primera_division.json';
             break;
           case COMPETITIONS.PRIMEIRA_LIGA:
-            filename = 'primeria_liga.json';
+            filename = 'primeira_liga.json';
             break;
           case COMPETITIONS.EREDIVISIE:
             filename = 'eredivisie.json';
