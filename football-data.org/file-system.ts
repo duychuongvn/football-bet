@@ -18,7 +18,8 @@ const COMPETITIONS = {
   LIGUE_1 : 2015,
   SERIE_A : 2019,
   PREMIER_LEAGUE : 2021,
-  PRIMERA_DIVISION : 2014
+  PRIMERA_DIVISION : 2014,
+  CHAMPIONSHIP: 2016
 };
 
 const DELAY_TIME = 5000;
@@ -64,6 +65,9 @@ class FetchData {
             break;
           case COMPETITIONS.EREDIVISIE:
             filename = 'eredivisie.json';
+            break;
+          case COMPETITIONS.CHAMPIONSHIP:
+            filename = 'championship.json';
             break;
         }
 

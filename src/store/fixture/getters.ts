@@ -9,11 +9,12 @@ const premier_league = require('@/../football-data.org/competitions/premier_leag
 const primera_division = require('@/../football-data.org/competitions/primera_division.json');
 const primeria_liga = require('@/../football-data.org/competitions/primeria_liga.json');
 const eredivisie = require('@/../football-data.org/competitions/eredivisie.json');
+const championship = require('@/../football-data.org/matches/championship.json');
 
 export const getters: GetterTree<any, RootState> = {
   fixturesToday: state => state.fixturesToday,
   fixturesTomorrow: state => state.fixturesTomorrow,
   fixturesFuture: state => state.fixturesFuture,
   isInit: state => state.isInit,
-  competitions: () => [].concat(bundesliga, uefa_champions_league, ligue_1, serie_a, premier_league, primera_division, primeria_liga, eredivisie)
+  competitions: () => [].concat(bundesliga, uefa_champions_league, ligue_1, serie_a, premier_league, primera_division, primeria_liga, eredivisie, championship)
 };

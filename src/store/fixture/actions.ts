@@ -16,6 +16,7 @@ const fixtures: any = {
   uefac: require('@/../football-data.org/matches/uefa_champions_league.json'),
   primeria_liga: require('@/../football-data.org/matches/primeria_liga.json'),
   eredivisie: require('@/../football-data.org/matches/eredivisie.json'),
+  championship: require('@/../football-data.org/matches/championship.json')
 }
 
 export const actions: ActionTree<any, RootState> = {
