@@ -11,6 +11,8 @@ const api = axios.create({
 });
 const COMPETITIONS = {
   BUNDESLIGA : 2002,
+  PRIMEIRA_LIGA: 2017,
+  EREDIVISIE: 2003,
   // UEFA_EUROPA_LEAGUE : 2146,
   UEFA_CHAMPIONS_LEAGUE : 2001,
   LIGUE_1 : 2015,
@@ -56,6 +58,12 @@ class FetchData {
             break;
           case COMPETITIONS.PRIMERA_DIVISION:
             filename = 'primera_division.json';
+            break;
+          case COMPETITIONS.PRIMEIRA_LIGA:
+            filename = 'primeria_liga.json';
+            break;
+          case COMPETITIONS.EREDIVISIE:
+            filename = 'eredivisie.json';
             break;
         }
 
