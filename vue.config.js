@@ -5,7 +5,7 @@ module.exports = {
   configureWebpack: config => {
     config.optimization = {
       mergeDuplicateChunks: true,
-      minimize: true,
+      minimize: process.env.NODE_ENV === 'production',
       removeAvailableModules: true,
       removeEmptyChunks: true
     }
