@@ -35,11 +35,14 @@ contract Ownable {
   }
 
 }
+
+interface IFootballScore {
+  function getMatchDetails(bytes32 matchId) view returns(bytes32, string, string, string, uint48, uint8[] goalsAndStatus) ;
+  function getMatchStatus(bytes32 _matchId) view returns(uint8 status, uint48 time);
+  function getFinalScore(bytes32 _matchId)  view returns(bytes32 matchId,uint8 goalsHomeTeam,uint8 goalsAwayTeam, uint8 status);
+}
 contract BetherContract is Ownable {
 
-
-  function BetherContract(){
-  }
 
   event LogNewBet(bytes32 matchId, uint32 bettingIdx);
   event LogAcceptBet(bytes32 matchId, uint32 bettingIdx, uint32 settledIdx);
@@ -53,13 +56,13 @@ contract BetherContract is Ownable {
   enum BetStatus {Open, Deal, Settled, Canceled, Refunded, Done}
   enum BookmakerResult {None, Win, WinAHalf, Draw, LoseAHalf, Lose}
 
+  IFootballScore footballScore;
   mapping(address => uint256) public balances;
   mapping(address => bool) public admins;
   mapping(uint8 => string) leagues;
   mapping(bytes32 => address) betContracts;
   mapping(address => uint32[]) userBets;
   mapping(address => uint32[]) userSettled;
-  mapping(bytes32 => Match) matches;
   mapping(bytes32 => uint32[]) matchBets;
   mapping(uint32 => uint32[]) betSettled;
   mapping(address => uint256) report;
@@ -88,20 +91,6 @@ contract BetherContract is Ownable {
     uint256 amount;
   }
 
-  struct Match {
-
-    uint8 homeScore; // home score
-    uint8 awayScore;  // away score
-    uint32 idx;
-    uint48 time;
-    MatchStatus status;
-    bool isApproved;
-    bytes32 id;
-    string homeTeam; // home Team
-    string awayTeam; // away Team
-  }
-
-
   struct Funding {
 
     address receiver;
@@ -109,6 +98,10 @@ contract BetherContract is Ownable {
     uint256 amount;
   }
 
+
+  function BetherContract(address footballContractAddr){
+      footballScore = IFootballScore(footballContractAddr);
+  }
 
   modifier isAdmin() {
     require(msg.sender == owner || admins[msg.sender]);
@@ -119,24 +112,10 @@ contract BetherContract is Ownable {
     admins[user] = isAdmin;
   }
 
-  function offerNewMatch(bytes32 matchId, string homeTeam, string awayTeam, uint selectedTeam, uint time, int handicap) public payable returns (bool) {
+  function offerNewMatch(bytes32 matchId, uint selectedTeam, int handicap) public matchNotFinish(matchId) payable returns (bool) {
 
     require(msg.sender != owner);
-    require(time > now);
     require(handicap % 25 == 0);
-
-    Match memory _match = matches[matchId];
-
-    if (_match.status == MatchStatus.NotAvailable) {
-      _match.homeTeam = homeTeam;
-      _match.awayTeam = awayTeam;
-      _match.time = uint48(time);
-      _match.status = MatchStatus.Waiting;
-      _match.idx = uint32(matchIds.push(matchId) - 1);
-      _match.id=matchId;
-      matches[matchId] = _match;
-
-    }
 
     Betting memory _betting = Betting(uint8(selectedTeam), BetStatus.Open, BookmakerResult.None,  uint48(now), handicap, matchId, msg.sender, msg.value, 0);
 
@@ -152,14 +131,23 @@ contract BetherContract is Ownable {
     return true;
   }
 
-  function bet(uint32 bettingIdx) public payable returns (bool) {
+  modifier matchNotFinish(bytes32 matchId) {
+    uint8 matchStatus;
+    uint48 time;
+    (matchStatus, time) = footballScore.getMatchStatus(matchId);
+
+    require(matchStatus == 1 && time > now, "Match should not finished");
+    _;
+  }
+  function settleBet(uint32 bettingIdx) public payable returns (bool) {
     require(msg.sender != owner);
+
     Betting storage _betting = bets[bettingIdx];
-    require(matches[_betting.matchId].time > now);
     require(_betting.bMaker != msg.sender);
     require(_betting.status != BetStatus.Settled);
     require(_betting.bAmount - _betting.settledAmount >= msg.value);
-
+    //TODO Check match status
+//    matchNotFinish(_betting.matchId);
     if (isPlayerNotExist(msg.sender)) {
       players.push(msg.sender);
     }
@@ -239,21 +227,20 @@ contract BetherContract is Ownable {
   function findMatch(bytes32 matchId) public view returns (
     string homeTeam,
     string awayTeam,
-    uint homeScore,
-    uint awayScore,
-    uint time,
-    MatchStatus status,
+    uint8 homeScore,
+    uint8 awayScore,
+    uint48 time,
+    uint8 status,
     bool isApproved) {
 
-    Match memory _match = matches[matchId];
+    string memory reference ="";
+    uint8[] memory goals;
+    (matchId, homeTeam, awayTeam, reference, time,goals) = footballScore.getMatchDetails(matchId);
 
-    homeTeam = _match.homeTeam;
-    awayTeam = _match.awayTeam;
-    homeScore = _match.homeScore;
-    awayScore = _match.awayScore;
-    status = _match.status;
-    time = _match.time;
-    isApproved = _match.isApproved;
+    homeScore = goals[0];
+    awayScore = goals[1];
+    status = goals[4];
+    isApproved = matchPaid[matchId];
   }
   function getBettings(bytes32 matchId) public view returns (uint32[]) {
     return matchBets[matchId];
@@ -287,59 +274,40 @@ contract BetherContract is Ownable {
   function getPlayerBalance(address player) public view returns (uint256) {
     return balances[player];
   }
-  function updateScores(bytes32[] matchId, uint[] homeScore, uint[] awayScore) public isAdmin returns (bool) {
-    require(matchId.length == homeScore.length &&  homeScore.length == awayScore.length);
-    for(uint i = 0; i< matchId.length;i++) {
-      updateScore(matchId[i], homeScore[i], awayScore[i]);
-    }
-  }
-  function updateScore(bytes32 matchId, uint homeScore, uint awayScore) public isAdmin returns (bool) {
-    Match storage _match = matches[matchId];
-    _match.homeScore = uint8(homeScore);
-    _match.awayScore = uint8(awayScore);
-    _match.status = MatchStatus.Finished;
-    emit LogUpdateScore(matchId);
-    return true;
-  }
+
+  mapping(bytes32=> bool) matchPaid;
+  function forcePayout(bytes32 matchId) public isAdmin returns (bool) {
 
 
-  function approveScore(bytes32 matchId) public isAdmin returns (bool) {
-
-    Match storage _match = matches[matchId];
-    require(!_match.isApproved);
-    _match.isApproved = true;
-
+   // require(!_match.isApproved);
+    //_match.isApproved = true;
+    require(!matchPaid[matchId], "Match already paid");
+    uint8 homeGoals;
+    uint8 awayGoals;
+    uint8 status;
+    (matchId, homeGoals, awayGoals, status)= footballScore.getFinalScore(matchId);
+    require(status == uint8(MatchStatus.Finished));
     uint32[] memory betIdxes = matchBets[matchId];
     for (uint256 i = 0; i < betIdxes.length; i++) {
-      doRefundOrTransfer(_match, betIdxes[i]);
+      doRefundOrTransfer(matchId, homeGoals, awayGoals, betIdxes[i]);
     }
 
-    rmBetIdx(_match);
+    matchPaid[matchId] = true;
     emit LogApproveScore(matchId);
     return true;
   }
 
-  function doRefundOrTransfer(Match _match, uint32 bettingId ) internal returns(bool) {
+  function doRefundOrTransfer(bytes32 matchId, uint8 homeGoals, uint8 awayGoals, uint32 bettingId ) internal returns(bool) {
     Betting storage _betting = bets[bettingId];
-    require(_match.id == _betting.matchId);
+    require(matchId == _betting.matchId);
     if (_betting.status == BetStatus.Deal || _betting.status == BetStatus.Settled) {
-      doTransfer(_match, _betting, bettingId);
+      doTransfer(homeGoals, awayGoals , _betting, bettingId);
       _betting.status = BetStatus.Done;
     }
     else if (_betting.status == BetStatus.Open) {
       refund(_betting);
       _betting.status = BetStatus.Refunded;
     }
-  }
-
-  function rmBetIdx(Match _match) private returns (bool) {
-
-    uint32 toDelete = _match.idx;
-    uint32 lastIdx = uint32(matchIds.length - 1);
-    matchIds[toDelete] = matchIds[lastIdx];
-    matches[matchIds[toDelete]].idx = toDelete;
-    matchIds.length--;
-    return true;
   }
 
   function getMatchIds() public view returns(bytes32[]) {
@@ -363,9 +331,9 @@ contract BetherContract is Ownable {
   }
 
 
-  function doTransfer(Match _match, Betting storage  _betting, uint32 betIndex) internal returns (bool) {
+  function doTransfer(uint8 homeGoals, uint8 awayGoals, Betting storage  _betting, uint32 betIndex) internal returns (bool) {
 
-    Funding[] memory fundings = getFunding(_match, _betting, betIndex);
+    Funding[] memory fundings = getFunding(homeGoals,awayGoals, _betting, betIndex);
     for (uint i = 0; i < fundings.length; i++) {
       Funding memory funding = fundings[i];
       if (funding.amount > 0 && funding.receiver != 0x0) {
@@ -403,13 +371,13 @@ contract BetherContract is Ownable {
     }
   }
 
-  function getFunding(Match _match, Betting storage  _betting, uint32 betIdx) internal returns (Funding[]) {
+  function getFunding(uint8 homeScore, uint8 awayScore, Betting storage  _betting, uint32 betIdx) internal returns (Funding[]) {
 
     // calculate for bookmaker
     if (_betting.bmTeam == uint8(Team.Home)) {
-      _betting.bResult = getBookmakerResult(int(_match.homeScore) - int(_match.awayScore), _betting.odds);
+      _betting.bResult = getBookmakerResult(int(homeScore) - int(awayScore), _betting.odds);
     } else {
-      _betting.bResult = getBookmakerResult(int(_match.awayScore) - int(_match.homeScore), _betting.odds);
+      _betting.bResult = getBookmakerResult(int(awayScore) - int(homeScore), _betting.odds);
     }
     Funding[] memory fundings = new Funding[](betSettled[betIdx].length + 1);
     fundings[0] = createFunding(_betting.bMaker,_betting.bAmount,  _betting.settledAmount, _betting.bResult );
@@ -432,11 +400,13 @@ contract BetherContract is Ownable {
   }
 
   function claimStake(bytes32 matchId, uint32[] bettingIdxes) public returns (bool) {
-
-    Match memory _match = matches[matchId];
-    require(_match.status == MatchStatus.Finished);
+    uint8 homeGoals;
+    uint8 awayGoals;
+    uint8 status;
+    (matchId, homeGoals, awayGoals, status)= footballScore.getFinalScore(matchId);
+    require(status == uint8(MatchStatus.Finished));
     for (uint i = 0; i < bettingIdxes.length; i++) {
-      doRefundOrTransfer(_match, bettingIdxes[i]);
+      doRefundOrTransfer(matchId, homeGoals,awayGoals, bettingIdxes[i]);
     }
     emit LogClaimStake(matchId);
     return true;

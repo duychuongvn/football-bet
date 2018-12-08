@@ -188,8 +188,8 @@ export const BetherContractService = {
       match = {"match": null, "summary": {"stake": 0 as number, "payoutAvailable": false as boolean}, "matchId": betting.matchId, "bettings": [] as any};
 
 
-      const  calling = async()  => BetherContractService.loadMatchesById(match.matchId).toPromise().then((result:any)=>result);
-      match.match =  await  calling();
+      // const  calling = async()  => BetherContractService.loadMatchesById(match.matchId).toPromise().then((result:any)=>result);
+      match.match =  await  BetherContractService.loadMatchesById(match.matchId).toPromise();
       bettings.push(match);
 
     }
