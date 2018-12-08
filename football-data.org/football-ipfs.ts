@@ -11,6 +11,9 @@ const ligue_1 = require('./competitions/ligue_1.json');
 const serie_a = require('./competitions/serie_a.json');
 const premier_league = require('./competitions/premier_league.json');
 const primera_division = require('./competitions/primera_division.json');
+const primeira_liga = require('./competitions/primeira_liga.json');
+const eredivisie = require('./competitions/eredivisie.json');
+const championship = require('./competitions/championship.json');
 
 const api = axios.create({
   baseURL: 'http://api.football-data.org/v2/',
@@ -23,11 +26,14 @@ const api = axios.create({
 const COMPETITIONS_KEY = {
   BUNDESLIGA: 'BL1',
   // UEFA_EUROPA_LEAGUE: 'CL',
+  PRIMEIRA_LIGA: 'PPL',
+  EREDIVISIE: 'DED',
   UEFA_CHAMPIONS_LEAGUE: 'EL',
   LIGUE_1: 'FL1',
   SERIE_A: 'SA',
   PREMIER_LEAGUE: 'PL',
-  PRIMERA_DIVISION: 'PD'
+  PRIMERA_DIVISION: 'PD',
+  CHAMPIONSHIP: 'ELC'
 }
 
 // let ipfsData = [];
@@ -82,7 +88,7 @@ class FetchData {
       competitions: match_name,
       status: 'SCHEDULED',
       dateFrom: this.renderDate(0),
-      dateTo: this.renderDate(7)
+      dateTo: this.renderDate(10)
     });
 
     api.get(`matches?${_opts}`)
@@ -117,6 +123,18 @@ class FetchData {
           case COMPETITIONS_KEY.PRIMERA_DIVISION:
             fileName = 'primera_division.json';
             originData = primera_division;
+            break;
+          case COMPETITIONS_KEY.PRIMEIRA_LIGA:
+            fileName = 'primeira_liga.json';
+            originData = primeira_liga;
+            break;
+          case COMPETITIONS_KEY.EREDIVISIE:
+            fileName = 'eredivisie.json';
+            originData = eredivisie;
+            break;
+          case COMPETITIONS_KEY.CHAMPIONSHIP:
+            fileName = 'championship.json';
+            originData = championship;
             break;
         }
         this.filterMatches(res, fileName, originData)

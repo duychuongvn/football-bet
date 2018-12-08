@@ -66,7 +66,13 @@
           this.watchBettings(result.args.bettingIdx.valueOf())
         }
         this.setLoadingBetting(false);
-      })
+      });
+
+      this.bether.CancelBet().watch((error: any, result: any) => {
+        if (!!result) {
+          this.loadBettings(this.match);
+        }
+      });
     }
 
     watchBettings(bettingId: number) {

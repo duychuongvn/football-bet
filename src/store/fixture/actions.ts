@@ -14,6 +14,9 @@ const fixtures: any = {
   lique: require('@/../football-data.org/matches/ligue_1.json'),
   serie: require('@/../football-data.org/matches/serie_a.json'),
   uefac: require('@/../football-data.org/matches/uefa_champions_league.json'),
+  primeira_liga: require('@/../football-data.org/matches/primeira_liga.json'),
+  eredivisie: require('@/../football-data.org/matches/eredivisie.json'),
+  championship: require('@/../football-data.org/matches/championship.json')
 }
 
 export const actions: ActionTree<any, RootState> = {

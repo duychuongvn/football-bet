@@ -1,17 +1,20 @@
 module.exports = {
+  productionSourceMap: false,
+  lintOnSave: process.env.NODE_ENV !== 'production',
+  runtimeCompiler: true,
+  configureWebpack: config => {
+    config.optimization = {
+      mergeDuplicateChunks: true,
+      minimize: process.env.NODE_ENV === 'production',
+      removeAvailableModules: true,
+      removeEmptyChunks: true
+    }
+  },
   chainWebpack: config => {
     config.module
-      .rule('vue')
-      .use('vue-loader')
-      .loader('vue-loader')
-      .tap(options => Object.assign(options, {
-        transformAssetUrls: {
-          'v-img': ['src', 'lazy-src'],
-          'v-card': 'src',
-          'v-card-media': 'src',
-          'v-responsive': 'src',
-          'v-carousel-item': 'src'
-        }
-      }))
+      .rule('images')
+      .use('url-loader')
+      .loader('url-loader')
+      .tap(options => Object.assign(options, { limit: 10240 }))
   }
 }

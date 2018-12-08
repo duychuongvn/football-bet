@@ -11,6 +11,9 @@ const NAME_LEAGUE: any = {
   lique: 'France Ligue 1',
   serie: 'Serie A',
   uefac: 'UEFA Champions League',
+  primeira_liga: 'Primeria Liga',
+  eredivisie: 'Eredivisie',
+  championship: 'Championship'
 }
 
 const COMPETITION_FLAGS: any = {
@@ -20,6 +23,9 @@ const COMPETITION_FLAGS: any = {
   lique: require('@/assets/competition-flags/france-ligue1-flag.png'),
   serie: require('@/assets/competition-flags/serie-a-flag.png'),
   uefac: require('@/assets/competition-flags/uefa-champions-league-flag.png'),
+  primeira_liga: require('@/assets/competition-flags/primeira-liga-flag.png'),
+  eredivisie: require('@/assets/competition-flags/eredivisie-flag.png'),
+  championship: require('@/assets/competition-flags/championship-flag.png')
 }
 
 export const mutations: MutationTree<any> = {

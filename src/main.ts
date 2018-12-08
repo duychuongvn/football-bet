@@ -12,6 +12,7 @@ VueClipboard.config.autoSetContainer = true; // add this line
 
 const SocialSharing = require('vue-social-sharing');
 
+import '@/styles/meterial-icons.css';
 import '@/plugins/vuetify';
 import '@/registerServiceWorker';
 import '@/assets/fontawesome-free/css/all.css';

@@ -4,16 +4,31 @@
       <h3 class="headline font-weight-bold white--text mb-2">How It Works</h3>
       <v-card color="blue-grey lighten-6 mb-4" dark>
         <v-card-text>
-          <p>All matches will be managed by smart contracts thanks to the evolution of the Ethereum Blockchain. A match goes through the following phases:</p>
+          <p>All matches will be managed by smart contracts thanks to the evolution of the Ethereum Blockchain. A match
+            goes through the following phases:</p>
           <ul class="mb-0">
             <li class="mb-3">
-              <strong>Open</strong>: The open opens 2 weeks before the match starts. You can bet on either team as often you want with as much Ether as you want. The minimum bet amount is 0.001 Ether, which is about 50 cents right now.</li>
+              <strong>Open</strong>: The open opens 2 weeks before the match starts. You can bet on either team as often
+              you want with as much Ether as you want. The minimum bet amount is 0.001 Ether, which is about 50 cents
+              right now.
+            </li>
             <li class="mb-3">
-              <strong>Closed/Match playing</strong>: The bet closes right after the match starts. It is too late to place bets now, as the match is already started.</li>
+              <strong>Closed/Match playing</strong>: The bet closes right after the match starts. It is too late to
+              place bets now, as the match is already started.
+            </li>
             <li class="mb-3">
-              <strong>Match finished</strong>: When the regular match tie is over (90’), the match result goes through 2 stages confirmation, one from the API fetching and one from the Admin. The fetching and confirmation of the match outcome have to be completed within 1 day from after the match ends. If it takes longer, you can request to prioritize the payouts.</li>
+              <strong>Match finished</strong>: When the regular match tie is over (90’), the match result goes through 2
+              stages confirmation, one from the API fetching and one from the Admin. The fetching and confirmation of
+              the match outcome have to be completed within 1 day from after the match ends. If it takes longer, you can
+              request to prioritize the payouts.
+            </li>
             <li>
-              <strong>Payouts</strong>: Once the winner is fetched and confirmed, there is no go-back. Bettors, who betted on the winning team will receive their payouts with 5% juice cut within 1 day after the match starts. Bettors can claim payouts in advance after the result is decided and incur a small transfer fee (gas) on the network. In case there are no winning sides, refunds will be sent out to bettors with 2,5% juice cut each side.</li>
+              <strong>Payouts</strong>: Once the winner is fetched and confirmed, there is no go-back. Bettors, who
+              betted on the winning team will receive their payouts with 5% juice cut within 1 day after the match
+              starts. Bettors can claim payouts in advance after the result is decided and incur a small transfer fee
+              (gas) on the network. In case there are no winning sides, refunds will be sent out to bettors with 2,5%
+              juice cut each side.
+            </li>
           </ul>
         </v-card-text>
       </v-card>
@@ -23,56 +38,232 @@
         <v-expansion-panel class="accor-fixture">
           <v-expansion-panel-content class="bg-transparent" expand-icon="fas fa-chevron-down font-sm">
             <div class="font-weight-bold" slot="header">Create a new bet</div>
-            <v-card-text class="pl-4">
+            <v-card-text class="pl-4 pb-3">
+              <!-- Step 1 -->
               <h4 class="body-2">Step 1: Select an open match and choose the favorite team</h4>
-              <p class="pl-3">- The home team will be selected by default</p>
-              <h4 class="body-2">Step 2: Select the handicap which were pre-defined by the Admin and the stake to bet.</h4>
-              <p class="pl-3 mb-1">- For example, the match between Russia and Australia, Russia is your favorite team and you choose the handicap +1.</p>
-              <p class="pl-4 mb-1">+ <strong>Win</strong>: In order for you to win your bet, Russia must keep the match draw or win by any goals.</p>
-              <p class="pl-4 mb-1">+ <strong>Draw</strong>: If Australia wins by 1 goal, the result with your handicap applied is a draw and your stake will be refunded with 2,5% juice cut.</p>
+              <p class="pl-3 mb-1">- The home team will be selected by default</p>
+              <v-layout row wrap class="mb-3">
+                <v-flex sm6 xs12>
+                  <v-img
+                    :src="require('@/assets/how_it_work/1.png')"
+                    lazy-src="https://picsum.photos/10/6?image=15"
+                    aspect-ratio="1.9"  class="grey lighten-2 elevation-5">
+                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-layout>
+                  </v-img>
+                </v-flex>
+
+                <v-flex sm6 xs12>
+                  <v-img
+                    :src="require('@/assets/how_it_work/2.png')"
+                    lazy-src="https://picsum.photos/10/6?image=15"
+                    aspect-ratio="1.9"  class="grey lighten-2 elevation-5">
+                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-layout>
+                  </v-img>
+                </v-flex>
+              </v-layout>
+
+              <!-- Step 2 -->
+              <h4 class="body-2">Step 2: Select the handicap which were pre-defined by the Admin and the stake to
+                bet.</h4>
+              <p class="pl-3 mb-1">- For example, the match between Russia and Australia, Russia is your favorite team
+                and you choose the handicap +1.</p>
+              <p class="pl-4 mb-1">+ <strong>Win</strong>: In order for you to win your bet, Russia must keep the match
+                draw or win by any goals.</p>
+              <p class="pl-4 mb-1">+ <strong>Draw</strong>: If Australia wins by 1 goal, the result with your handicap
+                applied is a draw and your stake will be refunded with 2,5% juice cut.</p>
               <p class="pl-4">+ <strong>Lose</strong>: Otherwise, you will lose.</p>
-              <p class="pl-3 mb-1">- Let’s take another example with another handicap, your favorite team is also Russia and you choose the handicap -1.</p>
-              <p class="pl-4 mb-1">+ <strong>Win</strong>: In order for you to win the bet, Russia must win the match by 2 goals.
+              <p class="pl-3 mb-1">- Let’s take another example with another handicap, your favorite team is also Russia
+                and you choose the handicap -1.</p>
+              <p class="pl-4 mb-1">+ <strong>Win</strong>: In order for you to win the bet, Russia must win the match by
+                2 goals.
               </p>
-              <p class="pl-4 mb-1">+ <strong>Draw</strong>: If Russia just wins by 1 goal, the result with you handicap applied is a draw and your stake will be refunded with 2,5% juice cut.</p>
+              <p class="pl-4 mb-1">+ <strong>Draw</strong>: If Russia just wins by 1 goal, the result with you handicap
+                applied is a draw and your stake will be refunded with 2,5% juice cut.</p>
               <p class="pl-4">+ <strong>Lose</strong>: Otherwise, you will lose.</p>
-              <p class="pl-3 mb-1">- Next, bettors input the stake which is the amount of Ether for the bet. The minimum bet amount is 0.001 Ether, which is about 50 cents right now. There are no maximum ceilings for the bet amount, you can bet as much as you can afford for.</p>
-              <p class="pl-3">- Click Create button to proceed with the next step.</p>
+              <p class="pl-3 mb-1">- Next, bettors input the stake which is the amount of Ether for the bet. The minimum
+                bet amount is 0.001 Ether, which is about 50 cents right now. There are no maximum ceilings for the bet
+                amount, you can bet as much as you can afford for.</p>
+              <p class="pl-3 mb-1">- Click Create button to proceed with the next step.</p>
+              <v-layout row wrap class="mb-3">
+                <v-flex sm6 offset-sm3 xs12>
+                  <v-img
+                    :src="require('@/assets/how_it_work/3.png')"
+                    lazy-src="https://picsum.photos/10/6?image=15"
+                    aspect-ratio="1.9"  class="grey lighten-2 elevation-5">
+                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-layout>
+                  </v-img>
+                </v-flex>
+              </v-layout>
 
+              <!-- Step 3 -->
               <h4 class="body-2">Step 3: Submit the transaction</h4>
-              <p class="pl-3 mb-1">- A MetaMask notification will be displayed to submit the transaction. The amount is the stake you have defined when setting up a new bet. The default gas price is set to 6 GWei. If you want to accelerate the transaction, you can do so by increasing the amount you pay per unit of gas, the excess gas will be refunded back to you after the transaction was finished.</p>
-              <p class="pl-3">- Click Submit button to submit the transaction</p>
+              <p class="pl-3 mb-1">- A MetaMask notification will be displayed to submit the transaction. The amount is
+                the stake you have defined when setting up a new bet. The default gas price is set to 6 GWei. If you
+                want to accelerate the transaction, you can do so by increasing the amount you pay per unit of gas, the
+                excess gas will be refunded back to you after the transaction was finished.</p>
+              <p class="pl-3 mb-1">- Click Submit button to submit the transaction</p>
+              <v-layout row wrap class="mb-3">
+                <v-flex sm6 offset-sm3 xs12>
+                  <v-img
+                    :src="require('@/assets/how_it_work/4.png')"
+                    lazy-src="https://picsum.photos/10/6?image=15"
+                    aspect-ratio="1.9"  class="grey lighten-2 elevation-5">
+                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-layout>
+                  </v-img>
+                </v-flex>
+              </v-layout>
 
+              <!-- Step Final -->
               <h4 class="body-2">Final Step: Share with your friends</h4>
-              <p class="pl-3 mb-0">- After submitting the transaction, it might take a few moments for the transaction to be confirmed by the network and then your bet will be displayed on our system with the status open. Your bet has to wait for other bettors to settle before it is changed to the status settled.
-                You can share your bet via any social media to your friends or any relatives to make the settling process faster.</p>
+              <p class="pl-3 mb-1">- After submitting the transaction, it might take a few moments for the transaction
+                to be confirmed by the network and then your bet will be displayed on our system with the status open.
+                Your bet has to wait for other bettors to settle before it is changed to the status settled.
+                You can share your bet via any social media to your friends or any relatives to make the settling
+                process faster.</p>
+              <v-layout row wrap>
+                <v-flex sm6 xs12>
+                  <v-img
+                    :src="require('@/assets/how_it_work/5.png')"
+                    lazy-src="https://picsum.photos/10/6?image=15"
+                    aspect-ratio="1.9"  class="grey lighten-2 elevation-5">
+                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-layout>
+                  </v-img>
+                </v-flex>
+
+                <v-flex sm6 xs12>
+                  <v-img
+                    :src="require('@/assets/how_it_work/6.png')"
+                    lazy-src="https://picsum.photos/10/6?image=15"
+                    aspect-ratio="1.9"  class="grey lighten-2 elevation-5">
+                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-layout>
+                  </v-img>
+                </v-flex>
+              </v-layout>
             </v-card-text>
           </v-expansion-panel-content>
 
           <v-expansion-panel-content class="bg-transparent" expand-icon="fas fa-chevron-down font-sm">
             <div class="font-weight-bold" slot="header">Settle a bet</div>
-            <v-card-text class="pl-4">
+            <v-card-text class="pl-4 pb-3">
               <h4 class="body-2">Step 1: Select an open match</h4>
+              <v-layout row wrap class="mb-3">
+                <v-flex sm6 offset-sm3 xs12>
+                  <v-img
+                    :src="require('@/assets/how_it_work/7A.png')"
+                    lazy-src="https://picsum.photos/10/6?image=15"
+                    aspect-ratio="1.9"  class="grey lighten-2 elevation-5">
+                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-layout>
+                  </v-img>
+                </v-flex>
+              </v-layout>
 
               <h4 class="body-2">Step 2: Choose a bet you want to settle</h4>
-              <p class="pl-3">- Upon access the match details, all bets will be displayed by default. You can filter the open bets by clicking Open (on the top left of the bets list), the number next to Open is the total open bets.
-                The list of open bets will be filtered and now you just choose the bet with the handicap you want, then click on Settle button</p>
+              <p class="pl-3 mb-1">- Upon access the match details, all bets will be displayed by default. You can filter the
+                open bets by clicking Open (on the top left of the bets list), the number next to Open is the total open
+                bets.
+                The list of open bets will be filtered and now you just choose the bet with the handicap you want, then
+                click on Settle button</p>
+              <v-layout row wrap class="mb-3">
+                <v-flex sm6 offset-sm3 xs12>
+                  <v-img
+                    :src="require('@/assets/how_it_work/7.png')"
+                    lazy-src="https://picsum.photos/10/6?image=15"
+                    aspect-ratio="1.9"  class="grey lighten-2 elevation-5">
+                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-layout>
+                  </v-img>
+                </v-flex>
+              </v-layout>
 
               <h4 class="body-2">Step 3: Settle the bet</h4>
-              <p class="pl-3">- Upon click on Settle, the bet details will be displayed. You can check the handicap and the maximum stake which was offered by the bettor placing the bet. You can adjust the stake you want as long as it is less than the maximum amount offered and greater than the minimum amount required by our system.</p>
-              <p class="pl-3 mb-1">- For example, the match between Russia and Australia, another bettor who placed the bet chose Russia with the handicap +1. You choose this bet to settle, it means that you bet on Australia with the handicap -1</p>
-              <p class="pl-4 mb-1">+ <strong>Win</strong>: In order for you to win the bet, Australia must win by 2 goals</p>
-              <p class="pl-4 mb-1">+ <strong>Draw</strong>: If Australia wins by 1 goal, the result with your handicap applied is a draw and your stake will be refunded with 2,5% juice cut.</p>
+              <p class="pl-3">- Upon click on Settle, the bet details will be displayed. You can check the handicap and
+                the maximum stake which was offered by the bettor placing the bet. You can adjust the stake you want as
+                long as it is less than the maximum amount offered and greater than the minimum amount required by our
+                system.</p>
+              <p class="pl-3 mb-1">- For example, the match between Russia and Australia, another bettor who placed the
+                bet chose Russia with the handicap +1. You choose this bet to settle, it means that you bet on Australia
+                with the handicap -1</p>
+              <p class="pl-4 mb-1">+ <strong>Win</strong>: In order for you to win the bet, Australia must win by 2
+                goals</p>
+              <p class="pl-4 mb-1">+ <strong>Draw</strong>: If Australia wins by 1 goal, the result with your handicap
+                applied is a draw and your stake will be refunded with 2,5% juice cut.</p>
               <p class="pl-4">+ <strong>Lose</strong>: Otherwise, you will lose.</p>
-              <p class="pl-3">- Click on Settle button to settle the bet.</p>
+              <p class="pl-3 mb-1">- Click on Settle button to settle the bet.</p>
+              <v-layout row wrap class="mb-3">
+                <v-flex sm6 offset-sm3 xs12>
+                  <v-img
+                    :src="require('@/assets/how_it_work/8.png')"
+                    lazy-src="https://picsum.photos/10/6?image=15"
+                    aspect-ratio="1.9"  class="grey lighten-2 elevation-5">
+                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-layout>
+                  </v-img>
+                </v-flex>
+              </v-layout>
 
               <h4 class="body-2">Step 4: Submit the transaction</h4>
-              <p class="pl-3 mb-1">- A MetaMask notification will be displayed to submit the transaction. The amount is the stake of your selected bet. The default gas price is set to 6 GWei. If you want to accelerate the transaction, you can do so by increasing the amount you pay per unit of gas, the excess gas will be refunded back to you after the transaction was finished.</p>
+              <p class="pl-3 mb-1">- A MetaMask notification will be displayed to submit the transaction. The amount is
+                the stake of your selected bet. The default gas price is set to 6 GWei. If you want to accelerate the
+                transaction, you can do so by increasing the amount you pay per unit of gas, the excess gas will be
+                refunded back to you after the transaction was finished.</p>
               <p class="pl-3">- Click Submit button to submit the transaction</p>
+              <v-layout row wrap class="mb-3">
+                <v-flex sm6 offset-sm3 xs12>
+                  <v-img
+                    :src="require('@/assets/how_it_work/9.png')"
+                    lazy-src="https://picsum.photos/10/6?image=15"
+                    aspect-ratio="1.9"  class="grey lighten-2 elevation-5">
+                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-layout>
+                  </v-img>
+                </v-flex>
+              </v-layout>
 
               <h4 class="body-2">Final Step: Share with your friends</h4>
-              <p class="pl-3 mb-0">- After submitting the transaction, it might take a few minutes for the transaction to be confirmed by the network and then your bet will be displayed on our system with the status settled.
+              <p class="pl-3 mb-1">- After submitting the transaction, it might take a few minutes for the transaction
+                to be confirmed by the network and then your bet will be displayed on our system with the status
+                settled.
                 Now just waiting for the match finished and get the payout if you are the winner.</p>
+              <v-layout row wrap class="b-3">
+                <v-flex sm6 xs12>
+                  <v-img
+                    :src="require('@/assets/how_it_work/10.png')"
+                    lazy-src="https://picsum.photos/10/6?image=15"
+                    aspect-ratio="1.9"  class="grey lighten-2 elevation-5">
+                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-layout>
+                  </v-img>
+                </v-flex>
+
+                <v-flex sm6 xs12>
+                  <v-img
+                    :src="require('@/assets/how_it_work/11.png')"
+                    lazy-src="https://picsum.photos/10/6?image=15"
+                    aspect-ratio="1.9"  class="grey lighten-2 elevation-5">
+                    <v-layout slot="placeholder" fill-height align-center justify-center ma-0>
+                      <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
+                    </v-layout>
+                  </v-img>
+                </v-flex>
+              </v-layout>
             </v-card-text>
           </v-expansion-panel-content>
         </v-expansion-panel>
