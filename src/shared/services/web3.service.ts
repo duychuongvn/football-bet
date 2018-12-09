@@ -75,14 +75,12 @@ export const Web3Vue = {
       }
     })
   }),
-  toSHA3(match: MatchInterface) {
-    if (!web3Provider) return;
-    const _date = DateTime.fromISO(match.date).toMillis() / 1000;
-    const _val = `${match.homeTeam}${match.awayTeam}${_date}`;
-
-    return web3Provider.utils.soliditySha3(_val);
-  },
   toEther(wei: number) {
     return web3Provider.utils.fromWei(wei, 'ether');
-  }
+  },
+
+  generateMatchId(homeTeam: string, awayTeam: string, leagueName: any) {
+    return web3Provider.utils.soliditySha3(homeTeam+awayTeam+leagueName);
+  },
+
 };

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.21;
+pragma solidity ^0.4.24;
 
 contract Ownable {
 
@@ -57,6 +57,7 @@ contract BetherContract is Ownable {
   enum BookmakerResult {None, Win, WinAHalf, Draw, LoseAHalf, Lose}
 
   IFootballScore footballScore;
+
   mapping(address => uint256) public balances;
   mapping(address => bool) public admins;
   mapping(uint8 => string) leagues;
@@ -66,12 +67,14 @@ contract BetherContract is Ownable {
   mapping(bytes32 => uint32[]) matchBets;
   mapping(uint32 => uint32[]) betSettled;
   mapping(address => uint256) report;
+  mapping(bytes32=> bool) matchPaid;
 
   address[] players;
   Betting[] bets;
   Settle[] settles;
   bytes32[] betIndexes;
   bytes32[] matchIds;
+  uint public lockInBet;
 
   struct Betting {
     uint8 bmTeam; //bMaker team
@@ -112,11 +115,11 @@ contract BetherContract is Ownable {
     admins[user] = isAdmin;
   }
 
-  function offerNewMatch(bytes32 matchId, uint selectedTeam, int handicap) public matchNotFinish(matchId) payable returns (bool) {
+  function offerNewMatch(bytes32 matchId, uint selectedTeam, int handicap) public payable returns (bool) {
 
     require(msg.sender != owner);
     require(handicap % 25 == 0);
-
+    checkMatchNotFinish(matchId);
     Betting memory _betting = Betting(uint8(selectedTeam), BetStatus.Open, BookmakerResult.None,  uint48(now), handicap, matchId, msg.sender, msg.value, 0);
 
     uint32 betIdx = uint32(bets.push(_betting) - 1);
@@ -128,17 +131,17 @@ contract BetherContract is Ownable {
     }
     emit LogNewBet(matchId, betIdx);
     balances[msg.sender] += msg.value;
+    lockInBet+=msg.value;
     return true;
   }
 
-  modifier matchNotFinish(bytes32 matchId) {
+  function  checkMatchNotFinish(bytes32 matchId) {
     uint8 matchStatus;
     uint48 time;
     (matchStatus, time) = footballScore.getMatchStatus(matchId);
-
     require(matchStatus == 1 && time > now, "Match should not finished");
-    _;
   }
+
   function settleBet(uint32 bettingIdx) public payable returns (bool) {
     require(msg.sender != owner);
 
@@ -146,8 +149,7 @@ contract BetherContract is Ownable {
     require(_betting.bMaker != msg.sender);
     require(_betting.status != BetStatus.Settled);
     require(_betting.bAmount - _betting.settledAmount >= msg.value);
-    //TODO Check match status
-//    matchNotFinish(_betting.matchId);
+    checkMatchNotFinish(_betting.matchId);
     if (isPlayerNotExist(msg.sender)) {
       players.push(msg.sender);
     }
@@ -164,6 +166,7 @@ contract BetherContract is Ownable {
     userSettled[msg.sender].push(betIdx);
     betSettled[bettingIdx].push(betIdx);
     balances[msg.sender] += msg.value;
+    lockInBet += msg.value;
     emit LogAcceptBet(_betting.matchId, bettingIdx, betIdx);
     return true;
   }
@@ -275,12 +278,8 @@ contract BetherContract is Ownable {
     return balances[player];
   }
 
-  mapping(bytes32=> bool) matchPaid;
   function forcePayout(bytes32 matchId) public isAdmin returns (bool) {
 
-
-   // require(!_match.isApproved);
-    //_match.isApproved = true;
     require(!matchPaid[matchId], "Match already paid");
     uint8 homeGoals;
     uint8 awayGoals;
@@ -327,6 +326,7 @@ contract BetherContract is Ownable {
     transferFund(_betting.bMaker, _betting.bAmount);
     _betting.status = BetStatus.Refunded;
     balances[_betting.bMaker] = balances[_betting.bMaker] - _betting.bAmount;
+    lockInBet -= _betting.bAmount;
     return true;
   }
 
@@ -356,6 +356,7 @@ contract BetherContract is Ownable {
   }
   function createFunding(address receiver, uint256 betAmount, uint256 settledAmount, BookmakerResult bResult) internal returns (Funding funding) {
     balances[receiver] -= betAmount;
+    lockInBet -=betAmount;
     if(bResult == BookmakerResult.Win) {
       funding = Funding(receiver ,betAmount,  betAmount+ (settledAmount * 95 / 100));
       report[receiver]+= funding.amount - betAmount;
@@ -437,11 +438,7 @@ contract BetherContract is Ownable {
   }
 
   function destroyContract() public onlyOwner returns (bool) {
-    for (uint i = 0; i < players.length; i++) {
-      if (balances[players[i]] > 0) {
-        players[i].transfer(balances[players[i]]);
-      }
-    }
+    require(lockInBet == 0);
     selfdestruct(owner);
     return true;
   }

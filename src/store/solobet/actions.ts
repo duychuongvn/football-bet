@@ -13,7 +13,7 @@ export const actions: ActionTree<any, RootState> = {
     });
   },
   createOffer({ commit }, offerObj: any): any {
-    const _matchId = Web3Vue.toSHA3(offerObj.match.toJson);
+    const _matchId = offerObj.match.toJson._matchId;
 
     BetherContractService.newOffer(_matchId, offerObj)
       .subscribe((res: any) => {

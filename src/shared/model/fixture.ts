@@ -7,7 +7,16 @@ import { Web3Vue } from '@/shared/services/web3.service';
 import { DateTime, Interval } from 'luxon';
 
 export class Fixture extends BaseModel{
+
   private _date!: string;
+  private _leagueName: any;
+  get leagueName(): any {
+    return this._leagueName;
+  }
+
+  set leagueName(value: any) {
+    this._leagueName = value;
+  }
   get date(): string {
     return this._date;
   }
@@ -59,12 +68,10 @@ export class Fixture extends BaseModel{
     return `${this.homeTeam.name} ~ ${this.awayTeam.name}`;
   }
   get matchId(): string {
-    return Web3Vue.toSHA3({
-      id: this.id,
-      date: this.date,
-      homeTeam: this.homeTeam.name,
-      awayTeam: this.awayTeam.name
-    })
+    return Web3Vue.generateMatchId(
+      this.homeTeam.name,
+      this.awayTeam.name,
+      this.leagueName)
   }
 
   get diffCurrentDate(): DiffCurrentDate {
@@ -136,7 +143,8 @@ export class Fixture extends BaseModel{
       id: this.id,
       date: this.date,
       homeTeam: this.homeTeam.name,
-      awayTeam: this.awayTeam.name
+      awayTeam: this.awayTeam.name,
+      matchId:this.matchId,
     }
   }
 
@@ -153,6 +161,9 @@ export class Fixture extends BaseModel{
       this.approved  = fixture.approved;
       this.homeGoals = fixture.homeGoals;
       this.awayGoals = fixture.awayGoals;
+      this.leagueName = 'PREMIER LEAGUE';
+
+      console.log("fixture.leagueName",fixture.leagueName)
     }
   }
 }

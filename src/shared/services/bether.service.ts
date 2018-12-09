@@ -23,11 +23,11 @@ export const BetherContractService = {
 
   newOffer: (matchId: any, offerObj: any) => Rx.Observable.create((observer: any) => {
     let handicap = offerObj.odds;
+    console.log(offerObj.match.matchId);
     if (handicap % 25 == 0) {
       bether.offerNewMatch(
-        matchId,
-        offerObj.homeTeam, offerObj.awayTeam,
-        offerObj.selectedTeam, offerObj.time, handicap,
+
+        offerObj.match.matchId, offerObj.selectedTeam, handicap,
         {from: offerObj.account, value: window.web3.toWei(offerObj.stake, 'ether')},
         (err: any, result: any) => {
           if (err) {
@@ -49,7 +49,7 @@ export const BetherContractService = {
 
       if ((result.status === 0 || result.status === 1) && ( ( result.bookmakerAmount - result.settledAmount).toFixed(3) >= dealObj.amount.toFixed(3))) {
 
-        bether.bet(dealObj.bettingId, {
+        bether.settleBet(dealObj.bettingId, {
           from: dealObj.account,
           value: window.web3.toWei(dealObj.amount, 'ether')
         }, (error: any, result: any) => {
@@ -190,6 +190,7 @@ export const BetherContractService = {
 
       // const  calling = async()  => BetherContractService.loadMatchesById(match.matchId).toPromise().then((result:any)=>result);
       match.match =  await  BetherContractService.loadMatchesById(match.matchId).toPromise();
+      console.log("Match: ", match.match)
       bettings.push(match);
 
     }

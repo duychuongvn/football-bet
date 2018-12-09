@@ -10,7 +10,7 @@ import { Fixture } from '@/shared/model/fixture';
 
 export const actions: ActionTree<any, RootState> = {
   loadBettings({ commit }, match: Fixture): any {
-    const _matchId = Web3Vue.toSHA3(match.toJson);
+    const _matchId = match.toJson.matchId;
     BetherContractService.getBettings(_matchId)
       .subscribe((bettings: any) => {
         commit(RECEVER_TOTAL_BETTING, bettings)

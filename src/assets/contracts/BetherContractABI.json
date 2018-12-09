@@ -52,6 +52,20 @@
     "type": "function"
   },
   {
+    "constant": true,
+    "inputs": [],
+    "name": "lockInBet",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "constant": false,
     "inputs": [
       {
@@ -66,7 +80,12 @@
     "type": "function"
   },
   {
-    "inputs": [],
+    "inputs": [
+      {
+        "name": "footballContractAddr",
+        "type": "address"
+      }
+    ],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "constructor"
@@ -201,19 +220,7 @@
         "type": "bytes32"
       },
       {
-        "name": "homeTeam",
-        "type": "string"
-      },
-      {
-        "name": "awayTeam",
-        "type": "string"
-      },
-      {
         "name": "selectedTeam",
-        "type": "uint256"
-      },
-      {
-        "name": "time",
         "type": "uint256"
       },
       {
@@ -236,11 +243,25 @@
     "constant": false,
     "inputs": [
       {
+        "name": "matchId",
+        "type": "bytes32"
+      }
+    ],
+    "name": "checkMatchNotFinish",
+    "outputs": [],
+    "payable": false,
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "constant": false,
+    "inputs": [
+      {
         "name": "bettingIdx",
         "type": "uint32"
       }
     ],
-    "name": "bet",
+    "name": "settleBet",
     "outputs": [
       {
         "name": "",
@@ -372,15 +393,15 @@
       },
       {
         "name": "homeScore",
-        "type": "uint256"
+        "type": "uint8"
       },
       {
         "name": "awayScore",
-        "type": "uint256"
+        "type": "uint8"
       },
       {
         "name": "time",
-        "type": "uint256"
+        "type": "uint48"
       },
       {
         "name": "status",
@@ -549,64 +570,10 @@
     "inputs": [
       {
         "name": "matchId",
-        "type": "bytes32[]"
-      },
-      {
-        "name": "homeScore",
-        "type": "uint256[]"
-      },
-      {
-        "name": "awayScore",
-        "type": "uint256[]"
-      }
-    ],
-    "name": "updateScores",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "matchId",
-        "type": "bytes32"
-      },
-      {
-        "name": "homeScore",
-        "type": "uint256"
-      },
-      {
-        "name": "awayScore",
-        "type": "uint256"
-      }
-    ],
-    "name": "updateScore",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "constant": false,
-    "inputs": [
-      {
-        "name": "matchId",
         "type": "bytes32"
       }
     ],
-    "name": "approveScore",
+    "name": "forcePayout",
     "outputs": [
       {
         "name": "",
